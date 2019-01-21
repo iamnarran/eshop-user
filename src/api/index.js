@@ -5,6 +5,8 @@ import brand from './Brands';
 import staticinfo from './Static';
 import menu from './Menu';
 import category from './Category';
+import widget from './Widget';
+import product from './Product';
 
 let rest = {};
 
@@ -68,6 +70,16 @@ category.forEach(api => {
   rest.category[api.NAME] = data => generateAPI(api, data);
 });
 
-console.log('rest: ', rest);
+// WIDGET
+rest['widget'] = {};
+widget.forEach(api => {
+  rest.widget[api.NAME] = data => generateAPI(api, data);
+});
+
+// PRODUCT
+rest['product'] = {};
+product.forEach(api => {
+  rest.product[api.NAME] = data => generateAPI(api, data);
+});
 
 export { rest as default, setAuthorizationHeader };

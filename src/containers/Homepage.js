@@ -15,7 +15,10 @@ const fetch = async (props, onData) => {
         const staticinfo = await api.staticinfo.findAll();
         const menu = await api.menu.findAll();
         const category = await api.category.findAll();
-        // console.log(category.data);
+        const widget = await api.widget.findAll();
+        const emartProducts = await api.product.findAllEmartProducts();
+        const saleProducts = await api.product.findAllSaleProducts();
+        const newProducts = await api.product.findAllNewProducts();
 
         onData(null, {
             container: { 
@@ -24,6 +27,10 @@ const fetch = async (props, onData) => {
                 staticinfo: staticinfo.data[0],
                 menus: menu.data,
                 categories: category.data,
+                widgets: widget.data,
+                emartProducts: emartProducts.data,
+                saleProducts: saleProducts.data,
+                newProducts: newProducts.data,
             }
         });
     } catch (e) {
