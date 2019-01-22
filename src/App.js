@@ -16,27 +16,18 @@ import { storage } from './utils';
 import Layouts from 'layouts/Default';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import 'scss/app.scss';
-// import { setUser } from './actions/users';
-// Pages
+
 import Homepage from './containers/Homepage';
 import messages from './messages.json';
+import Salepage from './containers/Salepage';
+import Header from './containers/AppHeader';
+import Newpage from './pages/New';
+import Recipe from './pages/Recipe';
+import Package from './pages/Package';
+import Promotion from './pages/Promotion';
+import Season from './pages/Season';
 
 addLocaleData([...en]);
-
-// class Private extends Component {
-//   render() {
-//     const { auth, component: Component, ...rest } = this.props;
-//     const isAuth = auth.user;
-//     return (
-//       <Route
-//         { ...rest }
-//         render={props =>
-//           isAuth ? <Component {...props} /> : <Redirect to="/login" />
-//         }
-//       />
-//     );
-//   }
-// }
 
 class Public extends Component {
   render() {
@@ -64,41 +55,66 @@ class Localization extends Component {
 
   render() {
     const { auth } = this.props;
+
+    const routes = [
+      {
+        path: "/",
+        exact: true,
+        component: (rest) => <Homepage {...rest} {...this.props}/>
+      },
+      {
+        exact: false,
+        path: "/salepage",
+        component: (rest) => <Salepage {...rest} {...this.props}/>
+      },
+      {
+        exact: false,
+        path: "/new",
+        component: (rest) => <Newpage {...rest} {...this.props}/>
+      },
+      {
+        exact: false,
+        path: "/recipe",
+        component: (rest) => <Recipe {...rest} {...this.props}/>
+      },
+      {
+        exact: false,
+        path: "/package",
+        component: (rest) => <Package {...rest} {...this.props}/>
+      },
+      {
+        exact: false,
+        path: "/promotion",
+        component: (rest) => <Promotion {...rest} {...this.props}/>
+      },
+      {
+        exact: false,
+        path: "/season",
+        component: (rest) => <Season {...rest} {...this.props}/>
+      },
+    ];
+
     return (
       auth && (
         <Router history={BrowserHistory}>
-          <Switch>
-            <Public
-              {...this.props}
-              exact
-              path="/"
-              component={rest => (
-                <Homepage {...rest} {...this.props} />
-              )}
-            />
-            <Route
-              path={'/Account'}
-              render={props => (
-                <Layouts {...props} {...this.props}>
-                  <ToastContainer />
-                  <Switch>
-                    {/* <Private
-                      { ...this.props }
-                      { ...props }
-                      exact
-                      path="/"
-                      component={rest => (
-                        <Account
-                          { ...props }
-                          { ...rest }
-                        />
-                      )}
-                    /> */}
-                  </Switch>
-                </Layouts>
-              )}
-            />
-          </Switch>
+          <div>
+            <Header />
+            <Switch>
+              {
+                routes.map((route, index) => {
+                  return (
+                    <Public 
+                      {...this.props}
+                      key={index}
+                      exact={route.exact}                     
+                      path={route.path} 
+                      component={route.component}
+                    />
+                  );
+                })
+              }            
+            </Switch>
+          </div>
         </Router>
       )
     );
@@ -116,8 +132,6 @@ class App extends Component {
 
     if (storage.has('user')) {
       try {
-        // const user = storage.get('user');
-        // store.dispatch(setUser(user));
       } catch (e) { }
     }
   }
@@ -134,3 +148,26 @@ class App extends Component {
 }
 
 export default App;
+
+{/* <Route
+              path={'/Account'}
+              render={props => (
+                <Layouts {...props} {...this.props}>
+                  <ToastContainer />
+                  <Switch>
+                    <Private
+                      { ...this.props }
+                      { ...props }
+                      exact
+                      path="/"
+                      component={rest => (
+                        <Account
+                          { ...props }
+                          { ...rest }
+                        />
+                      )}
+                    /> 
+                  </Switch>
+                </Layouts>
+              )}
+            /> */}

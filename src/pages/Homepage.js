@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Icon, Badge, Avatar } from 'antd';
-import MessengerCustomerChat from 'react-messenger-customer-chat';
+// import MessengerCustomerChat from 'react-messenger-customer-chat';
 import Category from '../components/Category';
 import MainMenu from '../components/Menu';
 import Slider from '../components/Swiper';
@@ -88,160 +88,6 @@ class Dashboard extends Component {
 
         return (
             <div className="top-container" >
-
-                <div className="top-nav">
-                    <div className="container container-laptop pad10">
-                        <div className="row row10">
-                            <div className="col-xl-6 pad10">
-                                <ul className="list-inline left-panel">
-                                    <li className="list-inline-item">
-                                        <a href="" className="e-phone">
-                                            <Icon type="phone" theme="filled" style={{ color: 'rgba(254, 180, 21, 1)', }} />
-                                            <strong> {staticinfo.phone} </strong>
-                                        </a>
-                                    </li>
-                                    {/* <li className="list-inline-item">
-                                        <Link to="" className="e-help">
-                                            <span>Тусламж</span>
-                                        </Link>
-                                    </li> */}
-                                </ul>
-                            </div>
-                            <div className="col-xl-6 pad10">
-                                <div className="text-right">
-                                    <ul className="list-inline right-panel">
-                                        <li className="list-inline-item language">
-                                            <form>
-                                                <select className="custom-select" defaultValue="0">
-                                                    <option value='0' defaultValue>МОН</option>
-                                                    <option value="1">ENG</option>
-                                                    {/* <option value="2">KOR</option> */}
-                                                </select>
-                                            </form>
-                                        </li>
-                                        <li className="list-inline-item">
-                                            <Badge dot>
-                                                <Avatar shape="square" icon="bell" theme="filled" size="small" style={{ lineHeight: '20px' }} />
-                                            </Badge>
-                                        </li>
-                                        <li className="list-inline-item">
-                                            <Link to="" role="button" data-toggle="modal" data-target="#exampleModal1">
-                                                <span className="text-uppercase">Нэвтрэх</span>
-                                            </Link>
-                                        </li>
-                                        <li className="list-inline-item">
-                                            <Link to="" role="button" data-toggle="modal" data-target="#exampleModal2">
-                                                <span className="text-uppercase">Бүртгүүлэх</span>
-                                            </Link>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="top-main">
-                    <div className="container container-laptop pad10">
-                        <div className="row row10">
-                            <div className="col-xl-8 pad10">
-                                <div className="flex-this">
-                                    <Link to={'http://localhost:3001'} className="logo">
-                                        <img alt="logo" src={IMAGE + staticinfo.logopath} />
-                                    </Link>
-                                    <div className="search">
-                                        <form>
-                                            <ul className="list-unstyled list-float clr">
-                                                <li>
-                                                    <div className="dropdown" onClick={this.toggleOpen}>
-                                                        <button className="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            Бүх бараа
-                                                        </button>
-                                                        <div className={menuClass} aria-labelledby="dropdownMenuButton">
-                                                            {
-                                                                root.map((entry, index) => {
-                                                                    return (
-                                                                        <Link className="dropdown-item" to="" key={index}>
-                                                                            <img src={IMAGE + entry.icon} alt="category" />
-                                                                            <span>{entry.name}</span>
-                                                                        </Link>
-                                                                    )
-                                                                })
-                                                            }
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div className="form-group">
-                                                        <label htmlFor="mainsearch" className="sr-only">Main-search</label>
-                                                        <input type="text" className="form-control" id="mainsearch" aria-describedby="emailHelp" placeholder="Бүгдээс хайх" />
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <button type="submit" className="btn">
-                                                        <i className="fa fa-search" aria-hidden="true"></i>
-                                                        <span className="text-uppercase">Хайх</span>
-                                                    </button>
-                                                </li>
-                                            </ul>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="offset-xl-1 col-xl-3 pad10">
-                                <div className="action">
-                                    <ul className="list-inline">
-                                        <li className="list-inline-item">
-                                            <Link to="">
-                                                <Icon type="heart" theme="filled" />
-                                                <p>
-                                                    <small>Хадгалсан</small>
-                                                    <span className="text-uppercase">бараа</span>
-                                                </p>
-                                            </Link>
-                                        </li>
-                                        <li className="list-inline-item">
-                                            <Link to="">
-                                                <span className="count">1</span>
-                                                <Icon type="shopping-cart" />
-                                                <p>
-                                                    <small>Миний</small>
-                                                    <span className="text-uppercase">сагс</span>
-                                                </p>
-                                                <strong>0₮</strong>
-                                            </Link>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="main-nav">
-                    <div className="container container-laptop pad10">
-                        <ul className="list-inline">
-                            <li className="list-inline-item active">
-                                <Link to="">
-                                    <Icon type="home" theme="filled" style={{ color: '#feb415' }}></Icon>
-                                </Link>
-                            </li>
-                            <li className="list-inline-item has-drop">
-                                <Link to="">
-                                    <span>Ангилал</span>
-                                    <Icon type="down" style={{ color: '#feb415' }} />
-                                </Link>
-                                <div className="drop-container">
-                                    <div className="container pad10">
-                                        <Category dataSource={root} />
-                                    </div>
-                                </div>
-                            </li>
-                            <MainMenu dataSource={menus} />
-                        </ul>
-                    </div>
-                </div>
-
                 {/* Slider */}
                 <div className="main-slide">
                     <Slider dataSource={banner} params={homeBannerParams} elContainer={'banner'} />
@@ -1640,7 +1486,7 @@ class Dashboard extends Component {
                             </p>
                         </h1>
                         <div className="row row10">
-                            <div className="col-five pad10">
+                            <div className="col-five pad10">                                                            
                                 <div className="single-product small-product sale-product">
                                     <div className="image-container">
                                         <Link to="">
@@ -3261,7 +3107,7 @@ class Dashboard extends Component {
                 {/* Footer */}
                 
                 {/* Messenger */}
-                <MessengerCustomerChat pageId="169275059877520" appId="570055533421847" htmlRef={window.location.pathname}/>
+                {/* <MessengerCustomerChat pageId="169275059877520" appId="570055533421847" htmlRef={window.fndsmfpo.pathname}/> */}
                 {/* Messenger */}
             </div>
         );

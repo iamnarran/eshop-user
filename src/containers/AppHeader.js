@@ -1,8 +1,8 @@
 import React from 'react';
 import api from '../api';
 import { compose } from 'react-komposer';
-import Homepage from '../pages/Homepage';
 import Loader from '../components/Loader';
+import Header from '../layouts/AppHeader';
 
 const options = {
     loadingHandler: () => <Loader />
@@ -38,4 +38,4 @@ const dataLoader = (props, onData) => {
 export default compose(
     dataLoader,
     options
-)(Homepage);
+)(Header);

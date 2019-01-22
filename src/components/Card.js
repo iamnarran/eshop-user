@@ -26,10 +26,7 @@ class Card extends React.Component {
                 <span className="image" style={{ backgroundImage: `url(${timesale5})` }}></span>
             </Link>
             {saleTag}
-            <div className="time">
-                <Icon className="fa fa-clock-o" aria-hidden="true"/>
-                <span className="text">{product.time}</span>
-            </div>
+            {timeTag}
           </div>
           <div className="info-container">
             <Link to="" className="name">
@@ -145,7 +142,6 @@ class Card extends React.Component {
     else  return <b>CardType type error</b>
   }
 }
-
 
 Card.default = {
   product: [],
