@@ -10,16 +10,18 @@ export default [
     NAME: 'findAllEmartProducts',
     METHOD: 'GET',
     URL: `${API}/api/product/emartproduct/01`,
-    // REPLACE: 'jumcd, jumcd',
+    // REPLACE: 'jumcd',
   },
   {
     NAME: 'findAllSaleProducts',
     METHOD: 'GET',
     URL: `${API}/api/product/saleproduct/01`,
+    // REPLACE: 'jumcd',
   },
   {
     NAME: 'findAllNewProducts',
     METHOD: 'GET',
     URL: `${API}/api/product/newproduct/01`,
+    // REPLACE: 'jumcd',
   }
 ];

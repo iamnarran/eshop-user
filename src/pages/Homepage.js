@@ -9,23 +9,19 @@ import Slider from '../components/Swiper';
 import Widget from '../components/Widget';
 import Banner from '../components/Banner';
 import config from '../config';
-import timesale1 from '../scss/assets/images/demo/6.jpg';
-import timesale2 from '../scss/assets/images/demo/7.jpg';
-import timesale3 from '../scss/assets/images/demo/8.jpg';
-import timesale4 from '../scss/assets/images/demo/9.jpg';
-import timesale5 from '../scss/assets/images/demo/5.jpg';
-import timesale6 from '../scss/assets/images/demo/11.jpg';
-import timesale7 from '../scss/assets/images/demo/12.jpg';
-import ehow1 from '../scss/assets/images/demo/13.jpg';
-import ehow2 from '../scss/assets/images/demo/14.jpg';
-import ehow3 from '../scss/assets/images/demo/15.jpg';
-import ehow4 from '../scss/assets/images/demo/16.jpg';
-import ehow5 from '../scss/assets/images/demo/17.jpg';
 
 const IMAGE =
     process.env.NODE_ENV === 'development'
         ? config.image.development
         : config.image.production;
+
+const WIDGET_TYPES = {
+    'onlyEmart': 'Зөвхөн И-МАРТ дэлгүүрт',
+    'discount': 'Цагийн хямдрал',
+    'batch': 'Багцын бараа',
+    'recipe': 'Хоолны жор',
+};
+Object.freeze(WIDGET_TYPES);
 
 const bannerIndices = [2, 4];
 
@@ -43,6 +39,8 @@ class Homepage extends Component {
     renderItems(widgets, allProducts) {
         let items = [];
 
+        widgets = widgets.sort((obj1, obj2) => obj1.orders - obj2.orders);
+
         widgets.forEach((widget, index) => {
             if (bannerIndices.includes(index)) {
                 items.push(<Banner />);
@@ -50,13 +48,13 @@ class Homepage extends Component {
 
             let productsToShow = [];
             switch (widget.name) {
-                case 'Зөвхөн И-МАРТ дэлгүүрт':
+                case WIDGET_TYPES.onlyEmart:
                     productsToShow = allProducts.emartProducts;
                     break;
-                case 'Хямдралтай бүтээгдэхүүн':
+                case WIDGET_TYPES.discount:
                     productsToShow = allProducts.saleProducts;
                     break;
-                case 'Багцын бараа':
+                case WIDGET_TYPES.batch:
                     productsToShow = allProducts.newProducts;
                     break;
                 default:

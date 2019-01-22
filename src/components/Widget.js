@@ -1,102 +1,102 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Icon, Badge, Avatar } from 'antd';
+import { Icon } from 'antd';
 
-import timesale5 from '../scss/assets/images/demo/5.jpg';
-import Rate from './Rate';
+import Card from './Card';
 
-const cardTypes = {
+const CARD_TYPES = {
   'wide': 1,
   'thin': 2,
 };
-Object.freeze(cardTypes);
+Object.freeze(CARD_TYPES);
 
-const numOfCards = {
+const CARD_NUM = {
   'wide': 3,
   'thin': 5,
 }
-Object.freeze(numOfCards);
+Object.freeze(CARD_NUM);
 
 class Widget extends React.Component {
-  renderCard(product, renderType = cardTypes.wide) {
-    if (parseInt(renderType) !== cardTypes.wide) {
-      return (
-        <div className="col-five pad10">
-            <div className="single-product small-product">
-                <div className="image-container">
-                    <Link to="">
-                        <span className="image" style={{ backgroundImage: `url(${timesale5})` }}></span>
-                    </Link>
-                    <div className="percent">
-                        <span className="text"><strong>10</strong><small>%</small></span>
-                    </div>
-                    <div className="time">
-                        <i className="fa fa-clock-o" aria-hidden="true"></i>
-                        <span className="text">21 : 32 : 46</span>
-                    </div>
-                </div>
-                <div className="info-container">
-                    <Link to="" className="name">
-                        <span>Хуурай кофе Американо No Brand</span>
-                    </Link>
-                    <Link to="" className="cat">
-                        <span>Лаазтай кофе латте Лаазтай кофе латте</span>
-                    </Link>
+//   renderCard(product, renderType = CARD_TYPES.wide) {
+//     if (parseInt(renderType) !== CARD_TYPES.wide) {
+//       return (
+//         <div className="col-five pad10">
+//             <div className="single-product small-product">
+//                 <div className="image-container">
+//                     <Link to="">
+//                         <span className="image" style={{ backgroundImage: `url(${timesale5})` }}></span>
+//                     </Link>
+//                     <div className="percent">
+//                         <span className="text"><strong>10</strong><small>%</small></span>
+//                     </div>
+//                     <div className="time">
+//                         <i className="fa fa-clock-o" aria-hidden="true"></i>
+//                         <span className="text">21 : 32 : 46</span>
+//                     </div>
+//                 </div>
+//                 <div className="info-container">
+//                     <Link to="" className="name">
+//                         <span>Хуурай кофе Американо No Brand</span>
+//                     </Link>
+//                     <Link to="" className="cat">
+//                         <span>Лаазтай кофе латте Лаазтай кофе латте</span>
+//                     </Link>
                     
-                    <Rate />
+//                     <Rate />
 
-                    <Link to="" className="price">
-                        <small className="sale">6,900₮</small>
-                        <span className="current">6,500₮</span>
-                    </Link>
-                </div>
-            </div>
-        </div>
-      );
-    }
+//                     <Link to="" className="price">
+//                         <small className="sale">6,900₮</small>
+//                         <span className="current">6,500₮</span>
+//                     </Link>
+//                 </div>
+//             </div>
+//         </div>
+//       );
+//     }
 
-    return (
-      <div className="col-xl-4 pad10">
-          <div className="single-product big-product sale-product timed-product">
-              <div className="image-container">
-                  <Link to="">
-                      <span className="image" style={{ backgroundImage: `url(${timesale5})` }}></span>
-                  </Link>
-                  <div className="percent">
-                      <span className="text"><strong>10</strong><small>%</small></span>
-                  </div>
-                  <div className="time">
-                      <i className="fa fa-clock-o" aria-hidden="true"></i>
-                      <span className="text">21 : 32 : 46</span>
-                  </div>
-              </div>
-              <div className="info-container">
-                  <Link to="" className="name">
-                      <span>{product ? product.skunm : null}</span>
-                  </Link>
-                  <Link to="" className="cat">
-                      <span>Лаазтай кофе латте</span>
-                  </Link>
+//     return (
+//       <div className="col-xl-4 pad10">
+//           <div className="single-product big-product sale-product timed-product">
+//               <div className="image-container">
+//                   <Link to="">
+//                       <span className="image" style={{ backgroundImage: `url(${timesale5})` }}></span>
+//                   </Link>
+//                   <div className="percent">
+//                       <span className="text"><strong>10</strong><small>%</small></span>
+//                   </div>
+//                   <div className="time">
+//                       <i className="fa fa-clock-o" aria-hidden="true"></i>
+//                       <span className="text">21 : 32 : 46</span>
+//                   </div>
+//               </div>
+//               <div className="info-container">
+//                   <Link to="" className="name">
+//                       <span>{product ? product.skunm : null}</span>
+//                   </Link>
+//                   <Link to="" className="cat">
+//                       <span>Лаазтай кофе латте</span>
+//                   </Link>
 
-                  <Rate />
+//                   <Rate />
                   
-                  <Link to="" className="price">
-                      <small className="sale">{product ? product.sprice : null}₮</small>
-                      <span className="current">6,500₮</span>
-                  </Link>
-              </div>
-          </div>
-      </div>
-    );
-  }
+//                   <Link to="" className="price">
+//                       <small className="sale">{product ? product.sprice : null}₮</small>
+//                       <span className="current">6,500₮</span>
+//                   </Link>
+//               </div>
+//           </div>
+//       </div>
+//     );
+//   }
 
-  renderProducts(products, renderOrder) {
+  renderProducts(widgetType, products, renderOrder) {
     const rows = renderOrder.split(',');
     let cards = [];
     for (let i = 0, p = 0; i < rows.length; i++) {
-      const cardsInRow = parseInt(rows[i]) === cardTypes.wide ? numOfCards.wide : numOfCards.thin;
+      const cardsInRow = parseInt(rows[i]) === CARD_TYPES.wide ? CARD_NUM.wide : CARD_NUM.thin;
       for (let j = 0; j < cardsInRow; j++) {
-        cards.push(this.renderCard(products[p++], rows[i]));
+        // cards.push(this.renderCard(products[p++], rows[i]));
+        cards.push(<Card product={products[p++]} renderType={rows[i]} widgetType={widgetType} />);
       }
     }
 
@@ -122,7 +122,7 @@ class Widget extends React.Component {
                   {subtitle}
               </h1>
               <div className="row row10">
-                  {this.renderProducts(this.props.products, this.props.renderOrder)}
+                  {this.renderProducts(this.props.name, this.props.products, this.props.renderOrder)}
               </div>
               <div className="more-link text-center">
                   <Link to="" className="btn btn-border">

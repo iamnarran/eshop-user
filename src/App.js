@@ -13,6 +13,8 @@ import { updateIntl, IntlProvider } from 'react-intl-redux';
 import en from 'react-intl/locale-data/en';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+import { far } from '@fortawesome/free-regular-svg-icons';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 // import { faCheckSquare, faCoffee } from '@fortawesome/free-solid-svg-icons';
 
@@ -27,7 +29,7 @@ import Homepage from './containers/Homepage';
 import messages from './messages.json';
 
 // library.add(fab, faCheckSquare, faCoffee);
-library.add(fab);
+library.add(fas, far, fab);
 
 addLocaleData([...en]);
 
