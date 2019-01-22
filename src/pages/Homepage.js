@@ -130,7 +130,6 @@ class Homepage extends Component {
 
         return (
             <div className="top-container" >
-
                 <div className="top-nav">
                     <div className="container container-laptop pad10">
                         <div className="row row10">
@@ -292,7 +291,9 @@ class Homepage extends Component {
                 </div>
                 {/* Slider end */}
 
+                {/* Main content */}
                 {this.renderItems(widgets, allProducts)}
+                {/* Main content end */}
 
                 {/* Brand list */}
                 <div className="main-slide brands-list">
@@ -413,7 +414,7 @@ class Homepage extends Component {
                 {/* Footer */}
                 
                 {/* Messenger */}
-                <MessengerCustomerChat pageId="169275059877520" appId="570055533421847" htmlRef={window.location.pathname}/>
+                <MessengerCustomerChat pageId="169275059877520" appId="570055533421847" htmlRef={window.location.pathname} />
                 {/* Messenger */}
             </div>
         );

@@ -5,7 +5,7 @@ import registerServiceWorker from './registerServiceWorker';
 
 render(
   <App/>, 
-  document.getElementById('root')
+  document.querySelector('#root')
 );
 
 registerServiceWorker();
