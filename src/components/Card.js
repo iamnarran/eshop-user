@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Icon } from 'antd';
 
 import Rate from './Rate';
+import { CARD_TYPES } from '../utils/consts';
 
 import img5 from '../scss/assets/images/demo/5.jpg';
 import img6 from '../scss/assets/images/demo/6.jpg';
@@ -17,39 +18,26 @@ import img15 from '../scss/assets/images/demo/15.jpg';
 import img16 from '../scss/assets/images/demo/16.jpg';
 import img17 from '../scss/assets/images/demo/17.jpg';
 
-const images = [5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17];
-
-const WIDGET_TYPES = {
-  'onlyEmart': 'Зөвхөн И-МАРТ дэлгүүрт',
-  'discount': 'Цагийн хямдрал',
-  'batch': 'Багцын бараа',
-  'recipe': 'Хоолны жор',
-};
-Object.freeze(WIDGET_TYPES);
-
-const CARD_TYPES = {
-  'wide': 1,
-  'thin': 2,
-};
-Object.freeze(CARD_TYPES);
+// const images = [5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17];
 
 class Card extends React.Component {
   render() {
-    const {product, widgetType} = this.props;
+    const { product, extra } = this.props;
 
     if (!product) {
       return null;
     }
 
-    let {renderType} = this.props;
+    let { renderType } = this.props;
     renderType = parseInt(renderType);
 
-    let mainLabel = null;
+    let percentLabel = null;
     let expiryDateLabel = null;
+    let productCountLabel = null;
 
     let prices = <span className="current">{product.price}₮</span>;
     
-    if (product.edate && widgetType === WIDGET_TYPES.discount) {
+    if (extra && extra.includes('expiryDate')) {
       expiryDateLabel = (
         <div className="time">
           <Icon type="clock-circle" />
@@ -58,12 +46,23 @@ class Card extends React.Component {
       );
     }
 
-    if (product.spercent && (widgetType === WIDGET_TYPES.new || widgetType === WIDGET_TYPES.discount || widgetType === WIDGET_TYPES.batch)) {
-      mainLabel = (
+    if (extra && extra.includes('percent')) {
+      percentLabel = (
         <div className="percent">
           <span className="text"><strong>{product.spercent}</strong><small>%</small></span>
         </div>
       );
+    }
+
+    if (extra && extra.includes('productCount')) {
+      productCountLabel = (
+        <div className="percent">
+          <span className="text"><strong>12</strong><small>ш</small></span>
+        </div>
+      );
+    }
+
+    if (extra && extra.includes('discountPrice') && product.sprice) {
       prices = (
         <div>
           <small className="sale">{product.price}₮</small>
@@ -72,7 +71,7 @@ class Card extends React.Component {
       );
     }
 
-    if (renderType !== CARD_TYPES.wide) {
+    if (renderType === CARD_TYPES.slim) {
       return (
         <div className="col-five pad10">
             <div className="single-product small-product">
@@ -80,7 +79,8 @@ class Card extends React.Component {
                     <Link to="">
                         <span className="image" style={{ backgroundImage: `url(${img5})` }}></span>
                     </Link>
-                    {mainLabel}
+                    {percentLabel}
+                    {productCountLabel}
                     {expiryDateLabel}
                 </div>
                 <div className="info-container">
@@ -109,7 +109,8 @@ class Card extends React.Component {
                   <Link to="">
                       <span className="image" style={{ backgroundImage: `url(${img5})` }}></span>
                   </Link>
-                  {mainLabel}
+                  {percentLabel}
+                  {productCountLabel}
                   {expiryDateLabel}
               </div>
               <div className="info-container">

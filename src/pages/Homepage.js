@@ -3,27 +3,19 @@ import { Link } from 'react-router-dom';
 import { Icon, Badge, Avatar } from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import MessengerCustomerChat from 'react-messenger-customer-chat';
+
 import Category from '../components/Category';
 import MainMenu from '../components/Menu';
 import Slider from '../components/Swiper';
 import Widget from '../components/Widget';
 import Banner from '../components/Banner';
 import config from '../config';
+import { WIDGET_NAMES, BANNER_LOCATION_INDICES } from '../utils/consts';
 
 const IMAGE =
     process.env.NODE_ENV === 'development'
         ? config.image.development
         : config.image.production;
-
-const WIDGET_TYPES = {
-    'onlyEmart': 'Зөвхөн И-МАРТ дэлгүүрт',
-    'discount': 'Цагийн хямдрал',
-    'batch': 'Багцын бараа',
-    'recipe': 'Хоолны жор',
-};
-Object.freeze(WIDGET_TYPES);
-
-const bannerIndices = [2, 4];
 
 class Homepage extends Component {
     state = {
@@ -36,34 +28,36 @@ class Homepage extends Component {
         console.log(`selected ${value}`);
     }
 
-    renderItems(widgets, allProducts) {
-        let items = [];
+    renderBlocks(widgets, allProducts) {
+        let blocks = [];
 
         widgets = widgets.sort((obj1, obj2) => obj1.orders - obj2.orders);
-
         widgets.forEach((widget, index) => {
-            if (bannerIndices.includes(index)) {
-                items.push(<Banner />);
+            if (BANNER_LOCATION_INDICES.includes(index)) {
+                blocks.push(<Banner />);
             }
 
-            let productsToShow = [];
+            let productsInWidget = [];
             switch (widget.name) {
-                case WIDGET_TYPES.onlyEmart:
-                    productsToShow = allProducts.emartProducts;
+                case WIDGET_NAMES.onlyEmart:
+                    productsInWidget = allProducts.emartProducts;
                     break;
-                case WIDGET_TYPES.discount:
-                    productsToShow = allProducts.saleProducts;
+                case WIDGET_NAMES.discount:
+                    productsInWidget = allProducts.saleProducts;
                     break;
-                case WIDGET_TYPES.batch:
-                    productsToShow = allProducts.newProducts;
+                case WIDGET_NAMES.batch:
+                    productsInWidget = allProducts.newProducts;
                     break;
+                // case WIDGET_NAMES.recipe:
+                //     productsInWidget = allProducts.newProducts;
+                //     break;
                 default:
             }
 
-            items.push(<Widget key={widget.name} title={widget.name} products={productsToShow} renderOrder={widget.type} />);
+            blocks.push(<Widget key={widget.name} name={widget.name} products={productsInWidget} renderOrder={widget.type} />);
         });
 
-        return items;
+        return blocks;
     }
 
     render() {
@@ -290,7 +284,7 @@ class Homepage extends Component {
                 {/* Slider end */}
 
                 {/* Main content */}
-                {this.renderItems(widgets, allProducts)}
+                {this.renderBlocks(widgets, allProducts)}
                 {/* Main content end */}
 
                 {/* Brand list */}
