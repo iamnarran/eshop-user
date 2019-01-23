@@ -89,8 +89,7 @@ class Card extends React.Component {
                     </Link>
                     <Link to="" className="cat">
                         <span>{product.shortnm}</span>
-                    </Link>
-                    
+                    </Link>                    
                     <Rate rate={product.rate} numOfVotes={product.rate_user_cnt} />
 
                     <Link to="" className="price">
