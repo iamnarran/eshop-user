@@ -1,170 +1,134 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Icon } from 'antd';
-import timesale5 from '../scss/assets/images/demo/8.jpg';
+
+import Rate from './Rate';
+
+import img5 from '../scss/assets/images/demo/5.jpg';
+import img6 from '../scss/assets/images/demo/6.jpg';
+import img7 from '../scss/assets/images/demo/7.jpg';
+import img8 from '../scss/assets/images/demo/8.jpg';
+import img9 from '../scss/assets/images/demo/9.jpg';
+import img11 from '../scss/assets/images/demo/11.jpg';
+import img12 from '../scss/assets/images/demo/12.jpg';
+import img13 from '../scss/assets/images/demo/13.jpg';
+import img14 from '../scss/assets/images/demo/14.jpg';
+import img15 from '../scss/assets/images/demo/15.jpg';
+import img16 from '../scss/assets/images/demo/16.jpg';
+import img17 from '../scss/assets/images/demo/17.jpg';
+
+const images = [5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17];
+
+const WIDGET_TYPES = {
+  'onlyEmart': 'Зөвхөн И-МАРТ дэлгүүрт',
+  'discount': 'Цагийн хямдрал',
+  'batch': 'Багцын бараа',
+  'recipe': 'Хоолны жор',
+};
+Object.freeze(WIDGET_TYPES);
+
+const CARD_TYPES = {
+  'wide': 1,
+  'thin': 2,
+};
+Object.freeze(CARD_TYPES);
 
 class Card extends React.Component {
   render() {
-    const {product, cardType, type, neew, time, sale} = this.props;
+    const {product, widgetType} = this.props;
 
-    const saleTag = (        
-      <div className="percent">
-        <span className="text"><strong>{product.spercent}</strong><small>%</small></span>
-      </div>
-    )
-    const timeTag = (
-      <div className="time">
-        <Icon type="clock-circle" />
-        <span className="text">{product.time}</span>
-      </div>
-    )
-    const newTag = (
-      <div class="percent new">
-        <span class="text"><strong>Шинэ</strong></span>
-      </div>
-    )
-    const saleFiveCard = (
-        <div className="col-five col-md-3 col-6 pad10">
-        <div className="single-product small-product sale-product new-product">
-          <div className="image-container">
-            <Link to="">
-                <span className="image" style={{ backgroundImage: `url(${timesale5})` }}></span>
-            </Link>
-            {time ? timeTag : ''}
-            {sale ? saleTag : ''}
-            {neew ? newTag : ''}
-          </div>
-          <div className="info-container">
-            <Link to="" className="name">
-                <span>{product.skunm}</span>
-            </Link>
-            <Link to="" className="cat">
-                <span>{product.shortnm}</span>
-            </Link>
-            <Link to="" className="rating">
-              <ul className="list-inline">
-                <li className="list-inline-item active">
-                  <i className="fa fa-star" aria-hidden="true"></i>
-                  <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                  <i className="fa fa-star-o" aria-hidden="true"></i>
-                </li>
-                <li className="list-inline-item active">
-                  <i className="fa fa-star" aria-hidden="true"></i>
-                  <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                  <i className="fa fa-star-o" aria-hidden="true"></i>
-                </li>
-                <li className="list-inline-item half-active">
-                  <i className="fa fa-star" aria-hidden="true"></i>
-                  <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                  <i className="fa fa-star-o" aria-hidden="true"></i>
-                </li>
-                <li className="list-inline-item">
-                  <i className="fa fa-star" aria-hidden="true"></i>
-                  <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                  <i className="fa fa-star-o" aria-hidden="true"></i>
-                </li>
-                <li className="list-inline-item">
-                  <i className="fa fa-star" aria-hidden="true"></i>
-                  <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                  <i className="fa fa-star-o" aria-hidden="true"></i>
-                </li>
-                <li className="list-inline-item">
-                  <span className="text">{product.rate}</span>
-                </li>
-              </ul>
-            </Link>
-            <Link to="" className="price">
-              <small className="sale">{product.price+'₮'}</small>
-              <span className="current">{product.sprice+'₮'}</span>
-            </Link>
-          </div>
+    if (!product) {
+      return null;
+    }
+
+    let {renderType} = this.props;
+    renderType = parseInt(renderType);
+
+    let mainLabel = null;
+    let expiryDateLabel = null;
+
+    let prices = <span className="current">{product.price}₮</span>;
+    
+    if (product.edate && widgetType === WIDGET_TYPES.discount) {
+      expiryDateLabel = (
+        <div className="time">
+          <Icon type="clock-circle" />
+          <span className="text">{product.edate}</span>
         </div>
+      );
+    }
+
+    if (product.spercent && (widgetType === WIDGET_TYPES.new || widgetType === WIDGET_TYPES.discount || widgetType === WIDGET_TYPES.batch)) {
+      mainLabel = (
+        <div className="percent">
+          <span className="text"><strong>{product.spercent}</strong><small>%</small></span>
         </div>
-    )
-    const saleThreeCard = (
-      <div className="col-xl-4 pad10">
-            <div className="single-product big-product sale-product timed-product">
+      );
+      prices = (
+        <div>
+          <small className="sale">{product.price}₮</small>
+          <span className="current">{product.sprice}₮</span>
+        </div>
+      );
+    }
+
+    if (renderType !== CARD_TYPES.wide) {
+      return (
+        <div className="col-five pad10">
+            <div className="single-product small-product">
                 <div className="image-container">
                     <Link to="">
-                        <span className="image" style={{ backgroundImage: `url(${timesale5})` }}></span>
+                        <span className="image" style={{ backgroundImage: `url(${img5})` }}></span>
                     </Link>
-                    {time ? timeTag : ''}
-                    {sale ? saleTag : ''}
-                    {neew ? newTag : ''}
+                    {mainLabel}
+                    {expiryDateLabel}
                 </div>
                 <div className="info-container">
                     <Link to="" className="name">
-                        <span>{product.skunm}</span>
+                        <span>{product.name}</span>
                     </Link>
                     <Link to="" className="cat">
                         <span>{product.shortnm}</span>
-                    </Link>
-                    <Link to="" className="rating">
-                        <ul className="list-inline">
-                            <li className="list-inline-item active">
-                                <i className="fa fa-star" aria-hidden="true"></i>
-                                <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                <i className="fa fa-star-o" aria-hidden="true"></i>
-                            </li>
-                            <li className="list-inline-item active">
-                                <i className="fa fa-star" aria-hidden="true"></i>
-                                <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                <i className="fa fa-star-o" aria-hidden="true"></i>
-                            </li>
-                            <li className="list-inline-item half-active">
-                                <i className="fa fa-star" aria-hidden="true"></i>
-                                <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                <i className="fa fa-star-o" aria-hidden="true"></i>
-                            </li>
-                            <li className="list-inline-item">
-                                <i className="fa fa-star" aria-hidden="true"></i>
-                                <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                <i className="fa fa-star-o" aria-hidden="true"></i>
-                            </li>
-                            <li className="list-inline-item">
-                                <i className="fa fa-star" aria-hidden="true"></i>
-                                <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                <i className="fa fa-star-o" aria-hidden="true"></i>
-                            </li>
-                            <li className="list-inline-item">
-                                <span className="text">{product.rate}</span>
-                            </li>
-                        </ul>
-                    </Link>
+                    </Link>                    
+                    <Rate rate={product.rate} numOfVotes={product.rate_user_cnt} />
+
                     <Link to="" className="price">
-                        <small className="sale">{product.price+'₮'}</small>
-                        <span className="current">{product.price+'₮'}</span>
+                        {prices}
                     </Link>
                 </div>
             </div>
-            </div>
-    )
-    
-    if(cardType.toString() === "1" && type.toString() === "sale"){
-      return ( saleFiveCard )
+        </div>
+      );
     }
-    else if(cardType.toString() === "2" && type.toString() === "sale"){
-      return ( saleThreeCard )
-    }
-    else  return <b>CardType type error</b>
+
+    return (
+      <div className="col-xl-4 pad10">
+          <div className="single-product big-product sale-product timed-product">
+              <div className="image-container">
+                  <Link to="">
+                      <span className="image" style={{ backgroundImage: `url(${img5})` }}></span>
+                  </Link>
+                  {mainLabel}
+                  {expiryDateLabel}
+              </div>
+              <div className="info-container">
+                  <Link to="" className="name">
+                      <span>{product.name}</span>
+                  </Link>
+                  <Link to="" className="cat">
+                      <span>{product.shortnm}</span>
+                  </Link>
+
+                  <Rate rate={product.rate} numOfVotes={product.rate_user_cnt} />
+                  
+                  <Link to="" className="price">
+                      {prices}
+                  </Link>
+              </div>
+          </div>
+      </div>
+    );
   }
-}
-
-Card.default = {
-  product: [],
-  neew: false,
-  sale: false,
-  time: false,
-}
-
-Card.PropTypes = {
-  product: PropTypes.object,
-  cardType: PropTypes.string,
-  type: PropTypes.string,
-  neew: PropTypes.bool,
-  sale: PropTypes.bool,
-  time: PropTypes.bool,
 }
 
 export default Card;

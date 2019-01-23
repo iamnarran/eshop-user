@@ -1,32 +1,31 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Icon, Badge, Avatar } from 'antd';
-// import MessengerCustomerChat from 'react-messenger-customer-chat';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import MessengerCustomerChat from 'react-messenger-customer-chat';
 import Category from '../components/Category';
 import MainMenu from '../components/Menu';
 import Slider from '../components/Swiper';
+import Widget from '../components/Widget';
+import Banner from '../components/Banner';
 import config from '../config';
-import timesale1 from '../scss/assets/images/demo/6.jpg';
-import timesale2 from '../scss/assets/images/demo/7.jpg';
-import timesale3 from '../scss/assets/images/demo/8.jpg';
-import timesale4 from '../scss/assets/images/demo/9.jpg';
-import timesale5 from '../scss/assets/images/demo/5.jpg';
-import timesale6 from '../scss/assets/images/demo/11.jpg';
-import timesale7 from '../scss/assets/images/demo/12.jpg';
-import ehow1 from '../scss/assets/images/demo/13.jpg';
-import ehow2 from '../scss/assets/images/demo/14.jpg';
-import ehow3 from '../scss/assets/images/demo/15.jpg';
-import ehow4 from '../scss/assets/images/demo/16.jpg';
-import ehow5 from '../scss/assets/images/demo/17.jpg';
-
 
 const IMAGE =
     process.env.NODE_ENV === 'development'
         ? config.image.development
         : config.image.production;
 
-class Dashboard extends Component {
+const WIDGET_TYPES = {
+    'onlyEmart': 'Зөвхөн И-МАРТ дэлгүүрт',
+    'discount': 'Цагийн хямдрал',
+    'batch': 'Багцын бараа',
+    'recipe': 'Хоолны жор',
+};
+Object.freeze(WIDGET_TYPES);
 
+const bannerIndices = [2, 4];
+
+class Homepage extends Component {
     state = {
         isOpen: false,
     };
@@ -37,10 +36,54 @@ class Dashboard extends Component {
         console.log(`selected ${value}`);
     }
 
+    renderItems(widgets, allProducts) {
+        let items = [];
+
+        widgets = widgets.sort((obj1, obj2) => obj1.orders - obj2.orders);
+
+        widgets.forEach((widget, index) => {
+            if (bannerIndices.includes(index)) {
+                items.push(<Banner />);
+            }
+
+            let productsToShow = [];
+            switch (widget.name) {
+                case WIDGET_TYPES.onlyEmart:
+                    productsToShow = allProducts.emartProducts;
+                    break;
+                case WIDGET_TYPES.discount:
+                    productsToShow = allProducts.saleProducts;
+                    break;
+                case WIDGET_TYPES.batch:
+                    productsToShow = allProducts.newProducts;
+                    break;
+                default:
+            }
+
+            items.push(<Widget key={widget.name} title={widget.name} products={productsToShow} renderOrder={widget.type} />);
+        });
+
+        return items;
+    }
+
     render() {
-        const { categories } = this.props.container;
-        const { banner } = this.props.container;
-        const { brands } = this.props.container;
+        const { 
+            staticinfo, 
+            categories, 
+            banner, 
+            brands, 
+            menus, 
+            widgets,
+            emartProducts,
+            saleProducts,
+            newProducts,
+        } = this.props.container;
+
+        const allProducts = {
+            emartProducts,
+            saleProducts,
+            newProducts,
+        };
 
         const root = [];
         categories.forEach((entry) => {
@@ -91,504 +134,17 @@ class Dashboard extends Component {
                 </div>
                 {/* Slider end */}
 
-                {/* Recently Products */}
-                <div className="section">
+                {/* Main content */}
+                {this.renderItems(widgets, allProducts)}
+                {/* Main content end */}
+
+                {/* Brand list */}
+                <div className="main-slide brands-list">
                     <div className="container pad10">
-                        <h1 className="title">
-                            <span className="text-uppercase">Эрэлт ихтэй бүтээгдэхүүн</span>
-                        </h1>
-                        <div className="row row10">
-                            <div className="col-xl-4 pad10">
-                                <div className="single-product big-product sale-product timed-product">
-                                    <div className="image-container">
-                                        <Link to="">
-                                            <span className="image" style={{ backgroundImage: `url(${timesale5})` }}></span>
-                                        </Link>
-                                        <div className="percent">
-                                            <span className="text"><strong>10</strong><small>%</small></span>
-                                        </div>
-                                        <div className="time">
-                                            <i className="fa fa-clock-o" aria-hidden="true"></i>
-                                            <span className="text">21 : 32 : 46</span>
-                                        </div>
-                                    </div>
-                                    <div className="info-container">
-                                        <Link to="" className="name">
-                                            <span>Шингэн кофе Американо No Brand</span>
-                                        </Link>
-                                        <Link to="" className="cat">
-                                            <span>Лаазтай кофе латте</span>
-                                        </Link>
-                                        <Link to="" className="rating">
-                                            <ul className="list-inline">
-                                                <li className="list-inline-item active">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item active">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item half-active">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item">
-                                                    <span className="text">197</span>
-                                                </li>
-                                            </ul>
-                                        </Link>
-                                        <Link to="" className="price">
-                                            <small className="sale">6,900₮</small>
-                                            <span className="current">6,500₮</span>
-                                        </Link>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-xl-4 pad10">
-                                <div className="single-product big-product">
-                                    <div className="image-container">
-                                        <Link to="">
-                                            <span className="image" style={{ backgroundImage: `url(${timesale5})` }}></span>
-                                        </Link>
-                                        <div className="percent">
-                                            <span className="text"><strong>10</strong><small>%</small></span>
-                                        </div>
-                                        <div className="time">
-                                            <i className="fa fa-clock-o" aria-hidden="true"></i>
-                                            <span className="text">21 : 32 : 46</span>
-                                        </div>
-                                    </div>
-                                    <div className="info-container">
-                                        <Link to="" className="name">
-                                            <span>Шингэн кофе Американо No Brand</span>
-                                        </Link>
-                                        <Link to="" className="cat">
-                                            <span>Лаазтай кофе латте</span>
-                                        </Link>
-                                        <Link to="" className="rating">
-                                            <ul className="list-inline">
-                                                <li className="list-inline-item active">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item active">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item half-active">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item">
-                                                    <span className="text">197</span>
-                                                </li>
-                                            </ul>
-                                        </Link>
-                                        <Link to="" className="price">
-                                            <small className="sale">6,900₮</small>
-                                            <span className="current">6,500₮</span>
-                                        </Link>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-xl-4 pad10">
-                                <div className="single-product big-product">
-                                    <div className="image-container">
-                                        <Link to="">
-                                            <span className="image" style={{ backgroundImage: `url(${timesale5})` }}></span>
-                                        </Link>
-                                        <div className="percent">
-                                            <span className="text"><strong>10</strong><small>%</small></span>
-                                        </div>
-                                        <div className="time">
-                                            <i className="fa fa-clock-o" aria-hidden="true"></i>
-                                            <span className="text">21 : 32 : 46</span>
-                                        </div>
-                                    </div>
-                                    <div className="info-container">
-                                        <Link to="" className="name">
-                                            <span>Шингэн кофе Американо No Brand</span>
-                                        </Link>
-                                        <Link to="" className="cat">
-                                            <span>Лаазтай кофе латте</span>
-                                        </Link>
-                                        <Link to="" className="rating">
-                                            <ul className="list-inline">
-                                                <li className="list-inline-item active">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item active">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item half-active">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item">
-                                                    <span className="text">197</span>
-                                                </li>
-                                            </ul>
-                                        </Link>
-                                        <Link to="" className="price">
-                                            <small className="sale">6,900₮</small>
-                                            <span className="current">6,500₮</span>
-                                        </Link>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="row row10">
-                            <div className="col-five pad10">
-                                <div className="single-product small-product">
-                                    <div className="image-container">
-                                        <Link to="">
-                                            <span className="image" style={{ backgroundImage: `url(${timesale5})` }}></span>
-                                        </Link>
-                                        <div className="percent">
-                                            <span className="text"><strong>10</strong><small>%</small></span>
-                                        </div>
-                                        <div className="time">
-                                            <i className="fa fa-clock-o" aria-hidden="true"></i>
-                                            <span className="text">21 : 32 : 46</span>
-                                        </div>
-                                    </div>
-                                    <div className="info-container">
-                                        <Link to="" className="name">
-                                            <span>Хуурай кофе Американо No Brand</span>
-                                        </Link>
-                                        <Link to="" className="cat">
-                                            <span>Лаазтай кофе латте Лаазтай кофе латте</span>
-                                        </Link>
-                                        <Link to="" className="rating">
-                                            <ul className="list-inline">
-                                                <li className="list-inline-item active">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item active">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item half-active">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item">
-                                                    <span className="text">197</span>
-                                                </li>
-                                            </ul>
-                                        </Link>
-                                        <Link to="" className="price">
-                                            <small className="sale">6,900₮</small>
-                                            <span className="current">6,500₮</span>
-                                        </Link>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-five pad10">
-                                <div className="single-product small-product">
-                                    <div className="image-container">
-                                        <Link to="">
-                                            <span className="image" style={{ backgroundImage: `url(${timesale5})` }}></span>
-                                        </Link>
-                                        <div className="percent">
-                                            <span className="text"><strong>10</strong><small>%</small></span>
-                                        </div>
-                                        <div className="time">
-                                            <i className="fa fa-clock-o" aria-hidden="true"></i>
-                                            <span className="text">21 : 32 : 46</span>
-                                        </div>
-                                    </div>
-                                    <div className="info-container">
-                                        <Link to="" className="name">
-                                            <span>Шингэн кофе Американо No Brand</span>
-                                        </Link>
-                                        <Link to="" className="cat">
-                                            <span>Лаазтай кофе латте урт нэр</span>
-                                        </Link>
-                                        <Link to="" className="rating">
-                                            <ul className="list-inline">
-                                                <li className="list-inline-item active">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item active">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item half-active">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item">
-                                                    <span className="text">197</span>
-                                                </li>
-                                            </ul>
-                                        </Link>
-                                        <Link to="" className="price">
-                                            <small className="sale">6,900₮</small>
-                                            <span className="current">6,500₮</span>
-                                        </Link>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-five pad10">
-                                <div className="single-product small-product sale-product timed-product">
-                                    <div className="image-container">
-                                        <Link to="">
-                                            <span className="image" style={{ backgroundImage: `url(${timesale5})` }}></span>
-                                        </Link>
-                                        <div className="percent">
-                                            <span className="text"><strong>10</strong><small>%</small></span>
-                                        </div>
-                                        <div className="time">
-                                            <i className="fa fa-clock-o" aria-hidden="true"></i>
-                                            <span className="text">21 : 32 : 46</span>
-                                        </div>
-                                    </div>
-                                    <div className="info-container">
-                                        <Link to="" className="name">
-                                            <span>Шингэн кофе Американо</span>
-                                        </Link>
-                                        <Link to="" className="cat">
-                                            <span>Лаазтай кофе латте шинэ хувилбар</span>
-                                        </Link>
-                                        <Link to="" className="rating">
-                                            <ul className="list-inline">
-                                                <li className="list-inline-item active">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item active">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item half-active">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item">
-                                                    <span className="text">197</span>
-                                                </li>
-                                            </ul>
-                                        </Link>
-                                        <Link to="" className="price">
-                                            <small className="sale">6,900₮</small>
-                                            <span className="current">6,500₮</span>
-                                        </Link>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-five pad10">
-                                <div className="single-product small-product">
-                                    <div className="image-container">
-                                        <Link to="">
-                                            <span className="image" style={{ backgroundImage: `url(${timesale5})` }}></span>
-                                        </Link>
-                                        <div className="percent">
-                                            <span className="text"><strong>10</strong><small>%</small></span>
-                                        </div>
-                                        <div className="time">
-                                            <i className="fa fa-clock-o" aria-hidden="true"></i>
-                                            <span className="text">21 : 32 : 46</span>
-                                        </div>
-                                    </div>
-                                    <div className="info-container">
-                                        <Link to="" className="name">
-                                            <span>Espresso</span>
-                                        </Link>
-                                        <Link to="" className="cat">
-                                            <span>Лаазтай кофе латте</span>
-                                        </Link>
-                                        <Link to="" className="rating">
-                                            <ul className="list-inline">
-                                                <li className="list-inline-item active">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item active">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item half-active">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item">
-                                                    <span className="text">197</span>
-                                                </li>
-                                            </ul>
-                                        </Link>
-                                        <Link to="" className="price">
-                                            <small className="sale">6,900₮</small>
-                                            <span className="current">6,500₮</span>
-                                        </Link>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-five pad10">
-                                <div className="single-product small-product">
-                                    <div className="image-container">
-                                        <Link to="">
-                                            <span className="image" style={{ backgroundImage: `url(${timesale5})` }}></span>
-                                        </Link>
-                                        <div className="percent">
-                                            <span className="text"><strong>10</strong><small>%</small></span>
-                                        </div>
-                                        <div className="time">
-                                            <i className="fa fa-clock-o" aria-hidden="true"></i>
-                                            <span className="text">21 : 32 : 46</span>
-                                        </div>
-                                    </div>
-                                    <div className="info-container">
-                                        <Link to="" className="name">
-                                            <span>Шингэн кофе Американо No Brand</span>
-                                        </Link>
-                                        <Link to="" className="cat">
-                                            <span>Лаазтай кофе латте</span>
-                                        </Link>
-                                        <Link to="" className="rating">
-                                            <ul className="list-inline">
-                                                <li className="list-inline-item active">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item active">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item half-active">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item">
-                                                    <i className="fa fa-star" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                    <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                </li>
-                                                <li className="list-inline-item">
-                                                    <span className="text">197</span>
-                                                </li>
-                                            </ul>
-                                        </Link>
-                                        <Link to="" className="price">
-                                            <small className="sale">6,900₮</small>
-                                            <span className="current">6,500₮</span>
-                                        </Link>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="more-link text-center">
-                            <Link to="" className="btn btn-border">
-                                <span className="text text-uppercase">Эрэлт ихтэй бусад барааг үзэх</span>
-                            </Link>
-                        </div>
+                        <Slider dataSource={brands} params={brandsParams} elContainer={'brands'} />
                     </div>
                 </div>
-                {/* Recently Products */}
+                {/* Brand list */}
 
                 {/* Schedule products */}
                 <div className="section section-gray">
@@ -2989,10 +2545,13 @@ class Dashboard extends Component {
                 
                 {/* Messenger */}
                 {/* <MessengerCustomerChat pageId="169275059877520" appId="570055533421847" htmlRef={window.fndsmfpo.pathname}/> */}
+                
+                {/* Messenger */}
+                <MessengerCustomerChat pageId="169275059877520" appId="570055533421847" htmlRef={window.location.pathname} />
                 {/* Messenger */}
             </div>
         );
     }
 }
 
-export default Dashboard;
+export default Homepage;

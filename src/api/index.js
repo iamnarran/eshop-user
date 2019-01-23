@@ -7,6 +7,8 @@ import menu from './Menu';
 import category from './Category';
 import saleproduct from './Saleproduct';
 import newproduct from './Newproduct';
+import widget from './Widget';
+import product from './Product';
 
 let rest = {};
 
@@ -83,5 +85,17 @@ newproduct.forEach(api => {
 });
 
 console.log('rest: ', rest);
+=======
+// WIDGET
+rest['widget'] = {};
+widget.forEach(api => {
+  rest.widget[api.NAME] = data => generateAPI(api, data);
+});
+
+// PRODUCT
+rest['product'] = {};
+product.forEach(api => {
+  rest.product[api.NAME] = data => generateAPI(api, data);
+});
 
 export { rest as default, setAuthorizationHeader };

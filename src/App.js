@@ -11,6 +11,13 @@ import { ToastContainer } from 'react-toastify';
 import { addLocaleData, injectIntl } from 'react-intl';
 import { updateIntl, IntlProvider } from 'react-intl-redux';
 import en from 'react-intl/locale-data/en';
+
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+import { far } from '@fortawesome/free-regular-svg-icons';
+import { fab } from '@fortawesome/free-brands-svg-icons';
+// import { faCheckSquare, faCoffee } from '@fortawesome/free-solid-svg-icons';
+
 import store from './store';
 import { storage } from './utils';
 import Layouts from 'layouts/Default';
@@ -28,6 +35,9 @@ import Recipe from './pages/Recipe';
 import Package from './pages/Package';
 import Promotion from './pages/Promotion';
 import Season from './pages/Season';
+
+// library.add(fab, faCheckSquare, faCoffee);
+library.add(fas, far, fab);
 
 addLocaleData([...en]);
 
