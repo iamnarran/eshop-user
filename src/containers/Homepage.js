@@ -12,16 +12,12 @@ const fetch = async (props, onData) => {
     try {
         const banners = await api.banner.findAll({ type: 'A1' });
         const brands = await api.brand.findAll();
-        const staticinfo = await api.staticinfo.findAll();
-        const menu = await api.menu.findAll();
         const category = await api.category.findAll();
 
         onData(null, {
             container: { 
                 banner: banners.data,
                 brands : brands.data,
-                staticinfo: staticinfo.data[0],
-                menus: menu.data,
                 categories: category.data,
             }
         });

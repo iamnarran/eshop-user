@@ -38,12 +38,9 @@ class Dashboard extends Component {
     }
 
     render() {
-
-        const { staticinfo } = this.props.container;
         const { categories } = this.props.container;
         const { banner } = this.props.container;
         const { brands } = this.props.container;
-        const { menus } = this.props.container;
 
         const root = [];
         categories.forEach((entry) => {
@@ -2989,122 +2986,6 @@ class Dashboard extends Component {
                     </div>
                 </div>
                 {/* Brand list */}
-
-                {/* Footer */}
-                <div className="section section-footer">
-                    <div className="container pad10">
-                        <div className="row row10">
-                            <div className="col-xl-3 pad10">
-                                <Link to="" className="logo">
-                                    <img alt="logo" src={IMAGE + staticinfo.logopath} />
-                                </Link>
-                                <ul className="list-unstyled address">
-                                    <li>
-                                        <span>
-                                            <Icon type="facebook" />
-                                        </span>
-                                        <span>
-                                            <Icon type="google-plus" />
-                                        </span>
-                                        <span>
-                                            <Icon type="twitter" />
-                                        </span>
-                                    </li>
-                                    {/* <li>
-                                        <span>
-                                        <Icon type="twitter" />
-                                        </span>
-                                    </li>
-                                    <li>
-                                        <span>
-                                            <Icon type="google-plus" />
-                                        </span>
-                                    </li> */}
-                                </ul>
-                            </div>
-                            <div className="col-xl-3 pad10">
-                                <ul className="list-unstyled">
-                                    <li>
-                                        <strong>Бидний тухай</strong>
-                                    </li>
-                                    <li>
-                                        <Link to="">
-                                            <span>Үйлчилгээний нөхцөл</span>
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link to="">
-                                            <span>Нууцлалын баталгаа</span>
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link to="">
-                                            <span>Хүргэлтийн журам</span>
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link to="">
-                                            <span>Бараа буцаах солиулах нөхцөл</span>
-                                        </Link>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div className="col-xl-3 pad10">
-                                <ul className="list-unstyled">
-                                    <li>
-                                        <strong>Үйлчилгээний нөхцөл</strong>
-                                    </li>
-                                    <li>
-                                        <Link to="">
-                                            <span>Гишүүнчилэл</span>
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link to="">
-                                            <span>Худалдан авалт хийх заавар</span>
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link to="">
-                                            <span>Түгээмэл асуулт хариулт</span>
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link to="">
-                                            <span>Урамшуулал</span>
-                                        </Link>
-                                    </li>
-                                </ul>                                
-                            </div>
-                            <div className="col-xl-3 pad10">
-                                <ul className="list-unstyled address">
-                                    <li>
-                                        <strong>Холбоо барих</strong>
-                                    </li>
-                                    <li>
-                                        <span>
-                                            {staticinfo.address}
-                                        </span>
-                                    </li>
-                                    <li>
-                                        <span>
-                                            {staticinfo.phone}
-                                        </span>
-                                    </li>
-                                    <li>
-                                        <span>
-                                            {staticinfo.email}
-                                        </span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div className="bottom-container">
-                            <p>Copyright © 2016-2018 emart. All Rights Reserved.</p>
-                        </div>
-                    </div>
-                </div>
-                {/* Footer */}
                 
                 {/* Messenger */}
                 {/* <MessengerCustomerChat pageId="169275059877520" appId="570055533421847" htmlRef={window.fndsmfpo.pathname}/> */}

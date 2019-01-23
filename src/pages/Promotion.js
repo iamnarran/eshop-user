@@ -4,11 +4,11 @@ class Promotion extends React.Component {
   render() {
     return(
       <div className="top-container">
-        <div class="whole-page-title color-main">
-          <div class="container pad10">
-            <div class="title-container flex-space">
+        <div className="whole-page-title color-main">
+          <div className="container pad10">
+            <div className="title-container flex-space">
               <h2>
-                <span class="big">Хямдралтай</span>
+                <span className="big">Хямдралтай</span>
                 <strong>Хугацаагүй хямдрал зарлагдсан бараа бүтээгдэхүүн</strong>
               </h2>
             </div>

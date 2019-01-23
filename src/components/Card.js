@@ -6,7 +6,8 @@ import timesale5 from '../scss/assets/images/demo/8.jpg';
 
 class Card extends React.Component {
   render() {
-    const {product, cardType, type} = this.props;
+    const {product, cardType, type, neew, time, sale} = this.props;
+
     const saleTag = (        
       <div className="percent">
         <span className="text"><strong>{product.spercent}</strong><small>%</small></span>
@@ -18,15 +19,21 @@ class Card extends React.Component {
         <span className="text">{product.time}</span>
       </div>
     )
+    const newTag = (
+      <div class="percent new">
+        <span class="text"><strong>Шинэ</strong></span>
+      </div>
+    )
     const saleFiveCard = (
-        <div className="col-five pad10">
-        <div className="single-product small-product sale-product">
+        <div className="col-five col-md-3 col-6 pad10">
+        <div className="single-product small-product sale-product new-product">
           <div className="image-container">
             <Link to="">
                 <span className="image" style={{ backgroundImage: `url(${timesale5})` }}></span>
             </Link>
-            {saleTag}
-            {timeTag}
+            {time ? timeTag : ''}
+            {sale ? saleTag : ''}
+            {neew ? newTag : ''}
           </div>
           <div className="info-container">
             <Link to="" className="name">
@@ -82,8 +89,9 @@ class Card extends React.Component {
                     <Link to="">
                         <span className="image" style={{ backgroundImage: `url(${timesale5})` }}></span>
                     </Link>
-                    {saleTag}
-                    {timeTag}
+                    {time ? timeTag : ''}
+                    {sale ? saleTag : ''}
+                    {neew ? newTag : ''}
                 </div>
                 <div className="info-container">
                     <Link to="" className="name">
@@ -145,12 +153,18 @@ class Card extends React.Component {
 
 Card.default = {
   product: [],
+  neew: false,
+  sale: false,
+  time: false,
 }
 
 Card.PropTypes = {
   product: PropTypes.object,
   cardType: PropTypes.string,
   type: PropTypes.string,
+  neew: PropTypes.bool,
+  sale: PropTypes.bool,
+  time: PropTypes.bool,
 }
 
 export default Card;

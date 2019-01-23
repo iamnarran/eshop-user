@@ -17,11 +17,13 @@ import Layouts from 'layouts/Default';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import 'scss/app.scss';
 
+import Header from './containers/AppHeader';
+import Footer from './containers/AppFooter';
+
 import Homepage from './containers/Homepage';
 import messages from './messages.json';
-import Salepage from './containers/Salepage';
-import Header from './containers/AppHeader';
-import Newpage from './pages/New';
+import Salepage from './containers/SaleProduct';
+import Newpage from './containers/Newpage';
 import Recipe from './pages/Recipe';
 import Package from './pages/Package';
 import Promotion from './pages/Promotion';
@@ -99,6 +101,7 @@ class Localization extends Component {
         <Router history={BrowserHistory}>
           <div>
             <Header />
+
             <Switch>
               {
                 routes.map((route, index) => {
@@ -114,6 +117,8 @@ class Localization extends Component {
                 })
               }            
             </Switch>
+
+            <Footer />
           </div>
         </Router>
       )

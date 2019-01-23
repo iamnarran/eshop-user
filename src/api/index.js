@@ -5,6 +5,8 @@ import brand from './Brands';
 import staticinfo from './Static';
 import menu from './Menu';
 import category from './Category';
+import saleproduct from './Saleproduct';
+import newproduct from './Newproduct';
 
 let rest = {};
 
@@ -66,6 +68,18 @@ menu.forEach(api => {
 rest['category'] = {};
 category.forEach(api => {
   rest.category[api.NAME] = data => generateAPI(api, data);
+});
+
+//SALE PRODUCT
+rest['saleproduct'] = {};
+saleproduct.forEach(api => {
+  rest.saleproduct[api.NAME] = data => generateAPI(api, data);
+});
+
+//NEW PRODUCT
+rest['newproduct'] = {};
+newproduct.forEach(api => {
+  rest.newproduct[api.NAME] = data => generateAPI(api, data);
 });
 
 console.log('rest: ', rest);

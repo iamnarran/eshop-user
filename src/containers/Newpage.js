@@ -2,7 +2,7 @@ import React from 'react';
 import api from '../api';
 import { compose } from 'react-komposer';
 import Loader from '../components/Loader';
-import Salepage from '../pages/Salepage';
+import Newpage from '../pages/NewProduct';
 
 const options = {
     loadingHandler: () => <Loader />
@@ -10,11 +10,12 @@ const options = {
 
 const fetch = async (props, onData) => {
     try {
-        // const staticinfo = await api.staticinfo.findAll();
-        // console.log(staticinfo.data[0]);
+        const newproduct = await api.newproduct.findAll({ jumcd: '01' });
+        console.log(newproduct);        
+        
         onData(null, {
             container: { 
-                staticinfo: []
+              newproduct: newproduct.data
             }
         });
     } catch (e) {
@@ -30,4 +31,4 @@ const dataLoader = (props, onData) => {
 export default compose(
     dataLoader,
     options
-)(Salepage);
+)(Newpage);
