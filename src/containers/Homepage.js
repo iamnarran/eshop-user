@@ -12,8 +12,6 @@ const fetch = async (props, onData) => {
     try {
         const banners = await api.banner.findAll({ type: 'A1' });
         const brands = await api.brand.findAll();
-        const staticinfo = await api.staticinfo.findAll();
-        const menu = await api.menu.findAll();
         const category = await api.category.findAll();
         const widget = await api.widget.findAll();
         const emartProducts = await api.product.findAllEmartProducts();
@@ -25,8 +23,6 @@ const fetch = async (props, onData) => {
             container: { 
                 banner: banners.data,
                 brands : brands.data,
-                staticinfo: staticinfo.data[0],
-                menus: menu.data,
                 categories: category.data,
                 widgets: widget.data,
                 emartProducts: emartProducts.data,
