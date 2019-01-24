@@ -56,7 +56,7 @@ class Homepage extends Component {
                 case WIDGET_NAMES.discount:
                     itemsInWidget = allItems.discountProducts;
                     break;
-                case WIDGET_NAMES.batch:
+                case WIDGET_NAMES.package:
                     itemsInWidget = allItems.packageProducts;
                     break;
                 case WIDGET_NAMES.recipe:
@@ -90,15 +90,15 @@ class Homepage extends Component {
             widgets,
             emartProducts,
             discountProducts,
-            recipes,
             packageProducts,
+            recipes,
         } = this.props.container;
 
         const allItems = {
             emartProducts,
             discountProducts,
-            recipes,
             packageProducts,
+            recipes,
         };
 
         const root = [];

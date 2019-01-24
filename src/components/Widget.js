@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Icon } from 'antd';
 
 import Card from './Card';
-import { CARD_TYPES, CARD_NUMS_IN_COL, WIDGET_TYPES, WIDGET_LABELS } from '../utils/consts';
+import { CARD_TYPES, CARD_NUMS_IN_COL, WIDGET_TYPES, WIDGET_LABELS, WIDGET_NAMES } from '../utils/consts';
 
 class Widget extends React.Component {
   renderItems(type, name, renderOrder, items) {
@@ -66,6 +66,23 @@ class Widget extends React.Component {
       );
     }
 
+    let buttonValue = 'Цааш үзэх';
+    switch (this.props.name) {
+        case WIDGET_NAMES.onlyEmart:
+            buttonValue = 'Зөвхөн Имартын бусад барааг үзэх';
+            break;
+        case WIDGET_NAMES.discount:
+            buttonValue = 'Бусад хямдралтай барааг үзэх';
+            break;
+        case WIDGET_NAMES.package:
+            buttonValue = 'Бусад багцыг үзэх';
+            break;
+        case WIDGET_NAMES.recipe:
+            buttonValue = 'Бусад хоолны жорыг үзэх';
+            break;
+        default:
+    }
+
     return (
       <div className="section">
           <div className="container pad10">
@@ -78,7 +95,7 @@ class Widget extends React.Component {
               </div>
               <div className="more-link text-center">
                   <Link to="" className="btn btn-border">
-                      <span className="text text-uppercase">Эрэлт ихтэй бусад барааг үзэх</span>
+                      <span className="text text-uppercase">{buttonValue}</span>
                   </Link>
               </div>
           </div>

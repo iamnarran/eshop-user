@@ -20,7 +20,7 @@ Object.freeze(WIDGET_TYPES);
 const WIDGET_NAMES = {
   onlyEmart: 'Зөвхөн И-МАРТ дэлгүүрт',
   discount: 'Хямдралтай',
-  batch: 'Багц бараа',
+  package: 'Багц бараа',
   recipe: 'Хоолны жор',
 };
 Object.freeze(WIDGET_NAMES);
