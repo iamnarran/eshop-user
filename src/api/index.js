@@ -10,6 +10,7 @@ import newproduct from './Newproduct';
 import widget from './Widget';
 import product from './Product';
 import recipe from './Recipe';
+// import packageProduct from './Package';
 
 let rest = {};
 
@@ -104,5 +105,11 @@ rest['recipe'] = {};
 recipe.forEach(api => {
   rest.recipe[api.NAME] = data => generateAPI(api, data);
 });
+
+// // PACKAGE
+// rest['package'] = {};
+// packageProduct.forEach(api => {
+//   rest.packageProduct[api.NAME] = data => generateAPI(api, data);
+// });
 
 export { rest as default, setAuthorizationHeader };
