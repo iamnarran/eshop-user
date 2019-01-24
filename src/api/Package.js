@@ -7,7 +7,7 @@ const API =
     
 export default [
   {
-    NAME: 'findAllPackageProducts',
+    NAME: 'findAll',
     METHOD: 'GET',
     URL: `${API}/api/package`,
     // REPLACE: 'jumcd',

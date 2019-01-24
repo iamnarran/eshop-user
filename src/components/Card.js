@@ -34,6 +34,8 @@ class Card extends React.Component {
       return null;
     }
 
+    console.log('item', item);
+
     let { renderType } = this.props;
     renderType = parseInt(renderType);
 

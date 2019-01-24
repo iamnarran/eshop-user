@@ -18,7 +18,7 @@ import Slider from '../components/Swiper';
 import Widget from '../components/Widget';
 import Banner from '../components/Banner';
 import config from '../config';
-import { WIDGET_TYPES, WIDGET_NAMES, BANNER_LOCATION_INDICES } from '../utils/consts';
+import { WIDGET_TYPES, WIDGET_SLUGS, BANNER_LOCATION_INDICES } from '../utils/consts';
 
 /* const IMAGE =
     process.env.NODE_ENV === 'development'
@@ -49,17 +49,17 @@ class Homepage extends Component {
             }
 
             let type = WIDGET_TYPES.horizontal;
-            switch (widget.name) {
-                case WIDGET_NAMES.onlyEmart:
+            switch (widget.slug) {
+                case WIDGET_SLUGS.onlyEmart:
                     itemsInWidget = allItems.emartProducts;
                     break;
-                case WIDGET_NAMES.discount:
+                case WIDGET_SLUGS.discount:
                     itemsInWidget = allItems.discountProducts;
                     break;
-                case WIDGET_NAMES.package:
+                case WIDGET_SLUGS.package:
                     itemsInWidget = allItems.packageProducts;
                     break;
-                case WIDGET_NAMES.recipe:
+                case WIDGET_SLUGS.recipe:
                     type = WIDGET_TYPES.vertical;
                     itemsInWidget = allItems.recipes;
                     break;
@@ -70,9 +70,8 @@ class Homepage extends Component {
                 <Widget 
                     key={widget.slug}
                     type={type}
-                    name={widget.name}
                     items={itemsInWidget} 
-                    renderOrder={widget.type}
+                    widget={widget}
                 />
             );
         });
@@ -84,7 +83,7 @@ class Homepage extends Component {
         const {
             //staticinfo,
             categories,
-            banner,
+            banners,
             brands,
             //menus,
             widgets,
@@ -144,7 +143,7 @@ class Homepage extends Component {
             <div className="top-container" >
                 {/* Slider */}
                 <div className="main-slide">
-                    <Slider dataSource={banner} params={homeBannerParams} elContainer={'banner'} />
+                    <Slider dataSource={banners} params={homeBannerParams} elContainer={'banner'} />
                 </div>
                 {/* Slider end */}
                 {/* Main content */}

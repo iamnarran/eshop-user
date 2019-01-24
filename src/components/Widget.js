@@ -3,14 +3,14 @@ import { Link } from 'react-router-dom';
 import { Icon } from 'antd';
 
 import Card from './Card';
-import { CARD_TYPES, CARD_NUMS_IN_COL, WIDGET_TYPES, WIDGET_LABELS, WIDGET_NAMES } from '../utils/consts';
+import { CARD_TYPES, CARD_NUMS_IN_COL, WIDGET_TYPES, WIDGET_LABELS, WIDGET_SLUGS } from '../utils/consts';
 
 class Widget extends React.Component {
-  renderItems(type, name, renderOrder, items) {
+  renderItems() {
     let cards = [];
 
-    if (type === WIDGET_TYPES.horizontal) {
-        const rows = renderOrder.split(',');
+    if (this.props.type === WIDGET_TYPES.horizontal) {
+        const rows = this.props.widget.type.split(',');
         for (let i = 0, p = 0; i < rows.length; i++) {
             const cardsInRow = parseInt(rows[i]) === CARD_TYPES.wide ? CARD_NUMS_IN_COL.wide : CARD_NUMS_IN_COL.slim;
             for (let j = 0; j < cardsInRow; j++) {
@@ -18,8 +18,8 @@ class Widget extends React.Component {
                     <Card 
                         key={p}
                         renderType={rows[i]} 
-                        item={items[p++]} 
-                        extra={WIDGET_LABELS[name]} 
+                        item={this.props.items[p++]} 
+                        extra={WIDGET_LABELS[this.props.widget.slug]} 
                     />
                 );
             }
@@ -29,9 +29,9 @@ class Widget extends React.Component {
     }
 
     let cardNumsInCol = 2;
-    cardNumsInCol = Math.ceil(items.length / 3) < cardNumsInCol ? Math.ceil(items.length / 3) : cardNumsInCol;
+    cardNumsInCol = Math.ceil(this.props.items.length / 3) < cardNumsInCol ? Math.ceil(this.props.items.length / 3) : cardNumsInCol;
 
-    const iterationNum = items.length > cardNumsInCol * 3 ? cardNumsInCol * 3 : items.length;
+    const iterationNum = this.props.items.length > cardNumsInCol * 3 ? cardNumsInCol * 3 : this.props.items.length;
 
     let cardsToRender = [];
     for (let i = 0; i < iterationNum; i++) {
@@ -41,8 +41,8 @@ class Widget extends React.Component {
                 index={i}
                 cardNumsInCol={cardNumsInCol}
                 renderType={CARD_TYPES.tile} 
-                item={items[i]} 
-                extra={WIDGET_LABELS[name]} 
+                item={this.props.items[i]} 
+                extra={WIDGET_LABELS[this.props.widget.slug]} 
             />
         );
 
@@ -57,27 +57,27 @@ class Widget extends React.Component {
 
   render() {
     let subtitle = null;
-    if (this.props.subtitle) {
+    if (this.props.widget.subtitle) {
       subtitle = (
         <p className="text">
             <Icon type="clock-circle" />
-            <span>{ this.props.subtitle }</span>
+            <span>{ this.props.widget.subtitle }</span>
         </p>
       );
     }
 
     let buttonValue = 'Цааш үзэх';
-    switch (this.props.name) {
-        case WIDGET_NAMES.onlyEmart:
+    switch (this.props.widget.slug) {
+        case WIDGET_SLUGS.onlyEmart:
             buttonValue = 'Зөвхөн Имартын бусад барааг үзэх';
             break;
-        case WIDGET_NAMES.discount:
+        case WIDGET_SLUGS.discount:
             buttonValue = 'Бусад хямдралтай барааг үзэх';
             break;
-        case WIDGET_NAMES.package:
+        case WIDGET_SLUGS.package:
             buttonValue = 'Бусад багцыг үзэх';
             break;
-        case WIDGET_NAMES.recipe:
+        case WIDGET_SLUGS.recipe:
             buttonValue = 'Бусад хоолны жорыг үзэх';
             break;
         default:
@@ -87,11 +87,11 @@ class Widget extends React.Component {
       <div className="section">
           <div className="container pad10">
               <h1 className="title">
-                  <span className="text-uppercase">{this.props.name}</span>
+                  <span className="text-uppercase">{this.props.widget.name}</span>
                   {subtitle}
               </h1>
               <div className="row row10">
-                  {this.renderItems(this.props.type, this.props.name, this.props.renderOrder, this.props.items)}
+                  {this.renderItems()}
               </div>
               <div className="more-link text-center">
                   <Link to="" className="btn btn-border">

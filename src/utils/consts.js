@@ -17,19 +17,19 @@ const WIDGET_TYPES = {
 };
 Object.freeze(WIDGET_TYPES);
 
-const WIDGET_NAMES = {
-  onlyEmart: 'Зөвхөн И-МАРТ дэлгүүрт',
-  discount: 'Хямдралтай',
-  package: 'Багц бараа',
-  recipe: 'Хоолны жор',
+const WIDGET_SLUGS = {
+  onlyEmart: 'onlyemart',
+  discount: 'discount',
+  package: 'package',
+  recipe: 'recipe',
 };
-Object.freeze(WIDGET_NAMES);
+Object.freeze(WIDGET_SLUGS);
 
 let WIDGET_LABELS = {};
-WIDGET_LABELS[WIDGET_NAMES.onlyEmart] = [];
-WIDGET_LABELS[WIDGET_NAMES.discount] = ['percent', 'expiryDate', 'discountPrice'];
-WIDGET_LABELS[WIDGET_NAMES.batch] = ['productCount'];
-WIDGET_LABELS[WIDGET_NAMES.recipe] = ['productCount'];
+WIDGET_LABELS[WIDGET_SLUGS.onlyEmart] = [];
+WIDGET_LABELS[WIDGET_SLUGS.discount] = ['percent', 'expiryDate', 'discountPrice'];
+WIDGET_LABELS[WIDGET_SLUGS.package] = ['productCount'];
+WIDGET_LABELS[WIDGET_SLUGS.recipe] = ['productCount'];
 Object.freeze(WIDGET_LABELS);
 
 const BANNER_LOCATION_INDICES = [2, 4];
@@ -39,7 +39,7 @@ export {
   CARD_TYPES, 
   CARD_NUMS_IN_COL, 
   WIDGET_TYPES,
-  WIDGET_NAMES,
+  WIDGET_SLUGS,
   WIDGET_LABELS, 
   BANNER_LOCATION_INDICES,
 };

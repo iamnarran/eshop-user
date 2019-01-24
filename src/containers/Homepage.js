@@ -14,14 +14,14 @@ const fetch = async (props, onData) => {
         const brands = await api.brand.findAll();
         const category = await api.category.findAll();
         const widget = await api.widget.findAll();
-        const emartProducts = await api.product.findAllEmartProducts();
-        const discountProducts = await api.product.findAllDiscountProducts();
-        const recipes = await api.recipe.findAllRecipes();
-        const packageProducts = await api.packageProduct.findAllPackageProducts();
+        const emartProducts = await api.product.findAllEmartProducts({ jumcd: '01' });
+        const discountProducts = await api.product.findAllDiscountProducts({ jumcd: '99' });
+        const recipes = await api.recipe.findAll();
+        const packageProducts = await api.packageProduct.findAll();
 
         onData(null, {
             container: { 
-                banner: banners.data,
+                banners: banners.data,
                 brands : brands.data,
                 categories: category.data,
                 widgets: widget.data,
