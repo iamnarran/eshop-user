@@ -9,7 +9,7 @@ export default [
   {
     NAME: 'findAll',
     METHOD: 'GET',
-    URL: `${API}/api/banner/:type`,
+    URL: `${API}/api/homepagebanner/:type`,
     REPLACE: 'id, type',
   }
 ];

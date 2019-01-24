@@ -28,10 +28,10 @@ class Widget extends React.Component {
         return cards;
     }
 
-    let cardNumsInCol = 3;
+    let cardNumsInCol = 2;
     cardNumsInCol = Math.ceil(items.length / 3) < cardNumsInCol ? Math.ceil(items.length / 3) : cardNumsInCol;
 
-    const iterationNum = items.length > cardNumsInCol * 3 ? cardNumsInCol : items.length;
+    const iterationNum = items.length > cardNumsInCol * 3 ? cardNumsInCol * 3 : items.length;
 
     let cardsToRender = [];
     for (let i = 0; i < iterationNum; i++) {
