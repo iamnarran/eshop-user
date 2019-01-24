@@ -1,14 +1,21 @@
 const CARD_TYPES = {
-  'wide': 1,
-  'slim': 2,
+  wide: 1,
+  slim: 2,
+  tile: 3,
 };
 Object.freeze(CARD_TYPES);
 
 const CARD_NUMS_IN_COL = {
-  'wide': 3,
-  'slim': 5,
+  wide: 3,
+  slim: 5,
 }
 Object.freeze(CARD_NUMS_IN_COL);
+
+const WIDGET_TYPES = {
+  horizontal: 1,
+  vertical: 2,
+};
+Object.freeze(WIDGET_TYPES);
 
 const WIDGET_NAMES = {
   onlyEmart: 'Зөвхөн И-МАРТ дэлгүүрт',
@@ -31,6 +38,7 @@ Object.freeze(BANNER_LOCATION_INDICES);
 export { 
   CARD_TYPES, 
   CARD_NUMS_IN_COL, 
+  WIDGET_TYPES,
   WIDGET_NAMES,
   WIDGET_LABELS, 
   BANNER_LOCATION_INDICES,

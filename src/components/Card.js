@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from 'antd';
 
+// import config from '../config';
 import Rate from './Rate';
 import { CARD_TYPES } from '../utils/consts';
 
@@ -20,11 +21,16 @@ import img17 from '../scss/assets/images/demo/17.jpg';
 
 // const images = [5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17];
 
+// const IMAGE =
+//     process.env.NODE_ENV === 'development'
+//         ? config.image.development
+//         : config.image.production;
+
 class Card extends React.Component {
   render() {
-    const { product, extra } = this.props;
+    const { item, extra } = this.props;
 
-    if (!product) {
+    if (!item) {
       return null;
     }
 
@@ -35,13 +41,13 @@ class Card extends React.Component {
     let expiryDateLabel = null;
     let productCountLabel = null;
 
-    let prices = <span className="current">{product.price}₮</span>;
+    let prices = <span className="current">{item.price}₮</span>;
     
     if (extra && extra.includes('expiryDate')) {
       expiryDateLabel = (
         <div className="time">
           <Icon type="clock-circle" />
-          <span className="text">{product.edate}</span>
+          <span className="text">{item.edate}</span>
         </div>
       );
     }
@@ -49,7 +55,7 @@ class Card extends React.Component {
     if (extra && extra.includes('percent')) {
       percentLabel = (
         <div className="percent">
-          <span className="text"><strong>{product.spercent}</strong><small>%</small></span>
+          <span className="text"><strong>{item.spercent}</strong><small>%</small></span>
         </div>
       );
     }
@@ -62,74 +68,104 @@ class Card extends React.Component {
       );
     }
 
-    if (extra && extra.includes('discountPrice') && product.sprice) {
+    if (extra && extra.includes('discountPrice') && item.sprice) {
       prices = (
         <div>
-          <small className="sale">{product.price}₮</small>
-          <span className="current">{product.sprice}₮</span>
+          <small className="sale">{item.price}₮</small>
+          <span className="current">{item.sprice}₮</span>
         </div>
       );
     }
 
-    if (renderType === CARD_TYPES.slim) {
-      return (
-        <div className="col-five pad10">
-            <div className="single-product small-product">
-                <div className="image-container">
-                    <Link to="">
-                        <span className="image" style={{ backgroundImage: `url(${img5})` }}></span>
-                    </Link>
-                    {percentLabel}
-                    {productCountLabel}
-                    {expiryDateLabel}
-                </div>
-                <div className="info-container">
-                    <Link to="" className="name">
-                        <span>{product.name}</span>
-                    </Link>
-                    <Link to="" className="cat">
-                        <span>{product.shortnm}</span>
-                    </Link>
-                    
-                    <Rate rate={product.rate} numOfVotes={product.rate_user_cnt} />
+    switch (renderType) {
+      case CARD_TYPES.slim:
+        return (
+          <div className="col-five pad10">
+              <div className="single-product small-product">
+                  <div className="image-container">
+                      <Link to="">
+                          <span className="image" style={{ backgroundImage: `url(${img5})` }}></span>
+                      </Link>
+                      {percentLabel}
+                      {productCountLabel}
+                      {expiryDateLabel}
+                  </div>
+                  <div className="info-container">
+                      <Link to="" className="name">
+                          <span>{item.name}</span>
+                      </Link>
+                      <Link to="" className="cat">
+                          <span>{item.shortnm}</span>
+                      </Link>
+                      
+                      <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} />
 
-                    <Link to="" className="price">
-                        {prices}
-                    </Link>
-                </div>
-            </div>
-        </div>
-      );
-    }
-
-    return (
-      <div className="col-xl-4 pad10">
-          <div className="single-product big-product sale-product timed-product">
-              <div className="image-container">
-                  <Link to="">
-                      <span className="image" style={{ backgroundImage: `url(${img5})` }}></span>
-                  </Link>
-                  {percentLabel}
-                  {productCountLabel}
-                  {expiryDateLabel}
-              </div>
-              <div className="info-container">
-                  <Link to="" className="name">
-                      <span>{product.name}</span>
-                  </Link>
-                  <Link to="" className="cat">
-                      <span>{product.shortnm}</span>
-                  </Link>
-
-                  <Rate rate={product.rate} numOfVotes={product.rate_user_cnt} />
-                  
-                  <Link to="" className="price">
-                      {prices}
-                  </Link>
+                      <Link to="" className="price">
+                          {prices}
+                      </Link>
+                  </div>
               </div>
           </div>
-      </div>
-    );
+        );
+      case CARD_TYPES.wide:
+        return (
+          <div className="col-xl-4 pad10">
+              <div className="single-product big-product sale-product timed-product">
+                  <div className="image-container">
+                      <Link to="">
+                        <span className="image" style={{ backgroundImage: `url(${img5})` }}></span>
+                      </Link>
+                      {percentLabel}
+                      {productCountLabel}
+                      {expiryDateLabel}
+                  </div>
+                  <div className="info-container">
+                      <Link to="" className="name">
+                          <span>{item.name}</span>
+                      </Link>
+                      <Link to="" className="cat">
+                          <span>{item.shortnm}</span>
+                      </Link>
+    
+                      <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} />
+                      
+                      <Link to="" className="price">
+                          {prices}
+                      </Link>
+                  </div>
+              </div>
+          </div>
+        );
+      case CARD_TYPES.tile:
+        const c = (this.props.cardNumsInCol % 2 !== 0 && this.props.index % 2 === 0)
+            ? 'long'
+            : 'short';
+
+        return (
+          <div className={`single-product big-product food-post food-${c}`}>
+            <div className="image-container">
+                <Link to="">
+                  <span className="image" style={{ backgroundImage: `url(${img13})` }}></span>
+                </Link>
+                {percentLabel}
+                {productCountLabel}
+                {expiryDateLabel}
+            </div>
+            <div className="info-container">
+              <Link to="" className="name">
+                <span>{item.recipenm}</span>
+              </Link>
+              <Link to="" className="cat">
+                <span>{item.featuretxt}</span>
+              </Link>
+
+              <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} />
+            </div>
+          </div>
+        );
+      default:
+        return null;
+    }
   }
 }
 

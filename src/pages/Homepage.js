@@ -10,7 +10,7 @@ import Slider from '../components/Swiper';
 import Widget from '../components/Widget';
 import Banner from '../components/Banner';
 import config from '../config';
-import { WIDGET_NAMES, BANNER_LOCATION_INDICES } from '../utils/consts';
+import { WIDGET_TYPES, WIDGET_NAMES, BANNER_LOCATION_INDICES } from '../utils/consts';
 
 const IMAGE =
     process.env.NODE_ENV === 'development'
@@ -28,33 +28,45 @@ class Homepage extends Component {
         console.log(`selected ${value}`);
     }
 
-    renderBlocks(widgets, allProducts) {
+    renderWidgets(widgets, allItems) {
         let blocks = [];
 
         widgets = widgets.sort((obj1, obj2) => obj1.orders - obj2.orders);
+
+        let itemsInWidget = [];
         widgets.forEach((widget, index) => {
             if (BANNER_LOCATION_INDICES.includes(index)) {
-                blocks.push(<Banner />);
+                // change "key" in the future
+                blocks.push(<Banner key={index} />);
             }
 
-            let productsInWidget = [];
+            let type = WIDGET_TYPES.horizontal;
             switch (widget.name) {
                 case WIDGET_NAMES.onlyEmart:
-                    productsInWidget = allProducts.emartProducts;
+                    itemsInWidget = allItems.emartProducts;
                     break;
                 case WIDGET_NAMES.discount:
-                    productsInWidget = allProducts.saleProducts;
+                    itemsInWidget = allItems.discountProducts;
                     break;
                 case WIDGET_NAMES.batch:
-                    productsInWidget = allProducts.newProducts;
+                    itemsInWidget = allItems.packageProducts;
                     break;
-                // case WIDGET_NAMES.recipe:
-                //     productsInWidget = allProducts.newProducts;
-                //     break;
+                case WIDGET_NAMES.recipe:
+                    type = WIDGET_TYPES.vertical;
+                    itemsInWidget = allItems.recipes;
+                    break;
                 default:
             }
 
-            blocks.push(<Widget key={widget.name} name={widget.name} products={productsInWidget} renderOrder={widget.type} />);
+            blocks.push(
+                <Widget 
+                    key={widget.slug}
+                    type={type}
+                    name={widget.name}
+                    items={itemsInWidget} 
+                    renderOrder={widget.type}
+                />
+            );
         });
 
         return blocks;
@@ -69,14 +81,16 @@ class Homepage extends Component {
             menus, 
             widgets,
             emartProducts,
-            saleProducts,
-            newProducts,
+            discountProducts,
+            packageProducts,
+            recipes,
         } = this.props.container;
 
-        const allProducts = {
+        const allItems = {
             emartProducts,
-            saleProducts,
-            newProducts,
+            discountProducts,
+            packageProducts,
+            recipes,
         };
 
         const root = [];
@@ -284,7 +298,7 @@ class Homepage extends Component {
                 {/* Slider end */}
 
                 {/* Main content */}
-                {this.renderBlocks(widgets, allProducts)}
+                {this.renderWidgets(widgets, allItems)}
                 {/* Main content end */}
 
                 {/* Brand list */}

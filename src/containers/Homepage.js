@@ -17,8 +17,9 @@ const fetch = async (props, onData) => {
         const category = await api.category.findAll();
         const widget = await api.widget.findAll();
         const emartProducts = await api.product.findAllEmartProducts();
-        const saleProducts = await api.product.findAllSaleProducts();
-        const newProducts = await api.product.findAllNewProducts();
+        const discountProducts = await api.product.findAllDiscountProducts();
+        const packageProducts = await api.product.findAllPackageProducts();
+        const recipes = await api.recipe.findAllRecipes();
 
         onData(null, {
             container: { 
@@ -29,8 +30,9 @@ const fetch = async (props, onData) => {
                 categories: category.data,
                 widgets: widget.data,
                 emartProducts: emartProducts.data,
-                saleProducts: saleProducts.data,
-                newProducts: newProducts.data,
+                discountProducts: discountProducts.data,
+                packageProducts: packageProducts.data,
+                recipes: recipes.data,
             }
         });
     } catch (e) {
