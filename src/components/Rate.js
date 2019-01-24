@@ -27,7 +27,7 @@ class Rate extends React.Component {
         stars.push(<FontAwesomeIcon key={stars.length} icon={['far', 'star']} color={color} />);
     }
 
-    console.log('stars', stars);
+    /* console.log('stars', stars); */
 
     return (
       <Link to="" className="rating">

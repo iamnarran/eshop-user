@@ -85,7 +85,7 @@ newproduct.forEach(api => {
 });
 
 console.log('rest: ', rest);
-=======
+
 // WIDGET
 rest['widget'] = {};
 widget.forEach(api => {

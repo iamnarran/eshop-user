@@ -1,19 +1,23 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Icon, Badge, Avatar } from 'antd';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Icon } from 'antd';
 import MessengerCustomerChat from 'react-messenger-customer-chat';
-import Category from '../components/Category';
-import MainMenu from '../components/Menu';
 import Slider from '../components/Swiper';
 import Widget from '../components/Widget';
 import Banner from '../components/Banner';
-import config from '../config';
+//import config from '../config';
+import timesale1 from '../scss/assets/images/demo/6.jpg';
+import timesale2 from '../scss/assets/images/demo/7.jpg';
+import timesale3 from '../scss/assets/images/demo/8.jpg';
+import timesale4 from '../scss/assets/images/demo/9.jpg';
+import timesale5 from '../scss/assets/images/demo/5.jpg';
+import timesale6 from '../scss/assets/images/demo/11.jpg';
+import timesale7 from '../scss/assets/images/demo/12.jpg';
 
-const IMAGE =
+/* const IMAGE =
     process.env.NODE_ENV === 'development'
         ? config.image.development
-        : config.image.production;
+        : config.image.production; */
 
 const WIDGET_TYPES = {
     'onlyEmart': 'Зөвхөн И-МАРТ дэлгүүрт',
@@ -43,7 +47,7 @@ class Homepage extends Component {
 
         widgets.forEach((widget, index) => {
             if (bannerIndices.includes(index)) {
-                items.push(<Banner />);
+                items.push(<Banner key={index}/>);
             }
 
             let productsToShow = [];
@@ -67,12 +71,12 @@ class Homepage extends Component {
     }
 
     render() {
-        const { 
-            staticinfo, 
-            categories, 
-            banner, 
-            brands, 
-            menus, 
+        const {
+            //staticinfo,
+            categories,
+            banner,
+            brands,
+            //menus,
             widgets,
             emartProducts,
             saleProducts,
@@ -124,8 +128,6 @@ class Homepage extends Component {
             },
         }
 
-        const menuClass = `dropdown-menu${this.state.isOpen ? " show" : ""}`;
-
         return (
             <div className="top-container" >
                 {/* Slider */}
@@ -133,11 +135,9 @@ class Homepage extends Component {
                     <Slider dataSource={banner} params={homeBannerParams} elContainer={'banner'} />
                 </div>
                 {/* Slider end */}
-
                 {/* Main content */}
                 {this.renderItems(widgets, allProducts)}
                 {/* Main content end */}
-
                 {/* Brand list */}
                 <div className="main-slide brands-list">
                     <div className="container pad10">
@@ -145,7 +145,6 @@ class Homepage extends Component {
                     </div>
                 </div>
                 {/* Brand list */}
-
                 {/* Schedule products */}
                 <div className="section section-gray">
                     <div className="container pad10">
@@ -1039,7 +1038,7 @@ class Homepage extends Component {
                             </p>
                         </h1>
                         <div className="row row10">
-                            <div className="col-five pad10">                                                            
+                            <div className="col-five pad10">
                                 <div className="single-product small-product sale-product">
                                     <div className="image-container">
                                         <Link to="">
@@ -1373,7 +1372,7 @@ class Homepage extends Component {
                                 <div className="single-product big-product food-post food-long">
                                     <div className="image-container">
                                         <Link to="">
-                                            <span className="image" style={{ backgroundImage: `url(${ehow1})` }}></span>
+                                            <span className="image" style={{ backgroundImage: `url(${timesale7})` }}></span>
                                         </Link>
                                         <div className="percent">
                                             <span className="text"><strong>12ш</strong><small>Жор</small></span>
@@ -1427,7 +1426,7 @@ class Homepage extends Component {
                                 <div className="single-product big-product food-post food-short">
                                     <div className="image-container">
                                         <Link to="">
-                                            <span className="image" style={{ backgroundImage: `url(${ehow2})` }}></span>
+                                            <span className="image" style={{ backgroundImage: `url(${timesale7})` }}></span>
                                         </Link>
                                         <div className="percent">
                                             <span className="text"><strong>12ш</strong><small>Жор</small></span>
@@ -1483,7 +1482,7 @@ class Homepage extends Component {
                                 <div className="single-product big-product food-post food-short">
                                     <div className="image-container">
                                         <Link to="">
-                                            <span className="image" style={{ backgroundImage: `url(${ehow3})` }}></span>
+                                            <span className="image" style={{ backgroundImage: `url(${timesale7})` }}></span>
                                         </Link>
                                         <div className="percent">
                                             <span className="text"><strong>12ш</strong><small>Жор</small></span>
@@ -1537,7 +1536,7 @@ class Homepage extends Component {
                                 <div className="single-product big-product food-post food-long">
                                     <div className="image-container">
                                         <Link to="">
-                                            <span className="image" style={{ backgroundImage: `url(${ehow4})` }}></span>
+                                            <span className="image" style={{ backgroundImage: `url(${timesale7})` }}></span>
                                         </Link>
                                         <div className="percent">
                                             <span className="text"><strong>12ш</strong><small>Жор</small></span>
@@ -1593,7 +1592,7 @@ class Homepage extends Component {
                                 <div className="single-product big-product food-post food-long">
                                     <div className="image-container">
                                         <Link to="">
-                                            <span className="image" style={{ backgroundImage: `url(${ehow5})` }}></span>
+                                            <span className="image" style={{ backgroundImage: `url(${timesale7})` }}></span>
                                         </Link>
                                         <div className="percent">
                                             <span className="text"><strong>12ш</strong><small>Жор</small></span>
@@ -1647,7 +1646,7 @@ class Homepage extends Component {
                                 <div className="single-product big-product food-post food-short">
                                     <div className="image-container">
                                         <Link to="">
-                                            <span className="image" style={{ backgroundImage: `url(${ehow4})` }}></span>
+                                            <span className="image" style={{ backgroundImage: `url(${timesale7})` }}></span>
                                         </Link>
                                         <div className="percent">
                                             <span className="text"><strong>12ш</strong><small>Жор</small></span>
@@ -2542,10 +2541,10 @@ class Homepage extends Component {
                     </div>
                 </div>
                 {/* Brand list */}
-                
+
                 {/* Messenger */}
                 {/* <MessengerCustomerChat pageId="169275059877520" appId="570055533421847" htmlRef={window.fndsmfpo.pathname}/> */}
-                
+
                 {/* Messenger */}
                 <MessengerCustomerChat pageId="169275059877520" appId="570055533421847" htmlRef={window.location.pathname} />
                 {/* Messenger */}

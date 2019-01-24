@@ -6,15 +6,17 @@ class MainMenu extends React.Component {
         const data = this.props && this.props.dataSource;
         var indents = data.map(function (item, index) {
             return (
-                <li className="list-inline-item d-none d-lg-inline-block" key={index + 1000} >
-                    <Link to={item.link} key={index}><span>{item.menunm}</span></Link>
+                <li>
+                    <Link to={item.link} key={index}> <span>{item.menunm}</span> </Link>
                 </li>
             );
         });
         return (
-            <span>
-                {indents}
-            </span>
+            <div className="single top-3">
+                <ul className="list-unstyled flex-this flex-wrap">
+                    {indents}
+                </ul>
+            </div>
         )
     }
 }

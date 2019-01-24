@@ -1,12 +1,12 @@
 import React from 'react';
 import Card from '../components/Card';
 import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
+/* import PropTypes from 'prop-types'; */
 
 class Salepage extends React.Component {
   render() {
-    const {saleproduct} = this.props.container;
-    return(
+    const { saleproduct } = this.props.container;
+    return (
       <div className="top-container">
         <div className="whole-page-title color-main">
           <div className="container pad10">
@@ -23,7 +23,7 @@ class Salepage extends React.Component {
             <div className="row row10">
               {
                 saleproduct.map((product, key) => {
-                  return <Card product={product} cardType="1" type="sale" key={key} sale/>
+                  return <Card product={product} cardType="1" type="sale" key={key} sale />
                 })
               }
             </div>
@@ -39,7 +39,7 @@ class Salepage extends React.Component {
   }
 }
 
-Salepage.default  = {
+Salepage.default = {
   saleproduct: []
 }
 

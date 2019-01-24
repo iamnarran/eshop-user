@@ -4,29 +4,30 @@ import { Link } from 'react-router-dom';
 class MainMenu extends React.Component {
     render() {
         const data = this.props && this.props.dataSource;
-
         var indents = data.map(function (item, index) {
             return (
-                <div className="col-xl-3 pad10" style={{marginBottom: '15px'}} key={index}>
+                <div className="col-md-3 pad20">
                     <ul className="list-unstyled">
-                        <Link to="" key={index}>
-                            <strong className="text-uppercase">
-                                {item.name}
-                            </strong>
-                        </Link>
+                        <li>
+                            <Link to="" key={index}>
+                                <strong className="text-uppercase">{item.name}</strong>
+                            </Link>
+                        </li>
                         {
                             item.children && item.children.map(function (it, ind) {
                                 return (
-                                    <Link to="" key={ind}>
-                                        <span>
-                                            {it.name}
-                                        </span>
-                                    </Link>
+                                    <li>
+                                        <Link to="" key={ind} className="list-unstyled">
+                                            <span>
+                                                {it.name}
+                                            </span>
+                                        </Link>
+                                    </li>
                                 )
                             })
                         }
                     </ul>
-                </div>
+                </div >
             )
         });
         return (

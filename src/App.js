@@ -7,7 +7,7 @@ import {
   Redirect
 } from 'react-router-dom';
 import { Provider, connect } from 'react-redux';
-import { ToastContainer } from 'react-toastify';
+/* import { ToastContainer } from 'react-toastify'; */
 import { addLocaleData, injectIntl } from 'react-intl';
 import { updateIntl, IntlProvider } from 'react-intl-redux';
 import en from 'react-intl/locale-data/en';
@@ -20,7 +20,7 @@ import { fab } from '@fortawesome/free-brands-svg-icons';
 
 import store from './store';
 import { storage } from './utils';
-import Layouts from 'layouts/Default';
+/* import Layouts from 'layouts/Default'; */
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import 'scss/app.scss';
 
@@ -36,7 +36,7 @@ import Package from './pages/Package';
 import Promotion from './pages/Promotion';
 import Season from './pages/Season';
 
-// library.add(fab, faCheckSquare, faCoffee);
+//library.add(fab, faCheckSquare, faCoffee);
 library.add(fas, far, fab);
 
 addLocaleData([...en]);
@@ -72,37 +72,37 @@ class Localization extends Component {
       {
         path: "/",
         exact: true,
-        component: (rest) => <Homepage {...rest} {...this.props}/>
+        component: (rest) => <Homepage {...rest} {...this.props} />
       },
       {
         exact: false,
         path: "/salepage",
-        component: (rest) => <Salepage {...rest} {...this.props}/>
+        component: (rest) => <Salepage {...rest} {...this.props} />
       },
       {
         exact: false,
         path: "/new",
-        component: (rest) => <Newpage {...rest} {...this.props}/>
+        component: (rest) => <Newpage {...rest} {...this.props} />
       },
       {
         exact: false,
         path: "/recipe",
-        component: (rest) => <Recipe {...rest} {...this.props}/>
+        component: (rest) => <Recipe {...rest} {...this.props} />
       },
       {
         exact: false,
         path: "/package",
-        component: (rest) => <Package {...rest} {...this.props}/>
+        component: (rest) => <Package {...rest} {...this.props} />
       },
       {
         exact: false,
         path: "/promotion",
-        component: (rest) => <Promotion {...rest} {...this.props}/>
+        component: (rest) => <Promotion {...rest} {...this.props} />
       },
       {
         exact: false,
         path: "/season",
-        component: (rest) => <Season {...rest} {...this.props}/>
+        component: (rest) => <Season {...rest} {...this.props} />
       },
     ];
 
@@ -116,16 +116,16 @@ class Localization extends Component {
               {
                 routes.map((route, index) => {
                   return (
-                    <Public 
+                    <Public
                       {...this.props}
                       key={index}
-                      exact={route.exact}                     
-                      path={route.path} 
+                      exact={route.exact}
+                      path={route.path}
                       component={route.component}
                     />
                   );
                 })
-              }            
+              }
             </Switch>
 
             <Footer />
@@ -161,10 +161,7 @@ class App extends Component {
     );
   }
 }
-
-export default App;
-
-{/* <Route
+/* <Route
               path={'/Account'}
               render={props => (
                 <Layouts {...props} {...this.props}>
@@ -185,4 +182,6 @@ export default App;
                   </Switch>
                 </Layouts>
               )}
-            /> */}
+            /> */
+export default App;
+
