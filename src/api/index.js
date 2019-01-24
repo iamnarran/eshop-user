@@ -10,7 +10,7 @@ import newproduct from './Newproduct';
 import widget from './Widget';
 import product from './Product';
 import recipe from './Recipe';
-// import packageProduct from './Package';
+import packageProduct from './Package';
 
 let rest = {};
 
@@ -86,8 +86,6 @@ newproduct.forEach(api => {
   rest.newproduct[api.NAME] = data => generateAPI(api, data);
 });
 
-console.log('rest: ', rest);
-
 // WIDGET
 rest['widget'] = {};
 widget.forEach(api => {
@@ -106,10 +104,10 @@ recipe.forEach(api => {
   rest.recipe[api.NAME] = data => generateAPI(api, data);
 });
 
-// // PACKAGE
-// rest['package'] = {};
-// packageProduct.forEach(api => {
-//   rest.packageProduct[api.NAME] = data => generateAPI(api, data);
-// });
+// PACKAGE
+rest['packageProduct'] = {};
+packageProduct.forEach(api => {
+  rest.packageProduct[api.NAME] = data => generateAPI(api, data);
+});
 
 export { rest as default, setAuthorizationHeader };

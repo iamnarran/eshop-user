@@ -90,15 +90,15 @@ class Homepage extends Component {
             widgets,
             emartProducts,
             discountProducts,
-            packageProducts,
             recipes,
+            packageProducts,
         } = this.props.container;
 
         const allItems = {
             emartProducts,
             discountProducts,
-            packageProducts,
             recipes,
+            packageProducts,
         };
 
         const root = [];

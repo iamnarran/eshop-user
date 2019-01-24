@@ -16,8 +16,8 @@ const fetch = async (props, onData) => {
         const widget = await api.widget.findAll();
         const emartProducts = await api.product.findAllEmartProducts();
         const discountProducts = await api.product.findAllDiscountProducts();
-        const packageProducts = await api.product.findAllPackageProducts();
         const recipes = await api.recipe.findAllRecipes();
+        const packageProducts = await api.packageProduct.findAllPackageProducts();
 
         onData(null, {
             container: { 
@@ -27,8 +27,8 @@ const fetch = async (props, onData) => {
                 widgets: widget.data,
                 emartProducts: emartProducts.data,
                 discountProducts: discountProducts.data,
-                packageProducts: packageProducts.data,
                 recipes: recipes.data,
+                packageProducts: packageProducts.data,
             }
         });
     } catch (e) {

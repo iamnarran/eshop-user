@@ -92,13 +92,13 @@ class Card extends React.Component {
                   </div>
                   <div className="info-container">
                       <Link to="" className="name">
-                          <span>{item.name}</span>
+                          <span>{item.name ? item.name : item.packagenm}</span>
                       </Link>
                       <Link to="" className="cat">
-                          <span>{item.shortnm}</span>
+                          <span>{item.shortnm ? item.shortnm : item.featuretxt}</span>
                       </Link>
                       
-                      <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} />
+                      {item.rate ? <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} /> : null}
 
                       <Link to="" className="price">
                           {prices}
@@ -121,13 +121,13 @@ class Card extends React.Component {
                   </div>
                   <div className="info-container">
                       <Link to="" className="name">
-                          <span>{item.name}</span>
+                          <span>{item.name ? item.name : item.packagenm}</span>
                       </Link>
                       <Link to="" className="cat">
-                          <span>{item.shortnm}</span>
+                          <span>{item.shortnm ? item.shortnm : item.featuretxt}</span>
                       </Link>
     
-                      <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} />
+                      {item.rate ? <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} /> : null}
                       
                       <Link to="" className="price">
                           {prices}
