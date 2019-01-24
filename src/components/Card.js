@@ -1,7 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from 'antd';
+<<<<<<< HEAD
 import Rate from './Rate';
+=======
+
+// import config from '../config';
+import Rate from './Rate';
+import { CARD_TYPES } from '../utils/consts';
+
+>>>>>>> 91af03434f8696c5c648e7f6783e051476609cc9
 import img5 from '../scss/assets/images/demo/5.jpg';
 /* import img6 from '../scss/assets/images/demo/6.jpg';
 import img7 from '../scss/assets/images/demo/7.jpg';
@@ -14,61 +22,71 @@ import img14 from '../scss/assets/images/demo/14.jpg';
 import img15 from '../scss/assets/images/demo/15.jpg';
 import img16 from '../scss/assets/images/demo/16.jpg';
 import img17 from '../scss/assets/images/demo/17.jpg';
+<<<<<<< HEAD
 const images = [5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17]; */
+=======
 
-const WIDGET_TYPES = {
-  'onlyEmart': 'Зөвхөн И-МАРТ дэлгүүрт',
-  'discount': 'Цагийн хямдрал',
-  'batch': 'Багцын бараа',
-  'recipe': 'Хоолны жор',
-};
-Object.freeze(WIDGET_TYPES);
+// const images = [5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17];
+>>>>>>> 91af03434f8696c5c648e7f6783e051476609cc9
 
-const CARD_TYPES = {
-  'wide': 1,
-  'thin': 2,
-};
-Object.freeze(CARD_TYPES);
+// const IMAGE =
+//     process.env.NODE_ENV === 'development'
+//         ? config.image.development
+//         : config.image.production;
 
 class Card extends React.Component {
   render() {
+<<<<<<< HEAD
     const { product, widgetType } = this.props;
+=======
+    const { item, extra } = this.props;
+>>>>>>> 91af03434f8696c5c648e7f6783e051476609cc9
 
-    if (!product) {
+    if (!item) {
       return null;
     }
 
     let { renderType } = this.props;
     renderType = parseInt(renderType);
 
-    let mainLabel = null;
+    let percentLabel = null;
     let expiryDateLabel = null;
+    let productCountLabel = null;
 
+<<<<<<< HEAD
     let prices = <span className="current">{product.price}₮</span>;
 
     if (product.edate && widgetType === WIDGET_TYPES.discount) {
+=======
+    let prices = <span className="current">{item.price}₮</span>;
+    
+    if (extra && extra.includes('expiryDate')) {
+>>>>>>> 91af03434f8696c5c648e7f6783e051476609cc9
       expiryDateLabel = (
         <div className="time">
           <Icon type="clock-circle" />
-          <span className="text">{product.edate}</span>
+          <span className="text">{item.edate}</span>
         </div>
       );
     }
 
-    if (product.spercent && (widgetType === WIDGET_TYPES.new || widgetType === WIDGET_TYPES.discount || widgetType === WIDGET_TYPES.batch)) {
-      mainLabel = (
+    if (extra && extra.includes('percent')) {
+      percentLabel = (
         <div className="percent">
-          <span className="text"><strong>{product.spercent}</strong><small>%</small></span>
-        </div>
-      );
-      prices = (
-        <div>
-          <small className="sale">{product.price}₮</small>
-          <span className="current">{product.sprice}₮</span>
+          <span className="text"><strong>{item.spercent}</strong><small>%</small></span>
         </div>
       );
     }
 
+    if (extra && extra.includes('productCount')) {
+      productCountLabel = (
+        <div className="percent">
+          <span className="text"><strong>12</strong><small>ш</small></span>
+        </div>
+      );
+    }
+
+<<<<<<< HEAD
     if (renderType !== CARD_TYPES.wide) {
       return (
         <div className="col-five pad10">
@@ -94,10 +112,18 @@ class Card extends React.Component {
               </Link>
             </div>
           </div>
+=======
+    if (extra && extra.includes('discountPrice') && item.sprice) {
+      prices = (
+        <div>
+          <small className="sale">{item.price}₮</small>
+          <span className="current">{item.sprice}₮</span>
+>>>>>>> 91af03434f8696c5c648e7f6783e051476609cc9
         </div>
       );
     }
 
+<<<<<<< HEAD
     return (
       <div className="col-xl-4 pad10">
         <div className="single-product big-product sale-product timed-product">
@@ -125,6 +151,97 @@ class Card extends React.Component {
         </div>
       </div>
     );
+=======
+    switch (renderType) {
+      case CARD_TYPES.slim:
+        return (
+          <div className="col-five pad10">
+              <div className="single-product small-product">
+                  <div className="image-container">
+                      <Link to="">
+                          <span className="image" style={{ backgroundImage: `url(${img5})` }}></span>
+                      </Link>
+                      {percentLabel}
+                      {productCountLabel}
+                      {expiryDateLabel}
+                  </div>
+                  <div className="info-container">
+                      <Link to="" className="name">
+                          <span>{item.name}</span>
+                      </Link>
+                      <Link to="" className="cat">
+                          <span>{item.shortnm}</span>
+                      </Link>
+                      
+                      <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} />
+
+                      <Link to="" className="price">
+                          {prices}
+                      </Link>
+                  </div>
+              </div>
+          </div>
+        );
+      case CARD_TYPES.wide:
+        return (
+          <div className="col-xl-4 pad10">
+              <div className="single-product big-product sale-product timed-product">
+                  <div className="image-container">
+                      <Link to="">
+                        <span className="image" style={{ backgroundImage: `url(${img5})` }}></span>
+                      </Link>
+                      {percentLabel}
+                      {productCountLabel}
+                      {expiryDateLabel}
+                  </div>
+                  <div className="info-container">
+                      <Link to="" className="name">
+                          <span>{item.name}</span>
+                      </Link>
+                      <Link to="" className="cat">
+                          <span>{item.shortnm}</span>
+                      </Link>
+    
+                      <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} />
+                      
+                      <Link to="" className="price">
+                          {prices}
+                      </Link>
+                  </div>
+              </div>
+          </div>
+        );
+      case CARD_TYPES.tile:
+        const c = (this.props.cardNumsInCol % 2 !== 0 && this.props.index % 2 === 0)
+            ? 'long'
+            : 'short';
+
+        return (
+          <div className={`single-product big-product food-post food-${c}`}>
+            <div className="image-container">
+                <Link to="">
+                  <span className="image" style={{ backgroundImage: `url(${img13})` }}></span>
+                </Link>
+                {percentLabel}
+                {productCountLabel}
+                {expiryDateLabel}
+            </div>
+            <div className="info-container">
+              <Link to="" className="name">
+                <span>{item.recipenm}</span>
+              </Link>
+              <Link to="" className="cat">
+                <span>{item.featuretxt}</span>
+              </Link>
+
+              <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} />
+            </div>
+          </div>
+        );
+      default:
+        return null;
+    }
+>>>>>>> 91af03434f8696c5c648e7f6783e051476609cc9
   }
 }
 

@@ -27,8 +27,11 @@ class Rate extends React.Component {
         stars.push(<FontAwesomeIcon key={stars.length} icon={['far', 'star']} color={color} />);
     }
 
+<<<<<<< HEAD
     /* console.log('stars', stars); */
 
+=======
+>>>>>>> 91af03434f8696c5c648e7f6783e051476609cc9
     return (
       <Link to="" className="rating">
           <ul className="list-inline">

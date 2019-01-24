@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from 'antd';
 import MessengerCustomerChat from 'react-messenger-customer-chat';
+<<<<<<< HEAD
 import Slider from '../components/Swiper';
 import Widget from '../components/Widget';
 import Banner from '../components/Banner';
@@ -13,21 +14,21 @@ import timesale4 from '../scss/assets/images/demo/9.jpg';
 import timesale5 from '../scss/assets/images/demo/5.jpg';
 import timesale6 from '../scss/assets/images/demo/11.jpg';
 import timesale7 from '../scss/assets/images/demo/12.jpg';
+=======
+
+import Category from '../components/Category';
+import MainMenu from '../components/Menu';
+import Slider from '../components/Swiper';
+import Widget from '../components/Widget';
+import Banner from '../components/Banner';
+import config from '../config';
+import { WIDGET_TYPES, WIDGET_NAMES, BANNER_LOCATION_INDICES } from '../utils/consts';
+>>>>>>> 91af03434f8696c5c648e7f6783e051476609cc9
 
 /* const IMAGE =
     process.env.NODE_ENV === 'development'
         ? config.image.development
         : config.image.production; */
-
-const WIDGET_TYPES = {
-    'onlyEmart': 'Зөвхөн И-МАРТ дэлгүүрт',
-    'discount': 'Цагийн хямдрал',
-    'batch': 'Багцын бараа',
-    'recipe': 'Хоолны жор',
-};
-Object.freeze(WIDGET_TYPES);
-
-const bannerIndices = [2, 4];
 
 class Homepage extends Component {
     state = {
@@ -40,34 +41,53 @@ class Homepage extends Component {
         console.log(`selected ${value}`);
     }
 
-    renderItems(widgets, allProducts) {
-        let items = [];
+    renderWidgets(widgets, allItems) {
+        let blocks = [];
 
         widgets = widgets.sort((obj1, obj2) => obj1.orders - obj2.orders);
 
+        let itemsInWidget = [];
         widgets.forEach((widget, index) => {
+<<<<<<< HEAD
             if (bannerIndices.includes(index)) {
                 items.push(<Banner key={index}/>);
+=======
+            if (BANNER_LOCATION_INDICES.includes(index)) {
+                // change "key" in the future
+                blocks.push(<Banner key={index} />);
+>>>>>>> 91af03434f8696c5c648e7f6783e051476609cc9
             }
 
-            let productsToShow = [];
+            let type = WIDGET_TYPES.horizontal;
             switch (widget.name) {
-                case WIDGET_TYPES.onlyEmart:
-                    productsToShow = allProducts.emartProducts;
+                case WIDGET_NAMES.onlyEmart:
+                    itemsInWidget = allItems.emartProducts;
                     break;
-                case WIDGET_TYPES.discount:
-                    productsToShow = allProducts.saleProducts;
+                case WIDGET_NAMES.discount:
+                    itemsInWidget = allItems.discountProducts;
                     break;
-                case WIDGET_TYPES.batch:
-                    productsToShow = allProducts.newProducts;
+                case WIDGET_NAMES.batch:
+                    itemsInWidget = allItems.packageProducts;
+                    break;
+                case WIDGET_NAMES.recipe:
+                    type = WIDGET_TYPES.vertical;
+                    itemsInWidget = allItems.recipes;
                     break;
                 default:
             }
 
-            items.push(<Widget key={widget.name} title={widget.name} products={productsToShow} renderOrder={widget.type} />);
+            blocks.push(
+                <Widget 
+                    key={widget.slug}
+                    type={type}
+                    name={widget.name}
+                    items={itemsInWidget} 
+                    renderOrder={widget.type}
+                />
+            );
         });
 
-        return items;
+        return blocks;
     }
 
     render() {
@@ -79,14 +99,16 @@ class Homepage extends Component {
             //menus,
             widgets,
             emartProducts,
-            saleProducts,
-            newProducts,
+            discountProducts,
+            packageProducts,
+            recipes,
         } = this.props.container;
 
-        const allProducts = {
+        const allItems = {
             emartProducts,
-            saleProducts,
-            newProducts,
+            discountProducts,
+            packageProducts,
+            recipes,
         };
 
         const root = [];
@@ -136,7 +158,7 @@ class Homepage extends Component {
                 </div>
                 {/* Slider end */}
                 {/* Main content */}
-                {this.renderItems(widgets, allProducts)}
+                {this.renderWidgets(widgets, allItems)}
                 {/* Main content end */}
                 {/* Brand list */}
                 <div className="main-slide brands-list">

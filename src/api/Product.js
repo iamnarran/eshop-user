@@ -13,15 +13,15 @@ export default [
     // REPLACE: 'jumcd',
   },
   {
-    NAME: 'findAllSaleProducts',
+    NAME: 'findAllDiscountProducts',
     METHOD: 'GET',
     URL: `${API}/api/product/saleproduct/01`,
     // REPLACE: 'jumcd',
   },
   {
-    NAME: 'findAllNewProducts',
+    NAME: 'findAllPackageProducts',
     METHOD: 'GET',
-    URL: `${API}/api/product/newproduct/01`,
+    URL: `${API}/api/product/saleproduct/01`,
     // REPLACE: 'jumcd',
-  }
+  },
 ];
