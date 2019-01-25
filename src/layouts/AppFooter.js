@@ -1,7 +1,10 @@
 import React from 'react';
 import { Icon } from 'antd';
 import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import config from '../config';
+import './AppFooter.css';
 
 const IMAGE =
     process.env.NODE_ENV === 'development'
@@ -21,28 +24,27 @@ class Footer extends React.Component {
                         <Link to="" className="logo">
                             <img alt="logo" src={IMAGE + staticinfo.logopath} />
                         </Link>
-                        <ul className="list-unstyled address">
+                        <ul className="address">
                             <li>
-                                <span>
-                                    <Icon type="facebook" />
-                                </span>
-                                <span>
-                                    <Icon type="google-plus" />
-                                </span>
-                                <span>
-                                    <Icon type="twitter" />
-                                </span>
+                                <Link to="https://www.facebook.com/EmartMongolia/?fref=ts">
+                                    <span className="fa-layers fa-fw">
+                                        <FontAwesomeIcon icon={['fas', 'circle']} size="4x" color="#999" />
+                                        <FontAwesomeIcon icon={['fab', 'facebook-f']} size="4x" inverse transform="shrink-6 right-3.5" />
+                                    </span>
+                                </Link>
+                                <Link to="https://plus.google.com/114881595936629316870">   
+                                    <span className="fa-layers fa-fw">
+                                        <FontAwesomeIcon icon={['fas', 'circle']} size="4x" color="#999" />
+                                        <FontAwesomeIcon icon={['fab', 'google-plus-g']} size="4x" inverse transform="shrink-6 left-2" />
+                                    </span>
+                                </Link>
+                                <Link to="https://twitter.com/emartmongolia">
+                                    <span className="fa-layers fa-fw">
+                                        <FontAwesomeIcon icon={['fas', 'circle']} size="4x" color="#999" />
+                                        <FontAwesomeIcon icon={['fab', 'twitter']} size="4x" inverse transform="shrink-6" />
+                                    </span>
+                                </Link>
                             </li>
-                            {/* <li>
-                                <span>
-                                <Icon type="twitter" />
-                                </span>
-                            </li>
-                            <li>
-                                <span>
-                                    <Icon type="google-plus" />
-                                </span>
-                            </li> */}
                         </ul>
                     </div>
                     <div className="col-xl-3 pad10">

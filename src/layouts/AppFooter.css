@@ -1,0 +1,16 @@
+.section-footer .address {
+  padding: 0;
+}
+
+.section-footer .address li {
+  list-style-type: none;
+  display: inline;
+}
+
+.section-footer .address span {
+  display: inline;
+}
+
+.section-footer .address a {
+  margin-right: 50px;
+}
