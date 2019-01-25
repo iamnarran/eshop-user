@@ -4,7 +4,6 @@ import MessengerCustomerChat from 'react-messenger-customer-chat';
 import Slider from '../components/Swiper';
 import Widget from '../components/Widget';
 import Banner from '../components/Banner';
-import config from '../config';
 import { WIDGET_TYPES, WIDGET_SLUGS } from '../utils/consts';
 
 /* const IMAGE =

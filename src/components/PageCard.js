@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { Icon } from 'antd';
 import timesale5 from '../scss/assets/images/demo/8.jpg';
 import Rate from './Rate';
-
 class CardPage extends React.Component {
   render() {
     var nf = new Intl.NumberFormat();
