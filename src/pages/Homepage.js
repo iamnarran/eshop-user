@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import MessengerCustomerChat from 'react-messenger-customer-chat';
 
 import Slider from '../components/Swiper';
