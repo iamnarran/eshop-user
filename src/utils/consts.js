@@ -32,14 +32,10 @@ WIDGET_LABELS[WIDGET_SLUGS.package] = ['productCount'];
 WIDGET_LABELS[WIDGET_SLUGS.recipe] = ['productCount'];
 Object.freeze(WIDGET_LABELS);
 
-const BANNER_LOCATION_INDICES = [2, 4];
-Object.freeze(BANNER_LOCATION_INDICES);
-
 export { 
   CARD_TYPES, 
   CARD_NUMS_IN_COL, 
   WIDGET_TYPES,
   WIDGET_SLUGS,
   WIDGET_LABELS, 
-  BANNER_LOCATION_INDICES,
 };

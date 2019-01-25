@@ -34,8 +34,6 @@ class Card extends React.Component {
       return null;
     }
 
-    console.log('item', item);
-
     let { renderType } = this.props;
     renderType = parseInt(renderType);
 
@@ -45,14 +43,14 @@ class Card extends React.Component {
 
     let prices = <span className="current">{item.price}₮</span>;
     
-    if (extra && extra.includes('expiryDate')) {
-      expiryDateLabel = (
-        <div className="time">
-          <Icon type="clock-circle" />
-          <span className="text">{item.edate}</span>
-        </div>
-      );
-    }
+    // if (extra && extra.includes('expiryDate')) {
+    //   expiryDateLabel = (
+    //     <div className="time">
+    //       <Icon type="clock-circle" />
+    //       <span className="text">{item.edate}</span>
+    //     </div>
+    //   );
+    // }
 
     if (extra && extra.includes('percent')) {
       percentLabel = (
@@ -83,11 +81,12 @@ class Card extends React.Component {
       case CARD_TYPES.slim:
         return (
           <div className="col-five pad10">
-              <div className="single-product small-product">
+              <div className="single-product small-product sale-product timed-product">
                   <div className="image-container">
                       <Link to="">
-                          <span className="image" style={{ backgroundImage: `url(${img5})` }}></span>
+                        <span className="image" style={{ backgroundImage: `url(${img5})` }}></span>
                       </Link>
+                      {console.log(percentLabel)}
                       {percentLabel}
                       {productCountLabel}
                       {expiryDateLabel}
@@ -117,6 +116,7 @@ class Card extends React.Component {
                       <Link to="">
                         <span className="image" style={{ backgroundImage: `url(${img5})` }}></span>
                       </Link>
+                      {console.log(percentLabel)}
                       {percentLabel}
                       {productCountLabel}
                       {expiryDateLabel}
@@ -163,7 +163,7 @@ class Card extends React.Component {
                 <span>{item.featuretxt}</span>
               </Link>
 
-              <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} />
+              {/* <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} /> */}
             </div>
           </div>
         );

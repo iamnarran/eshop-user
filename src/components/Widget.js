@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from 'antd';
+import moment from 'moment';
 
 import Card from './Card';
 import { CARD_TYPES, CARD_NUMS_IN_COL, WIDGET_TYPES, WIDGET_LABELS, WIDGET_SLUGS } from '../utils/consts';
@@ -47,7 +48,7 @@ class Widget extends React.Component {
         );
 
         if ((i + 1) % cardNumsInCol === 0 || i === iterationNum - 1) {
-            cardsToRender.push(<div class="col-md-4 pad10">{cards}</div>);
+            cardsToRender.push(<div className="col-md-4 pad10" key={i}>{cards}</div>);
             cards = [];
         }
     }
@@ -60,18 +61,23 @@ class Widget extends React.Component {
     if (this.props.widget.subtitle) {
       subtitle = (
         <p className="text">
-            <Icon type="clock-circle" />
-            <span>{ this.props.widget.subtitle }</span>
+            <Icon type="clock-circle" /> { this.props.widget.subtitle }
         </p>
       );
     }
 
+    let dateInterval = null;
     let buttonValue = 'Цааш үзэх';
     switch (this.props.widget.slug) {
         case WIDGET_SLUGS.onlyEmart:
             buttonValue = 'Зөвхөн Имартын бусад барааг үзэх';
             break;
         case WIDGET_SLUGS.discount:
+            dateInterval = (
+                <span>
+                    {moment().startOf('month').format('MM/DD')} - {moment().endOf('month').format('MM/DD')}
+                </span>
+            );
             buttonValue = 'Бусад хямдралтай барааг үзэх';
             break;
         case WIDGET_SLUGS.package:
@@ -89,6 +95,7 @@ class Widget extends React.Component {
               <h1 className="title">
                   <span className="text-uppercase">{this.props.widget.name}</span>
                   {subtitle}
+                  {dateInterval}
               </h1>
               <div className="row row10">
                   {this.renderItems()}

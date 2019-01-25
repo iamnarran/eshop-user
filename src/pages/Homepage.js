@@ -18,7 +18,7 @@ import Slider from '../components/Swiper';
 import Widget from '../components/Widget';
 import Banner from '../components/Banner';
 import config from '../config';
-import { WIDGET_TYPES, WIDGET_SLUGS, BANNER_LOCATION_INDICES } from '../utils/consts';
+import { WIDGET_TYPES, WIDGET_SLUGS } from '../utils/consts';
 
 /* const IMAGE =
     process.env.NODE_ENV === 'development'
@@ -43,11 +43,15 @@ class Homepage extends Component {
 
         let itemsInWidget = [];
         widgets.forEach((widget, index) => {
-            if (BANNER_LOCATION_INDICES.includes(index)) {
-                // change "key" in the future
-                blocks.push(<Banner key={index} />);
+            if ((index !== 0 && index % 2 === 0)) {
+                blocks.push(
+                    <Banner 
+                        key={allItems.banners[index][0].id} 
+                        data={allItems.banners[index][0]}
+                    />
+                );
             }
-
+            
             let type = WIDGET_TYPES.horizontal;
             switch (widget.slug) {
                 case WIDGET_SLUGS.onlyEmart:
@@ -76,6 +80,15 @@ class Homepage extends Component {
             );
         });
 
+        if (widgets.length % 2 === 0) {
+            blocks.push(
+                <Banner 
+                    key={allItems.banners[widgets.length][0].id} 
+                    data={allItems.banners[widgets.length][0]}
+                />
+            );
+        }
+
         return blocks;
     }
 
@@ -98,6 +111,7 @@ class Homepage extends Component {
             discountProducts,
             packageProducts,
             recipes,
+            banners,
         };
 
         const root = [];
@@ -143,7 +157,7 @@ class Homepage extends Component {
             <div className="top-container" >
                 {/* Slider */}
                 <div className="main-slide">
-                    <Slider dataSource={banners} params={homeBannerParams} elContainer={'banner'} />
+                    <Slider dataSource={banners[0]} params={homeBannerParams} elContainer={'banner'} />
                 </div>
                 {/* Slider end */}
                 {/* Main content */}

@@ -10,7 +10,9 @@ const options = {
 
 const fetch = async (props, onData) => {
     try {
-        const banners = await api.banner.findAll({ type: 'A1' });
+        const banners1 = await api.banner.findAll({ type: 'A1' });
+        const banners2 = await api.banner.findAll({ type: 'A2' });
+        const banners3 = await api.banner.findAll({ type: 'A3' });
         const brands = await api.brand.findAll();
         const category = await api.category.findAll();
         const widget = await api.widget.findAll();
@@ -19,9 +21,14 @@ const fetch = async (props, onData) => {
         const recipes = await api.recipe.findAll();
         const packageProducts = await api.packageProduct.findAll();
 
+        const banners = [];
+        banners[0] = banners1.data;
+        banners[2] = banners2.data;
+        banners[4] = banners3.data;
+
         onData(null, {
             container: { 
-                banners: banners.data,
+                banners,
                 brands : brands.data,
                 categories: category.data,
                 widgets: widget.data,
