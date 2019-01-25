@@ -14,3 +14,7 @@
 .section-footer .address a {
   margin-right: 50px;
 }
+
+.section-footer ul.list-unstyled span {
+  font-size: 0.8rem;
+}

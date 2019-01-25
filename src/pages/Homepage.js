@@ -84,6 +84,7 @@ class Homepage extends Component {
             //staticinfo,
             categories,
             banners,
+            tags,
             brands,
             //menus,
             widgets,

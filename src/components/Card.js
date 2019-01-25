@@ -4,6 +4,7 @@ import { Icon } from 'antd';
 
 // import config from '../config';
 import Rate from './Rate';
+import Label from './Label';
 import { CARD_TYPES } from '../utils/consts';
 import img5 from '../scss/assets/images/demo/5.jpg';
 import img13 from '../scss/assets/images/demo/13.jpg';
@@ -36,9 +37,10 @@ class Card extends React.Component {
 
     if (extra && extra.includes('percent')) {
       percentLabel = (
-        <div className="percent">
-          <span className="text"><strong>{item.spercent}</strong><small>%</small></span>
-        </div>
+        // <div className="percent">
+        //   <span className="text"><strong>{item.spercent}</strong><small>%</small></span>
+        // </div>
+        <Label bgColor="blue" item={item} />
       );
     }
 
@@ -68,7 +70,6 @@ class Card extends React.Component {
                       <Link to="">
                         <span className="image" style={{ backgroundImage: `url(${img5})` }}></span>
                       </Link>
-                      {console.log(percentLabel)}
                       {percentLabel}
                       {productCountLabel}
                       {expiryDateLabel}
@@ -98,7 +99,6 @@ class Card extends React.Component {
                       <Link to="">
                         <span className="image" style={{ backgroundImage: `url(${img5})` }}></span>
                       </Link>
-                      {console.log(percentLabel)}
                       {percentLabel}
                       {productCountLabel}
                       {expiryDateLabel}
