@@ -1,46 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from 'antd';
-<<<<<<< HEAD
-import Rate from './Rate';
-=======
 
 // import config from '../config';
 import Rate from './Rate';
 import { CARD_TYPES } from '../utils/consts';
-
->>>>>>> 91af03434f8696c5c648e7f6783e051476609cc9
 import img5 from '../scss/assets/images/demo/5.jpg';
-/* import img6 from '../scss/assets/images/demo/6.jpg';
-import img7 from '../scss/assets/images/demo/7.jpg';
-import img8 from '../scss/assets/images/demo/8.jpg';
-import img9 from '../scss/assets/images/demo/9.jpg';
-import img11 from '../scss/assets/images/demo/11.jpg';
-import img12 from '../scss/assets/images/demo/12.jpg';
 import img13 from '../scss/assets/images/demo/13.jpg';
-import img14 from '../scss/assets/images/demo/14.jpg';
-import img15 from '../scss/assets/images/demo/15.jpg';
-import img16 from '../scss/assets/images/demo/16.jpg';
-import img17 from '../scss/assets/images/demo/17.jpg';
-<<<<<<< HEAD
-const images = [5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17]; */
-=======
-
-// const images = [5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17];
->>>>>>> 91af03434f8696c5c648e7f6783e051476609cc9
-
-// const IMAGE =
-//     process.env.NODE_ENV === 'development'
-//         ? config.image.development
-//         : config.image.production;
 
 class Card extends React.Component {
   render() {
-<<<<<<< HEAD
-    const { product, widgetType } = this.props;
-=======
     const { item, extra } = this.props;
->>>>>>> 91af03434f8696c5c648e7f6783e051476609cc9
 
     if (!item) {
       return null;
@@ -53,15 +23,9 @@ class Card extends React.Component {
     let expiryDateLabel = null;
     let productCountLabel = null;
 
-<<<<<<< HEAD
-    let prices = <span className="current">{product.price}₮</span>;
-
-    if (product.edate && widgetType === WIDGET_TYPES.discount) {
-=======
     let prices = <span className="current">{item.price}₮</span>;
     
     if (extra && extra.includes('expiryDate')) {
->>>>>>> 91af03434f8696c5c648e7f6783e051476609cc9
       expiryDateLabel = (
         <div className="time">
           <Icon type="clock-circle" />
@@ -86,72 +50,15 @@ class Card extends React.Component {
       );
     }
 
-<<<<<<< HEAD
-    if (renderType !== CARD_TYPES.wide) {
-      return (
-        <div className="col-five pad10">
-          <div className="single-product small-product">
-            <div className="image-container">
-              <Link to="">
-                <span className="image" style={{ backgroundImage: `url(${img5})` }}></span>
-              </Link>
-              {mainLabel}
-              {expiryDateLabel}
-            </div>
-            <div className="info-container">
-              <Link to="" className="name">
-                <span>{product.name}</span>
-              </Link>
-              <Link to="" className="cat">
-                <span>{product.shortnm}</span>
-              </Link>
-              <Rate rate={product.rate} numOfVotes={product.rate_user_cnt} />
-
-              <Link to="" className="price">
-                {prices}
-              </Link>
-            </div>
-          </div>
-=======
     if (extra && extra.includes('discountPrice') && item.sprice) {
       prices = (
         <div>
           <small className="sale">{item.price}₮</small>
           <span className="current">{item.sprice}₮</span>
->>>>>>> 91af03434f8696c5c648e7f6783e051476609cc9
         </div>
       );
     }
 
-<<<<<<< HEAD
-    return (
-      <div className="col-xl-4 pad10">
-        <div className="single-product big-product sale-product timed-product">
-          <div className="image-container">
-            <Link to="">
-              <span className="image" style={{ backgroundImage: `url(${img5})` }}></span>
-            </Link>
-            {mainLabel}
-            {expiryDateLabel}
-          </div>
-          <div className="info-container">
-            <Link to="" className="name">
-              <span>{product.name}</span>
-            </Link>
-            <Link to="" className="cat">
-              <span>{product.shortnm}</span>
-            </Link>
-
-            <Rate rate={product.rate} numOfVotes={product.rate_user_cnt} />
-
-            <Link to="" className="price">
-              {prices}
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-=======
     switch (renderType) {
       case CARD_TYPES.slim:
         return (
@@ -241,7 +148,6 @@ class Card extends React.Component {
       default:
         return null;
     }
->>>>>>> 91af03434f8696c5c648e7f6783e051476609cc9
   }
 }
 
