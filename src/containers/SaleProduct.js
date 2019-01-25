@@ -10,11 +10,17 @@ const options = {
 
 const fetch = async (props, onData) => {
     try {
-        const saleproduct = await api.saleproduct.findAll({ jumcd: '01' });
-        
+        const saleproduct = await api.saleproduct.findAll({ jumcd: '99' });
+        const mainbanner = await api.pagebanner.findAll({ type: 'D1' });
+        const subbanner = await api.pagebanner.findAll({ type: 'D2'}); 
+        const tag = await api.tag.findAll({ type: '1' });
+        console.log(tag.data[0]);        
         onData(null, {
             container: { 
-                saleproduct: saleproduct.data
+                saleproduct: saleproduct.data,
+                mainbanner: mainbanner.data[0],
+                subbanner: subbanner.data[0],
+                tag: tag.data[0],
             }
         });
     } catch (e) {

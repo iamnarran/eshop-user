@@ -1,6 +1,7 @@
 import client, { setAuthorizationHeader } from './client';
 import homepage from './Homepage';
-import banner from './Banner';
+import banner from './HompageBanner';
+import pagebanner from './PagesBanner';
 import brand from './Brands';
 import staticinfo from './Static';
 import menu from './Menu';
@@ -10,6 +11,7 @@ import newproduct from './Newproduct';
 import widget from './Widget';
 import product from './Product';
 import recipe from './Recipe';
+import tag from './Tag';
 
 let rest = {};
 
@@ -103,6 +105,18 @@ product.forEach(api => {
 rest['recipe'] = {};
 recipe.forEach(api => {
   rest.recipe[api.NAME] = data => generateAPI(api, data);
+});
+
+//PAGE'S BANNER
+rest['pagebanner'] = {};
+pagebanner.forEach(api => {
+  rest.pagebanner[api.NAME] = data => generateAPI(api, data);
+});
+
+//TAG
+rest['tag'] = {};
+tag.forEach(api => {
+  rest.tag[api.NAME] = data => generateAPI(api, data);
 });
 
 export { rest as default, setAuthorizationHeader };
