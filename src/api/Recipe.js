@@ -7,7 +7,7 @@ const API =
     
 export default [
   {
-    NAME: 'findAllRecipes',
+    NAME: 'findAll',
     METHOD: 'GET',
     URL: `${API}/api/cookrecipe`,
     // REPLACE: 'jumcd',

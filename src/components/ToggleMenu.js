@@ -6,8 +6,8 @@ class MainMenu extends React.Component {
         const data = this.props && this.props.dataSource;
         var indents = data.map(function (item, index) {
             return (
-                <li>
-                    <Link to={item.link} key={index}> <span>{item.menunm}</span> </Link>
+                <li key={index}>
+                    <Link to={item.link}><span>{item.menunm}</span></Link>
                 </li>
             );
         });

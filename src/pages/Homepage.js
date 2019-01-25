@@ -4,7 +4,13 @@ import MessengerCustomerChat from 'react-messenger-customer-chat';
 import Slider from '../components/Swiper';
 import Widget from '../components/Widget';
 import Banner from '../components/Banner';
-import { WIDGET_TYPES, WIDGET_NAMES, BANNER_LOCATION_INDICES } from '../utils/consts';
+import config from '../config';
+import { WIDGET_TYPES, WIDGET_SLUGS } from '../utils/consts';
+
+/* const IMAGE =
+    process.env.NODE_ENV === 'development'
+        ? config.image.development
+        : config.image.production; */
 
 class Homepage extends Component {
     state = {
@@ -24,23 +30,27 @@ class Homepage extends Component {
 
         let itemsInWidget = [];
         widgets.forEach((widget, index) => {
-            if (BANNER_LOCATION_INDICES.includes(index)) {
-                // change "key" in the future
-                blocks.push(<Banner key={index} />);
+            if ((index !== 0 && index % 2 === 0)) {
+                blocks.push(
+                    <Banner 
+                        key={allItems.banners[index][0].id} 
+                        data={allItems.banners[index][0]}
+                    />
+                );
             }
-
+            
             let type = WIDGET_TYPES.horizontal;
-            switch (widget.name) {
-                case WIDGET_NAMES.onlyEmart:
+            switch (widget.slug) {
+                case WIDGET_SLUGS.onlyEmart:
                     itemsInWidget = allItems.emartProducts;
                     break;
-                case WIDGET_NAMES.discount:
+                case WIDGET_SLUGS.discount:
                     itemsInWidget = allItems.discountProducts;
                     break;
-                case WIDGET_NAMES.batch:
+                case WIDGET_SLUGS.package:
                     itemsInWidget = allItems.packageProducts;
                     break;
-                case WIDGET_NAMES.recipe:
+                case WIDGET_SLUGS.recipe:
                     type = WIDGET_TYPES.vertical;
                     itemsInWidget = allItems.recipes;
                     break;
@@ -51,12 +61,20 @@ class Homepage extends Component {
                 <Widget 
                     key={widget.slug}
                     type={type}
-                    name={widget.name}
                     items={itemsInWidget} 
-                    renderOrder={widget.type}
+                    widget={widget}
                 />
             );
         });
+
+        if (widgets.length % 2 === 0) {
+            blocks.push(
+                <Banner 
+                    key={allItems.banners[widgets.length][0].id} 
+                    data={allItems.banners[widgets.length][0]}
+                />
+            );
+        }
 
         return blocks;
     }
@@ -65,7 +83,7 @@ class Homepage extends Component {
         const {
             //staticinfo,
             categories,
-            banner,
+            banners,
             brands,
             //menus,
             widgets,
@@ -80,6 +98,7 @@ class Homepage extends Component {
             discountProducts,
             packageProducts,
             recipes,
+            banners,
         };
 
         const root = [];
@@ -125,14 +144,13 @@ class Homepage extends Component {
             <div className="top-container" >
                 {/* Slider */}
                 <div className="main-slide">
-                    <Slider dataSource={banner} params={homeBannerParams} elContainer={'banner'} />
+                    <Slider dataSource={banners[0]} params={homeBannerParams} elContainer={'banner'} />
                 </div>
                 {/* Slider end */}
 
                 {/* Main content */}
                 {this.renderWidgets(widgets, allItems)}
                 {/* Main content end */}
-
                 {/* Brand list */}
                 <div className="main-slide brands-list">
                     <div className="container pad10">
@@ -141,9 +159,6 @@ class Homepage extends Component {
                 </div>
                 {/* Brand list */}
                 
-                {/* Messenger */}
-                {/* <MessengerCustomerChat pageId="169275059877520" appId="570055533421847" htmlRef={window.fndsmfpo.pathname}/> */}
-
                 {/* Messenger */}
                 <MessengerCustomerChat pageId="169275059877520" appId="570055533421847" htmlRef={window.location.pathname} />
                 {/* Messenger */}
