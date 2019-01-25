@@ -31,7 +31,7 @@ import Homepage from './containers/Homepage';
 import messages from './messages.json';
 import Discount from './containers/Discount';
 import NewProduct from './containers/NewProduct';
-import Recipe from './pages/Recipe/index';
+import Recipe from './containers/Recipe';
 import Package from './pages/Package/index';
 import Promotion from './pages/Promotion/index';
 import Season from './pages/Season/index';

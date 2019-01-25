@@ -2,7 +2,7 @@ import React from 'react';
 import api from '../api';
 import { compose } from 'react-komposer';
 import Loader from '../components/Loader';
-import NewProduct from '../pages/NewProduct/index';
+import Recipe from '../pages/Recipe/index';
 
 const options = {
     loadingHandler: () => <Loader />
@@ -10,14 +10,15 @@ const options = {
 
 const fetch = async (props, onData) => {
     try {
-        const newproduct = await api.newproduct.findAll({ jumcd: '01' });
+        const recipeproduct = await api.recipe.findAll();
         const mainbanner = await api.pagebanner.findAll({ type: 'F1' });
         const subbanner = await api.pagebanner.findAll({ type: 'F2'}); 
-        const tag = await api.tag.findAll({ type: '1' });  
-        // console.log(newproduct);                
+        const tag = await api.tag.findAll({ type: '1' });
+        // console.log(recipeproduct);        
+        
         onData(null, {
             container: { 
-              newproduct: newproduct.data,
+              recipeproduct: recipeproduct.data,
               mainbanner: mainbanner.data[0],
               subbanner: subbanner.data[0],
               tag: tag.data[0],
@@ -36,4 +37,4 @@ const dataLoader = (props, onData) => {
 export default compose(
     dataLoader,
     options
-)(NewProduct);
+)(Recipe);

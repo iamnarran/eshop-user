@@ -68,7 +68,6 @@ class Card extends React.Component {
                       <Link to="">
                         <span className="image" style={{ backgroundImage: `url(${img5})` }}></span>
                       </Link>
-                      {console.log(percentLabel)}
                       {percentLabel}
                       {productCountLabel}
                       {expiryDateLabel}
@@ -98,7 +97,6 @@ class Card extends React.Component {
                       <Link to="">
                         <span className="image" style={{ backgroundImage: `url(${img5})` }}></span>
                       </Link>
-                      {console.log(percentLabel)}
                       {percentLabel}
                       {productCountLabel}
                       {expiryDateLabel}

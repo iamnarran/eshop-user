@@ -13,8 +13,7 @@ const fetch = async (props, onData) => {
         const saleproduct = await api.saleproduct.findAll({ jumcd: '99' });
         const mainbanner = await api.pagebanner.findAll({ type: 'D1' });
         const subbanner = await api.pagebanner.findAll({ type: 'D2'}); 
-        const tag = await api.tag.findAll({ type: '1' });
-        console.log(tag.data[0]);        
+        const tag = await api.tag.findAll({ type: '4' });      
         onData(null, {
             container: { 
                 saleproduct: saleproduct.data,

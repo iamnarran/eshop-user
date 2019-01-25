@@ -150,15 +150,14 @@ class Homepage extends Component {
                 {/* Main content */}
                 {this.renderWidgets(widgets, allItems)}
                 {/* Main content end */}
+                
                 {/* Brand list */}
                 <div className="main-slide brands-list">
                     <div className="container pad10">
                         <Slider dataSource={brands} params={brandsParams} elContainer={'brands'} />
                     </div>
                 </div>
-                {/* Brand list */}
-
-                
+                {/* Brand list */}               
                 
                 {/* Messenger */}
                 <MessengerCustomerChat pageId="169275059877520" appId="570055533421847" htmlRef={window.location.pathname} />

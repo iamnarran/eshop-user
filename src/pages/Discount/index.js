@@ -10,8 +10,8 @@ const IMAGE =
         : config.image.production;
 class Salepage extends React.Component {
   render() {
-    const { saleproduct, mainbanner, subbanner } = this.props.container;
-    console.log(this.props.container);
+    const { saleproduct, mainbanner, subbanner } = this.props.container;    
+    let products = []
     
     return (
       <div className="top-container">
@@ -32,19 +32,32 @@ class Salepage extends React.Component {
             <div className="row row10">
               {
                 saleproduct.map((product, key) => {
-                  if(key === 10){
-                    return(
-                      <div key={key} className="banner-container" style={{marginBottom: '20px'}}>
-                        <span style={{backgroundImage: `url(${IMAGE+subbanner.img })`}}></span>
-                        <div className="container pad10" >
-                          <Link to="#">
-                            <img alt="banner" src={IMAGE+subbanner.img} className="img-fluid" />
-                          </Link>
-                        </div>
-                      </div>
-                    )
-                  }  
-                  return <CardPage key={key}  product={product} cardType="1" type="sale" sale/>
+                  if(key >= 10){ 
+                    products.push(product)
+                    return null
+                  }
+                  else { return <CardPage key={key}  product={product} cardType="1" type="sale" sale/> }
+                })                
+              }
+            </div>
+          </div>
+        </div>
+
+        <div className="banner-container">
+          <span style={{ backgroundImage: `url(${IMAGE+subbanner.img })`}}></span>
+          <div className="container pad10">
+            <Link to={subbanner.link}>
+              <img alt="banner" src={IMAGE+subbanner.img} className="img-fluid"/>
+            </Link>
+          </div>
+        </div>
+
+        <div className="section">
+          <div className="container pad10">
+            <div className="row row10">
+              {
+                products.map((product, key) => {
+                  return <CardPage key={key}  product={product} cardType="1" type="sale" sale/> 
                 })                
               }
             </div>
