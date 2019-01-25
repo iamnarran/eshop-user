@@ -2,21 +2,9 @@ import React, { Component } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import MessengerCustomerChat from 'react-messenger-customer-chat';
 
-//import config from '../config';
-import timesale1 from '../scss/assets/images/demo/6.jpg';
-import timesale2 from '../scss/assets/images/demo/7.jpg';
-import timesale3 from '../scss/assets/images/demo/8.jpg';
-import timesale4 from '../scss/assets/images/demo/9.jpg';
-import timesale5 from '../scss/assets/images/demo/5.jpg';
-import timesale6 from '../scss/assets/images/demo/11.jpg';
-import timesale7 from '../scss/assets/images/demo/12.jpg';
-
-import Category from '../components/Category';
-import MainMenu from '../components/Menu';
 import Slider from '../components/Swiper';
 import Widget from '../components/Widget';
 import Banner from '../components/Banner';
-import config from '../config';
 import { WIDGET_TYPES, WIDGET_SLUGS } from '../utils/consts';
 
 /* const IMAGE =
@@ -159,6 +147,7 @@ class Homepage extends Component {
                     <Slider dataSource={banners[0]} params={homeBannerParams} elContainer={'banner'} />
                 </div>
                 {/* Slider end */}
+
                 {/* Main content */}
                 {this.renderWidgets(widgets, allItems)}
                 {/* Main content end */}

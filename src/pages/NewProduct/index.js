@@ -1,19 +1,19 @@
 import React from 'react';
-import Card from '../components/Card';
+import Card from '../../components/Card';
 import { Link } from 'react-router-dom';
-/* import PropTypes from 'prop-types'; */
 
-class Salepage extends React.Component {
+class Newproduct extends React.Component {
   render() {
-    const { saleproduct } = this.props.container;
-    return (
+    const { newproduct } = this.props.container;
+    
+    return(
       <div className="top-container">
-        <div className="whole-page-title color-main">
+        <div className="whole-page-title color-blue">
           <div className="container pad10">
             <div className="title-container flex-space">
               <h2>
-                <span className="big">Хямдралтай</span>
-                <strong>Хугацаагүй хямдрал зарлагдсан бараа бүтээгдэхүүн</strong>
+                <span className="big">Шинэ</span>
+                <strong>Шинээр худалдаалагдаж буй бараа бүтээгдэхүүн</strong>
               </h2>
             </div>
           </div>
@@ -22,8 +22,8 @@ class Salepage extends React.Component {
           <div className="container pad10">
             <div className="row row10">
               {
-                saleproduct.map((product, key) => {
-                  return <Card product={product} cardType="1" type="sale" key={key} sale />
+                newproduct.map((product, key) => {
+                  return <Card product={product} cardType="1" type="sale" key={key} neew />
                 })
               }
             </div>
@@ -39,8 +39,8 @@ class Salepage extends React.Component {
   }
 }
 
-Salepage.default = {
-  saleproduct: []
+Newproduct.default = {
+  newproduct: [],
 }
 
-export default Salepage;
+export default Newproduct;
