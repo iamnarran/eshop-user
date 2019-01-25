@@ -29,12 +29,12 @@ import Footer from './containers/AppFooter';
 
 import Homepage from './containers/Homepage';
 import messages from './messages.json';
-import Salepage from './containers/SaleProduct';
-import Newpage from './containers/Newpage';
-import Recipe from './pages/Recipe';
-import Package from './pages/Package';
-import Promotion from './pages/Promotion';
-import Season from './pages/Season';
+import Discount from './containers/Discount';
+import NewProduct from './containers/NewProduct';
+import Recipe from './pages/Recipe/index';
+import Package from './pages/Package/index';
+import Promotion from './pages/Promotion/index';
+import Season from './pages/Season/index';
 
 //library.add(fab, faCheckSquare, faCoffee);
 library.add(fas, far, fab);
@@ -76,13 +76,13 @@ class Localization extends Component {
       },
       {
         exact: false,
-        path: "/salepage",
-        component: (rest) => <Salepage {...rest} {...this.props} />
+        path: "/discount",
+        component: (rest) => <Discount {...rest} {...this.props} />
       },
       {
         exact: false,
         path: "/new",
-        component: (rest) => <Newpage {...rest} {...this.props} />
+        component: (rest) => <NewProduct {...rest} {...this.props} />
       },
       {
         exact: false,

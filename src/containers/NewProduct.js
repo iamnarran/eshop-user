@@ -2,7 +2,7 @@ import React from 'react';
 import api from '../api';
 import { compose } from 'react-komposer';
 import Loader from '../components/Loader';
-import Newpage from '../pages/NewProduct';
+import NewProduct from '../pages/NewProduct/index';
 
 const options = {
     loadingHandler: () => <Loader />
@@ -31,4 +31,4 @@ const dataLoader = (props, onData) => {
 export default compose(
     dataLoader,
     options
-)(Newpage);
+)(NewProduct);

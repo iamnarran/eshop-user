@@ -1,5 +1,5 @@
 import React from 'react';
-import CardPage from '../components/PageCard';
+import CardPage from '../../components/PageCard';
 import config from 'config';
 import { Link } from 'react-router-dom';
 /* import PropTypes from 'prop-types'; */
@@ -15,7 +15,8 @@ class Salepage extends React.Component {
     
     return (
       <div className="top-container">
-        <div className="whole-page-title color-main" style={{ backgroundImage: `url(${IMAGE+mainbanner.img })`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right', backgroundSize: 'contain' }}>
+        <div className="whole-page-title color-main" style={{ backgroundImage: `url(${IMAGE+mainbanner.img })`, 
+          backgroundRepeat: 'no-repeat', backgroundPosition: 'right', backgroundSize: '50%'}}>
           <div className="container pad10">
             <div className="title-container flex-space">
               <h2>
@@ -35,7 +36,7 @@ class Salepage extends React.Component {
                     return(
                       <div key={key} className="banner-container" style={{marginBottom: '20px'}}>
                         <span style={{backgroundImage: `url(${IMAGE+subbanner.img })`}}></span>
-                        <div className="container pad10">
+                        <div className="container pad10" >
                           <Link to="#">
                             <img alt="banner" src={IMAGE+subbanner.img} className="img-fluid" />
                           </Link>
