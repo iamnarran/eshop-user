@@ -13,7 +13,6 @@ const options = {
 const fetch = async (props, onData) => {
    try {
       const staticinfo = await api.staticinfo.findAll();
-      console.log(staticinfo);
       
       onData(null, {
          container: {

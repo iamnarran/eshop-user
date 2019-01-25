@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { Icon } from 'antd';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import MessengerCustomerChat from 'react-messenger-customer-chat';
 
 //import config from '../config';
@@ -170,6 +169,8 @@ class Homepage extends Component {
                     </div>
                 </div>
                 {/* Brand list */}
+
+                
                 
                 {/* Messenger */}
                 <MessengerCustomerChat pageId="169275059877520" appId="570055533421847" htmlRef={window.location.pathname} />
