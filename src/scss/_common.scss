@@ -394,6 +394,16 @@
     align-items: center;
     justify-content: space-between;
   }
+  @media (max-width: 1000px) {
+    .page-main-banner{
+      display: none;
+    }
+  }
+  @media (min-width: 1000px) {
+    .page-main-banner{
+      display: block;
+    }
+  }
   @media (min-width: 1440px) {
   
     .container-laptop {
