@@ -5,7 +5,7 @@ import brand from './Brands';
 import staticinfo from './Static';
 import menu from './Menu';
 import category from './Category';
-import saleproduct from './Saleproduct';
+import saleproduct from './Discountproduct';
 import newproduct from './Newproduct';
 import widget from './Widget';
 import product from './Product';

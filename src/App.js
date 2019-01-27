@@ -104,6 +104,12 @@ class Localization extends Component {
         path: "/season",
         component: (rest) => <Season {...rest} {...this.props} />
       },
+
+      // {
+      //   path: "*",
+      //   exact: false,
+      //   component: () => <NotFound />
+      // },
     ];
 
     return (

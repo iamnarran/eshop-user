@@ -15,7 +15,7 @@ export default [
   {
     NAME: 'findAllDiscountProducts',
     METHOD: 'GET',
-    URL: `${API}/api/product/saleproduct/:jumcd`,
+    URL: `${API}/api/product/discountproduct/:jumcd`,
     REPLACE: 'id, jumcd',
   },
 ];

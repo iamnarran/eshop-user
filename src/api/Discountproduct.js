@@ -9,7 +9,7 @@ export default [
   {
     NAME: 'findAll',
     METHOD: 'GET',
-    URL: `${API}/api/product/saleproduct/:jumcd`,
+    URL: `${API}/api/product/discountproduct/:jumcd`,
     REPLACE: 'id, jumcd',
   }
 ];

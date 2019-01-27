@@ -2,13 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Icon } from 'antd';
-import timesale5 from '../scss/assets/images/demo/8.jpg';
 import Rate from './Rate';
+import config from 'config';
+
+const IMAGE =
+process.env.NODE_ENV === 'development'
+    ? config.image.development
+    : config.image.production;
 class CardPage extends React.Component {
   render() {
-    var nf = new Intl.NumberFormat();
-    const {product, cardType, type, neew, time, sale} = this.props;
+    let nf = new Intl.NumberFormat();
+    const {product, type, neew, time, sale} = this.props;
 
+    /**CARD'S TAG **/
     const saleTag = (
       <div className="percent">
         <span className="text"><strong>{product.spercent}</strong><small>%</small></span>
@@ -27,7 +33,7 @@ class CardPage extends React.Component {
     )
     const hover = (
       <div className="search-hover">
-        <Link to="">
+        <Link to="" >
           <i className="fa fa-heart-o" aria-hidden="true"></i>                
           <span></span>
         </Link>
@@ -37,12 +43,14 @@ class CardPage extends React.Component {
         </Link>
       </div>
     )
-    const saleFiveCard = (
+
+    /**PAGE'S CARD */
+    const DiscountCard = (
         <div className="col-five col-md-3 col-6 pad10">
         <div className="single-product small-product sale-product new-product">
           <div className="image-container">
             <Link to="">
-                <span className="image" style={{ backgroundImage: `url(${timesale5})` }}></span>
+                <span className="image" style={{ backgroundImage: `url(${IMAGE+product.img})` }}></span>
             </Link>
             {time ? timeTag : ''}
             {sale ? saleTag : ''}
@@ -65,43 +73,17 @@ class CardPage extends React.Component {
         </div>
         </div>
     )
-    const saleThreeCard = (
-      <div className="col-xl-4 pad10">
-            <div className="single-product big-product sale-product timed-product">
-                <div className="image-container">
-                    <Link to="">
-                        <span className="image" style={{ backgroundImage: `url(${timesale5})` }}></span>
-                    </Link>
-                    {time ? timeTag : ''}
-                    {sale ? saleTag : ''}
-                    {neew ? newTag : ''}
-                </div>
-                <div className="info-container">
-                    <Link to="" className="name">
-                        <span>{product.name}</span>
-                    </Link>
-                    <Link to="" className="cat">
-                        <span>{product.shortnm}</span>
-                    </Link>
-                    <Rate rate={product.rate} numOfVotes={product.rate_user_cnt} />
-                    <Link to="" className="price">
-                        <small className="sale">{product.price+'₮'}</small>
-                        <span className="current">{product.price+'₮'}</span>
-                    </Link>
-                </div>
-            </div>
-            </div>
-    )
-    const newFiveCard = (
+    const Newcard = (
       <div className="col-five col-md-3 col-6 pad10">
         <div className="single-product small-product sale-product new-product">
           <div className="image-container">
             <Link to="">
-                <span className="image" style={{ backgroundImage: `url(${timesale5})` }}></span>
+                <span className="image" style={{ backgroundImage: `url(${IMAGE+product.img})` }}></span>
             </Link>
             {time ? timeTag : ''}
             {sale ? saleTag : ''}
             {neew ? newTag : ''}
+            {hover}
           </div>
           <div className="info-container">
             <Link to="" className="name">
@@ -119,14 +101,11 @@ class CardPage extends React.Component {
       </div>
     )
     
-    if(cardType.toString() === "1" && type.toString() === "sale"){
-      return ( saleFiveCard )
+    if(type === "discount"){
+      return ( DiscountCard )
     }
-    else if(cardType.toString() === "2" && type.toString() === "sale"){
-      return ( saleThreeCard )
-    }
-    else if(cardType.toString() === "1" && type.toString() === "new"){
-      return ( newFiveCard )
+    else if(type === "new"){
+      return ( Newcard )
     }
     else  return <b>CardType type error</b>
   }

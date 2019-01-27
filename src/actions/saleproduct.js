@@ -1,5 +1,5 @@
 import api from '../api';
-import Saleproduct from '../api/Saleproduct';
+import Saleproduct from '../api/Discountproduct';
 
 let actions = {};
 Saleproduct.forEach(a => {

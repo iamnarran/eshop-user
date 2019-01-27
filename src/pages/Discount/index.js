@@ -36,7 +36,7 @@ class Salepage extends React.Component {
                     products.push(product)
                     return null
                   }
-                  else { return <CardPage key={key}  product={product} cardType="1" type="sale" sale/> }
+                  else { return <CardPage key={key}  product={product} type="discount" sale/> }
                 })                
               }
             </div>
@@ -57,7 +57,7 @@ class Salepage extends React.Component {
             <div className="row row10">
               {
                 products.map((product, key) => {
-                  return <CardPage key={key}  product={product} cardType="1" type="sale" sale/> 
+                  return <CardPage key={key}  product={product} type="discount" sale/> 
                 })                
               }
             </div>
