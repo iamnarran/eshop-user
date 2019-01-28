@@ -30,16 +30,15 @@ class AppHeader extends Component {
   }
 
   toggleOpen = () => this.setState({ isOpen: !this.state.isOpen });
-  togglePopup = () => this.setState({ isToggle: !this.state.isToggle });
   toggleSearch = () => this.setState({ isSearch: !this.state.isSearch });
-
   showLogInModal = () => this.setState({ logInVisible: true });
-  handleLogInSave = (e) => { console.log(e); this.setState({ logInVisible: false, }); }
-  handleLogInCancel = (e) => { console.log(e); this.setState({ logInVisible: false, }); }
-
+  handleLogInSave = () => this.setState({ logInVisible: false, })
+  handleLogInCancel = () => this.setState({ logInVisible: false, });
   showSingUpModal = () => this.setState({ SingUpVisible: true });
-  handleSingUpSave = (e) => { console.log(e); this.setState({ SingUpVisible: false, }); }
-  handleSingUpCancel = (e) => { console.log(e); this.setState({ SingUpVisible: false, }); }
+  handleSingUpSave = () => this.setState({ SingUpVisible: false, });
+  handleSingUpCancel = () => this.setState({ SingUpVisible: false, });
+
+  togglePopup = () => { this.props.onChange() };
 
   render() {
     const { staticinfo } = this.props.container;
@@ -58,13 +57,14 @@ class AppHeader extends Component {
         }
       });
     });
+
     const menuClass = `dropdown-menu${this.state.isOpen ? " show" : ""}`;
-    /* const popupClass = `${this.state.isToggle ? "activated" : ""}`; */
     const seartchClass = `search-mobile${this.state.isSearch ? " activated" : ""}`;
+    const togglePopup = `${this.props.isToggle ? " activated" : ""}`;
 
     return (
       <div>
-        <div /* className={popupClass} */ >
+        <div className={togglePopup} >
           <div className="fixed-mobile-menu">
             <div className="single">
               <ul className="list-unstyled flex-this flex-space top-1">
@@ -124,11 +124,6 @@ class AppHeader extends Component {
                             <strong> {staticinfo.phone} </strong>
                           </Link>
                         </li>
-                        <li className="list-inline-item">
-                          <Link to="" className="e-help">
-                            <span>Тусламж</span>
-                          </Link>
-                        </li>
                       </ul>
                     </div>
                     <div className="col-lg-6 col-md-6 d-none d-md-block  pad10">
@@ -172,7 +167,7 @@ class AppHeader extends Component {
                           <i className="fa fa-navicon" aria-hidden="true"></i>
                           <i className="fa fa-times" aria-hidden="true"></i>
                         </Link>
-                        <Link to={'http://localhost:3001'} className="logo">
+                        <Link to={'/'} className="logo">
                           <img alt="logo" src={IMAGE + staticinfo.logopath} />
                         </Link>
                         <div className="search">
