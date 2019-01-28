@@ -79,7 +79,7 @@ class Widget extends React.Component {
         case WIDGET_SLUGS.discount:
             dateInterval = (
                 <span>
-                    {moment().startOf('month').format('MM/DD')} - {moment().endOf('month').format('MM/DD')}
+                    {moment().startOf('month').format('MM/DD')} ~ {moment().endOf('month').format('MM/DD')}
                 </span>
             );
             buttonValue = 'Бусад хямдралтай барааг үзэх';

@@ -16,7 +16,7 @@ const fetch = async (props, onData) => {
         const brands = await api.brand.findAll();
         const category = await api.category.findAll();
         const widget = await api.widget.findAll();
-        const emartProducts = await api.product.findAllEmartProducts({ jumcd: '01' });
+        const emartProducts = await api.product.findAllEmartProducts({ jumcd: '99' });
         const discountProducts = await api.product.findAllDiscountProducts({ jumcd: '99' });
         const recipes = await api.recipe.findAll();
         const packageProducts = await api.packageProduct.findAll();
@@ -35,6 +35,8 @@ const fetch = async (props, onData) => {
         tags[2] = tags2.data[0];
         tags['recipe'] = tags3.data[0];
         tags['discount'] = tags4.data[0];
+
+        console.log(widget.data);
 
         onData(null, {
             container: { 

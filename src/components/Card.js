@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from 'antd';
 
-// import config from '../config';
+import config from '../config';
 import Rate from './Rate';
 import Label from './Label';
 import { CARD_TYPES } from '../utils/consts';
@@ -10,6 +10,11 @@ import img5 from '../scss/assets/images/demo/5.jpg';
 import img13 from '../scss/assets/images/demo/13.jpg';
 
 import './Card.css';
+
+const IMAGE =
+process.env.NODE_ENV === 'development'
+    ? config.image.development
+    : config.image.production;
 
 class Card extends React.Component {
   render() {
@@ -26,7 +31,8 @@ class Card extends React.Component {
     let expiryDateLabel = null;
     let productCountLabel = null;
 
-    let prices = <span className="current">{item.price}₮</span>;
+    const formatter = new Intl.NumberFormat('en-US');
+    let prices = <span className="current">{formatter.format(item.price)}₮</span>;
     
     // if (extra && extra.includes('expiryDate')) {
     //   expiryDateLabel = (
@@ -38,6 +44,7 @@ class Card extends React.Component {
     // }
 
     if (extra && extra.includes('percent')) {
+      console.log(item);
       percentLabel = (
         <Label bgColor={labelColor} item={item} />
       );
@@ -50,8 +57,6 @@ class Card extends React.Component {
     }
 
     if (extra && extra.includes('discountPrice') && item.sprice) {
-      const formatter = new Intl.NumberFormat('en-US');
-
       prices = (
         <div>
           <small className="sale">{formatter.format(item.price)}₮</small>
@@ -80,7 +85,7 @@ class Card extends React.Component {
               <div className="single-product small-product sale-product timed-product">
                   <div className="image-container">
                       <Link to="#">
-                        <span className="image" style={{ backgroundImage: `url(${img5})` }}></span>
+                        <span className="image" style={{ backgroundImage: `url(${IMAGE + item.img})` }}></span>
                       </Link>
                       {percentLabel}
                       {productCountLabel}
@@ -110,7 +115,7 @@ class Card extends React.Component {
               <div className="single-product big-product sale-product timed-product">
                   <div className="image-container">
                       <Link to="#">
-                        <span className="image" style={{ backgroundImage: `url(${img5})` }}></span>
+                        <span className="image" style={{ backgroundImage: `url(${IMAGE + item.img})` }}></span>
                       </Link>
                       {percentLabel}
                       {productCountLabel}
@@ -145,11 +150,12 @@ class Card extends React.Component {
           <div className={`single-product big-product food-post food-${c}`}>
             <div className="image-container">
                 <Link to="#">
-                  <span className="image" style={{ backgroundImage: `url(${img13})` }}></span>
+                  <span className="image" style={{ backgroundImage: `url(${IMAGE + item.img})` }}></span>
                 </Link>
                 {percentLabel}
                 {productCountLabel}
                 {expiryDateLabel}
+                {hover}
             </div>
             <div className="info-container">
               <Link to="#" className="name">
