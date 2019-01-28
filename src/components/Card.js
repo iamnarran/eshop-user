@@ -60,6 +60,19 @@ class Card extends React.Component {
       );
     }
 
+    const hover = (
+      <div className="search-hover">
+        <Link to="" >
+          <i className="fa fa-heart-o" aria-hidden="true"></i>                
+          <span></span>
+        </Link>
+        <Link to="">
+          <i className="fa fa-cart-plus" aria-hidden="true"></i>                
+          <span></span>
+        </Link>
+      </div>
+    )
+
     switch (renderType) {
       case CARD_TYPES.slim:
         return (
@@ -72,6 +85,7 @@ class Card extends React.Component {
                       {percentLabel}
                       {productCountLabel}
                       {expiryDateLabel}
+                      {hover}
                   </div>
                   <div className="info-container">
                       <Link to="#" className="name">
@@ -101,6 +115,7 @@ class Card extends React.Component {
                       {percentLabel}
                       {productCountLabel}
                       {expiryDateLabel}
+                      {hover}
                   </div>
                   <div className="info-container">
                       <Link to="#" className="name">
