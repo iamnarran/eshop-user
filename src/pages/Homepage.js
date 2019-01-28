@@ -6,11 +6,6 @@ import Widget from '../components/Widget';
 import Banner from '../components/Banner';
 import { WIDGET_TYPES, WIDGET_SLUGS } from '../utils/consts';
 
-/* const IMAGE =
-    process.env.NODE_ENV === 'development'
-        ? config.image.development
-        : config.image.production; */
-
 class Homepage extends Component {
     state = {
         isOpen: false,
@@ -29,7 +24,7 @@ class Homepage extends Component {
 
         let itemsInWidget = [];
         widgets.forEach((widget, index) => {
-            if ((index !== 0 && index % 2 === 0)) {
+            if (index !== 0 && index % 2 === 0) {
                 blocks.push(
                     <Banner 
                         key={allItems.banners[index].id} 
