@@ -74,11 +74,6 @@ class AppHeader extends Component {
                     <strong>{staticinfo.phone}</strong>
                   </Link>
                 </li>
-                <li className="list-inline-item">
-                  <Link to="" className="e-help">
-                    <span>Тусламж</span>
-                  </Link>
-                </li>
                 <li className="list-inline-item language">
                   <form>
                     <select className="custom-select" defaultValue="0">
@@ -124,11 +119,6 @@ class AppHeader extends Component {
                             <strong> {staticinfo.phone} </strong>
                           </Link>
                         </li>
-                        <li className="list-inline-item">
-                          <Link to="" className="e-help">
-                            <span>Тусламж</span>
-                          </Link>
-                        </li>
                       </ul>
                     </div>
                     <div className="col-lg-6 col-md-6 d-none d-md-block  pad10">
@@ -172,7 +162,7 @@ class AppHeader extends Component {
                           <i className="fa fa-navicon" aria-hidden="true"></i>
                           <i className="fa fa-times" aria-hidden="true"></i>
                         </Link>
-                        <Link to={'http://localhost:3001'} className="logo">
+                        <Link to={'/'} className="logo">
                           <img alt="logo" src={IMAGE + staticinfo.logopath} />
                         </Link>
                         <div className="search">

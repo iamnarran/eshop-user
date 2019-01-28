@@ -395,15 +395,11 @@
     justify-content: space-between;
   }
   @media (max-width: 1000px) {
-    .page-main-banner{
-      display: none;
+    .whole-page-title{
+      background-size: 0 !important;
     }
   }
-  @media (min-width: 1000px) {
-    .page-main-banner{
-      display: block;
-    }
-  }
+
   @media (min-width: 1440px) {
   
     .container-laptop {

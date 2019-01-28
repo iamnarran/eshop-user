@@ -27,8 +27,8 @@ class CardPage extends React.Component {
       </div>
     )
     const newTag = (
-      <div class="percent new">
-        <span class="text"><strong>Шинэ</strong></span>
+      <div className="percent new">
+        <span className="text"><strong>Шинэ</strong></span>
       </div>
     )
     const hover = (

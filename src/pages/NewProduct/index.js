@@ -1,6 +1,5 @@
 import React from 'react';
 import config from 'config';
-import { Link } from 'react-router-dom';
 import CardPage from '../../components/PageCard';
 
 const IMAGE =
@@ -11,14 +10,15 @@ class Newproduct extends React.Component {
   render() {
     const { newproduct, mainbanner, subbanner } = this.props.container;
     let products = []
+    let subbannerhtml = (<img alt="banner" src={subbanner!==undefined ? IMAGE+subbanner.img: null} className="img-fluid"/>)
     // console.log(newproduct);    
     
     return(
       <div className="top-container">
 
         {/**NEW PRODUCT TITLE */}
-        <div className="whole-page-title color-blue" style={{ backgroundImage: `url(${IMAGE+mainbanner.img })`, 
-          backgroundRepeat: 'no-repeat', backgroundPosition: 'right', backgroundSize: '50%'}}>
+        <div className="whole-page-title color-blue" style={{ backgroundImage: `url(${mainbanner!==undefined ? IMAGE+mainbanner.img:'' })`, 
+          backgroundRepeat: 'no-repeat', backgroundPosition: 'right', backgroundSize: '50% 120px'}}>
           <div className="container pad10">
             <div className="title-container flex-space">
               <h2>
@@ -34,9 +34,7 @@ class Newproduct extends React.Component {
           <div className="container pad10">
             <div className="row row10">
               {
-                newproduct.map((product, key) => {
-                  console.log(product);
-                  
+                newproduct.map((product, key) => {                  
                   if(key >= 10){ 
                     products.push(product)
                     return null
@@ -50,11 +48,11 @@ class Newproduct extends React.Component {
       
         {/**SUB BANNER */}
         <div className="banner-container">
-          <span style={{ backgroundImage: `url(${IMAGE+subbanner.img })`}}></span>
+          <span style={{ backgroundImage: `url(${subbanner!==undefined ? IMAGE+subbanner.img:''})`}}></span>
           <div className="container pad10">
-            <Link to={subbanner.link}>
-              <img alt="banner" src={IMAGE+subbanner.img} className="img-fluid"/>
-            </Link>
+            <a href={subbanner!==undefined ? subbanner.link:''} target="_blank" rel="noopener">
+              {subbanner!==undefined ? subbannerhtml: null}              
+            </a>
           </div>
         </div>
 

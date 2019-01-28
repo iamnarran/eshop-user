@@ -14,7 +14,7 @@ const fetch = async (props, onData) => {
         const mainbanner = await api.pagebanner.findAll({ type: 'F1' });
         const subbanner = await api.pagebanner.findAll({ type: 'F2'}); 
         const tag = await api.tag.findAll({ type: '1' });  
-        // console.log(newproduct);                
+        // console.log(subbanner);                
         onData(null, {
             container: { 
               newproduct: newproduct.data,
