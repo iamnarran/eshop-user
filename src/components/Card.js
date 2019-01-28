@@ -48,10 +48,12 @@ class Card extends React.Component {
     }
 
     if (extra && extra.includes('discountPrice') && item.sprice) {
+      const formatter = new Intl.NumberFormat('en-US');
+
       prices = (
         <div>
-          <small className="sale">{item.price}₮</small>
-          <span className="current">{item.sprice}₮</span>
+          <small className="sale">{formatter.format(item.price)}₮</small>
+          <span className="current">{formatter.format(item.sprice)}₮</span>
         </div>
       );
     }
