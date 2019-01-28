@@ -28,7 +28,7 @@ class Rate extends React.Component {
     }
 
     return (
-      <Link to="" className="rating">
+      <Link to="#" className="rating">
           <ul className="list-inline">
               <li className="list-inline-item active">
                   {stars}

@@ -9,6 +9,8 @@ import { CARD_TYPES } from '../utils/consts';
 import img5 from '../scss/assets/images/demo/5.jpg';
 import img13 from '../scss/assets/images/demo/13.jpg';
 
+import './Card.css';
+
 class Card extends React.Component {
   render() {
     const { item, extra } = this.props;
@@ -64,7 +66,7 @@ class Card extends React.Component {
           <div className="col-five pad10">
               <div className="single-product small-product sale-product timed-product">
                   <div className="image-container">
-                      <Link to="">
+                      <Link to="#">
                         <span className="image" style={{ backgroundImage: `url(${img5})` }}></span>
                       </Link>
                       {percentLabel}
@@ -72,17 +74,17 @@ class Card extends React.Component {
                       {expiryDateLabel}
                   </div>
                   <div className="info-container">
-                      <Link to="" className="name">
+                      <Link to="#" className="name">
                           <span>{item.name ? item.name : item.packagenm}</span>
                       </Link>
-                      <Link to="" className="cat">
+                      <Link to="#" className="cat">
                           <span>{item.shortnm ? item.shortnm : item.featuretxt}</span>
                       </Link>
                       
                       {item.rate ? <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} /> : null}
 
-                      <Link to="" className="price">
-                          {prices}
+                      <Link to="#" className="price">
+                        {prices}
                       </Link>
                   </div>
               </div>
@@ -93,7 +95,7 @@ class Card extends React.Component {
           <div className="col-xl-4 pad10">
               <div className="single-product big-product sale-product timed-product">
                   <div className="image-container">
-                      <Link to="">
+                      <Link to="#">
                         <span className="image" style={{ backgroundImage: `url(${img5})` }}></span>
                       </Link>
                       {percentLabel}
@@ -101,17 +103,17 @@ class Card extends React.Component {
                       {expiryDateLabel}
                   </div>
                   <div className="info-container">
-                      <Link to="" className="name">
+                      <Link to="#" className="name">
                           <span>{item.name ? item.name : item.packagenm}</span>
                       </Link>
-                      <Link to="" className="cat">
+                      <Link to="#" className="cat">
                           <span>{item.shortnm ? item.shortnm : item.featuretxt}</span>
                       </Link>
     
                       {item.rate ? <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} /> : null}
                       
-                      <Link to="" className="price">
-                          {prices}
+                      <Link to="#" className="price">
+                        {prices}
                       </Link>
                   </div>
               </div>
@@ -127,7 +129,7 @@ class Card extends React.Component {
         return (
           <div className={`single-product big-product food-post food-${c}`}>
             <div className="image-container">
-                <Link to="">
+                <Link to="#">
                   <span className="image" style={{ backgroundImage: `url(${img13})` }}></span>
                 </Link>
                 {percentLabel}
@@ -135,10 +137,10 @@ class Card extends React.Component {
                 {expiryDateLabel}
             </div>
             <div className="info-container">
-              <Link to="" className="name">
+              <Link to="#" className="name">
                 <span>{item.recipenm}</span>
               </Link>
-              <Link to="" className="cat">
+              <Link to="#" className="cat">
                 <span>{item.featuretxt}</span>
               </Link>
 
