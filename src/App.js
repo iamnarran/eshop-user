@@ -26,6 +26,7 @@ import 'scss/app.scss';
 
 import Header from './containers/AppHeader';
 import Footer from './containers/AppFooter';
+import MobileMenu from './containers/MobileMenu';
 
 import Homepage from './containers/Homepage';
 import messages from './messages.json';
@@ -65,7 +66,11 @@ class Localization extends Component {
     window.formatMessage = formatMessage;
   }
 
+  state = { isToggle: false }
+  toggleMenu = () => this.setState({ isToggle: !this.state.isToggle })
+
   render() {
+    const popupClass = `fixed-mobile-menu${this.state.isToggle ? " activated" : ""}`;
     const { auth } = this.props;
 
     const routes = [
@@ -116,7 +121,8 @@ class Localization extends Component {
       auth && (
         <Router history={BrowserHistory}>
           <div>
-            <Header />
+            <Header isToggle={this.state.isToggle} onChange={this.toggleMenu} />
+            <MobileMenu popupClass={popupClass} isToggle={this.state.isToggle} onChange={this.toggleMenu} />
 
             <Switch>
               {
