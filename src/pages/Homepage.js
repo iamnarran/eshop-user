@@ -32,19 +32,21 @@ class Homepage extends Component {
             if ((index !== 0 && index % 2 === 0)) {
                 blocks.push(
                     <Banner 
-                        key={allItems.banners[index][0].id} 
-                        data={allItems.banners[index][0]}
+                        key={allItems.banners[index].id} 
+                        data={allItems.banners[index]}
                     />
                 );
             }
             
             let type = WIDGET_TYPES.horizontal;
+            let labelColor = '#f00';
             switch (widget.slug) {
                 case WIDGET_SLUGS.onlyEmart:
                     itemsInWidget = allItems.emartProducts;
                     break;
                 case WIDGET_SLUGS.discount:
                     itemsInWidget = allItems.discountProducts;
+                    labelColor = allItems.tags.discount.color;
                     break;
                 case WIDGET_SLUGS.package:
                     itemsInWidget = allItems.packageProducts;
@@ -52,6 +54,7 @@ class Homepage extends Component {
                 case WIDGET_SLUGS.recipe:
                     type = WIDGET_TYPES.vertical;
                     itemsInWidget = allItems.recipes;
+                    labelColor = allItems.tags.recipe.color;
                     break;
                 default:
             }
@@ -62,6 +65,7 @@ class Homepage extends Component {
                     type={type}
                     items={itemsInWidget} 
                     widget={widget}
+                    labelColor={labelColor}
                 />
             );
         });
@@ -69,8 +73,8 @@ class Homepage extends Component {
         if (widgets.length % 2 === 0) {
             blocks.push(
                 <Banner 
-                    key={allItems.banners[widgets.length][0].id} 
-                    data={allItems.banners[widgets.length][0]}
+                    key={allItems.banners[widgets.length].id} 
+                    data={allItems.banners[widgets.length]}
                 />
             );
         }
@@ -99,6 +103,7 @@ class Homepage extends Component {
             packageProducts,
             recipes,
             banners,
+            tags,
         };
 
         const root = [];
@@ -144,7 +149,7 @@ class Homepage extends Component {
             <div className="top-container" >
                 {/* Slider */}
                 <div className="main-slide">
-                    <Slider dataSource={banners[0]} params={homeBannerParams} elContainer={'banner'} />
+                    <Slider dataSource={banners} params={homeBannerParams} elContainer={'banner'} />
                 </div>
                 {/* Slider end */}
 

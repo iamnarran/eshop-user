@@ -17,7 +17,7 @@ class Card extends React.Component {
       return null;
     }
 
-    let { renderType } = this.props;
+    let { renderType, labelColor } = this.props;
     renderType = parseInt(renderType);
 
     let percentLabel = null;
@@ -26,29 +26,24 @@ class Card extends React.Component {
 
     let prices = <span className="current">{item.price}₮</span>;
     
-    if (extra && extra.includes('expiryDate')) {
-      expiryDateLabel = (
-        <div className="time">
-          <Icon type="clock-circle" />
-          <span className="text">{item.edate}</span>
-        </div>
-      );
-    }
+    // if (extra && extra.includes('expiryDate')) {
+    //   expiryDateLabel = (
+    //     <div className="time">
+    //       <Icon type="clock-circle" />
+    //       <span className="text">{item.edate}</span>
+    //     </div>
+    //   );
+    // }
 
     if (extra && extra.includes('percent')) {
       percentLabel = (
-        // <div className="percent">
-        //   <span className="text"><strong>{item.spercent}</strong><small>%</small></span>
-        // </div>
-        <Label bgColor="blue" item={item} />
+        <Label bgColor={labelColor} item={item} />
       );
     }
 
     if (extra && extra.includes('productCount')) {
       productCountLabel = (
-        <div className="percent">
-          <span className="text"><strong>12</strong><small>ш</small></span>
-        </div>
+        <Label bgColor={labelColor} item={item} />
       );
     }
 

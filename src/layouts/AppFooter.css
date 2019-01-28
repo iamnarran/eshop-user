@@ -1,17 +1,17 @@
-.section-footer .address {
+.section-footer .social {
   padding: 0;
 }
 
-.section-footer .address li {
+.section-footer .social li {
   list-style-type: none;
   display: inline;
 }
 
-.section-footer .address span {
+.section-footer .social span {
   display: inline;
 }
 
-.section-footer .address a {
+.section-footer .social a {
   margin-right: 50px;
 }
 

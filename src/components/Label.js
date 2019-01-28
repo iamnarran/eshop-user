@@ -49,8 +49,26 @@ class Label extends React.Component {
                 border-radius: 3px;
                 left: 10px;
               }
+              .text:after {
+                top: 15px;
+              }
+              .text strong {
+                font-weight: 400;
+                position: relative;
+                z-index: 1;
+              }
+              .text small {
+                position: relative;
+                z-index: 1;
+                font-size: 0.7rem;
+                display: inline-block;
+                margin-left: 2px;
+              }
             `}
-            <span className="text">{item && item.spercent ? item.spercent : null}%</span>
+            <span className="text">
+              <strong>{item.spercent ? item.spercent : (item.skucnt ? item.skucnt : 0)}</strong>
+              <small>{item.spercent ? '%' : (item.skucnt ? 'ш' : '')}</small>
+            </span>
           </Style>
         </div>
       </Style>

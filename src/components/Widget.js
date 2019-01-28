@@ -6,6 +6,8 @@ import moment from 'moment';
 import Card from './Card';
 import { CARD_TYPES, CARD_NUMS_IN_COL, WIDGET_TYPES, WIDGET_LABELS, WIDGET_SLUGS } from '../utils/consts';
 
+import './Widget.css';
+
 class Widget extends React.Component {
   renderItems() {
     let cards = [];
@@ -20,6 +22,7 @@ class Widget extends React.Component {
                         key={p}
                         renderType={rows[i]} 
                         item={this.props.items[p++]} 
+                        labelColor={this.props.labelColor}
                         extra={WIDGET_LABELS[this.props.widget.slug]} 
                     />
                 );
@@ -43,6 +46,7 @@ class Widget extends React.Component {
                 cardNumsInCol={cardNumsInCol}
                 renderType={CARD_TYPES.tile} 
                 item={this.props.items[i]} 
+                labelColor={this.props.labelColor}
                 extra={WIDGET_LABELS[this.props.widget.slug]} 
             />
         );

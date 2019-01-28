@@ -23,7 +23,7 @@ class Footer extends React.Component {
                         <Link to="" className="logo">
                             <img alt="logo" src={IMAGE + staticinfo.logopath} />
                         </Link>
-                        <ul className="address">
+                        <ul className="social">
                             <li>
                                 <a href="https://www.facebook.com/EmartMongolia/?fref=ts" target="_blank" rel="noopener">
                                     <span className="fa-layers fa-fw">
