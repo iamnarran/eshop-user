@@ -19,23 +19,23 @@ class Discount extends React.Component {
       window.open(this.state.mainbanner.link, '_blank')
     }
   }
+
   render() {
-    const { saleproduct, mainbanner, subbanner, widget } = this.props.container;    
+    const { saleproduct, mainbanner, subbanner, menu } = this.props.container;    
     let subbannerhtml = (<img alt="banner" src={subbanner!==undefined ? IMAGE+subbanner.img:''} className="img-fluid"/>)
     let products = []
     // console.log(this.props.container);
     
     return (
       <div className="top-container">
-      
         {/**DISCOUNT PRODUCT TITLE*/}
         <div className="whole-page-title color-main class" style={{ backgroundImage: `url(${mainbanner!==undefined ? IMAGE+mainbanner.img:''})`, 
           backgroundRepeat: 'no-repeat', backgroundPosition: 'right', backgroundSize: '50% 120px'}} onClick={this.changeLocation}>
           <div className="container pad10">
             <div className="title-container flex-space">
               <h2>
-                <span className="big">{widget===undefined ? 'Хямдралтай':widget.name}</span>
-                <strong>{widget===undefined ? 'Зарлагдсан хугацаанд багтаж худалдаа хийгээрэй':widget.subtitle}</strong>
+                <span className="big">{menu[0]===undefined ? '':menu[0].menunm}</span>
+                <strong>{menu[0]===undefined ? '':menu[0].subtitle}</strong>
               </h2>
             </div>         
           </div>
@@ -80,6 +80,7 @@ class Discount extends React.Component {
             </div>
           </div>
         </div>
+      
       </div>
     );
   }
