@@ -9,10 +9,17 @@ const IMAGE =
         ? config.image.development
         : config.image.production;
 class Discount extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      mainbanner: this.props.container.mainbanner
+    };
+  }
 
-  changeLocation = (e) => {
-    console.log(this);       
-    
+  changeLocation = () => {     
+    if(this.state.mainbanner !== undefined){
+      window.open(this.state.mainbanner.link, '_blank')
+    }
   }
   render() {
     const { saleproduct, mainbanner, subbanner } = this.props.container;    
@@ -21,6 +28,7 @@ class Discount extends React.Component {
     
     return (
       <div className="top-container">
+      
         {/**DISCOUNT PRODUCT TITLE*/}
         <div className="whole-page-title color-main class" style={{ backgroundImage: `url(${mainbanner!==undefined ? IMAGE+mainbanner.img:''})`, 
           backgroundRepeat: 'no-repeat', backgroundPosition: 'right', backgroundSize: '50% 120px'}} onClick={this.changeLocation}>

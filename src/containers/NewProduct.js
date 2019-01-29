@@ -10,7 +10,7 @@ const options = {
 
 const fetch = async (props, onData) => {
     try {
-        const newproduct = await api.newproduct.findAll({ jumcd: '01' });
+        const newproduct = await api.newproduct.findAll({ jumcd: '99' });
         const mainbanner = await api.pagebanner.findAll({ type: 'F1' });
         const subbanner = await api.pagebanner.findAll({ type: 'F2'}); 
         const tag = await api.tag.findAll({ type: '1' });  

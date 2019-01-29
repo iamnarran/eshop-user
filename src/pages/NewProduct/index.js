@@ -7,6 +7,19 @@ process.env.NODE_ENV === 'development'
     ? config.image.development
     : config.image.production;
 class Newproduct extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      mainbanner: this.props.container.mainbanner
+    };
+  }
+
+  changeLocation = () => {     
+    if(this.state.mainbanner !== undefined){
+      window.open(this.state.mainbanner.link, '_blank')
+    }
+  }
+
   render() {
     const { newproduct, mainbanner, subbanner } = this.props.container;
     let products = []
@@ -18,7 +31,7 @@ class Newproduct extends React.Component {
 
         {/**NEW PRODUCT TITLE */}
         <div className="whole-page-title color-blue" style={{ backgroundImage: `url(${mainbanner!==undefined ? IMAGE+mainbanner.img:'' })`, 
-          backgroundRepeat: 'no-repeat', backgroundPosition: 'right', backgroundSize: '50% 120px'}}>
+          backgroundRepeat: 'no-repeat', backgroundPosition: 'right', backgroundSize: '50% 120px'}} onClick={this.changeLocation}>
           <div className="container pad10">
             <div className="title-container flex-space">
               <h2>

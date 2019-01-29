@@ -160,7 +160,6 @@ class AppHeader extends Component {
                       <div className="flex-this flex-space">
                         <Link to="" className="mobile-menu-btn d-block d-md-none" onClick={this.togglePopup} >
                           <i className="fa fa-navicon" aria-hidden="true"></i>
-                          <i className="fa fa-times" aria-hidden="true"></i>
                         </Link>
                         <Link to={'/'} className="logo">
                           <img alt="logo" src={IMAGE + staticinfo.logopath} />
@@ -314,48 +313,7 @@ class AppHeader extends Component {
             </div>
           </Modal>
 
-          <Modal
-            title="Бүртгүүлэх"
-            visible={this.state.SingUpVisible}
-            onOk={this.handleSingUpSave}
-            onCancel={this.handleSingUpCancel}
-            footer={[]}
-          >
-            <div className="modal-body">
-              <form>
-                <div className="form-group">
-                  <label htmlFor="exampleInputEmail1" className="sr-only">Email address</label>
-                  <input type="email" className="form-control" id="exampleInputEmail3" aria-describedby="emailHelp" placeholder="Овог" />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="exampleInputPassword1" className="sr-only">Password</label>
-                  <input type="password" className="form-control" id="exampleInputPassword4" placeholder="Нэр" />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="exampleInputEmail1" className="sr-only">Email address</label>
-                  <input type="email" className="form-control" id="exampleInputEmail5" aria-describedby="emailHelp" placeholder="Имэйл хаяг" />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="exampleInputPassword1" className="sr-only">Password</label>
-                  <input type="password" className="form-control" id="exampleInputPassword6" placeholder="Утасны дугаар" />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="exampleInputEmail1" className="sr-only">Email address</label>
-                  <input type="email" className="form-control" id="exampleInputEmail7" aria-describedby="emailHelp" placeholder="Нууц үг" />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="exampleInputPassword1" className="sr-only">Password</label>
-                  <input type="password" className="form-control" id="exampleInputPassword8" placeholder="Нууц үг давтах" />
-                </div>
-                <button type="submit" className="btn btn-block btn-login text-uppercase">Бүртгүүлэх</button>
-              </form>
-              <span className="divide-maker">Эсвэл</span>
-              <button type="submit" className="btn btn-block btn-social btn-facebook">
-                <span>Facebook-р бүртгүүлэх</span></button>
-              <button type="submit" className="btn btn-block btn-social btn-gmail">Gmail-р бүртгүүлэх</button>
-              <button type="submit" className="btn btn-block btn-social btn-emart">Имарт картаар бүртгүүлэх</button>
-            </div>
-          </Modal>
+          
         </div>
       </div>
     );
