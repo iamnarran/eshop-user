@@ -39,10 +39,10 @@ const fetch = async (props, onData) => {
         tags['package'] = tags5.data[0];
 
         onData(null, {
-            container: { 
+            container: {
                 banners,
                 tags,
-                brands : brands.data,
+                brands: brands.data,
                 categories: category.data,
                 widgets: widget.data,
                 emartProducts: emartProducts.data,

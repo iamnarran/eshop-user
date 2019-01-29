@@ -61,7 +61,7 @@ class AppHeader extends Component {
     const menuClass = `dropdown-menu${this.state.isOpen ? " show" : ""}`;
     const seartchClass = `search-mobile${this.state.isSearch ? " activated" : ""}`;
     const togglePopup = `${this.props.isToggle ? " activated" : ""}`;
-
+    console.log(root)
     return (
       <div>
         <div className={togglePopup} >
@@ -165,7 +165,6 @@ class AppHeader extends Component {
                       <div className="flex-this flex-space">
                         <Link to="" className="mobile-menu-btn d-block d-md-none" onClick={this.togglePopup} >
                           <i className="fa fa-navicon" aria-hidden="true"></i>
-                          <i className="fa fa-times" aria-hidden="true"></i>
                         </Link>
                         <Link to={'/'} className="logo">
                           <img alt="logo" src={IMAGE + staticinfo.logopath} />
@@ -322,7 +321,7 @@ class AppHeader extends Component {
           <Modal
             title="Бүртгүүлэх"
             visible={this.state.SingUpVisible}
-            onOk={this.handleSingUpSave}
+            onOk={this.showSingUpModal}
             onCancel={this.handleSingUpCancel}
             footer={[]}
           >
@@ -361,6 +360,8 @@ class AppHeader extends Component {
               <button type="submit" className="btn btn-block btn-social btn-emart">Имарт картаар бүртгүүлэх</button>
             </div>
           </Modal>
+
+
         </div>
       </div>
     );
