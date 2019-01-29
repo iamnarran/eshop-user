@@ -9,16 +9,20 @@ const IMAGE =
         ? config.image.development
         : config.image.production;
 
+console.log(IMAGE);
+
 class Banner extends React.Component {
   render() {
     const banner = this.props && this.props.data;
+
+    console.log(banner);
 
     return (
       <div className="banner-container" >
           <span style={{ backgroundImage: `url(${IMAGE + banner.imgnm})` }}></span>
           <div className="container pad10">
               <a href={banner.link ? banner.link : '#'} target="_blank" rel="noopener">
-                <img alt="banner" src={timesale6} className="img-fluid" />
+                <img alt="banner" src={IMAGE + banner.imgnm} className="img-fluid" />
               </a>
           </div>
       </div>

@@ -36,8 +36,6 @@ const fetch = async (props, onData) => {
         tags['recipe'] = tags3.data[0];
         tags['discount'] = tags4.data[0];
 
-        console.log(widget.data);
-
         onData(null, {
             container: { 
                 banners,

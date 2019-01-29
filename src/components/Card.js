@@ -44,7 +44,6 @@ class Card extends React.Component {
     // }
 
     if (extra && extra.includes('percent')) {
-      console.log(item);
       percentLabel = (
         <Label bgColor={labelColor} item={item} />
       );
