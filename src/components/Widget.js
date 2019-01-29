@@ -49,9 +49,9 @@ class Widget extends React.Component {
         }
 
         let cardNumsInCol = 2;
-        cardNumsInCol = Math.ceil(this.props.items.length / 3) < cardNumsInCol ? Math.ceil(this.props.items.length / 3) : cardNumsInCol;
+        cardNumsInCol = Math.ceil(items.length / 3) < cardNumsInCol ? Math.ceil(items.length / 3) : cardNumsInCol;
 
-        const iterationNum = this.props.items.length > cardNumsInCol * 3 ? cardNumsInCol * 3 : this.props.items.length;
+        const iterationNum = items.length > cardNumsInCol * 3 ? cardNumsInCol * 3 : items.length;
 
         let cardsToRender = [];
         for (let i = 0; i < iterationNum; i++) {
@@ -61,9 +61,9 @@ class Widget extends React.Component {
                     index={i}
                     cardNumsInCol={cardNumsInCol}
                     renderType={CARD_TYPES.tile}
-                    item={this.props.items[i]}
-                    labelColor={this.props.labelColor}
-                    extra={WIDGET_LABELS[this.props.widget.slug]}
+                    item={items[i]}
+                    label={label}
+                    extra={WIDGET_LABELS[widget.slug]}
                 />
             );
 
@@ -77,13 +77,29 @@ class Widget extends React.Component {
     }
 
     render() {
+        const { widget } = this.props;
+
         let subtitle = null;
-        if (this.props.widget.subtitle) {
+        if (widget.subtitle) {
             subtitle = (
                 <p className="text">
-                    <Icon type="clock-circle" /> {this.props.widget.subtitle}
+                    <Icon type="clock-circle" /> {widget.subtitle}
                 </p>
             );
+        }
+
+        let dateInterval = null;
+        let buttonValue = 'Цааш үзэх';
+        switch (widget.slug) {
+            case WIDGET_SLUGS.onlyEmart:
+                buttonValue = 'Зөвхөн Имартын бусад барааг үзэх';
+                break;
+            case WIDGET_SLUGS.discount:
+                dateInterval = (
+                    <span>
+                        {moment().startOf('month').format('MM/DD')} ~ {moment().endOf('month').format('MM/DD')}
+                    </span>
+                );
         }
 
         let dateInterval = null;
@@ -113,7 +129,7 @@ class Widget extends React.Component {
             <div className="section">
                 <div className="container pad10">
                     <h1 className="title">
-                        <span className="text-uppercase">{this.props.widget.name}</span>
+                        <span className="text-uppercase">{widget.name}</span>
                         {subtitle}
                         {dateInterval}
                     </h1>
@@ -121,7 +137,7 @@ class Widget extends React.Component {
                         {this.renderItems()}
                     </div>
                     <div className="more-link text-center">
-                        <Link to="" className="btn btn-border">
+                        <Link to={widget.link ? widget.link : ''} className="btn btn-border">
                             <span className="text text-uppercase">{buttonValue}</span>
                         </Link>
                     </div>
