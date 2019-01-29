@@ -17,9 +17,9 @@ class Banner extends React.Component {
       <div className="banner-container" >
           <span style={{ backgroundImage: `url(${IMAGE + banner.imgnm})` }}></span>
           <div className="container pad10">
-              <Link to="">
-                  <img alt="banner" src={timesale6} className="img-fluid" />
-              </Link>
+              <a href={banner.link ? banner.link : '#'} target="_blank" rel="noopener">
+                <img alt="banner" src={timesale6} className="img-fluid" />
+              </a>
           </div>
       </div>
     );

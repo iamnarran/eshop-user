@@ -7,9 +7,9 @@ import MainMenu from '../components/Menu';
 import DropMenu from '../components/DropMenu';
 import ToggleMenu from '../components/ToggleMenu';
 import ToggleCategory from '../components/ToggleCategory';
-
-
 import config from '../config';
+
+import './AppHeader.css';
 
 const IMAGE =
   process.env.NODE_ENV === 'development'
@@ -74,14 +74,19 @@ class AppHeader extends Component {
                     <strong>{staticinfo.phone}</strong>
                   </Link>
                 </li>
-                <li className="list-inline-item language">
+                <li className="list-inline-item">
+                  <Link to="" className="e-help">
+                    <span>Тусламж</span>
+                  </Link>
+                </li>
+                {/* <li className="list-inline-item language">
                   <form>
                     <select className="custom-select" defaultValue="0">
                       <option value="0">МОН</option>
                       <option value="1">ENG</option>
                     </select>
                   </form>
-                </li>
+                </li> */}
               </ul>
               <ul className="list-unstyled flex-this flex-space top-2">
                 <li className="list-inline-item notification">
@@ -124,9 +129,9 @@ class AppHeader extends Component {
                     <div className="col-lg-6 col-md-6 d-none d-md-block  pad10">
                       <div className="text-right">
                         <ul className="list-inline right-panel">
-                          <li className="list-inline-item language">
+                          <li className="list-inline-item">
                             <form>
-                              <select className="custom-select" defaultValue="0">
+                              <select className="classic" defaultValue="0">
                                 <option value='0' defaultValue>МОН</option>
                                 <option value="1">ENG</option>
                               </select>

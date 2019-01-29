@@ -6,11 +6,6 @@ import Widget from '../components/Widget';
 import Banner from '../components/Banner';
 import { WIDGET_TYPES, WIDGET_SLUGS } from '../utils/consts';
 
-/* const IMAGE =
-    process.env.NODE_ENV === 'development'
-        ? config.image.development
-        : config.image.production; */
-
 class Homepage extends Component {
     state = {
         isOpen: false,
@@ -29,29 +24,42 @@ class Homepage extends Component {
 
         let itemsInWidget = [];
         widgets.forEach((widget, index) => {
-            if ((index !== 0 && index % 2 === 0)) {
+            if (index !== 0 && index % 2 === 0) {
                 blocks.push(
                     <Banner 
-                        key={allItems.banners[index][0].id} 
-                        data={allItems.banners[index][0]}
+                        key={allItems.banners[index].id} 
+                        data={allItems.banners[index]}
                     />
                 );
             }
             
             let type = WIDGET_TYPES.horizontal;
+            let labelColor = '#f00';
             switch (widget.slug) {
                 case WIDGET_SLUGS.onlyEmart:
                     itemsInWidget = allItems.emartProducts;
+                    if (allItems.tags.emartProducts && allItems.tags.emartProducts.color) {
+                        labelColor = allItems.tags.emartProducts.color;
+                    }
                     break;
                 case WIDGET_SLUGS.discount:
                     itemsInWidget = allItems.discountProducts;
+                    if (allItems.tags.discount && allItems.tags.discount.color) {
+                        labelColor = allItems.tags.discount.color;
+                    }
                     break;
                 case WIDGET_SLUGS.package:
                     itemsInWidget = allItems.packageProducts;
+                    if (allItems.tags.package && allItems.tags.package.color) {
+                        labelColor = allItems.tags.package.color;
+                    }
                     break;
                 case WIDGET_SLUGS.recipe:
                     type = WIDGET_TYPES.vertical;
                     itemsInWidget = allItems.recipes;
+                    if (allItems.tags.recipe && allItems.tags.recipe.color) {
+                        labelColor = allItems.tags.recipe.color;
+                    }
                     break;
                 default:
             }
@@ -62,6 +70,7 @@ class Homepage extends Component {
                     type={type}
                     items={itemsInWidget} 
                     widget={widget}
+                    labelColor={labelColor}
                 />
             );
         });
@@ -69,8 +78,8 @@ class Homepage extends Component {
         if (widgets.length % 2 === 0) {
             blocks.push(
                 <Banner 
-                    key={allItems.banners[widgets.length][0].id} 
-                    data={allItems.banners[widgets.length][0]}
+                    key={allItems.banners[widgets.length].id} 
+                    data={allItems.banners[widgets.length]}
                 />
             );
         }
@@ -99,6 +108,7 @@ class Homepage extends Component {
             packageProducts,
             recipes,
             banners,
+            tags,
         };
 
         const root = [];
@@ -144,7 +154,7 @@ class Homepage extends Component {
             <div className="top-container" >
                 {/* Slider */}
                 <div className="main-slide">
-                    <Slider dataSource={banners[0]} params={homeBannerParams} elContainer={'banner'} />
+                    <Slider dataSource={banners} params={homeBannerParams} elContainer={'banner'} />
                 </div>
                 {/* Slider end */}
 

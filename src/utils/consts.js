@@ -1,6 +1,6 @@
 const CARD_TYPES = {
-  wide: 1,
-  slim: 2,
+  slim: 1,
+  wide: 2,
   tile: 3,
 };
 Object.freeze(CARD_TYPES);

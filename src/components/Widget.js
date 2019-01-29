@@ -6,20 +6,23 @@ import moment from 'moment';
 import Card from './Card';
 import { CARD_TYPES, CARD_NUMS_IN_COL, WIDGET_TYPES, WIDGET_LABELS, WIDGET_SLUGS } from '../utils/consts';
 
+import './Widget.css';
+
 class Widget extends React.Component {
   renderItems() {
     let cards = [];
 
     if (this.props.type === WIDGET_TYPES.horizontal) {
-        const rows = this.props.widget.type.split(',');
-        for (let i = 0, p = 0; i < rows.length; i++) {
-            const cardsInRow = parseInt(rows[i]) === CARD_TYPES.wide ? CARD_NUMS_IN_COL.wide : CARD_NUMS_IN_COL.slim;
+        const cardTypes = this.props.widget.type.split(',');
+        for (let i = 0, p = 0; i < cardTypes.length; i++) {
+            const cardsInRow = parseInt(cardTypes[i]) === CARD_TYPES.wide ? CARD_NUMS_IN_COL.wide : CARD_NUMS_IN_COL.slim;
             for (let j = 0; j < cardsInRow; j++) {
                 cards.push(
                     <Card 
                         key={p}
-                        renderType={rows[i]} 
+                        renderType={cardTypes[i]} 
                         item={this.props.items[p++]} 
+                        labelColor={this.props.labelColor}
                         extra={WIDGET_LABELS[this.props.widget.slug]} 
                     />
                 );
@@ -43,6 +46,7 @@ class Widget extends React.Component {
                 cardNumsInCol={cardNumsInCol}
                 renderType={CARD_TYPES.tile} 
                 item={this.props.items[i]} 
+                labelColor={this.props.labelColor}
                 extra={WIDGET_LABELS[this.props.widget.slug]} 
             />
         );
@@ -75,7 +79,7 @@ class Widget extends React.Component {
         case WIDGET_SLUGS.discount:
             dateInterval = (
                 <span>
-                    {moment().startOf('month').format('MM/DD')} - {moment().endOf('month').format('MM/DD')}
+                    {moment().startOf('month').format('MM/DD')} ~ {moment().endOf('month').format('MM/DD')}
                 </span>
             );
             buttonValue = 'Бусад хямдралтай барааг үзэх';
