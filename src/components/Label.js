@@ -81,6 +81,7 @@ class Label extends React.Component {
                 display: inline-block;
                 margin-left: 2px;
                 line-height: 1.2;
+                letter-spacing: 1px;
               }
             `}
             <span className="text">
