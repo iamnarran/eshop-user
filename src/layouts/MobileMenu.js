@@ -1,8 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Modal } from 'antd';
-/* import { ToggleCategory } from '../components/ToggleCategory'; */
-/* import { ToggleMenu } from '../components/ToggleMenu'; */
 
 class MobileMenu extends React.Component {
     state = {
@@ -13,7 +11,7 @@ class MobileMenu extends React.Component {
     showLogInModal = () => this.setState({ logInVisible: true });
     handleLogInSave = () => this.setState({ logInVisible: false, })
     handleLogInCancel = () => this.setState({ logInVisible: false, });
-    showSingUpModal = () => this.setState({ SingUpVisible: true });
+    showSingUpModal = () => this.setState({ SingUpVisible: false });
     handleSingUpSave = () => this.setState({ SingUpVisible: false, });
     handleSingUpCancel = () => this.setState({ SingUpVisible: false, });
 
@@ -23,9 +21,9 @@ class MobileMenu extends React.Component {
         const { popupClass } = this.props;
         const { staticinfo } = this.props.container;
         const { menus } = this.props.container;
+        const { categories } = this.props.container;
+        const root = [];
 
-        /* const { categories } = this.props;
-        const dropMenu = [];
         categories.forEach((entry) => {
             if (entry.parentid === 0) {
                 entry.children = [];
@@ -36,8 +34,7 @@ class MobileMenu extends React.Component {
                     ent.children.push(entry);
                 }
             });
-        }); */
-        /* console.log("root", dropMenu) */
+        });
 
         var indents = menus.map(function (item, index) {
             return (
@@ -45,6 +42,32 @@ class MobileMenu extends React.Component {
                     <Link to={item.link}><span>{item.menunm}</span></Link>
                 </li>
             );
+        });
+
+        var toggleCategory = root.map(function (item, index) {
+            return (
+                <div className="card" key={index}>
+                    <button className="btn btn-link flex-this flex-space" key={index} type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        <strong className="text-uppercase">{item.name}</strong>
+                        {/* <i className="fa fa-chevron-down" aria-hidden="true"></i> */}
+                    </button>
+                    <div id="collapseOne" className="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                        <ul className="list-unstyled">
+                            {
+                                item.children && item.children.map(function (it, ind) {
+                                    return (
+                                        <li key={ind}>
+                                            <Link to="">
+                                                <span>{it.name}</span>
+                                            </Link>
+                                        </li>
+                                    )
+                                })
+                            }
+                        </ul>
+                    </div>
+                </div>
+            )
         });
 
         return (
@@ -63,11 +86,6 @@ class MobileMenu extends React.Component {
                                     <strong>{staticinfo.phone}</strong>
                                 </Link>
                             </li>
-                            {/* <li className="list-inline-item">
-                                <Link to="" className="e-help">
-                                    <span>Тусламж</span>
-                                </Link>
-                            </li> */}
                             <li className="list-inline-item language">
                                 <form>
                                     <select className="custom-select" defaultValue="0">
@@ -103,8 +121,13 @@ class MobileMenu extends React.Component {
                             </ul>
                         </div>
                     }
-                    {/* <ToggleMenu dataSource={menus} /> */}
-                    {/* <ToggleCategory dataSource={dropMenu} /> */}
+                    {
+                        <div className="single">
+                            <div className="accordion" id="accordionExample">
+                                {toggleCategory}
+                            </div>
+                        </div>
+                    }
                 </div>
                 <Modal
                     title="Нэвтрэх"

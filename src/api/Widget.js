@@ -10,11 +10,5 @@ export default [
     NAME: 'findAll',
     METHOD: 'GET',
     URL: `${API}/api/widget`
-  },
-  {
-    NAME: 'findAllPageWidget',
-    METHOD: 'GET',
-    URL: `${API}/api/pagewidget/:type`,
-    REPLACE: 'id, type'
-  },  
+  }
 ];

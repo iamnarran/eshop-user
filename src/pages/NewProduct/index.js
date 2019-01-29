@@ -24,7 +24,7 @@ class Newproduct extends React.Component {
     const { newproduct, mainbanner, subbanner, menu } = this.props.container;
     let products = []
     let subbannerhtml = (<img alt="banner" src={subbanner!==undefined ? IMAGE+subbanner.img: null} className="img-fluid"/>)
-    // console.log(this.props.container);    
+    // console.log(newproduct);    
     
     return(
       <div className="top-container">

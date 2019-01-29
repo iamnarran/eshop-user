@@ -36,13 +36,13 @@ const fetch = async (props, onData) => {
         tags['recipe'] = tags3.data[0];
         tags['discount'] = tags4.data[0];
 
-        console.log(widget.data);
+        /* console.log(widget.data); */
 
         onData(null, {
-            container: { 
+            container: {
                 banners,
                 tags,
-                brands : brands.data,
+                brands: brands.data,
                 categories: category.data,
                 widgets: widget.data,
                 emartProducts: emartProducts.data,

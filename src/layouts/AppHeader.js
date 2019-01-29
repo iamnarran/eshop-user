@@ -61,7 +61,7 @@ class AppHeader extends Component {
     const menuClass = `dropdown-menu${this.state.isOpen ? " show" : ""}`;
     const seartchClass = `search-mobile${this.state.isSearch ? " activated" : ""}`;
     const togglePopup = `${this.props.isToggle ? " activated" : ""}`;
-
+    console.log(root)
     return (
       <div>
         <div className={togglePopup} >
@@ -318,7 +318,50 @@ class AppHeader extends Component {
             </div>
           </Modal>
 
-          
+          <Modal
+            title="Бүртгүүлэх"
+            visible={this.state.SingUpVisible}
+            onOk={this.showSingUpModal}
+            onCancel={this.handleSingUpCancel}
+            footer={[]}
+          >
+            <div className="modal-body">
+              <form>
+                <div className="form-group">
+                  <label htmlFor="exampleInputEmail1" className="sr-only">Email address</label>
+                  <input type="email" className="form-control" id="exampleInputEmail3" aria-describedby="emailHelp" placeholder="Овог" />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="exampleInputPassword1" className="sr-only">Password</label>
+                  <input type="password" className="form-control" id="exampleInputPassword4" placeholder="Нэр" />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="exampleInputEmail1" className="sr-only">Email address</label>
+                  <input type="email" className="form-control" id="exampleInputEmail5" aria-describedby="emailHelp" placeholder="Имэйл хаяг" />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="exampleInputPassword1" className="sr-only">Password</label>
+                  <input type="password" className="form-control" id="exampleInputPassword6" placeholder="Утасны дугаар" />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="exampleInputEmail1" className="sr-only">Email address</label>
+                  <input type="email" className="form-control" id="exampleInputEmail7" aria-describedby="emailHelp" placeholder="Нууц үг" />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="exampleInputPassword1" className="sr-only">Password</label>
+                  <input type="password" className="form-control" id="exampleInputPassword8" placeholder="Нууц үг давтах" />
+                </div>
+                <button type="submit" className="btn btn-block btn-login text-uppercase">Бүртгүүлэх</button>
+              </form>
+              <span className="divide-maker">Эсвэл</span>
+              <button type="submit" className="btn btn-block btn-social btn-facebook">
+                <span>Facebook-р бүртгүүлэх</span></button>
+              <button type="submit" className="btn btn-block btn-social btn-gmail">Gmail-р бүртгүүлэх</button>
+              <button type="submit" className="btn btn-block btn-social btn-emart">Имарт картаар бүртгүүлэх</button>
+            </div>
+          </Modal>
+
+
         </div>
       </div>
     );
