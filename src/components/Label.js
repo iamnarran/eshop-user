@@ -3,21 +3,21 @@ import Style from 'style-it';
 
 class Label extends React.Component {
   render() {
-    const { item, bgColor } = this.props;
+    const { item, label } = this.props;
 
     let content = null;
     if (item.spercent) {
       content = (
         <div>
           <strong>{item.spercent}</strong>
-          <small>%</small>
+          <small>{label ? label.tagtext : ''}</small>
         </div>
       );
     } else if (item.skucnt) {
       content = (
         <small>
-          <span style={{ fontSize: '0.9rem' }}>{item.skucnt}ш</span><br />
-          <span>бараа</span>
+          <span style={{ fontSize: '0.9rem' }}>{item.skucnt}</span>
+          <span>{label ? label.tagtext : ''}</span>
         </small>
       );
     }
@@ -40,7 +40,7 @@ class Label extends React.Component {
                 display: block;
                 width: 46px;
                 height: 30px;
-                background-color: ${bgColor};
+                background-color: ${label ? label.color : '#f00'};
                 text-align: center;
                 font-size: 1.5rem;
                 color: white;
@@ -54,7 +54,7 @@ class Label extends React.Component {
                 z-index: 0;
                 position: absolute;
                 content: '';
-                background-color: ${bgColor};
+                background-color: ${label ? label.color : '#f00'};
                 width: 26px;
                 height: 26px;
                 top: -11px;

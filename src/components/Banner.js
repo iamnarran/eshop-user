@@ -9,13 +9,9 @@ const IMAGE =
         ? config.image.development
         : config.image.production;
 
-console.log(IMAGE);
-
 class Banner extends React.Component {
   render() {
     const banner = this.props && this.props.data;
-
-    console.log(banner);
 
     return (
       <div className="banner-container" >

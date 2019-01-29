@@ -24,6 +24,7 @@ const fetch = async (props, onData) => {
         const tags2 = await api.tag.findAll({ type: '2' });
         const tags3 = await api.tag.findAll({ type: '3' });
         const tags4 = await api.tag.findAll({ type: '4' });
+        const tags5 = await api.tag.findAll({ type: '5' });
 
         const banners = [];
         banners[0] = banners1.data;
@@ -35,8 +36,7 @@ const fetch = async (props, onData) => {
         tags[2] = tags2.data[0];
         tags['recipe'] = tags3.data[0];
         tags['discount'] = tags4.data[0];
-
-        console.log(banners[0]);
+        tags['package'] = tags5.data[0];
 
         onData(null, {
             container: { 

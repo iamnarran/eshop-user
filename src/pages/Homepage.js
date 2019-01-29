@@ -34,31 +34,31 @@ class Homepage extends Component {
             }
             
             let type = WIDGET_TYPES.horizontal;
-            let labelColor = '#f00';
+            let label = null;
             switch (widget.slug) {
                 case WIDGET_SLUGS.onlyEmart:
                     itemsInWidget = allItems.emartProducts;
-                    if (allItems.tags.emartProducts && allItems.tags.emartProducts.color) {
-                        labelColor = allItems.tags.emartProducts.color;
+                    if (allItems.tags.emartProducts && allItems.tags.emartProducts) {
+                        label = allItems.tags.emartProducts;
                     }
                     break;
                 case WIDGET_SLUGS.discount:
                     itemsInWidget = allItems.discountProducts;
-                    if (allItems.tags.discount && allItems.tags.discount.color) {
-                        labelColor = allItems.tags.discount.color;
+                    if (allItems.tags.discount && allItems.tags.discount) {
+                        label = allItems.tags.discount;
                     }
                     break;
                 case WIDGET_SLUGS.package:
                     itemsInWidget = allItems.packageProducts;
-                    if (allItems.tags.package && allItems.tags.package.color) {
-                        labelColor = allItems.tags.package.color;
+                    if (allItems.tags.package && allItems.tags.package) {
+                        label = allItems.tags.package;
                     }
                     break;
                 case WIDGET_SLUGS.recipe:
                     type = WIDGET_TYPES.vertical;
                     itemsInWidget = allItems.recipes;
-                    if (allItems.tags.recipe && allItems.tags.recipe.color) {
-                        labelColor = allItems.tags.recipe.color;
+                    if (allItems.tags.recipe && allItems.tags.recipe) {
+                        label = allItems.tags.recipe;
                     }
                     break;
                 default:
@@ -70,7 +70,7 @@ class Homepage extends Component {
                     type={type}
                     items={itemsInWidget} 
                     widget={widget}
-                    labelColor={labelColor}
+                    label={label}
                 />
             );
         });

@@ -32,13 +32,13 @@ class Card extends React.Component {
   }
 
   render() {
-    const { item, extra } = this.props;
+    const { item, label, extra } = this.props;
 
     if (!item) {
       return null;
     }
 
-    let { renderType, labelColor } = this.props;
+    let { renderType } = this.props;
     renderType = parseInt(renderType);
 
     let percentLabel = null;
@@ -59,13 +59,13 @@ class Card extends React.Component {
 
     if (extra && extra.includes('percent')) {
       percentLabel = (
-        <Label bgColor={labelColor} item={item} />
+        <Label label={label} item={item} />
       );
     }
 
     if (extra && extra.includes('productCount')) {
       productCountLabel = (
-        <Label bgColor={labelColor} item={item} />
+        <Label label={label} item={item} />
       );
     }
 
