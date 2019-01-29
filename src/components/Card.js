@@ -17,14 +17,14 @@ class Card extends React.Component {
   trimByWord(text, maxChars = 20) {
     const textWords = text.split(' ');
     const textWordsCount = textWords.length;
-    
+
     if (textWordsCount <= maxChars) {
       return text;
     }
 
     let trimmed = text.substr(0, maxChars);
     trimmed = trimmed.substr(0, Math.min(trimmed.length, trimmed.lastIndexOf(' ')));
-    
+
     return `${trimmed}...`;
   }
 
@@ -44,15 +44,6 @@ class Card extends React.Component {
 
     const formatter = new Intl.NumberFormat('en-US');
     let prices = <span className="current">{formatter.format(item.price)}₮</span>;
-
-    // if (extra && extra.includes('expiryDate')) {
-    //   expiryDateLabel = (
-    //     <div className="time">
-    //       <Icon type="clock-circle" />
-    //       <span className="text">{item.edate}</span>
-    //     </div>
-    //   );
-    // }
 
     if (extra && extra.includes('percent')) {
       percentLabel = (

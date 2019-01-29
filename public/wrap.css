@@ -367,6 +367,13 @@ h5 {
   align-items: center;
   justify-content: space-between; }
 
+@media (max-width: 1265px){
+  .lol{
+    display: none;
+  }
+}
+
+
 @media (min-width: 1440px) {
   .container-laptop {
     max-width: 1366px; } }
