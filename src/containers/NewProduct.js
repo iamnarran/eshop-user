@@ -13,16 +13,14 @@ const fetch = async (props, onData) => {
         const newproduct = await api.newproduct.findAll({ jumcd: '99' });
         const mainbanner = await api.pagebanner.findAll({ type: 'F1' });
         const subbanner = await api.pagebanner.findAll({ type: 'F2'}); 
-        const tag = await api.tag.findAll({ type: '1' }); 
-        const widget = await api.widget.findAllPageWidget({ type: 'new' });    
-                       
+        const tag = await api.tag.findAll({ type: '1' });  
+        // console.log(subbanner);                
         onData(null, {
             container: { 
               newproduct: newproduct.data,
               mainbanner: mainbanner.data[0],
               subbanner: subbanner.data[0],
               tag: tag.data[0],
-              widget: widget.data[0],
             }
         });
     } catch (e) {

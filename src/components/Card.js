@@ -5,10 +5,11 @@ import config from '../config';
 import Rate from './Rate';
 import Label from './Label';
 import { CARD_TYPES } from '../utils/consts';
+
 import './Card.css';
 
 const IMAGE =
-process.env.NODE_ENV === 'development'
+  process.env.NODE_ENV === 'development'
     ? config.image.development
     : config.image.production;
 
@@ -30,8 +31,17 @@ class Card extends React.Component {
     const formatter = new Intl.NumberFormat('en-US');
     let prices = <span className="current">{formatter.format(item.price)}₮</span>;
 
+    // if (extra && extra.includes('expiryDate')) {
+    //   expiryDateLabel = (
+    //     <div className="time">
+    //       <Icon type="clock-circle" />
+    //       <span className="text">{item.edate}</span>
+    //     </div>
+    //   );
+    // }
+
     if (extra && extra.includes('percent')) {
-      console.log(item);
+      /* console.log(item); */
       percentLabel = (
         <Label bgColor={labelColor} item={item} />
       );
@@ -55,11 +65,11 @@ class Card extends React.Component {
     const hover = (
       <div className="search-hover">
         <Link to="" >
-          <i className="fa fa-heart-o" aria-hidden="true"></i>                
+          <i className="fa fa-heart-o" aria-hidden="true"></i>
           <span></span>
         </Link>
         <Link to="">
-          <i className="fa fa-cart-plus" aria-hidden="true"></i>                
+          <i className="fa fa-cart-plus" aria-hidden="true"></i>
           <span></span>
         </Link>
       </div>
@@ -69,73 +79,8 @@ class Card extends React.Component {
       case CARD_TYPES.slim:
         return (
           <div className="col-five pad10">
-              <div className="single-product small-product sale-product timed-product">
-                  <div className="image-container">
-                      <Link to="#">
-                        <span className="image" style={{ backgroundImage: `url(${IMAGE + item.img})` }}></span>
-                      </Link>
-                      {percentLabel}
-                      {productCountLabel}
-                      {expiryDateLabel}
-                      {hover}
-                  </div>
-                  <div className="info-container">
-                      <Link to="#" className="name">
-                          <span>{item.name ? item.name : item.packagenm}</span>
-                      </Link>
-                      <Link to="#" className="cat">
-                          <span>{item.shortnm ? item.shortnm : item.featuretxt}</span>
-                      </Link>
-                      
-                      {item.rate ? <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} /> : null}
-
-                      <Link to="#" className="price">
-                        {prices}
-                      </Link>
-                  </div>
-              </div>
-          </div>
-        );
-      case CARD_TYPES.wide:
-        return (
-          <div className="col-xl-4 pad10">
-              <div className="single-product big-product sale-product timed-product">
-                  <div className="image-container">
-                      <Link to="#">
-                        <span className="image" style={{ backgroundImage: `url(${IMAGE + item.img})` }}></span>
-                      </Link>
-                      {percentLabel}
-                      {productCountLabel}
-                      {expiryDateLabel}
-                      {hover}
-                  </div>
-                  <div className="info-container">
-                      <Link to="#" className="name">
-                          <span>{item.name ? item.name : item.packagenm}</span>
-                      </Link>
-                      <Link to="#" className="cat">
-                          <span>{item.shortnm ? item.shortnm : item.featuretxt}</span>
-                      </Link>
-    
-                      {item.rate ? <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} /> : null}
-                      
-                      <Link to="#" className="price">
-                        {prices}
-                      </Link>
-                  </div>
-              </div>
-          </div>
-        );
-      case CARD_TYPES.tile:
-        let c = 'short';
-        if ((this.props.cardNumsInCol % 2 !== 0 && this.props.index % 2 === 0) 
-          || (this.props.cardNumsInCol % 2 === 0 && ((Math.floor(this.props.index / this.props.cardNumsInCol) % 2 === 0 && this.props.index % 2 === 0) || (Math.floor(this.props.index / this.props.cardNumsInCol) % 2 !== 0 && this.props.index % 2 !== 0)))) {
-            c = 'long';
-          }
-
-        return (
-          <div className={`single-product big-product food-post food-${c}`}>
-            <div className="image-container">
+            <div className="single-product small-product sale-product timed-product">
+              <div className="image-container">
                 <Link to="#">
                   <span className="image" style={{ backgroundImage: `url(${IMAGE + item.img})` }}></span>
                 </Link>
@@ -143,6 +88,71 @@ class Card extends React.Component {
                 {productCountLabel}
                 {expiryDateLabel}
                 {hover}
+              </div>
+              <div className="info-container">
+                <Link to="#" className="name">
+                  <span>{item.name ? item.name : item.packagenm}</span>
+                </Link>
+                <Link to="#" className="cat">
+                  <span>{item.shortnm ? item.shortnm : item.featuretxt}</span>
+                </Link>
+
+                {item.rate ? <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} /> : null}
+
+                <Link to="#" className="price">
+                  {prices}
+                </Link>
+              </div>
+            </div>
+          </div>
+        );
+      case CARD_TYPES.wide:
+        return (
+          <div className="col-xl-4 pad10">
+            <div className="single-product big-product sale-product timed-product">
+              <div className="image-container">
+                <Link to="#">
+                  <span className="image" style={{ backgroundImage: `url(${IMAGE + item.img})` }}></span>
+                </Link>
+                {percentLabel}
+                {productCountLabel}
+                {expiryDateLabel}
+                {hover}
+              </div>
+              <div className="info-container">
+                <Link to="#" className="name">
+                  <span>{item.name ? item.name : item.packagenm}</span>
+                </Link>
+                <Link to="#" className="cat">
+                  <span>{item.shortnm ? item.shortnm : item.featuretxt}</span>
+                </Link>
+
+                {item.rate ? <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} /> : null}
+
+                <Link to="#" className="price">
+                  {prices}
+                </Link>
+              </div>
+            </div>
+          </div>
+        );
+      case CARD_TYPES.tile:
+        let c = 'short';
+        if ((this.props.cardNumsInCol % 2 !== 0 && this.props.index % 2 === 0)
+          || (this.props.cardNumsInCol % 2 === 0 && ((Math.floor(this.props.index / this.props.cardNumsInCol) % 2 === 0 && this.props.index % 2 === 0) || (Math.floor(this.props.index / this.props.cardNumsInCol) % 2 !== 0 && this.props.index % 2 !== 0)))) {
+          c = 'long';
+        }
+
+        return (
+          <div className={`single-product big-product food-post food-${c}`}>
+            <div className="image-container">
+              <Link to="#">
+                <span className="image" style={{ backgroundImage: `url(${IMAGE + item.img})` }}></span>
+              </Link>
+              {percentLabel}
+              {productCountLabel}
+              {expiryDateLabel}
+              {hover}
             </div>
             <div className="info-container">
               <Link to="#" className="name">

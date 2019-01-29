@@ -21,10 +21,10 @@ class Newproduct extends React.Component {
   }
 
   render() {
-    const { newproduct, mainbanner, subbanner, widget } = this.props.container;
+    const { newproduct, mainbanner, subbanner } = this.props.container;
     let products = []
     let subbannerhtml = (<img alt="banner" src={subbanner!==undefined ? IMAGE+subbanner.img: null} className="img-fluid"/>)
-    // console.log(this.props.container);    
+    // console.log(newproduct);    
     
     return(
       <div className="top-container">
@@ -35,8 +35,8 @@ class Newproduct extends React.Component {
           <div className="container pad10">
             <div className="title-container flex-space">
               <h2>
-                <span className="big">{widget===undefined ? 'Шинэ': widget.name}</span>
-                <strong>{widget===undefined ? 'Шинээр худалдаалагдаж буй бараа бүтээгдэхүүн':widget.subtitle}</strong>
+                <span className="big">Шинэ</span>
+                <strong>Шинээр худалдаалагдаж буй бараа бүтээгдэхүүн</strong>
               </h2>
             </div>
           </div>

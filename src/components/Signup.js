@@ -7,15 +7,15 @@ class Signup extends React.Component {
   }
 
   handleSave = () => {
-    this.setState({ isOpen : !this.state.isOpen})
+    this.setState({ isOpen: !this.state.isOpen })
   }
 
-  handleCancel = () => {    
-    this.setState({ isOpen : !this.state.isOpen})
+  handleCancel = () => {
+    this.setState({ isOpen: !this.state.isOpen })
   }
 
   render() {
-    return(
+    return (
       <Modal
         title="Бүртгүүлэх"
         visible={this.state.isOpen}
