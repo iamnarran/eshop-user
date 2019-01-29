@@ -52,7 +52,7 @@ class Newproduct extends React.Component {
                     products.push(product)
                     return null
                   }
-                  else { return <CardPage key={key}  product={product} type="new" neew/> }
+                  else { return <CardPage key={key} product={product} type="new" neew/> }
                 })                
               }
             </div>
@@ -75,7 +75,7 @@ class Newproduct extends React.Component {
             <div className="row row10">
               {
                 products.map((product, key) => {
-                  return <CardPage key={key}  product={product} type="sale" sale/> 
+                  return <CardPage key={key} product={product} type="discount" sale/> 
                 })                
               }
             </div>
