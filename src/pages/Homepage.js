@@ -154,7 +154,7 @@ class Homepage extends Component {
             <div className="top-container" >
                 {/* Slider */}
                 <div className="main-slide">
-                    <Slider dataSource={banners} params={homeBannerParams} elContainer={'banner'} />
+                    <Slider dataSource={banners[0]} params={homeBannerParams} elContainer={'banner'} />
                 </div>
                 {/* Slider end */}
 
