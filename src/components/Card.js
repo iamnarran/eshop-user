@@ -1,14 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Icon } from 'antd';
 
 import config from '../config';
 import Rate from './Rate';
 import Label from './Label';
 import { CARD_TYPES } from '../utils/consts';
-import img5 from '../scss/assets/images/demo/5.jpg';
-import img13 from '../scss/assets/images/demo/13.jpg';
-
 import './Card.css';
 
 const IMAGE =
@@ -33,15 +29,6 @@ class Card extends React.Component {
 
     const formatter = new Intl.NumberFormat('en-US');
     let prices = <span className="current">{formatter.format(item.price)}₮</span>;
-    
-    // if (extra && extra.includes('expiryDate')) {
-    //   expiryDateLabel = (
-    //     <div className="time">
-    //       <Icon type="clock-circle" />
-    //       <span className="text">{item.edate}</span>
-    //     </div>
-    //   );
-    // }
 
     if (extra && extra.includes('percent')) {
       console.log(item);

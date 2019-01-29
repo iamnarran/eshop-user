@@ -1,8 +1,6 @@
 import React from 'react';
 import CardPage from '../../components/PageCard';
 import config from 'config';
-import { Link } from 'react-router-dom';
-/* import PropTypes from 'prop-types'; */
 
 const IMAGE =
     process.env.NODE_ENV === 'development'
@@ -22,9 +20,10 @@ class Discount extends React.Component {
     }
   }
   render() {
-    const { saleproduct, mainbanner, subbanner } = this.props.container;    
+    const { saleproduct, mainbanner, subbanner, widget } = this.props.container;    
     let subbannerhtml = (<img alt="banner" src={subbanner!==undefined ? IMAGE+subbanner.img:''} className="img-fluid"/>)
     let products = []
+    // console.log(this.props.container);
     
     return (
       <div className="top-container">
@@ -35,8 +34,8 @@ class Discount extends React.Component {
           <div className="container pad10">
             <div className="title-container flex-space">
               <h2>
-                <span className="big">Хямдралтай</span>
-                <strong>Хугацаагүй хямдрал зарлагдсан бараа бүтээгдэхүүн</strong>
+                <span className="big">{widget===undefined ? 'Хямдралтай':widget.name}</span>
+                <strong>{widget===undefined ? 'Зарлагдсан хугацаанд багтаж худалдаа хийгээрэй':widget.subtitle}</strong>
               </h2>
             </div>         
           </div>
