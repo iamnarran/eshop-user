@@ -87,14 +87,14 @@ class CardPage extends React.Component {
           </div>
           <div className="info-container">
             <Link to="" className="name">
-                <span>{product.name}</span>
+                <span>{product.name+' '+ product.brandnm}</span>
             </Link>
             <Link to="" className="cat">
                 <span>{product.shortnm}</span>
             </Link>
             <Rate rate={product.rate} numOfVotes={product.rate_user_cnt} />
             <Link to="" className="price">
-              <span className="current">{product.price+'₮'}</span>
+              <span className="current">{nf.format(product.price)+'₮'}</span>
             </Link>
           </div>
         </div>        

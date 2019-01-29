@@ -1,19 +1,20 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+/* import { Link } from 'react-router-dom';
 import config from 'config';
-import CardPage from '../../components/PageCard';
+import CardPage from '../../components/PageCard'; */
 
-const IMAGE =
+/* const IMAGE =
 process.env.NODE_ENV === 'development'
     ? config.image.development
-    : config.image.production;
+    : config.image.production; */
+
 class Recipe extends React.Component {
   render() {
     // const { recipeproduct, mainbanner, subbanner } = this.props
     // console.log(this.props);
-    
-    
-    return(
+
+
+    return (
       <div className="top-container">
 
         {/**RECIPE TITLE */}
@@ -44,7 +45,7 @@ class Recipe extends React.Component {
             </div>
           </div>
         </div>
-              
+
         {/**RECIPE SUB BANNER */}
         {/* <div className="banner-container">
           <span style={{ backgroundImage: `url(${IMAGE+subbanner.img })`}}></span>

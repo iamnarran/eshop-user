@@ -1,18 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Icon } from 'antd';
 
 import config from '../config';
 import Rate from './Rate';
 import Label from './Label';
 import { CARD_TYPES } from '../utils/consts';
-import img5 from '../scss/assets/images/demo/5.jpg';
-import img13 from '../scss/assets/images/demo/13.jpg';
 
 import './Card.css';
 
 const IMAGE =
-process.env.NODE_ENV === 'development'
+  process.env.NODE_ENV === 'development'
     ? config.image.development
     : config.image.production;
 
@@ -47,7 +44,7 @@ class Card extends React.Component {
 
     const formatter = new Intl.NumberFormat('en-US');
     let prices = <span className="current">{formatter.format(item.price)}₮</span>;
-    
+
     // if (extra && extra.includes('expiryDate')) {
     //   expiryDateLabel = (
     //     <div className="time">
@@ -95,80 +92,94 @@ class Card extends React.Component {
       case CARD_TYPES.slim:
         return (
           <div className="col-five pad10">
-              <div className="single-product small-product sale-product timed-product">
-                  <div className="image-container">
-                      <Link to="#">
-                        <span className="image" style={{ backgroundImage: `url(${IMAGE + item.img})` }}></span>
-                      </Link>
-                      {percentLabel}
-                      {productCountLabel}
-                      {expiryDateLabel}
-                      {hover}
-                  </div>
-                  <div className="info-container">
-                      <Link to="#" className="name">
-                          <span>{item.name ? this.trimByWord(item.name) : item.packagenm ? this.trimByWord(item.packagenm) : ''}</span>
-                      </Link>
-                      <Link to="#" className="cat">
-                          <span>{item.shortnm ? this.trimByWord(item.shortnm, 30) : item.featuretxt ? this.trimByWord(item.featuretxt, 30) : ''}</span>
-                      </Link>
-                      
-                      {item.rate ? <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} /> : null}
+            <div className="single-product small-product sale-product timed-product">
+                <div className="image-container">
+                    <Link to="#">
+                      <span className="image" style={{ backgroundImage: `url(${IMAGE + item.img})` }}></span>
+                    </Link>
+                    {percentLabel}
+                    {productCountLabel}
+                    {expiryDateLabel}
+                    {hover}
+                </div>
+                <div className="info-container">
+                    <Link to="#" className="name">
+                        <span>{item.name ? this.trimByWord(item.name) : item.packagenm ? this.trimByWord(item.packagenm) : ''}</span>
+                    </Link>
+                    <Link to="#" className="cat">
+                        <span>{item.shortnm ? this.trimByWord(item.shortnm, 30) : item.featuretxt ? this.trimByWord(item.featuretxt, 30) : ''}</span>
+                    </Link>
+                    
+                    {item.rate ? <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} /> : null}
 
-                      <Link to="#" className="price">
-                        {prices}
-                      </Link>
-                  </div>
-              </div>
+                    <Link to="#" className="price">
+                      {prices}
+                    </Link>
+                </div>
+            </div>
+            <div className="info-container">
+              <Link to="#" className="name">
+                <span>{item.name ? item.name : item.packagenm}</span>
+              </Link>
+              <Link to="#" className="cat">
+                <span>{item.shortnm ? item.shortnm : item.featuretxt}</span>
+              </Link>
+
+              {item.rate ? <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} /> : null}
+
+              <Link to="#" className="price">
+                {prices}
+              </Link>
+            </div>
           </div>
         );
       case CARD_TYPES.wide:
         return (
           <div className="col-xl-4 pad10">
-              <div className="single-product big-product sale-product timed-product">
-                  <div className="image-container">
-                      <Link to="#">
-                        <span className="image" style={{ backgroundImage: `url(${IMAGE + item.img})` }}></span>
-                      </Link>
-                      {percentLabel}
-                      {productCountLabel}
-                      {expiryDateLabel}
-                      {hover}
-                  </div>
-                  <div className="info-container">
-                      <Link to="#" className="name">
-                          <span>{item.name ? this.trimByWord(item.name) : item.packagenm ? this.trimByWord(item.packagenm) : ''}</span>
-                      </Link>
-                      <Link to="#" className="cat">
-                          <span>{item.shortnm ? this.trimByWord(item.shortnm, 30) : item.featuretxt ? this.trimByWord(item.featuretxt, 30) : ''}</span>
-                      </Link>
-    
-                      {item.rate ? <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} /> : null}
-                      
-                      <Link to="#" className="price">
-                        {prices}
-                      </Link>
-                  </div>
-              </div>
+            <div className="single-product big-product sale-product timed-product">
+                <div className="image-container">
+                    <Link to="#">
+                      <span className="image" style={{ backgroundImage: `url(${IMAGE + item.img})` }}></span>
+                    </Link>
+                    {percentLabel}
+                    {productCountLabel}
+                    {expiryDateLabel}
+                    {hover}
+                </div>
+                <div className="info-container">
+                    <Link to="#" className="name">
+                        <span>{item.name ? this.trimByWord(item.name) : item.packagenm ? this.trimByWord(item.packagenm) : ''}</span>
+                    </Link>
+                    <Link to="#" className="cat">
+                        <span>{item.shortnm ? this.trimByWord(item.shortnm, 30) : item.featuretxt ? this.trimByWord(item.featuretxt, 30) : ''}</span>
+                    </Link>
+  
+                    {item.rate ? <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} /> : null}
+                    
+                    <Link to="#" className="price">
+                      {prices}
+                    </Link>
+                </div>
+            </div>
           </div>
         );
       case CARD_TYPES.tile:
         let c = 'short';
-        if ((this.props.cardNumsInCol % 2 !== 0 && this.props.index % 2 === 0) 
+        if ((this.props.cardNumsInCol % 2 !== 0 && this.props.index % 2 === 0)
           || (this.props.cardNumsInCol % 2 === 0 && ((Math.floor(this.props.index / this.props.cardNumsInCol) % 2 === 0 && this.props.index % 2 === 0) || (Math.floor(this.props.index / this.props.cardNumsInCol) % 2 !== 0 && this.props.index % 2 !== 0)))) {
-            c = 'long';
-          }
+          c = 'long';
+        }
 
         return (
           <div className={`single-product big-product food-post food-${c}`}>
             <div className="image-container">
-                <Link to="#">
-                  <span className="image" style={{ backgroundImage: `url(${IMAGE + item.img})` }}></span>
-                </Link>
-                {percentLabel}
-                {productCountLabel}
-                {expiryDateLabel}
-                {hover}
+              <Link to="#">
+                <span className="image" style={{ backgroundImage: `url(${IMAGE + item.img})` }}></span>
+              </Link>
+              {percentLabel}
+              {productCountLabel}
+              {expiryDateLabel}
+              {hover}
             </div>
             <div className="info-container">
               <Link to="#" className="name">

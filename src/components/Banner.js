@@ -1,13 +1,13 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+/* import { Link } from 'react-router-dom'; */
 import config from 'config';
 
 import timesale6 from '../scss/assets/images/demo/11.jpg';
 
 const IMAGE =
-    process.env.NODE_ENV === 'development'
-        ? config.image.development
-        : config.image.production;
+  process.env.NODE_ENV === 'development'
+    ? config.image.development
+    : config.image.production;
 
 class Banner extends React.Component {
   render() {
