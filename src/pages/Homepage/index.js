@@ -26,13 +26,13 @@ class Homepage extends Component {
         widgets.forEach((widget, index) => {
             if (index !== 0 && index % 2 === 0) {
                 blocks.push(
-                    <Banner 
-                        key={allItems.banners[index].id} 
+                    <Banner
+                        key={allItems.banners[index].id}
                         data={allItems.banners[index]}
                     />
                 );
             }
-            
+
             let type = WIDGET_TYPES.horizontal;
             let label = null;
             switch (widget.slug) {
@@ -65,10 +65,10 @@ class Homepage extends Component {
             }
 
             blocks.push(
-                <Widget 
+                <Widget
                     key={widget.slug}
                     type={type}
-                    items={itemsInWidget} 
+                    items={itemsInWidget}
                     widget={widget}
                     label={label}
                 />
@@ -77,8 +77,8 @@ class Homepage extends Component {
 
         if (widgets.length % 2 === 0) {
             blocks.push(
-                <Banner 
-                    key={allItems.banners[widgets.length].id} 
+                <Banner
+                    key={allItems.banners[widgets.length].id}
                     data={allItems.banners[widgets.length]}
                 />
             );
@@ -161,15 +161,15 @@ class Homepage extends Component {
                 {/* Main content */}
                 {this.renderWidgets(widgets, allItems)}
                 {/* Main content end */}
-                
+
                 {/* Brand list */}
                 <div className="main-slide brands-list">
                     <div className="container pad10">
                         <Slider dataSource={brands} params={brandsParams} elContainer={'brands'} />
                     </div>
                 </div>
-                {/* Brand list */}               
-                
+                {/* Brand list */}
+
                 {/* Messenger */}
                 <MessengerCustomerChat pageId="169275059877520" appId="570055533421847" htmlRef={window.location.pathname} />
                 {/* Messenger */}
