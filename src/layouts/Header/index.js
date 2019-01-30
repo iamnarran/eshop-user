@@ -199,8 +199,8 @@ class AppHeader extends Component {
                               </li>
                               <li>
                                 <button type="submit" className="btn">
-                                  <i className="fa fa-search"></i>
-                                  <span className="text-uppercase">Хайх</span>
+                                  <i className="fa fa-search d-block d-sm-none" style={{ fontSize: '20px', margin: '5px' }}></i>
+                                  <span className="text-uppercase d-none d-sm-block">Хайх</span>
                                 </button>
                               </li>
                             </ul>
