@@ -29,6 +29,7 @@ class Card extends React.Component {
   }
 
   render() {
+    console.log(this.props)
     const { item, label, extra } = this.props;
 
     if (!item) {
@@ -83,7 +84,7 @@ class Card extends React.Component {
       case CARD_TYPES.slim:
         if (this.props.none) {
           return (
-            <div className="col-five col-md-3 col-6 pad10 lol">
+            <div className="col-five d-none d-xl-block pad10 lol">
               <div className="single-product small-product sale-product timed-product">
                 <div className="image-container">
                   <Link to="#">
