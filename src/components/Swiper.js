@@ -28,10 +28,10 @@ class Slider extends React.Component {
                                             <p className="text">{item.description}</p>
                                             {
                                                 item && item.link && (
-                                                    <Link to={item && item.link && item.link} className="btn btn-main" target="_blank">
+                                                    <Link to={item.link} className="btn btn-main" target="_blank">
                                                         <i className="fa fa-long-arrow-right" aria-hidden="true"></i>
                                                         <span className="text-uppercase">
-                                                            {item.btntext}
+                                                            {item.btntext && item.btntext.trim() ? item.btntext : 'Дэлгэрэнгүй'}
                                                         </span>
                                                     </Link>
                                                 )
