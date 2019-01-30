@@ -2,7 +2,7 @@ import React from 'react';
 import api from '../../api';
 import { compose } from 'react-komposer';
 import Loader from '../../components/Loader';
-import Recipe from '../../pages/Recipe/index';
+import {Recipe} from "../../pages";
 
 const options = {
     loadingHandler: () => <Loader />

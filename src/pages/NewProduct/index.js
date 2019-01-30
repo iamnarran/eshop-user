@@ -1,6 +1,6 @@
 import React from 'react';
 import config from 'config';
-import CardPage from '../../components/PageCard';
+import Card from "../../components/Card";
 
 const IMAGE =
 process.env.NODE_ENV === 'development'
@@ -21,21 +21,21 @@ class Newproduct extends React.Component {
   }
 
   render() {
-    const { newproduct, mainbanner, subbanner, menu } = this.props.container;
+    const { newproduct, mainbanner, subbanner, menu, tag } = this.props.container;
     let products = []
     let subbannerhtml = (<img alt="banner" src={subbanner!==undefined ? IMAGE+subbanner.img: null} className="img-fluid"/>)
-    // console.log(newproduct);    
+    // console.log(this.props);    
     
     return(
       <div className="top-container">
 
         {/**NEW PRODUCT TITLE */}
-        <div className="whole-page-title color-blue" style={{ backgroundImage: `url(${mainbanner!==undefined ? IMAGE+mainbanner.img:'' })`, 
-          backgroundRepeat: 'no-repeat', backgroundPosition: 'right', backgroundSize: '50% 120px'}} onClick={this.changeLocation}>
+        <div className="whole-page-title color-blue class container pad10" style={{ backgroundImage: `url(${mainbanner !== undefined ? IMAGE + mainbanner.img : ''})`,
+          backgroundRepeat: 'no-repeat', backgroundPosition: 'right', backgroundSize: '50% 115px' }} onClick={this.changeLocation}>
           <div className="container pad10">
             <div className="title-container flex-space">
               <h2>
-                <span className="big">{menu[0]===undefined ? '': menu[0].menunm}</span>
+                <span className="big">{menu[0]===undefined ? '':menu[0].menunm}</span>
                 <strong>{menu[0]===undefined ? '':menu[0].subtitle}</strong>
               </h2>
             </div>
@@ -52,7 +52,7 @@ class Newproduct extends React.Component {
                     products.push(product)
                     return null
                   }
-                  else { return <CardPage key={key} product={product} type="new" neew/> }
+                  else { return <Card key={key} item={product} extra={["new"]} renderType="1" label={tag}/> }
                 })                
               }
             </div>
@@ -73,11 +73,9 @@ class Newproduct extends React.Component {
         <div className="section">
           <div className="container pad10">
             <div className="row row10">
-              {
-                
-                products.map((product, key) => {
-                  console.log(product);                  
-                  return <CardPage key={key} product={product} type="new" neew/> 
+              {                
+                products.map((product, key) => {           
+                  return <Card key={key} item={product} extra={["new"]} renderType="1" label={tag}/> 
                 })                
               }
             </div>
