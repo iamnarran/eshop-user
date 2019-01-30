@@ -23,19 +23,20 @@ import { storage } from './utils';
 /* import Layouts from 'layouts/Default'; */
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import 'scss/app.scss';
-
-import Header from './containers/AppHeader';
-import Footer from './containers/AppFooter';
-import MobileMenu from './containers/MobileMenu';
-
-import Homepage from './containers/Homepage';
 import messages from './messages.json';
-import Discount from './containers/Discount';
-import NewProduct from './containers/NewProduct';
-import Recipe from './containers/Recipe';
 import Package from './pages/Package/index';
 import Promotion from './pages/Promotion/index';
 import Season from './pages/Season/index';
+
+import {
+  Footer,
+  Header,
+  Discount,
+  Homepage,
+  MobileMenu,
+  NewProduct,
+  Recipe,
+} from "./containers/index";
 
 //library.add(fab, faCheckSquare, faCoffee);
 library.add(fas, far, fab);
