@@ -61,7 +61,6 @@ class AppHeader extends Component {
     const menuClass = `dropdown-menu${this.state.isOpen ? " show" : ""}`;
     const seartchClass = `search-mobile${this.state.isSearch ? " activated" : ""}`;
     const togglePopup = `${this.props.isToggle ? " activated" : ""}`;
-    console.log(root)
     return (
       <div>
         <div className={togglePopup} >

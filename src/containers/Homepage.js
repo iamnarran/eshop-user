@@ -28,8 +28,8 @@ const fetch = async (props, onData) => {
 
         const banners = [];
         banners[0] = banners1.data;
-        banners[2] = banners2.data[0];
-        banners[4] = banners3.data[0];
+        banners[2] = banners2.data;
+        banners[4] = banners3.data;
 
         const tags = [];
         tags[1] = tags1.data[0];
