@@ -8,10 +8,6 @@ const IMAGE =
     : config.image.production;
 
 class Banner extends React.Component {
-  componentDidMount() {
-
-  }
-
   // handleMouseEnter = event => {
   //   console.log('ooo');
   // }

@@ -29,6 +29,7 @@ class Card extends React.Component {
   }
 
   render() {
+    console.log(this.props)
     const { item, label, extra } = this.props;
 
     if (!item) {
@@ -82,7 +83,7 @@ class Card extends React.Component {
     switch (renderType) {
       case CARD_TYPES.slim:
         return (
-          <div className="col-five pad10">
+          <div className={`col-five pad10${this.props.none ? ' d-none d-xl-block lol' : ''}`}>
             <div className="single-product small-product sale-product timed-product">
                 <div className="image-container">
                     <Link to="#">

@@ -1,18 +1,16 @@
-import client, { setAuthorizationHeader } from './client';
-import homepage from './Homepage';
-import banner from './HompageBanner';
-import brand from './Brands';
-import staticinfo from './Static';
-import menu from './Menu';
-import category from './Category';
-import saleproduct from './Discountproduct';
-import newproduct from './Newproduct';
-import widget from './Widget';
-import product from './Product';
-import recipe from './Recipe';
-import packageProduct from './Package';
-import pagebanner from './PagesBanner';
-import tag from './Tag';
+import client, { setAuthorizationHeader } from './Client/index';
+import homepage from './Homepage/index';
+import banner from './Banner/HompageBanner';
+import brand from './Brand/index';
+import staticinfo from './Static/index';
+import menu from './Menu/index';
+import category from './Category/index';
+import widget from './Widget/index';
+import product from './Product/index';
+import recipe from './Recipe/index';
+import packageProduct from './Package/index';
+import pagebanner from './Banner/PagesBanner';
+import tag from './Tag/index';
 
 let rest = {};
 
@@ -74,18 +72,6 @@ menu.forEach(api => {
 rest['category'] = {};
 category.forEach(api => {
   rest.category[api.NAME] = data => generateAPI(api, data);
-});
-
-//SALE PRODUCT
-rest['saleproduct'] = {};
-saleproduct.forEach(api => {
-  rest.saleproduct[api.NAME] = data => generateAPI(api, data);
-});
-
-//NEW PRODUCT
-rest['newproduct'] = {};
-newproduct.forEach(api => {
-  rest.newproduct[api.NAME] = data => generateAPI(api, data);
 });
 
 // WIDGET

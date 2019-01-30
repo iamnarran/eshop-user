@@ -25,6 +25,7 @@ class Widget extends React.Component {
                         item={items[p++]} 
                         label={label}
                         extra={WIDGET_LABELS[widget.slug]} 
+                        none={j === cardsInRow - 1 ? true : false}
                     />
                 );
             }
