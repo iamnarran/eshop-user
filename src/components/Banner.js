@@ -15,12 +15,12 @@ class Banner extends React.Component {
 
     return (
       <div className="banner-container" >
-        <span style={{ backgroundImage: `url(${IMAGE + banner.imgnm})` }}></span>
-        <div className="container pad10">
-          <a href={banner.link ? banner.link : '#'} target="_blank" rel="noopener">
-            <img alt="banner" src={timesale6} className="img-fluid" />
-          </a>
-        </div>
+          <span style={{ backgroundImage: `url(${IMAGE + banner.imgnm})` }}></span>
+          <div className="container pad10">
+              <a href={banner.link ? banner.link : '#'} target="_blank" rel="noopener">
+                <img alt="banner" src={IMAGE + banner.imgnm} className="img-fluid" />
+              </a>
+          </div>
       </div>
     );
   }
