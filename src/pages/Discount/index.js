@@ -1,8 +1,6 @@
 import React from 'react';
 import CardPage from '../../components/PageCard';
 import config from 'config';
-/* import { Link } from 'react-router-dom'; */
-/* import PropTypes from 'prop-types'; */
 
 const IMAGE =
   process.env.NODE_ENV === 'development'
