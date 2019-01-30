@@ -31,7 +31,7 @@ class Card extends React.Component {
   render() {
     console.log(this.props)
     const { item, label, extra } = this.props;
-
+    
     if (!item) {
       return null;
     }
@@ -42,6 +42,7 @@ class Card extends React.Component {
     let percentLabel = null;
     let expiryDateLabel = null;
     let productCountLabel = null;
+    let newLabel = null;
 
     const formatter = new Intl.NumberFormat('en-US');
     let prices = <span className="current">{formatter.format(item.price)}₮</span>;
@@ -55,6 +56,12 @@ class Card extends React.Component {
     if (extra && extra.includes('productCount')) {
       productCountLabel = (
         <Label label={label} item={item} />
+      );
+    }
+
+    if (extra && extra.includes('new')) {
+      newLabel = (
+        <Label label={label} neew/>
       );
     }
 
@@ -112,6 +119,38 @@ class Card extends React.Component {
               </div>
             </div>
           );
+        }
+        else if(newLabel){
+          return (
+            <div className="col-five col-md-3 col-6 pad10">
+              <div className="single-product small-product sale-product new-product">
+                <div className="image-container">
+                  <Link to="">
+                      <span className="image" style={{ backgroundImage: `url(${IMAGE+item.img})` }}></span>
+                  </Link>
+                  {percentLabel}
+                  {productCountLabel}
+                  {expiryDateLabel}
+                  {newLabel}
+                  {hover}
+                </div>
+                <div className="info-container">
+                  <Link to="#" className="name">
+                    <span>{item.name+' '+ item.brandnm}</span>
+                  </Link>
+                  <Link to="#" className="cat">
+                    <span>{item.shortnm ? item.shortnm : item.featuretxt}</span>
+                  </Link>
+
+                  {item.rate ? <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} /> : null}
+
+                  <Link to="" className="price">
+                    <span className="current">{formatter.format(item.price)}₮</span>
+                  </Link>
+                </div>
+              </div>        
+            </div>
+          )
         }
         else {
           return (
