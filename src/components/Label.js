@@ -3,10 +3,10 @@ import Style from 'style-it';
 
 class Label extends React.Component {
   render() {
-    const { item, label, neew } = this.props;
+    const { item, label, isNew } = this.props;
 
     let content = null;
-    if (neew){
+    if (isNew) {
       content = (
         <div>
           <span className="text" style={{ fontSize: '0.9rem' }}>

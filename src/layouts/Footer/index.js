@@ -124,7 +124,7 @@ class Footer extends React.Component {
                             </div>
                         </div>
                         <div className="bottom-container">
-                            <p>Copyright © 2016-2018 emart. All Rights Reserved.</p>
+                            <center><p>Copyright © 2016-2019 emart. All Rights Reserved.</p></center>
                         </div>
                     </div>
                 </div>

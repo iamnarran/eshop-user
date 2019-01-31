@@ -13,15 +13,20 @@ const fetch = async (props, onData) => {
         const discount = await api.product.findAllDiscountProducts({ jumcd: '99' });
         const mainbanner = await api.pagebanner.findAll({ type: 'D1' });
         const subbanner = await api.pagebanner.findAll({ type: 'D2'}); 
-        const tag = await api.tag.findAll({ type: 'discount' });
+        const tagsNew = await api.tag.findAll({ slug: 'new' });
+        const tagsDiscount = await api.tag.findAll({ slug: 'discount' });
         const menu = await api.menu.findAll();   
+
+        const tags = [];
+        tags['new'] = tagsNew.data[0];
+        tags['discount'] = tagsDiscount.data[0];
         
         onData(null, {
             container: { 
                 saleproduct: discount.data,
                 mainbanner: mainbanner.data[0],
                 subbanner: subbanner.data[0],
-                tag: tag.data[0],
+                tag: tags,
                 menu: menu.data.filter(i => {
                     if(i.id === 70) { return i;}
                     return null;

@@ -22,6 +22,7 @@ const WIDGET_SLUGS = {
   discount: 'discount',
   package: 'package',
   recipe: 'recipe',
+  new: 'new',
 };
 Object.freeze(WIDGET_SLUGS);
 
@@ -30,6 +31,7 @@ WIDGET_LABELS[WIDGET_SLUGS.onlyEmart] = [];
 WIDGET_LABELS[WIDGET_SLUGS.discount] = ['percent', 'expiryDate', 'discountPrice'];
 WIDGET_LABELS[WIDGET_SLUGS.package] = ['productCount'];
 WIDGET_LABELS[WIDGET_SLUGS.recipe] = ['productCount'];
+WIDGET_LABELS[WIDGET_SLUGS.new] = ['new'];
 Object.freeze(WIDGET_LABELS);
 
 export { 
