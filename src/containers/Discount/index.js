@@ -13,7 +13,7 @@ const fetch = async (props, onData) => {
         const discount = await api.product.findAllDiscountProducts({ jumcd: '99' });
         const mainbanner = await api.pagebanner.findAll({ type: 'D1' });
         const subbanner = await api.pagebanner.findAll({ type: 'D2'}); 
-        const tag = await api.tag.findAll({ type: '4' });
+        const tag = await api.tag.findAll({ type: 'discount' });
         const menu = await api.menu.findAll();   
         
         onData(null, {
