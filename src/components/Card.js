@@ -30,7 +30,7 @@ class Card extends React.Component {
 
   render() {
     const { item, label, extra } = this.props;
-
+    
     if (!item) {
       return null;
     }
@@ -38,9 +38,10 @@ class Card extends React.Component {
     let { renderType } = this.props;
     renderType = parseInt(renderType);
 
-    let percentLabel = null;
     let expiryDateLabel = null;
+    let percentLabel = null;
     let productCountLabel = null;
+    let newLabel = null;
 
     const formatter = new Intl.NumberFormat('en-US');
     let prices = <span className="current">{formatter.format(item.price)}₮</span>;
@@ -54,6 +55,12 @@ class Card extends React.Component {
     if (extra && extra.includes('productCount')) {
       productCountLabel = (
         <Label label={label} item={item} />
+      );
+    }
+
+    if (extra && extra.includes('new')) {
+      newLabel = (
+        <Label label={label} item={item} isNew />
       );
     }
 
@@ -90,6 +97,7 @@ class Card extends React.Component {
                     </Link>
                     {percentLabel}
                     {productCountLabel}
+                    {newLabel}
                     {expiryDateLabel}
                     {hover}
                 </div>

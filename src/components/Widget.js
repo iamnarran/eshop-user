@@ -24,8 +24,8 @@ class Widget extends React.Component {
                         renderType={cardTypes[i]} 
                         item={items[p++]} 
                         label={label}
-                        extra={WIDGET_LABELS[widget.slug]} 
                         none={j === cardsInRow - 1 ? true : false}
+                        extra={WIDGET_LABELS[widget.slug]} 
                     />
                 );
             }

@@ -3,10 +3,18 @@ import Style from 'style-it';
 
 class Label extends React.Component {
   render() {
-    const { item, label } = this.props;
+    const { item, label, isNew } = this.props;
 
     let content = null;
-    if (item.spercent) {
+    if (isNew) {
+      content = (
+        <div>
+          <span className="text" style={{ fontSize: '0.9rem' }}>
+            <strong>{label ? label.tagtext : ''}</strong>
+          </span>
+        </div>
+      )
+    } else if (item.spercent) {
       content = (
         <div>
           <strong>{item.spercent}</strong>
@@ -20,7 +28,7 @@ class Label extends React.Component {
           <span>{label ? label.tagtext : ''}</span>
         </small>
       );
-    }
+    } 
 
     return (
       <Style>
