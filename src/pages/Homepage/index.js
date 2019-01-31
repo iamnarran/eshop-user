@@ -19,6 +19,13 @@ class Homepage extends Component {
 
     renderWidgets(widgets, allItems) {
         let blocks = [];
+        const bannerParams = {
+            autoplay: {
+                delay: 5000,
+                disableOnInteraction: false,
+                loop: true,
+            },
+        };
 
         widgets = widgets.sort((obj1, obj2) => obj1.orders - obj2.orders);
 
@@ -27,8 +34,9 @@ class Homepage extends Component {
             if (index !== 0 && index % 2 === 0) {
                 blocks.push(
                     <Banner
-                        key={allItems.banners[index].id}
+                        key={allItems.banners[index][0].id}
                         data={allItems.banners[index]}
+                        params={bannerParams}
                     />
                 );
             }
@@ -77,9 +85,10 @@ class Homepage extends Component {
 
         if (widgets.length % 2 === 0) {
             blocks.push(
-                <Banner
-                    key={allItems.banners[widgets.length].id}
+                <Banner 
+                    key={allItems.banners[widgets.length][0].id} 
                     data={allItems.banners[widgets.length]}
+                    params={bannerParams}
                 />
             );
         }
@@ -124,7 +133,7 @@ class Homepage extends Component {
             });
         });
 
-        const homeBannerParams = {
+        const sliderParams = {
             autoplay: {
                 delay: 5000,
                 disableOnInteraction: false
@@ -154,7 +163,7 @@ class Homepage extends Component {
             <div className="top-container" >
                 {/* Slider */}
                 <div className="main-slide">
-                    <Slider dataSource={banners[0]} params={homeBannerParams} elContainer={'banner'} />
+                    <Slider dataSource={banners[0]} params={sliderParams} elContainer={'banner'} />
                 </div>
                 {/* Slider end */}
 
