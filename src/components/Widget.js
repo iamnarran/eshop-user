@@ -12,7 +12,8 @@ class Widget extends React.Component {
     state = { none: true }
     renderItems() {
         let cards = [];
-
+        // console.log(this.props);
+        
         if (this.props.type === WIDGET_TYPES.horizontal) {
             const cardTypes = this.props.widget.type.split(',');
             for (let i = 0, p = 0; i < cardTypes.length; i++) {

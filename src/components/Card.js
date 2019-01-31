@@ -29,8 +29,8 @@ class Card extends React.Component {
   }
 
   render() {
-    console.log(this.props)
     const { item, label, extra } = this.props;
+    // console.log(this.props);
     
     if (!item) {
       return null;

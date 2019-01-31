@@ -1,50 +1,36 @@
 import React from 'react';
-/* import { Link } from 'react-router-dom';
 import config from 'config';
-import CardPage from '../../components/PageCard'; */
+import Widget from '../../components/Widget';
 
-/* const IMAGE =
+const IMAGE =
 process.env.NODE_ENV === 'development'
     ? config.image.development
-    : config.image.production; */
+    : config.image.production; 
 
 class Recipe extends React.Component {
   render() {
-    // const { recipeproduct, mainbanner, subbanner } = this.props
+    const { recipeproduct, mainbanner, subbanner, menu, tag, widget } = this.props.container
     // console.log(this.props);
 
 
     return (
       <div className="top-container">
 
-        {/**RECIPE TITLE */}
-        <div className="whole-page-title color-light-green" >
+        {/**RECIPE PRODUCT TITLE */}
+        <div className="whole-page-title color-blue class container pad10" style={{ backgroundImage: `url(${mainbanner !== undefined ? IMAGE + mainbanner.img : ''})`,
+          backgroundRepeat: 'no-repeat', backgroundPosition: 'right', backgroundSize: '50% 115px' }} onClick={this.changeLocation}>
           <div className="container pad10">
             <div className="title-container flex-space">
               <h2>
-                <span className="big">Хоолны жор</span>
-                <strong>Таньд болон танай гэр бүлд зориулав</strong>
+                <span className="big">{menu[0]===undefined ? '':menu[0].menunm}</span>
+                <strong>{menu[0]===undefined ? '':menu[0].subtitle}</strong>
               </h2>
             </div>
           </div>
         </div>
 
         {/**RECIPE PRODUCTS */}
-        <div className="section">
-          <div className="container pad10">
-            <div className="row row10">
-              {
-                // recipeproduct.map((product, key) => {
-                //   if(key >= 10){ 
-                //     recipeproduct.push(product)
-                //     return null
-                //   }
-                //   else { return <CardPage key={key}  product={product} cardType="1" type="new" neew/> }
-                // })                
-              }
-            </div>
-          </div>
-        </div>
+        <Widget items={recipeproduct} type={2} widget={widget[0]===undefined ? '': widget[0]} />
 
         {/**RECIPE SUB BANNER */}
         {/* <div className="banner-container">
