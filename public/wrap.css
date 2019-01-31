@@ -3788,4 +3788,15 @@ form .e-input-group .count-text {
       min-width: 600px;
  }
 }
+.brands-list .swiper-slide{
+  height: 100% !important;
+}
+.brands{
+  height: 20%;
+}
+@media (max-width: 767.97px){
+  .main-slide .swiper-container {
+      height: 200px !important;
+  }
+}
 /*# sourceMappingURL=wrap.css.map */
