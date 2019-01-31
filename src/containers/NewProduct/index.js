@@ -25,7 +25,7 @@ const fetch = async (props, onData) => {
               menu: menu.data.filter(i => {
                 if(i.id === 75) { return i; }
                 return null;
-            }),
+                }),
             }
         });
     } catch (e) {

@@ -14,7 +14,7 @@ class Homepage extends Component {
     toggleOpen = () => this.setState({ isOpen: !this.state.isOpen });
 
     handleChange(value) {
-        console.log(`selected ${value}`);
+        // console.log(`selected ${value}`);
     }
 
     renderWidgets(widgets, allItems) {

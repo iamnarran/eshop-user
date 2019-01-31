@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 class Default extends Component {
   render() {
-    console.log('default=>render', this.props);
+    // console.log('default=>render', this.props);
     const { children } = this.props;
     return (
       <div className="main-container">
