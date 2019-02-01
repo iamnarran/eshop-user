@@ -19,7 +19,7 @@ class Footer extends React.Component {
                 <div className="section section-footer">
                     <div className="container pad10">
                         <div className="row row10">
-                            <div className="col-xl-3 pad10">
+                            <div className="col-sm-12 col-md-6 col-lg-3 pad10">
                                 <Link to="" className="logo">
                                     <img alt="logo" src={IMAGE + staticinfo.logopath} />
                                 </Link>
@@ -46,7 +46,7 @@ class Footer extends React.Component {
                                     </li>
                                 </ul>
                             </div>
-                            <div className="col-xl-3 pad10">
+                            <div className="col-sm-12 col-md-6 col-lg-3 pad10">
                                 <ul className="list-unstyled">
                                     <li>
                                         <strong>Бидний тухай</strong>
@@ -73,7 +73,7 @@ class Footer extends React.Component {
                                     </li>
                                 </ul>
                             </div>
-                            <div className="col-xl-3 pad10">
+                            <div className="col-sm-12 col-md-6 col-lg-3 pad10">
                                 <ul className="list-unstyled">
                                     <li>
                                         <strong>Үйлчилгээний нөхцөл</strong>
@@ -100,7 +100,7 @@ class Footer extends React.Component {
                                     </li>
                                 </ul>
                             </div>
-                            <div className="col-xl-3 pad10">
+                            <div className="col-sm-12 col-md-6 col-lg-3 pad10">
                                 <ul className="list-unstyled address">
                                     <li>
                                         <strong>Холбоо барих</strong>

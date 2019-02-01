@@ -85,8 +85,8 @@ class Homepage extends Component {
 
         if (widgets.length % 2 === 0) {
             blocks.push(
-                <Banner 
-                    key={allItems.banners[widgets.length][0].id} 
+                <Banner
+                    key={allItems.banners[widgets.length][0].id}
                     data={allItems.banners[widgets.length]}
                     params={bannerParams}
                 />
@@ -172,9 +172,11 @@ class Homepage extends Component {
                 {/* Main content end */}
 
                 {/* Brand list */}
-                <div className="main-slide brands-list">
-                    <div className="container pad10">
-                        <Slider dataSource={brands} params={brandsParams} elContainer={'brands'} />
+                <div className="section section-gray">
+                    <div className="main-slide brands-list">
+                        <div className="container pad10">
+                            <Slider dataSource={brands} params={brandsParams} elContainer={'brands'} />
+                        </div>
                     </div>
                 </div>
                 {/* Brand list */}
