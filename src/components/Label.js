@@ -1,34 +1,41 @@
-import React from 'react';
-import Style from 'style-it';
+import React from "react";
+import Style from "style-it";
+import PropTypes from "prop-types";
 
 class Label extends React.Component {
   render() {
-    const { item, label, isNew } = this.props;
+    const { data, item } = this.props;
+
+    if (!data) {
+      return null;
+    }
 
     let content = null;
-    if (isNew) {
+    if (data.new) {
       content = (
         <div>
-          <span className="text" style={{ fontSize: '0.9rem' }}>
-            <strong>{label ? label.tagtext : ''}</strong>
+          <span className="text" style={{ fontSize: "0.9rem" }}>
+            <strong>{data.tagtext ? data.tagtext : ""}</strong>
           </span>
         </div>
-      )
-    } else if (item.spercent) {
+      );
+    } else if (data.percent) {
       content = (
         <div>
-          <strong>{item.spercent}</strong>
-          <small>{label ? label.tagtext : ''}</small>
+          <strong>{item && item.spercent ? item.spercent : ""}</strong>
+          <small>{data.tagtext ? data.tagtext : ""}</small>
         </div>
       );
-    } else if (item.skucnt) {
+    } else if (data.count) {
       content = (
         <small>
-          <span style={{ fontSize: '0.9rem' }}>{item.skucnt}</span>
-          <span>{label ? label.tagtext : ''}</span>
+          <span style={{ fontSize: "0.9rem" }}>
+            {item && item.skucnt ? item.skucnt : ""}
+          </span>
+          <span>{data.tagtext ? data.tagtext : ""}</span>
         </small>
       );
-    } 
+    }
 
     return (
       <Style>
@@ -48,7 +55,7 @@ class Label extends React.Component {
                 display: block;
                 width: 46px;
                 height: 30px;
-                background-color: ${label ? label.color : '#f00'};
+                background-color: ${data.color ? data.color : "#f00"};
                 text-align: center;
                 font-size: 1.5rem;
                 color: white;
@@ -62,7 +69,7 @@ class Label extends React.Component {
                 z-index: 0;
                 position: absolute;
                 content: '';
-                background-color: ${label ? label.color : '#f00'};
+                background-color: ${data.color ? data.color : "#f00"};
                 width: 26px;
                 height: 26px;
                 top: -11px;
@@ -92,14 +99,17 @@ class Label extends React.Component {
                 letter-spacing: 1px;
               }
             `}
-            <span className="text">
-              {content}
-            </span>
+            <span className="text">{content}</span>
           </Style>
         </div>
       </Style>
     );
   }
+}
+
+Label.propTypes = {
+  data: PropTypes.number.isRequired,
+  item: PropTypes.object
 };
 
 export default Label;

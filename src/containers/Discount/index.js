@@ -2,7 +2,7 @@ import React from 'react';
 import api from '../../api';
 import { compose } from 'react-komposer';
 import Loader from '../../components/Loader';
-import {Discount} from "../../pages";
+import { Discount } from "../../pages";
 
 const options = {
     loadingHandler: () => <Loader />
