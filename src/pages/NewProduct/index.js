@@ -10,7 +10,7 @@ class Newproduct extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      mainbanner: this.props.container.mainbanner
+      ...this.props.container
     };
   }
 
@@ -21,10 +21,9 @@ class Newproduct extends React.Component {
   }
 
   render() {
-    const { newproduct, mainbanner, subbanner, menu, tag } = this.props.container;
+    const { newproduct, mainbanner, subbanner, menu, tag } = this.state;
     let products = []
-    let subbannerhtml = (<img alt="banner" src={subbanner!==undefined ? IMAGE+subbanner.img: null} className="img-fluid"/>)
-    // console.log(this.props);    
+    let subbannerhtml = (<img alt="banner" src={subbanner!==undefined ? IMAGE+subbanner.img:''} className="img-fluid"/>)   
     
     return(
       <div className="top-container">

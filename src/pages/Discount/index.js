@@ -10,7 +10,7 @@ class Discount extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      mainbanner: this.props.container.mainbanner
+      ...this.props.container
     };
   }
 
@@ -21,14 +21,14 @@ class Discount extends React.Component {
   }
 
   render() {
-    const { saleproduct, mainbanner, subbanner, menu, tag } = this.props.container;    
+    const { saleproduct, mainbanner, subbanner, menu, tag } = this.state;    
     let subbannerhtml = (<img alt="banner" src={subbanner!==undefined ? IMAGE+subbanner.img:''} className="img-fluid"/>)
     let products = []
 
     return (
       <div className="top-container">
         {/**DISCOUNT PRODUCT TITLE*/}
-        <div className="whole-page-title color-main class container pad10" style={{ backgroundImage: `url(${mainbanner !== undefined ? IMAGE + mainbanner.img : ''})`,
+        <div className="whole-page-title color-main container" style={{ backgroundImage: `url(${mainbanner !== undefined ? IMAGE + mainbanner.img : ''})`,
           backgroundRepeat: 'no-repeat', backgroundPosition: 'right', backgroundSize: '50% 115px' }} onClick={this.changeLocation}>
           <div className="container pad10">
             <div className="title-container flex-space">
