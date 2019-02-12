@@ -695,12 +695,11 @@ body {
   height: auto;
 }
 .top-main .search li:first-child {
-  width: 120px;
+  width: 25%;
   border-right: 1px solid rgba(0, 0, 0, 0.1);
 }
 .top-main .search li:first-child .btn {
   width: 100%;
-  font-weight: 500;
   color: rgba(0, 0, 0, 0.6);
   background: none;
 }
@@ -728,7 +727,6 @@ body {
 .top-main .search li:last-child .btn span {
   font-size: 0.9rem;
   font-weight: 500;
-  margin-left: 5px;
 }
 .top-main .search .form-group {
   margin: auto;
@@ -1200,6 +1198,7 @@ body {
   left: 5px;
 }
 .small-product {
+  height: auto !important;
   position: relative;
 }
 .small-product .image-container:after {
@@ -3799,4 +3798,21 @@ form .e-input-group .count-text {
       height: 200px !important;
   }
 }
+.button{
+  background-color: red;
+}
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 5px 10px;
+  margin-right: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+}
+.buttonGrey {background-color: #e7e7e7; color: black;}
+.buttonBlack {background-color: #555555;}
 /*# sourceMappingURL=wrap.css.map */

@@ -11,7 +11,7 @@ class MobileMenu extends React.Component {
     showLogInModal = () => this.setState({ logInVisible: true });
     handleLogInSave = () => this.setState({ logInVisible: false, })
     handleLogInCancel = () => this.setState({ logInVisible: false, });
-    showSingUpModal = () => this.setState({ SingUpVisible: false });
+    showSingUpModal = () => this.setState({ SingUpVisible: true });
     handleSingUpSave = () => this.setState({ SingUpVisible: false, });
     handleSingUpCancel = () => this.setState({ SingUpVisible: false, });
 
@@ -49,7 +49,7 @@ class MobileMenu extends React.Component {
                 <div className="card" key={index}>
                     <button className="btn btn-link flex-this flex-space" key={index} type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                         <strong className="text-uppercase">{item.name}</strong>
-                        {/* <i className="fa fa-chevron-down" aria-hidden="true"></i> */}
+                        <i className="fa fa-chevron-down" aria-hidden="true"></i>
                     </button>
                     <div id="collapseOne" className="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
                         <ul className="list-unstyled">
@@ -76,9 +76,9 @@ class MobileMenu extends React.Component {
                     <div className="single">
                         <ul className="list-unstyled flex-this flex-space top-1">
                             <li className="list-inline-item" onClick={this.togglePopup}>
-                                <Link to="">
+                                <button className="button buttonBlack">
                                     <i className="fa fa-times" aria-hidden="true"></i>
-                                </Link>
+                                </button>
                             </li>
                             <li className="list-inline-item">
                                 <Link to="" className="e-phone">

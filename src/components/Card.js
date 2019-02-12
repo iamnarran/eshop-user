@@ -131,7 +131,7 @@ class Card extends React.Component {
         );
       case CARD_TYPES.wide:
         return (
-          <div className="col-xl-4 pad10">
+          <div className="col-md-4 pad10">
             <div className="single-product big-product sale-product timed-product">
               <div className="image-container">
                 <Link to="#">
