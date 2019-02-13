@@ -22,6 +22,9 @@ const fetch = async (props, onData) => {
     const prodsDiscount = await api.product.findAllDiscountProducts({
       jumcd: "99"
     });
+    const prodsNew = await api.product.findAllNewProducts({
+      jumcd: "99"
+    });
     const banners1 = await api.banner.findAll({ type: "A1" });
     const banners2 = await api.banner.findAll({ type: "A2" });
     const banners3 = await api.banner.findAll({ type: "A3" });
@@ -49,7 +52,8 @@ const fetch = async (props, onData) => {
         recipes: recipes.data,
         prodsPackage: prodsPackage.data,
         prodsEmart: prodsEmart.data,
-        prodsDiscount: prodsDiscount.data
+        prodsDiscount: prodsDiscount.data,
+        prodsNew: prodsNew.data
       }
     });
   } catch (e) {

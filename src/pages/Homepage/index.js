@@ -17,14 +17,6 @@ class Homepage extends React.Component {
   renderWidgets(widgets, items) {
     let blocks = [];
 
-    const bannerParams = {
-      autoplay: {
-        delay: 5000,
-        disableOnInteraction: false,
-        loop: true
-      }
-    };
-
     widgets = widgets.sort((obj1, obj2) => obj1.orders - obj2.orders);
 
     widgets.forEach((widget, index) => {
@@ -33,7 +25,6 @@ class Homepage extends React.Component {
           <Banner
             key={items.banners[index][0].id}
             data={items.banners[index]}
-            params={bannerParams}
           />
         );
       }
@@ -70,6 +61,11 @@ class Homepage extends React.Component {
           //   items.tags.recipe && (widget.label = items.tags.recipe);
           widget.readMore = "Бусад хоолны жорыг үзэх";
           break;
+        case WIDGET_SLUGS.new:
+          widget.items = items.prodsNew;
+          //   items.tags.recipe && (widget.label = items.tags.recipe);
+          widget.readMore = "Бусад шинэ барааг үзэх";
+          break;
         default:
       }
 
@@ -77,11 +73,11 @@ class Homepage extends React.Component {
     });
 
     if (widgets.length % 2 === 0) {
+      console.log(items.banners[widgets.length]);
       blocks.push(
         <Banner
           key={items.banners[widgets.length][0].id}
           data={items.banners[widgets.length]}
-          params={bannerParams}
         />
       );
     }
@@ -99,6 +95,7 @@ class Homepage extends React.Component {
       prodsEmart,
       prodsDiscount,
       prodsPackage,
+      prodsNew,
       recipes
     } = this.props.container;
 
@@ -106,6 +103,7 @@ class Homepage extends React.Component {
       prodsEmart,
       prodsDiscount,
       prodsPackage,
+      prodsNew,
       recipes,
       banners,
       tags
