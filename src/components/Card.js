@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import Rate from "./Rate";
-import Label from "./Label";
+/* import Label from "./Label"; */
 import { IMAGE, CARD_TYPES } from "../utils/consts";
 
 import "./Card.css";
@@ -27,6 +27,7 @@ class Card extends React.Component {
   }
 
   render() {
+    console.log("Card")
     const { type, item } = this.props;
 
     if (!item) {
@@ -83,9 +84,9 @@ class Card extends React.Component {
       case CARD_TYPES.slim:
         return (
           <div
-            className={`col-five pad10${
-              this.props.none ? " d-none d-xl-block lol" : ""
-            }`}
+            className={`${
+              this.props.none ? "col-five pad10 d-none d-xl-block lol" : "col-five pad10 col-md-3 col-6"
+              }`}
           >
             <div className="single-product small-product sale-product timed-product">
               <div className="image-container">
@@ -104,8 +105,8 @@ class Card extends React.Component {
                     {item.name
                       ? this.trimByWord(item.name)
                       : item.packagenm
-                      ? this.trimByWord(item.packagenm)
-                      : ""}
+                        ? this.trimByWord(item.packagenm)
+                        : ""}
                   </span>
                 </Link>
                 <Link to="#" className="cat">
@@ -113,8 +114,8 @@ class Card extends React.Component {
                     {item.shortnm
                       ? this.trimByWord(item.shortnm, 30)
                       : item.featuretxt
-                      ? this.trimByWord(item.featuretxt, 30)
-                      : ""}
+                        ? this.trimByWord(item.featuretxt, 30)
+                        : ""}
                   </span>
                 </Link>
 
@@ -149,8 +150,8 @@ class Card extends React.Component {
                     {item.name
                       ? this.trimByWord(item.name)
                       : item.packagenm
-                      ? this.trimByWord(item.packagenm)
-                      : ""}
+                        ? this.trimByWord(item.packagenm)
+                        : ""}
                   </span>
                 </Link>
                 <Link to="#" className="cat">
@@ -158,8 +159,8 @@ class Card extends React.Component {
                     {item.shortnm
                       ? this.trimByWord(item.shortnm, 30)
                       : item.featuretxt
-                      ? this.trimByWord(item.featuretxt, 30)
-                      : ""}
+                        ? this.trimByWord(item.featuretxt, 30)
+                        : ""}
                   </span>
                 </Link>
 
@@ -179,7 +180,7 @@ class Card extends React.Component {
           <div
             className={`single-product big-product food-post food-${
               item.class ? item.class : "short"
-            }`}
+              }`}
           >
             <div className="image-container">
               <Link to="#">

@@ -141,8 +141,8 @@ class Homepage extends React.Component {
       slidesPerView: 5,
       spaceBetween: 10,
       navigation: {
-        nextEl: ".swiper-readMore-next",
-        prevEl: ".swiper-readMore-prev"
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
       },
       pagination: {
         type: "bullets",

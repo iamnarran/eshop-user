@@ -5,6 +5,7 @@ import Homepage from "./Homepage";
 import MobileMenu from "./MobileMenu";
 import NewProduct from "./NewProduct";
 import Recipe from "./Recipe";
+import Package from "./Package";
 
 export {
   Footer,
@@ -14,4 +15,5 @@ export {
   MobileMenu,
   NewProduct,
   Recipe,
+  Package,
 };

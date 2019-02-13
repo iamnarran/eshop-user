@@ -23,7 +23,7 @@ class Newproduct extends React.Component {
       mainbanner,
       subbanner,
       menu,
-      tag
+      /* tag */
     } = this.props.container;
     let products = [];
     let subbannerhtml = (
@@ -43,7 +43,7 @@ class Newproduct extends React.Component {
           style={{
             backgroundImage: `url(${
               mainbanner !== undefined ? IMAGE + mainbanner.img : ""
-            })`,
+              })`,
             backgroundRepeat: "no-repeat",
             backgroundPosition: "right",
             backgroundSize: "50% 115px"
@@ -76,8 +76,8 @@ class Newproduct extends React.Component {
                       key={key}
                       type={1}
                       item={product}
-                      // extra={["new"]}
-                      // label={tag}
+                    // extra={["new"]}
+                    // label={tag}
                     />
                   );
                 }
@@ -92,7 +92,7 @@ class Newproduct extends React.Component {
             style={{
               backgroundImage: `url(${
                 subbanner !== undefined ? IMAGE + subbanner.img : ""
-              })`
+                })`
             }}
           />
           <div className="container pad10">
@@ -116,8 +116,8 @@ class Newproduct extends React.Component {
                     key={key}
                     type={1}
                     item={product}
-                    // extra={["new"]}
-                    // label={tag}
+                  // extra={["new"]}
+                  // label={tag}
                   />
                 );
               })}

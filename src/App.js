@@ -24,7 +24,6 @@ import { storage } from './utils';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import 'scss/app.scss';
 import messages from './messages.json';
-import Package from './pages/Package/index';
 import Promotion from './pages/Promotion/index';
 import Season from './pages/Season/index';
 
@@ -36,6 +35,7 @@ import {
   MobileMenu,
   NewProduct,
   Recipe,
+  Package,
 } from "./containers/index";
 
 //library.add(fab, faCheckSquare, faCoffee);

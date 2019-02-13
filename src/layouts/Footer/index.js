@@ -13,7 +13,6 @@ const IMAGE =
 class Footer extends React.Component {
     render() {
         const { staticinfo } = this.props.container
-
         return (
             <div className="top-container">
                 <div className="section section-footer">

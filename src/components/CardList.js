@@ -24,9 +24,9 @@ class CardList extends React.Component {
             <Card
               key={p}
               type={cardType}
-              item={items[p++]}
-              //   none={j === cardsInRow - 1 ? true : false}
-              //   extra={WIDGET_LABELS[widget.slug]}
+            /* item={items[p++]} */
+            //   none={j === cardsInRow - 1 ? true : false}
+            //   extra={WIDGET_LABELS[widget.slug]}
             />
           );
         }
@@ -64,8 +64,8 @@ class CardList extends React.Component {
           //   cardsInCol={cardsInCol}
           type={CARD_TYPES.tile}
           item={items[i]}
-          //   label={label}
-          //   extra={WIDGET_LABELS[widget.slug]}
+        //   label={label}
+        //   extra={WIDGET_LABELS[widget.slug]}
         />
       );
 
