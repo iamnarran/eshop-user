@@ -1,9 +1,4 @@
-import config from "config";
-
-const API =
-  process.env.NODE_ENV === "development"
-    ? config.api.development
-    : config.api.production;
+import { API } from "../../utils/consts";
 
 export default [
   /**ONLY EMART PRODUCT */
