@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import Rate from "./Rate";
-import Label from "./Label";
+/* import Label from "./Label"; */
 import { IMAGE, CARD_TYPES } from "../utils/consts";
 
 import "./Card.css";

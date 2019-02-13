@@ -21,20 +21,22 @@ class Discount extends React.Component {
   }
 
   render() {
-    const { saleproduct, mainbanner, subbanner, menu, tag } = this.props.container;    
-    let subbannerhtml = (<img alt="banner" src={subbanner!==undefined ? IMAGE+subbanner.img:''} className="img-fluid"/>)
+    const { saleproduct, mainbanner, subbanner, menu, tag } = this.props.container;
+    let subbannerhtml = (<img alt="banner" src={subbanner !== undefined ? IMAGE + subbanner.img : ''} className="img-fluid" />)
     let products = []
 
     return (
       <div className="top-container">
         {/**DISCOUNT PRODUCT TITLE*/}
-        <div className="whole-page-title color-main class container pad10" style={{ backgroundImage: `url(${mainbanner !== undefined ? IMAGE + mainbanner.img : ''})`,
-          backgroundRepeat: 'no-repeat', backgroundPosition: 'right', backgroundSize: '50% 115px' }} onClick={this.changeLocation}>
+        <div className="whole-page-title color-main class container pad10" style={{
+          backgroundImage: `url(${mainbanner !== undefined ? IMAGE + mainbanner.img : ''})`,
+          backgroundRepeat: 'no-repeat', backgroundPosition: 'right', backgroundSize: '50% 115px'
+        }} onClick={this.changeLocation}>
           <div className="container pad10">
             <div className="title-container flex-space">
               <h2>
-                <span className="big">{menu[0]===undefined ? '':menu[0].menunm}</span>
-                <strong>{menu[0]===undefined ? '':menu[0].subtitle}</strong>
+                <span className="big">{menu[0] === undefined ? '' : menu[0].menunm}</span>
+                <strong>{menu[0] === undefined ? '' : menu[0].subtitle}</strong>
               </h2>
             </div>
           </div>
@@ -50,7 +52,7 @@ class Discount extends React.Component {
                     products.push(product)
                     return null
                   }
-                  else { return <Card key={key} item={product} extra={["percent", "expiryDate", "discountPrice"]} renderType="1" label={tag}/> }
+                  else { return <Card key={key} item={product} extra={["percent", "expiryDate", "discountPrice"]} renderType="1" label={tag} /> }
                 })
               }
             </div>
@@ -73,13 +75,13 @@ class Discount extends React.Component {
             <div className="row row10">
               {
                 products.map((product, key) => {
-                  return <Card key={key} item={product} extra={["percent", "expiryDate", "discountPrice"]} renderType="1" label={tag}/>
+                  return <Card key={key} item={product} extra={["percent", "expiryDate", "discountPrice"]} renderType="1" label={tag} />
                 })
               }
             </div>
           </div>
         </div>
-      
+
       </div>
     );
   }
