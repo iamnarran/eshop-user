@@ -37,6 +37,8 @@ const fetch = async (props, onData) => {
     banners[2] = banners2.data;
     banners[4] = banners3.data;
 
+    console.log(prodsNew);
+
     // const tags = [];
     // tags["recipe"] = tagsRecipe.data[0];
     // tags["discount"] = tagsDiscount.data[0];
