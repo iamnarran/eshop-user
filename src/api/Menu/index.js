@@ -1,14 +1,9 @@
-import config from 'config';
-
-const API =
-    process.env.NODE_ENV === 'development'
-        ? config.api.development
-        : config.api.production;
+import { API } from "../../utils/consts";
 
 export default [
-    {
-        NAME: 'findAll',
-        METHOD: 'GET',
-        URL: `${API}/api/menu`
-    }
+  {
+    NAME: "findAll",
+    METHOD: "GET",
+    URL: `${API}/api/menu`
+  }
 ];

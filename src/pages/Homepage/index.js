@@ -2,18 +2,12 @@ import React from "react";
 import moment from "moment";
 import MessengerCustomerChat from "react-messenger-customer-chat";
 
-import Swiper from "../../components/Swiper";
+import Slider from "../../components/Slider";
 import Widget from "../../components/Widget";
 import Banner from "../../components/Banner";
 import { WIDGET_SLUGS } from "../../utils/consts";
 
 class Homepage extends React.Component {
-  state = {
-    isOpen: false
-  };
-
-  toggleOpen = () => this.setState({ isOpen: !this.state.isOpen });
-
   renderWidgets(widgets, items) {
     let blocks = [];
 
@@ -73,7 +67,6 @@ class Homepage extends React.Component {
     });
 
     if (widgets.length % 2 === 0) {
-      console.log(items.banners[widgets.length]);
       blocks.push(
         <Banner
           key={items.banners[widgets.length][0].id}
@@ -122,7 +115,7 @@ class Homepage extends React.Component {
       });
     });
 
-    const swiperParams = {
+    const sliderParams = {
       autoplay: {
         delay: 5000,
         disableOnInteraction: false
@@ -139,8 +132,8 @@ class Homepage extends React.Component {
       slidesPerView: 5,
       spaceBetween: 10,
       navigation: {
-        nextEl: ".swiper-readMore-next",
-        prevEl: ".swiper-readMore-prev"
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev"
       },
       pagination: {
         type: "bullets",
@@ -150,15 +143,15 @@ class Homepage extends React.Component {
 
     return (
       <div className="top-container">
-        {/* Swiper */}
+        {/* Slider */}
         <div className="main-slide">
-          <Swiper
-            dataSource={banners[0]}
-            params={swiperParams}
+          <Slider
+            data={banners[0]}
+            params={sliderParams}
             elContainer={"banner"}
           />
         </div>
-        {/* Swiper end */}
+        {/* Slider end */}
 
         {/* Main content */}
         {this.renderWidgets(widgets, items)}
@@ -167,11 +160,7 @@ class Homepage extends React.Component {
         {/* Brand list */}
         <div className="main-slide brands-list">
           <div className="container pad10">
-            <Swiper
-              dataSource={brands}
-              params={brandParams}
-              elContainer={"brands"}
-            />
+            <Slider data={brands} params={brandParams} elContainer={"brands"} />
           </div>
         </div>
         {/* Brand list */}

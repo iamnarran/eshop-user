@@ -5,14 +5,26 @@ import { CARD_LIST_TYPES, CARD_TYPES, CARD_NUMS_IN_COL } from "../utils/consts";
 import Card from "./Card";
 
 class CardList extends React.Component {
-  render() {
-    const { type, seq, items } = this.props;
-    let { cardsInCol } = this.props;
+  state = {
+    type: CARD_LIST_TYPES.horizontal,
+    seq: null,
+    cardsInCol: null,
+    items: []
+  };
+
+  componentDidMount() {
+    this.setState({ ...this.props });
+  }
+
+  getCardList = () => {
+    if (!this.state.items.length) {
+      return null;
+    }
 
     let cardList = [];
 
-    if (type === CARD_LIST_TYPES.horizontal) {
-      const cardTypes = seq.split(",");
+    if (this.state.type === CARD_LIST_TYPES.horizontal) {
+      const cardTypes = this.state.seq.split(",");
       for (let i = 0, p = 0; i < cardTypes.length; i++) {
         const cardType = parseInt(cardTypes[i]);
         const cardsInRow =
@@ -24,9 +36,8 @@ class CardList extends React.Component {
             <Card
               key={p}
               type={cardType}
-              item={items[p++]}
-              //   none={j === cardsInRow - 1 ? true : false}
-              //   extra={WIDGET_LABELS[widget.slug]}
+              item={this.state.items[p++]}
+              isLastInRow={j === cardsInRow - 1 ? true : false}
             />
           );
         }
@@ -35,15 +46,17 @@ class CardList extends React.Component {
       return cardList;
     }
 
-    cardsInCol =
-      Math.ceil(items.length / 3) < cardsInCol
-        ? Math.ceil(items.length / 3)
-        : cardsInCol;
+    const cardsInCol =
+      Math.ceil(this.state.items.length / 3) < this.state.cardsInCol
+        ? Math.ceil(this.state.items.length / 3)
+        : this.state.cardsInCol;
 
     const cardsCount =
-      items.length > cardsInCol * 3 ? cardsInCol * 3 : items.length;
+      this.state.items.length > cardsInCol * 3
+        ? cardsInCol * 3
+        : this.state.items.length;
 
-    let cards = [];
+    let cardsTemp = [];
     for (let i = 0; i < cardsCount; i++) {
       let className = "short";
       if (
@@ -55,31 +68,30 @@ class CardList extends React.Component {
         className = "long";
       }
 
-      items[i]["class"] = className;
-
-      cards.push(
+      cardsTemp.push(
         <Card
           key={i}
-          //   index={i}
-          //   cardsInCol={cardsInCol}
           type={CARD_TYPES.tile}
-          item={items[i]}
-          //   label={label}
-          //   extra={WIDGET_LABELS[widget.slug]}
+          item={this.state.items[i]}
+          className={className}
         />
       );
 
       if ((i + 1) % cardsInCol === 0 || i === cardsCount - 1) {
         cardList.push(
           <div key={i} className="col-md-4 pad10">
-            {cards}
+            {cardsTemp}
           </div>
         );
-        cards = [];
+        cardsTemp = [];
       }
     }
 
     return cardList;
+  };
+
+  render() {
+    return <div className="row row10">{this.getCardList()}</div>;
   }
 }
 
