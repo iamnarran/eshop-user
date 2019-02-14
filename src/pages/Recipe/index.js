@@ -1,5 +1,4 @@
 import React from "react";
-
 import { IMAGE, CARD_LIST_TYPES } from "../../utils/consts";
 import CardList from "../../components/CardList";
 import Banner from "../../components/Banner";
@@ -10,7 +9,7 @@ class Recipe extends React.Component {
       products,
       primaryBanner,
       secondaryBanners,
-      tag
+      /* tag */
     } = this.props.container;
 
     return (

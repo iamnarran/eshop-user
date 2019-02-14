@@ -24,7 +24,6 @@ class Card extends React.Component {
     if (!this.state.item) {
       return null;
     }
-
     // const { labels } = item;
 
     // if (labels && labels.includes("percent")) {
@@ -120,7 +119,7 @@ class Card extends React.Component {
                     numOfVotes={this.state.item.rate_user_cnt}
                   />
                 ) : null}
-
+                <br></br>
                 <Link to="#" className="price">
                   {prices}
                 </Link>
@@ -170,7 +169,7 @@ class Card extends React.Component {
                     numOfVotes={this.state.item.rate_user_cnt}
                   />
                 ) : null}
-
+                <br></br>
                 <Link to="#" className="price">
                   {prices}
                 </Link>
@@ -204,7 +203,7 @@ class Card extends React.Component {
               <Link to="#" className="cat">
                 <span>{this.trimByWord(this.state.item.featuretxt, 30)}</span>
               </Link>
-
+              <br></br>
               {/* <Rate rate={this.state.item.rate} numOfVotes={item.rate_user_cnt} /> */}
             </div>
           </div>
