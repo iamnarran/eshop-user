@@ -20,7 +20,7 @@ class Footer extends React.Component {
                         <div className="row row10">
                             <div className="col-sm-12 col-md-6 col-lg-3 pad10">
                                 <Link to="" className="logo">
-                                    <img alt="logo" src={IMAGE + staticinfo.logopath} />
+                                    <img alt="logo" src={IMAGE + staticinfo.logopath2} />
                                 </Link>
                                 <ul className="social">
                                     <li>

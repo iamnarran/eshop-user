@@ -38,26 +38,28 @@ class Newproduct extends React.Component {
     return (
       <div className="top-container">
         {/**NEW PRODUCT TITLE */}
-        <div
-          className="whole-page-title color-blue class container pad10"
-          style={{
-            backgroundImage: `url(${
-              mainbanner !== undefined ? IMAGE + mainbanner.img : ""
-              })`,
-            backgroundRepeat: "no-repeat",
-            backgroundPosition: "right",
-            backgroundSize: "50% 115px"
-          }}
-          onClick={this.changeLocation}
-        >
-          <div className="container pad10">
-            <div className="title-container flex-space">
-              <h2>
-                <span className="big">
-                  {menu[0] === undefined ? "" : menu[0].menunm}
-                </span>
-                <strong>{menu[0] === undefined ? "" : menu[0].subtitle}</strong>
-              </h2>
+        <div className="whole-page-title color-blue" style={{ padding: '0px' }}>
+          <div
+            className="whole-page-title color-blue class container pad10"
+            style={{
+              backgroundImage: `url(${
+                mainbanner !== undefined ? IMAGE + mainbanner.img : ""
+                })`,
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "right",
+              backgroundSize: "50% 115px"
+            }}
+            onClick={this.changeLocation}
+          >
+            <div className="container pad10">
+              <div className="title-container flex-space">
+                <h2>
+                  <span className="big">
+                    {menu[0] === undefined ? "" : menu[0].menunm}
+                  </span>
+                  <strong>{menu[0] === undefined ? "" : menu[0].subtitle}</strong>
+                </h2>
+              </div>
             </div>
           </div>
         </div>

@@ -10,9 +10,7 @@ import "./Widget.css";
 
 class Widget extends React.Component {
   render() {
-    console.log("widget");
     const { data } = this.props;
-
     if (!data) {
       return null;
     }

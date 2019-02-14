@@ -7,8 +7,7 @@ class Package extends React.Component {
     ...this.props.container
   }
   render() {
-    console.log(this.state);
-
+    console.log(this.state)
     return (
       <div className="top-container">
         <div className="whole-page-title color-blue" style={{ padding: '0px' }}>
@@ -41,20 +40,22 @@ class Package extends React.Component {
           <div className="container pad10">
             <div className="row row10">
               {this.state.packageProducts.map((product, key) => {
-                return (
-                  <Card
-                    key={key}
-                    type={1}
-                    item={product}
-                  // extra={["new"]}
-                  // label={tag}
-                  />
-                );
+                if (key >= 10) {
+                  this.state.packageProducts.push(product);
+                  return null;
+                } else {
+                  return (
+                    <Card
+                      key={key}
+                      type={1}
+                      item={product}
+                    />
+                  );
+                }
               })}
             </div>
           </div>
         </div>
-
       </div>
     );
   }

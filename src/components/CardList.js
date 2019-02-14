@@ -8,7 +8,7 @@ class CardList extends React.Component {
   render() {
     const { type, seq, items } = this.props;
     let { cardsInCol } = this.props;
-
+    console.log("this.props.type", this.props.type)
     let cardList = [];
 
     if (type === CARD_LIST_TYPES.horizontal) {

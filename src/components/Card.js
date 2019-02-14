@@ -27,7 +27,6 @@ class Card extends React.Component {
   }
 
   render() {
-    console.log("Card")
     const { type, item } = this.props;
 
     if (!item) {
@@ -84,8 +83,8 @@ class Card extends React.Component {
       case CARD_TYPES.slim:
         return (
           <div
-            className={`${
-              this.props.none ? "col-five pad10 d-none d-xl-block lol" : "col-five pad10 col-md-3 col-6"
+            className={`col-five pad10${
+              this.props.none ? " d-none d-xl-block lol" : " col-md-3 col-6"
               }`}
           >
             <div className="single-product small-product sale-product timed-product">
@@ -118,7 +117,7 @@ class Card extends React.Component {
                         : ""}
                   </span>
                 </Link>
-
+                <br></br>
                 {item.rate ? (
                   <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} />
                 ) : null}
@@ -163,7 +162,7 @@ class Card extends React.Component {
                         : ""}
                   </span>
                 </Link>
-
+                <br></br>
                 {item.rate ? (
                   <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} />
                 ) : null}
@@ -199,7 +198,7 @@ class Card extends React.Component {
               <Link to="#" className="cat">
                 <span>{this.trimByWord(item.featuretxt, 30)}</span>
               </Link>
-
+              <br></br>
               {/* <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} /> */}
             </div>
           </div>

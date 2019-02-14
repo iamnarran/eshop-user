@@ -6,8 +6,10 @@ class MainMenu extends React.Component {
         const data = this.props && this.props.dataSource;
         var indents = data.map(function (item, index) {
             return (
-                <div className="card" key={index    }>
-                    <button className="btn btn-link flex-this flex-space" key={index} type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                <div className="card" key={index}>
+                    <button className="btn btn-link flex-this flex-space" key={index}
+                        type="button" data-toggle="collapse" data-target="#collapseOne"
+                        aria-expanded="true" aria-controls="collapseOne">
                         <strong className="text-uppercase">{item.name}</strong>
                         <i className="fa fa-chevron-down" aria-hidden="true"></i>
                     </button>
