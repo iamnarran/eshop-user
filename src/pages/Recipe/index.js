@@ -1,48 +1,64 @@
-import React from 'react';
-import config from 'config';
-import Widget from '../../components/Widget';
+import React from "react";
 
-const IMAGE =
-  process.env.NODE_ENV === 'development'
-    ? config.image.development
-    : config.image.production;
+import { IMAGE, CARD_LIST_TYPES } from "../../utils/consts";
+import CardList from "../../components/CardList";
+import Banner from "../../components/Banner";
 
 class Recipe extends React.Component {
   render() {
-    const { recipeproduct, mainbanner, /* subbanner, */ menu, /* tag, */ widget } = this.props.container
+    const {
+      products,
+      primaryBanner,
+      secondaryBanners,
+      tag
+    } = this.props.container;
 
     return (
       <div className="top-container">
-        {/**RECIPE PRODUCT TITLE */}
-        <div className="whole-page-title color-blue" style={{ padding: '0px' }}>
-          <div className="whole-page-title color-blue class container pad10" style={{
-            backgroundImage: `url(${mainbanner !== undefined ? IMAGE + mainbanner.img : ''})`,
-            backgroundRepeat: 'no-repeat', backgroundPosition: 'right', backgroundSize: '50% 115px'
-          }} onClick={this.changeLocation}>
-            <div className="container pad10">
-              <div className="title-container flex-space">
-                <h2>
-                  <span className="big">{menu[0] === undefined ? '' : menu[0].menunm}</span>
-                  <strong>{menu[0] === undefined ? '' : menu[0].subtitle}</strong>
-                </h2>
-              </div>
-            </div>
+        <div
+          className="whole-page-title color-blue pad10"
+          style={{
+            backgroundImage: `url(${
+              primaryBanner && primaryBanner.img
+                ? IMAGE + primaryBanner.img
+                : ""
+              })`,
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "right",
+            backgroundSize: "50% 115px",
+            marginBottom: "20px"
+          }}
+          onClick={this.changeLocation}
+        >
+          <div className="container">
+            <h1>Хоолны жор</h1>
+            <h3>Хоолны жор, Хоолны жор, Хоолны жор</h3>
           </div>
         </div>
-        {/**RECIPE PRODUCTS */}
-        <Widget items={recipeproduct} type={2} widget={widget[0] === undefined ? '' : widget[0]} />
 
-        {/**RECIPE SUB BANNER */}
+        <CardList
+          type={CARD_LIST_TYPES.vertical}
+          cardsInCol={2}
+          items={products}
+        />
+
+        <Banner data={secondaryBanners} />
+
         {/* <div className="banner-container">
-          <span style={{ backgroundImage: `url(${IMAGE+subbanner.img })`}}></span>
+          <span
+            style={{ backgroundImage: `url(${IMAGE + secondaryBanner.img})` }}
+          />
           <div className="container pad10">
-            <Link to={subbanner.link}>
-              <img alt="banner" src={IMAGE+subbanner.img} className="img-fluid"/>
+            <Link to={secondaryBanner.link}>
+              <img
+                alt="banner"
+                src={IMAGE + secondaryBanner.img}
+                className="img-fluid"
+              />
             </Link>
           </div>
         </div> */}
       </div>
-
     );
   }
 }

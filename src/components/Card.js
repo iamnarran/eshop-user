@@ -9,27 +9,19 @@ import { IMAGE, CARD_TYPES } from "../utils/consts";
 import "./Card.css";
 
 class Card extends React.Component {
-  trimByWord(text, maxChars = 20) {
-    const textWords = text.split(" ");
-    const textWordsCount = textWords.length;
+  state = {
+    type: CARD_TYPES.slim,
+    item: null,
+    isLastInRow: false,
+    className: ""
+  };
 
-    if (textWordsCount <= maxChars) {
-      return text;
-    }
-
-    let trimmed = text.substr(0, maxChars);
-    trimmed = trimmed.substr(
-      0,
-      Math.min(trimmed.length, trimmed.lastIndexOf(" "))
-    );
-
-    return `${trimmed}...`;
+  componentDidMount() {
+    this.setState({ ...this.props });
   }
 
   render() {
-    const { type, item } = this.props;
-
-    if (!item) {
+    if (!this.state.item) {
       return null;
     }
 
@@ -49,7 +41,9 @@ class Card extends React.Component {
 
     const formatter = new Intl.NumberFormat("en-US");
     let prices = (
-      <span className="current">{formatter.format(item.price)}₮</span>
+      <span className="current">
+        {formatter.format(this.state.item.price)}₮
+      </span>
     );
 
     // if (labels && labels.includes("percent")) {
@@ -79,7 +73,7 @@ class Card extends React.Component {
       </div>
     );
 
-    switch (type) {
+    switch (this.state.type) {
       case CARD_TYPES.slim:
         return (
           <div
@@ -92,7 +86,9 @@ class Card extends React.Component {
                 <Link to="#">
                   <span
                     className="image"
-                    style={{ backgroundImage: `url(${IMAGE + item.img})` }}
+                    style={{
+                      backgroundImage: `url(${IMAGE + this.state.item.img})`
+                    }}
                   />
                 </Link>
                 {/* {labels.map(label => label)} */}
@@ -101,25 +97,28 @@ class Card extends React.Component {
               <div className="info-container">
                 <Link to="#" className="name">
                   <span>
-                    {item.name
-                      ? this.trimByWord(item.name)
-                      : item.packagenm
-                        ? this.trimByWord(item.packagenm)
+                    {this.state.item.name
+                      ? this.trimByWord(this.state.item.name)
+                      : this.state.item.packagenm
+                        ? this.trimByWord(this.state.item.packagenm)
                         : ""}
                   </span>
                 </Link>
                 <Link to="#" className="cat">
                   <span>
-                    {item.shortnm
-                      ? this.trimByWord(item.shortnm, 30)
-                      : item.featuretxt
-                        ? this.trimByWord(item.featuretxt, 30)
+                    {this.state.item.shortnm
+                      ? this.trimByWord(this.state.item.shortnm, 30)
+                      : this.state.item.featuretxt
+                        ? this.trimByWord(this.state.item.featuretxt, 30)
                         : ""}
                   </span>
                 </Link>
-                <br></br>
-                {item.rate ? (
-                  <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} />
+
+                {this.state.item.rate ? (
+                  <Rate
+                    rate={this.state.item.rate}
+                    numOfVotes={this.state.item.rate_user_cnt}
+                  />
                 ) : null}
 
                 <Link to="#" className="price">
@@ -137,7 +136,9 @@ class Card extends React.Component {
                 <Link to="#">
                   <span
                     className="image"
-                    style={{ backgroundImage: `url(${IMAGE + item.img})` }}
+                    style={{
+                      backgroundImage: `url(${IMAGE + this.state.item.img})`
+                    }}
                   />
                 </Link>
                 {/* {labels.map(label => label)} */}
@@ -146,25 +147,28 @@ class Card extends React.Component {
               <div className="info-container">
                 <Link to="#" className="name">
                   <span>
-                    {item.name
-                      ? this.trimByWord(item.name)
-                      : item.packagenm
-                        ? this.trimByWord(item.packagenm)
+                    {this.state.item.name
+                      ? this.trimByWord(this.state.item.name)
+                      : this.state.item.packagenm
+                        ? this.trimByWord(this.state.item.packagenm)
                         : ""}
                   </span>
                 </Link>
                 <Link to="#" className="cat">
                   <span>
-                    {item.shortnm
-                      ? this.trimByWord(item.shortnm, 30)
-                      : item.featuretxt
-                        ? this.trimByWord(item.featuretxt, 30)
+                    {this.state.item.shortnm
+                      ? this.trimByWord(this.state.item.shortnm, 30)
+                      : this.state.item.featuretxt
+                        ? this.trimByWord(this.state.item.featuretxt, 30)
                         : ""}
                   </span>
                 </Link>
-                <br></br>
-                {item.rate ? (
-                  <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} />
+
+                {this.state.item.rate ? (
+                  <Rate
+                    rate={this.state.item.rate}
+                    numOfVotes={this.state.item.rate_user_cnt}
+                  />
                 ) : null}
 
                 <Link to="#" className="price">
@@ -178,14 +182,16 @@ class Card extends React.Component {
         return (
           <div
             className={`single-product big-product food-post food-${
-              item.class ? item.class : "short"
+              this.state.className ? this.state.className : "short"
               }`}
           >
             <div className="image-container">
               <Link to="#">
                 <span
                   className="image"
-                  style={{ backgroundImage: `url(${IMAGE + item.img})` }}
+                  style={{
+                    backgroundImage: `url(${IMAGE + this.state.item.img})`
+                  }}
                 />
               </Link>
               {/* {labels.map(label => label)} */}
@@ -193,13 +199,13 @@ class Card extends React.Component {
             </div>
             <div className="info-container">
               <Link to="#" className="name">
-                <span>{this.trimByWord(item.recipenm)}</span>
+                <span>{this.trimByWord(this.state.item.recipenm)}</span>
               </Link>
               <Link to="#" className="cat">
-                <span>{this.trimByWord(item.featuretxt, 30)}</span>
+                <span>{this.trimByWord(this.state.item.featuretxt, 30)}</span>
               </Link>
-              <br></br>
-              {/* <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} /> */}
+
+              {/* <Rate rate={this.state.item.rate} numOfVotes={item.rate_user_cnt} /> */}
             </div>
           </div>
         );
@@ -207,11 +213,30 @@ class Card extends React.Component {
         return null;
     }
   }
+
+  trimByWord(text, maxChars = 20) {
+    const textWords = text.split(" ");
+    const textWordsCount = textWords.length;
+
+    if (textWordsCount <= maxChars) {
+      return text;
+    }
+
+    let trimmed = text.substr(0, maxChars);
+    trimmed = trimmed.substr(
+      0,
+      Math.min(trimmed.length, trimmed.lastIndexOf(" "))
+    );
+
+    return `${trimmed}...`;
+  }
 }
 
 Card.propTypes = {
   type: PropTypes.number.isRequired,
-  item: PropTypes.object.isRequired
+  item: PropTypes.object.isRequired,
+  isLastInRow: PropTypes.bool,
+  className: PropTypes.string
 };
 
 export default Card;
