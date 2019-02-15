@@ -32,23 +32,14 @@ class Card extends React.Component {
       </span>
     );
 
-    // if (labels && labels.includes("count")) {
-    //   labels.count = <Label data={labels.count} item={item} />;
-    // }
-
-    // if (labels && labels.includes("percent")) {
-    //   prices = (
-    //     <div>
-    //       <small className="sale">{formatter.format(item.price)}₮</small>
-    //       <span className="current">
-    //         {item.sprice
-    //           ? formatter.format(item.sprice)
-    //           : formatter.format(item.price)}
-    //         ₮
-    //       </span>
-    //     </div>
-    //   );
-    // }
+    if (this.state.item.sprice) {
+      prices = (
+        <div>
+          <small className="sale">{this.state.item.price}₮</small>
+          <span className="current">{this.state.item.sprice}₮</span>
+        </div>
+      );
+    }
 
     const hover = (
       <div className="search-hover">
