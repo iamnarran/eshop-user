@@ -20,7 +20,7 @@ const fetch = async (props, onData) => {
       container: {
         newproduct: newproduct.data,
         mainbanner: mainbanner.data[0],
-        subbanner: subbanner.data[0],
+        subbanner: subbanner.data,
         tag: tag.data[0],
         menu: menu.data.filter(i => {
           if (i.id === 75) {

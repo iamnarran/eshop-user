@@ -1,6 +1,7 @@
 import React from "react";
-
 import Card from "../../components/Card";
+import Banner from "../../components/Banner";
+
 import { IMAGE } from "../../utils/consts";
 
 class Newproduct extends React.Component {
@@ -22,7 +23,7 @@ class Newproduct extends React.Component {
       newproduct,
       mainbanner,
       subbanner,
-      menu,
+      menu
       /* tag */
     } = this.props.container;
     let products = [];
@@ -38,13 +39,13 @@ class Newproduct extends React.Component {
     return (
       <div className="top-container">
         {/**NEW PRODUCT TITLE */}
-        <div className="whole-page-title color-blue" style={{ padding: '0px' }}>
+        <div className="whole-page-title color-blue" style={{ padding: "0px" }}>
           <div
             className="whole-page-title color-blue class container pad10"
             style={{
               backgroundImage: `url(${
-                mainbanner !== undefined ? IMAGE + mainbanner.img : ""
-                })`,
+                mainbanner !== undefined ? IMAGE + mainbanner.imgnm : ""
+              })`,
               backgroundRepeat: "no-repeat",
               backgroundPosition: "right",
               backgroundSize: "50% 115px"
@@ -57,7 +58,9 @@ class Newproduct extends React.Component {
                   <span className="big">
                     {menu[0] === undefined ? "" : menu[0].menunm}
                   </span>
-                  <strong>{menu[0] === undefined ? "" : menu[0].subtitle}</strong>
+                  <strong>
+                    {menu[0] === undefined ? "" : menu[0].subtitle}
+                  </strong>
                 </h2>
               </div>
             </div>
@@ -78,8 +81,8 @@ class Newproduct extends React.Component {
                       key={key}
                       type={1}
                       item={product}
-                    // extra={["new"]}
-                    // label={tag}
+                      // extra={["new"]}
+                      // label={tag}
                     />
                   );
                 }
@@ -89,7 +92,7 @@ class Newproduct extends React.Component {
         </div>
 
         {/**SUB BANNER */}
-        <div className="banner-container">
+        {/* <div className="banner-container">
           <span
             style={{
               backgroundImage: `url(${
@@ -106,7 +109,8 @@ class Newproduct extends React.Component {
               {subbanner !== undefined ? subbannerhtml : null}
             </a>
           </div>
-        </div>
+        </div> */}
+        <Banner data={subbanner} />
 
         {/**NEW PRODUCT'S PRODUCTS */}
         <div className="section">
@@ -118,8 +122,8 @@ class Newproduct extends React.Component {
                     key={key}
                     type={1}
                     item={product}
-                  // extra={["new"]}
-                  // label={tag}
+                    // extra={["new"]}
+                    // label={tag}
                   />
                 );
               })}
