@@ -4,7 +4,7 @@ import { Icon, Badge, Avatar, Modal } from 'antd';
 
 import Category from '../../components/Category';
 import MainMenu from '../../components/Menu';
-import DropMenu from '../../components/DropMenu';
+/* import DropMenu from '../../components/DropMenu'; */
 import ToggleMenu from '../../components/ToggleMenu';
 import ToggleCategory from '../../components/ToggleCategory';
 import config from '../../config';
@@ -261,7 +261,7 @@ class AppHeader extends Component {
 
                       <div className="drop-container">
                         <div className="container pad10">
-                          <DropMenu dataSource={menus} />
+                          {/* <DropMenu dataSource={menus} /> */}
                           <Category dataSource={root} />
                         </div>
                       </div>

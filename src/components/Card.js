@@ -68,7 +68,7 @@ class Card extends React.Component {
         return (
           <div
             className={`col-five pad10${
-              this.state.isLastInRow ? " d-none d-xl-block lol" : ""
+              this.props.none ? " d-none d-xl-block lol" : " col-md-3 col-6"
             }`}
           >
             <div className="single-product small-product sale-product timed-product">
@@ -113,7 +113,7 @@ class Card extends React.Component {
                     numOfVotes={this.state.item.rate_user_cnt}
                   />
                 ) : null}
-
+                <br />
                 <Link to="#" className="price">
                   {prices}
                 </Link>
@@ -166,7 +166,7 @@ class Card extends React.Component {
                     numOfVotes={this.state.item.rate_user_cnt}
                   />
                 ) : null}
-
+                <br />
                 <Link to="#" className="price">
                   {prices}
                 </Link>
@@ -203,7 +203,7 @@ class Card extends React.Component {
               <Link to="#" className="cat">
                 <span>{this.trimByWord(this.state.item.featuretxt, 30)}</span>
               </Link>
-
+              <br />
               {/* <Rate rate={this.state.item.rate} numOfVotes={item.rate_user_cnt} /> */}
             </div>
           </div>

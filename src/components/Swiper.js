@@ -13,7 +13,6 @@ class Slider extends React.Component {
     render() {
         const params = this.props && this.props.params;
         const data = this.props && this.props.dataSource;
-        console.log(params)
         var indents = data.map(function (item, index) {
             return (
                 <div style={{ backgroundImage: `url(${IMAGE + item.imgnm})` }} key={index}>

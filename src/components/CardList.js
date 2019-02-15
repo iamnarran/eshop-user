@@ -43,7 +43,6 @@ class CardList extends React.Component {
           );
         }
       }
-
       return cardList;
     }
 

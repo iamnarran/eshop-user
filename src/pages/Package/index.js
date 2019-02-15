@@ -1,14 +1,12 @@
 import React from 'react';
-import Card from "../../components/Card";
-import { IMAGE } from "../../utils/consts";
+import CardList from "../../components/CardList";
+import { IMAGE, CARD_LIST_TYPES } from "../../utils/consts";
 
 class Package extends React.Component {
   state = {
     ...this.props.container
   }
   render() {
-    console.log(this.state);
-
     return (
       <div className="top-container">
         <div className="whole-page-title color-blue" style={{ padding: '0px' }}>
@@ -40,21 +38,16 @@ class Package extends React.Component {
         <div className="section">
           <div className="container pad10">
             <div className="row row10">
-              {this.state.packageProducts.map((product, key) => {
-                return (
-                  <Card
-                    key={key}
-                    type={1}
-                    item={product}
-                  // extra={["new"]}
-                  // label={tag}
-                  />
-                );
-              })}
+              {
+                <CardList
+                  type={CARD_LIST_TYPES.horizontal}
+                  seq={this.state.widget[0].type}
+                  items={this.state.packageProducts}
+                />
+              }
             </div>
           </div>
         </div>
-
       </div>
     );
   }
