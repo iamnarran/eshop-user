@@ -31,12 +31,13 @@ class CardList extends React.Component {
           cardType === CARD_TYPES.wide
             ? CARD_NUMS_IN_COL.wide
             : CARD_NUMS_IN_COL.slim;
-        for (let j = 0; j < cardsInRow; j++) {
+        for (let j = 0; j < cardsInRow; j++, p++) {
+          // console.log(this.state.items[p]);
           cardList.push(
             <Card
               key={p}
               type={cardType}
-              item={this.state.items[p++]}
+              item={this.state.items[p]}
               isLastInRow={j === cardsInRow - 1 ? true : false}
             />
           );

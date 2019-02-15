@@ -26,12 +26,10 @@ class Homepage extends React.Component {
       switch (widget.slug) {
         case WIDGET_SLUGS.onlyemart:
           widget.items = items.prodsEmart;
-          //   items.tags.prodsEmart && (widget.label = items.tags.prodsEmart);
           widget.readMore = "Бусад Имартын барааг үзэх";
           break;
         case WIDGET_SLUGS.discount:
           widget.items = items.prodsDiscount;
-          //   items.tags.discount && (widget.label = items.tags.discount);
           widget.interval = (
             <span>
               {moment()

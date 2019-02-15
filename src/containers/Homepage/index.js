@@ -19,12 +19,15 @@ const fetch = async (props, onData) => {
     const prodsEmart = await api.product.findAllEmartProducts({
       jumcd: "99"
     });
+    console.log("emart", prodsEmart);
     const prodsDiscount = await api.product.findAllDiscountProducts({
       jumcd: "99"
     });
+    console.log("discount", prodsDiscount);
     const prodsNew = await api.product.findAllNewProducts({
       jumcd: "99"
     });
+    console.log("new", prodsNew);
     const banners1 = await api.banner.findAll({ type: "A1" });
     const banners2 = await api.banner.findAll({ type: "A2" });
     const banners3 = await api.banner.findAll({ type: "A3" });

@@ -36,11 +36,15 @@ class Recipe extends React.Component {
           </div>
         </div>
 
-        <CardList
-          type={CARD_LIST_TYPES.vertical}
-          cardsInCol={2}
-          items={products}
-        />
+        <div className="section">
+          <div className="container pad10">
+            <CardList
+              type={CARD_LIST_TYPES.vertical}
+              cardsInCol={2}
+              items={products}
+            />
+          </div>
+        </div>
 
         <Banner data={secondaryBanners} />
 

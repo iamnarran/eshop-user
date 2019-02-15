@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import Rate from "./Rate";
-/* import Label from "./Label"; */
+import Label from "./Label";
 import { IMAGE, CARD_TYPES } from "../utils/consts";
 
 import "./Card.css";
@@ -25,26 +25,16 @@ class Card extends React.Component {
       return null;
     }
 
-    // const { labels } = item;
-
-    // if (labels && labels.includes("percent")) {
-    //   labels.percent = <Label data={labels.percent} item={item} />;
-    // }
-
-    // if (labels && labels.includes("count")) {
-    //   labels.count = <Label data={labels.count} item={item} />;
-    // }
-
-    // if (labels && labels.includes("new")) {
-    //   labels.new = <Label data={labels.new} item={item} />;
-    // }
-
     const formatter = new Intl.NumberFormat("en-US");
     let prices = (
       <span className="current">
         {formatter.format(this.state.item.price)}₮
       </span>
     );
+
+    // if (labels && labels.includes("count")) {
+    //   labels.count = <Label data={labels.count} item={item} />;
+    // }
 
     // if (labels && labels.includes("percent")) {
     //   prices = (
@@ -91,7 +81,10 @@ class Card extends React.Component {
                     }}
                   />
                 </Link>
-                {/* {labels.map(label => label)} */}
+                {this.state.item.tags &&
+                  this.state.item.tags.map((label, index) => (
+                    <Label key={index} seq={index} data={label} />
+                  ))}
                 {hover}
               </div>
               <div className="info-container">
@@ -141,7 +134,10 @@ class Card extends React.Component {
                     }}
                   />
                 </Link>
-                {/* {labels.map(label => label)} */}
+                {this.state.item.tags &&
+                  this.state.item.tags.map((label, index) => (
+                    <Label key={index} seq={index} data={label} />
+                  ))}
                 {hover}
               </div>
               <div className="info-container">
@@ -194,7 +190,10 @@ class Card extends React.Component {
                   }}
                 />
               </Link>
-              {/* {labels.map(label => label)} */}
+              {this.state.item.tags &&
+                this.state.item.tags.map((label, index) => (
+                  <Label key={index} seq={index} data={label} />
+                ))}
               {hover}
             </div>
             <div className="info-container">
