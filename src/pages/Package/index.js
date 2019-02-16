@@ -7,7 +7,6 @@ class Package extends React.Component {
     ...this.props.container
   }
   render() {
-    console.log(this.state.secondaryBanners)
     return (
       <div className="top-container">
         <div className="whole-page-title color-blue" style={{ padding: '0px' }}>
