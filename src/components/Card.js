@@ -21,6 +21,7 @@ class Card extends React.Component {
   }
 
   render() {
+    /* console.log("card", this.props) */
     if (!this.state.item) {
       return null;
     }
@@ -60,7 +61,7 @@ class Card extends React.Component {
           <div
             className={`col-five pad10${
               this.props.none ? " d-none d-xl-block lol" : " col-md-3 col-6"
-            }`}
+              }`}
           >
             <div className="single-product small-product sale-product timed-product">
               <div className="image-container">
@@ -84,8 +85,8 @@ class Card extends React.Component {
                     {this.state.item.name
                       ? this.trimByWord(this.state.item.name)
                       : this.state.item.packagenm
-                      ? this.trimByWord(this.state.item.packagenm)
-                      : ""}
+                        ? this.trimByWord(this.state.item.packagenm)
+                        : ""}
                   </span>
                 </Link>
                 <Link to="#" className="cat">
@@ -93,8 +94,8 @@ class Card extends React.Component {
                     {this.state.item.shortnm
                       ? this.trimByWord(this.state.item.shortnm, 30)
                       : this.state.item.featuretxt
-                      ? this.trimByWord(this.state.item.featuretxt, 30)
-                      : ""}
+                        ? this.trimByWord(this.state.item.featuretxt, 30)
+                        : ""}
                   </span>
                 </Link>
 
@@ -137,8 +138,8 @@ class Card extends React.Component {
                     {this.state.item.name
                       ? this.trimByWord(this.state.item.name)
                       : this.state.item.packagenm
-                      ? this.trimByWord(this.state.item.packagenm)
-                      : ""}
+                        ? this.trimByWord(this.state.item.packagenm)
+                        : ""}
                   </span>
                 </Link>
                 <Link to="#" className="cat">
@@ -146,8 +147,8 @@ class Card extends React.Component {
                     {this.state.item.shortnm
                       ? this.trimByWord(this.state.item.shortnm, 30)
                       : this.state.item.featuretxt
-                      ? this.trimByWord(this.state.item.featuretxt, 30)
-                      : ""}
+                        ? this.trimByWord(this.state.item.featuretxt, 30)
+                        : ""}
                   </span>
                 </Link>
 
@@ -170,7 +171,7 @@ class Card extends React.Component {
           <div
             className={`single-product big-product food-post food-${
               this.state.className ? this.state.className : "short"
-            }`}
+              }`}
           >
             <div className="image-container">
               <Link to="#">

@@ -11,8 +11,8 @@ const options = {
 const fetch = async (props, onData) => {
     try {
         const packageProducts = await api.packageProduct.findAll();
-        const mainbanner = await api.pagebanner.findAll({ type: 'F1' });
-        const subbanner = await api.pagebanner.findAll({ type: 'F2' });
+        const mainbanner = await api.banner.findAll({ type: 'F1' });
+        const secondaryBanners = await api.banner.findAll({ type: 'F2' });
         const menu = await api.menu.findAll();
         const widget = await api.widget.findAll();
         /* const tag = await api.tag.findAll({ type: 'package' }); */
@@ -20,7 +20,7 @@ const fetch = async (props, onData) => {
             container: {
                 packageProducts: packageProducts.data,
                 mainbanner: mainbanner.data[0],
-                subbanner: subbanner.data[0],
+                secondaryBanners: secondaryBanners.data,
                 widget: widget.data.filter(i => {
                     if (i.slug === 'package') { return i }
                     return null

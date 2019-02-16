@@ -22,25 +22,71 @@ class CardList extends React.Component {
     }
 
     let cardList = [];
-
     if (this.state.type === CARD_LIST_TYPES.horizontal) {
       const cardTypes = this.state.seq.split(",");
-      for (let i = 0, p = 0; i < cardTypes.length; i++) {
-        const cardType = parseInt(cardTypes[i]);
-        const cardsInRow =
-          cardType === CARD_TYPES.wide
-            ? CARD_NUMS_IN_COL.wide
-            : CARD_NUMS_IN_COL.slim;
-        for (let j = 0; j < cardsInRow; j++, p++) {
-          // console.log(this.state.items[p]);
-          cardList.push(
-            <Card
-              key={p}
-              type={cardType}
-              item={this.state.items[p]}
-              isLastInRow={j === cardsInRow - 1 ? true : false}
-            />
-          );
+      if (this.props.location === 'packagemore') {
+        if (!this.props.second) {
+          for (let p = 0; p < 7;) {
+            for (let i = 0; i < cardTypes.length; i++) {
+              const cardType = parseInt(cardTypes[i]);
+              const cardsInRow =
+                cardType === CARD_TYPES.wide
+                  ? CARD_NUMS_IN_COL.wide
+                  : CARD_NUMS_IN_COL.slim;
+              for (let j = 0; j < cardsInRow; j++ , p++) {
+                cardList.push(
+                  <Card
+                    key={p}
+                    type={cardType}
+                    item={this.state.items[p]}
+                    isLastInRow={j === cardsInRow - 1 ? true : false}
+                  />
+                );
+              }
+            }
+          }
+        }
+        else {
+          for (let p = 7; p < this.state.items.length;) {
+            for (let i = 0; i < cardTypes.length; i++) {
+              const cardType = parseInt(cardTypes[i]);
+              const cardsInRow =
+                cardType === CARD_TYPES.wide
+                  ? CARD_NUMS_IN_COL.wide
+                  : CARD_NUMS_IN_COL.slim;
+              for (let j = 0; j < cardsInRow; j++ , p++) {
+                cardList.push(
+                  <Card
+                    key={p}
+                    type={cardType}
+                    item={this.state.items[p]}
+                    isLastInRow={j === cardsInRow - 1 ? true : false}
+                  />
+                );
+              }
+            }
+          }
+        }
+
+      }
+      else {
+        console.log("false")
+        for (let i = 0, p = 0; i < cardTypes.length; i++) {
+          const cardType = parseInt(cardTypes[i]);
+          const cardsInRow =
+            cardType === CARD_TYPES.wide
+              ? CARD_NUMS_IN_COL.wide
+              : CARD_NUMS_IN_COL.slim;
+          for (let j = 0; j < cardsInRow; j++ , p++) {
+            cardList.push(
+              <Card
+                key={p}
+                type={cardType}
+                item={this.state.items[p]}
+                isLastInRow={j === cardsInRow - 1 ? true : false}
+              />
+            );
+          }
         }
       }
       return cardList;
