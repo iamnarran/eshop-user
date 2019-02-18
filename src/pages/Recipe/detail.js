@@ -89,9 +89,9 @@ class RecipeDetail extends React.Component {
           <div className="e-breadcrumb">
             <ul className="list-unstyled">
               <li>
-                <a href="#">
+                <Link to="">
                   <span>Нүүр хуудас</span>
-                </a>
+                </Link>
               </li>
               <li>
                 <Link to="/recipe">
