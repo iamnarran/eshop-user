@@ -22,7 +22,6 @@ class CardList extends React.Component {
     }
 
     let cardList = [];
-
     if (this.state.type === CARD_LIST_TYPES.horizontal) {
       const cardTypes = this.state.seq.split(",");
       for (let i = 0, p = 0; i < cardTypes.length; i++) {
@@ -60,7 +59,6 @@ class CardList extends React.Component {
       this.state.items.length > cardsInCol * 3
         ? cardsInCol * 3
         : this.state.items.length;
-
     let cardsTemp = [];
     for (let i = 0; i < cardsCount; i++) {
       let className = "short";
@@ -72,7 +70,6 @@ class CardList extends React.Component {
       ) {
         className = "long";
       }
-
       cardsTemp.push(
         <Card
           key={i}
@@ -81,7 +78,6 @@ class CardList extends React.Component {
           className={className}
         />
       );
-
       if ((i + 1) % cardsInCol === 0 || i === cardsCount - 1) {
         cardList.push(
           <div key={i} className="col-md-4 pad10">
@@ -91,7 +87,6 @@ class CardList extends React.Component {
         cardsTemp = [];
       }
     }
-
     return cardList;
   };
 

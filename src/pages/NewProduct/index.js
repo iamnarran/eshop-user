@@ -8,7 +8,7 @@ class Newproduct extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      mainbanner: this.props.container.mainbanner
+      ...this.props.container
     };
   }
 
@@ -27,13 +27,6 @@ class Newproduct extends React.Component {
       /* tag */
     } = this.props.container;
     let products = [];
-    let subbannerhtml = (
-      <img
-        alt="banner"
-        src={subbanner !== undefined ? IMAGE + subbanner.img : null}
-        className="img-fluid"
-      />
-    );
     // console.log(this.props);
 
     return (

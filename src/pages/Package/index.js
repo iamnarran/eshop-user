@@ -1,7 +1,7 @@
 import React from 'react';
 import CardList from "../../components/CardList";
 import { IMAGE, CARD_LIST_TYPES } from "../../utils/consts";
-
+import Banner from '../../components/Banner';
 class Package extends React.Component {
   state = {
     ...this.props.container
@@ -14,7 +14,7 @@ class Package extends React.Component {
             className="whole-page-title container color-blue pad10"
             style={{
               backgroundImage: `url(${
-                this.state.mainbanner !== undefined ? IMAGE + this.state.mainbanner.img : ""
+                this.state.mainbanner !== undefined ? IMAGE + this.state.mainbanner.imgnm : ""
                 })`,
               backgroundRepeat: "no-repeat",
               backgroundPosition: "right",
@@ -34,15 +34,31 @@ class Package extends React.Component {
             </div>
           </div>
         </div>
-
         <div className="section">
           <div className="container pad10">
             <div className="row row10">
               {
                 <CardList
+                  location='packagemore'
                   type={CARD_LIST_TYPES.horizontal}
                   seq={this.state.widget[0].type}
                   items={this.state.packageProducts}
+                />
+              }
+            </div>
+          </div>
+        </div>
+        <Banner data={this.state.secondaryBanners} />
+        <div className="section">
+          <div className="container pad10">
+            <div className="row row10">
+              {
+                <CardList
+                  location='packagemore'
+                  type={CARD_LIST_TYPES.horizontal}
+                  seq={this.state.widget[0].type}
+                  items={this.state.packageProducts}
+                  second={true}
                 />
               }
             </div>
