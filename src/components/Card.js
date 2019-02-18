@@ -35,8 +35,12 @@ class Card extends React.Component {
     if (this.state.item.sprice) {
       prices = (
         <div>
-          <small className="sale">{this.state.item.price}₮</small>
-          <span className="current">{this.state.item.sprice}₮</span>
+          <small className="sale">
+            {formatter.format(this.state.item.price)}₮
+          </small>
+          <span className="current">
+            {formatter.format(this.state.item.sprice)}₮
+          </span>
         </div>
       );
     }
@@ -173,7 +177,7 @@ class Card extends React.Component {
             }`}
           >
             <div className="image-container">
-              <Link to="#">
+              <Link to={`/recipe/${this.state.item.recipeid}`}>
                 <span
                   className="image"
                   style={{

@@ -5,12 +5,9 @@ import Banner from "../../components/Banner";
 
 class Recipe extends React.Component {
   render() {
-    const {
-      products,
-      primaryBanner,
-      secondaryBanners,
-      /* tag */
-    } = this.props.container;
+    const { products, primaryBanner, secondaryBanners } = this.props.container;
+
+    const cardsInCol = 2;
 
     return (
       <div className="top-container">
@@ -21,7 +18,7 @@ class Recipe extends React.Component {
               primaryBanner && primaryBanner.img
                 ? IMAGE + primaryBanner.img
                 : ""
-              })`,
+            })`,
             backgroundRepeat: "no-repeat",
             backgroundPosition: "right",
             backgroundSize: "50% 115px",
@@ -40,27 +37,21 @@ class Recipe extends React.Component {
             <CardList
               type={CARD_LIST_TYPES.vertical}
               cardsInCol={2}
-              items={products}
+              items={products.slice(0, cardsInCol * 3)}
             />
           </div>
         </div>
 
         <Banner data={secondaryBanners} />
 
-        {/* <div className="banner-container">
-          <span
-            style={{ backgroundImage: `url(${IMAGE + secondaryBanner.img})` }}
-          />
+        <div className="section">
           <div className="container pad10">
-            <Link to={secondaryBanner.link}>
-              <img
-                alt="banner"
-                src={IMAGE + secondaryBanner.img}
-                className="img-fluid"
-              />
-            </Link>
+            <CardList
+              type={CARD_LIST_TYPES.vertical}
+              items={products.slice(cardsInCol * 3)}
+            />
           </div>
-        </div> */}
+        </div>
       </div>
     );
   }

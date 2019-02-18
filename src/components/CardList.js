@@ -32,24 +32,29 @@ class CardList extends React.Component {
             ? CARD_NUMS_IN_COL.wide
             : CARD_NUMS_IN_COL.slim;
         for (let j = 0; j < cardsInRow; j++, p++) {
-          // console.log(this.state.items[p]);
-          cardList.push(
-            <Card
-              key={p}
-              type={cardType}
-              item={this.state.items[p]}
-              isLastInRow={j === cardsInRow - 1 ? true : false}
-            />
-          );
+          if (this.state.items[p]) {
+            cardList.push(
+              <Card
+                key={p}
+                type={cardType}
+                item={this.state.items[p]}
+                isLastInRow={j === cardsInRow - 1 ? true : false}
+              />
+            );
+          }
         }
       }
       return cardList;
     }
 
-    const cardsInCol =
-      Math.ceil(this.state.items.length / 3) < this.state.cardsInCol
-        ? Math.ceil(this.state.items.length / 3)
-        : this.state.cardsInCol;
+    let cardsInCol = Math.ceil(this.state.items.length / 3);
+
+    if (this.state.cardsInCol) {
+      cardsInCol =
+        Math.ceil(this.state.items.length / 3) < this.state.cardsInCol
+          ? Math.ceil(this.state.items.length / 3)
+          : this.state.cardsInCol;
+    }
 
     const cardsCount =
       this.state.items.length > cardsInCol * 3

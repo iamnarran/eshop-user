@@ -1,10 +1,10 @@
-import { API } from '../../utils/consts';
+import { API } from "../../utils/consts";
 
 export default [
   {
-    NAME: 'findAll',
-    METHOD: 'GET',
+    NAME: "findAll",
+    METHOD: "GET",
     URL: `${API}/homepage`,
-    REPLACE: 'id, type',
+    REPLACE: "id, type"
   }
 ];

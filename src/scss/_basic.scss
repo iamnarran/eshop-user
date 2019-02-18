@@ -2603,3 +2603,16 @@ form {
 .swiper-button-prev {
   background-size: 10px;
 }
+
+.food-recipe-detail {
+  .swiper-button-next,
+  .swiper-container-rtl,
+  .swiper-button-prev {
+    background-size: 20px;
+  }
+
+  .swiper-container {
+    border-radius: 10px;
+    margin-bottom: 20px;
+  }
+}
