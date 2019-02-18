@@ -67,10 +67,8 @@ class CardList extends React.Component {
             }
           }
         }
-
       }
       else {
-        console.log("false")
         for (let i = 0, p = 0; i < cardTypes.length; i++) {
           const cardType = parseInt(cardTypes[i]);
           const cardsInRow =
@@ -96,12 +94,10 @@ class CardList extends React.Component {
       Math.ceil(this.state.items.length / 3) < this.state.cardsInCol
         ? Math.ceil(this.state.items.length / 3)
         : this.state.cardsInCol;
-
     const cardsCount =
       this.state.items.length > cardsInCol * 3
         ? cardsInCol * 3
         : this.state.items.length;
-
     let cardsTemp = [];
     for (let i = 0; i < cardsCount; i++) {
       let className = "short";
@@ -113,7 +109,6 @@ class CardList extends React.Component {
       ) {
         className = "long";
       }
-
       cardsTemp.push(
         <Card
           key={i}
@@ -122,7 +117,6 @@ class CardList extends React.Component {
           className={className}
         />
       );
-
       if ((i + 1) % cardsInCol === 0 || i === cardsCount - 1) {
         cardList.push(
           <div key={i} className="col-md-4 pad10">
@@ -132,7 +126,6 @@ class CardList extends React.Component {
         cardsTemp = [];
       }
     }
-
     return cardList;
   };
 
