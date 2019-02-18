@@ -8,6 +8,7 @@ import Information from "./Information"
 import Collection from "./CollectionProduct"
 import Comment from "./Comment"
 import Rate from "../Rate"
+import config from "config";
 
 class ProductDetail extends React.Component{
   state = {
@@ -27,30 +28,16 @@ class ProductDetail extends React.Component{
 
   render() {
     const { breadCrumb, product, productNumber, sumPrice, attribute, relationalProduct, collectionProduct, skucd } = this.state;
-
+    
     let image = (
       <div className="col-xl-4 col-lg-4 col-md-5 pad10">
         <div className="product-gallery">
-          {
-            console.log(product)
-          }
-            <Magnify img={p10} />
+            <Magnify img={product.img} />
             <div className="thumbs">
             <ul className="list-inline" onChange={this.onChangeImage}>
                 <li className="list-inline-item active image-container">
                   <a href="/" className="image-container">
-                    <img alt="image1" src={p10}/>
-                  </a>
-                </li>
-                <li className="list-inline-item">
-                  <a href="/" className="image-container">
-                    <img alt="image2" src={p11}/>
-                  </a>
-                </li>
-  
-                <li className="list-inline-item">
-                  <a href="/" className="image-container">
-                    <img alt="image3" src={p10}/>
+                    <img alt="image1" src={IMAGE+product.img}/>
                   </a>
                 </li>
               </ul>                    
@@ -186,8 +173,7 @@ class ProductDetail extends React.Component{
                   <span className="text-uppercase">Танилцуулга</span>
                 </h1>
                 <div className="product-bottom-images">
-                  <img alt="image6" src={p10}/>
-                  <img alt="image7" src={p11}/>
+                  <img alt="image6" src={IMAGE+product.img}/>
                 </div>
 
                 <Comment skucd={skucd}/>
@@ -239,7 +225,10 @@ class ProductDetail extends React.Component{
     console.log(e.target)
   }
 }
-
+const IMAGE =
+  process.env.NODE_ENV === "development"
+    ? config.image.development
+    : config.image.production;
 const money = new Intl.NumberFormat('en-US');
 
 export default ProductDetail;

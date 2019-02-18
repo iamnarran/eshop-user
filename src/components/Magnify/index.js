@@ -1,16 +1,15 @@
 import React from "react"
 import ReactImageMagnify from "react-image-magnify"
 import "./index.css"
+import config from "config";
 
 class Component extends React.Component {
   state = {
     img: []
   }
-
-  componentDidMount(){ this.setState({...this.props})}
   
-  render() {
-    const { img } = this.state
+  render() {    
+    const { img } = this.props
     return (
       <div className="perimeter">
         <div className="image">
@@ -18,11 +17,11 @@ class Component extends React.Component {
             smallImage: {
               alt: 'Wristwatch by Ted Baker London',
               isFluidWidth: true,
-              src: `${img}`,
+              src: `${IMAGE+img}`,
               sizes: '(min-width: 780px) 100vw, (max-width: 1200px) 30vw, 360px',
             },
             largeImage: {
-              src: `${img}`,
+              src: `${IMAGE+img}`,
               width: 1200,
               height: 1800
             },
@@ -40,5 +39,10 @@ class Component extends React.Component {
     );
   }
 }
+
+const IMAGE =
+  process.env.NODE_ENV === "development"
+    ? config.image.development
+    : config.image.production;
 
 export default Component;
