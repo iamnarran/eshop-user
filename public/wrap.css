@@ -1851,6 +1851,7 @@ body {
   color: rgba(0, 0, 0, 0.5);
   width: 40px;
   text-align: center;
+  background-color: rgb(221, 221, 221);
 }
 .product-detail-page .product-info form .input-group-prepend .btn {
   border-top-left-radius: 20px;

@@ -31,10 +31,13 @@ class ProductDetail extends React.Component{
     let image = (
       <div className="col-xl-4 col-lg-4 col-md-5 pad10">
         <div className="product-gallery">
+          {
+            console.log(product)
+          }
             <Magnify img={p10} />
             <div className="thumbs">
             <ul className="list-inline" onChange={this.onChangeImage}>
-                <li className="list-inline-item active">
+                <li className="list-inline-item active image-container">
                   <a href="/" className="image-container">
                     <img alt="image1" src={p10}/>
                   </a>
@@ -129,7 +132,7 @@ class ProductDetail extends React.Component{
                               <i className="fa fa-plus" aria-hidden="true"></i>
                             </button>
                           </div>
-                        </div>                        
+                        </div>
                         
                       </div>
                       <div className="col-xl-8 pad10">

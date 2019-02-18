@@ -114,7 +114,7 @@ class Card extends React.Component {
           <div className="col-md-4 pad10">
             <div className="single-product big-product sale-product timed-product">
               <div className="image-container">
-                <Link to="/">
+                <Link to={`/productdetail/${item.cd}`} params={item}>
                   <span className="image" style={{ backgroundImage: `url(${IMAGE + item.img})` }}></span>
                 </Link>
                 {this.state.item.tags &&
