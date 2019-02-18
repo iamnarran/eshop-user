@@ -9,7 +9,7 @@ process.env.NODE_ENV === 'development'
 
 class Recipe extends React.Component {
   render() {
-    const { recipeproduct, mainbanner, subbanner, menu, tag, widget } = this.props.container
+    const { recipeproduct, mainbanner, menu, widget } = this.props.container
     // console.log(this.props);
 
 

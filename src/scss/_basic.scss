@@ -1288,6 +1288,7 @@ body {
 					color: $black5;
 					width: 40px;
 					text-align: center;
+					background-color: rgb(216, 216, 216);
 				}
 			}
 			.input-group-prepend {
@@ -1310,13 +1311,15 @@ body {
 				border: none;
 			}
 			.count-text {
-				font-size: 0.8rem;
-				align-items: center;
-				height: 40px;
+				font-size: 0.9rem;
 				margin: auto;
 				display: flex;
 				justify-content: flex-end;
 				flex-direction: row;
+
+				span{
+					justify-content: flex-end;
+				}
 			}
 		}
 		.total-price {
@@ -1956,8 +1959,15 @@ form {
 		}
 	}
 }
+.page-main-banner>.whole-page-title{
+	-webkit-filter: blur(50px);
+  -moz-filter: blur(50px);
+  -ms-filter: blur(50px);
+  -o-filter: blur(50px);
+  filter: blur(50px);
+}
 .whole-page-title {
-	padding: 20px 0;
+	padding: 20px 0;	
 	
 	h2 {
 		font-weight: 400;

@@ -10,8 +10,16 @@ class Discount extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      ...this.props.container
+      saleproduct: [],
+      mainbanner: [],
+      subbanner: [],
+      menu: [],
+      tag: [],
     };
+  }
+
+  componentDidMount() {
+    this.setState({ ...this.props.container })
   }
 
   changeLocation = () => {
@@ -78,8 +86,7 @@ class Discount extends React.Component {
               }
             </div>
           </div>
-        </div>
-      
+        </div>      
       </div>
     );
   }

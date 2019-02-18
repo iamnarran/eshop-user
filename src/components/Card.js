@@ -93,7 +93,7 @@ class Card extends React.Component {
           <div className={`col-five col-md-3 col-6 pad10${this.props.none ? ' d-none d-xl-block lol' : ''}`}>
             <div className="single-product small-product sale-product timed-product">
               <div className="image-container">
-                <Link to="#">
+                <Link to={`/productdetail/${item.cd}`} params={item}>
                   <span className="image" style={{ backgroundImage: `url(${IMAGE + item.img})` }}></span>
                 </Link>
                 {percentLabel}
@@ -124,7 +124,7 @@ class Card extends React.Component {
           <div className="col-md-4 pad10">
             <div className="single-product big-product sale-product timed-product">
               <div className="image-container">
-                <Link to="#">
+                <Link to="/">
                   <span className="image" style={{ backgroundImage: `url(${IMAGE + item.img})` }}></span>
                 </Link>
                 {percentLabel}
@@ -159,7 +159,7 @@ class Card extends React.Component {
         return (
           <div className={`single-product big-product food-post food-${c}`}>
             <div className="image-container">
-              <Link to="#">
+              <Link to="/">
                 <span className="image" style={{ backgroundImage: `url(${IMAGE + item.img})` }}></span>
               </Link>
               {percentLabel}
