@@ -26,7 +26,6 @@ import 'scss/app.scss';
 import messages from './messages.json';
 import Promotion from './pages/Promotion/index';
 import Season from './pages/Season/index';
-
 import {
   Footer,
   Header,
@@ -37,6 +36,7 @@ import {
   Recipe,
   Package,
 } from "./containers/index";
+import { ProductDetail } from "./components"
 
 //library.add(fab, faCheckSquare, faCoffee);
 library.add(fas, far, fab);
@@ -110,6 +110,12 @@ class Localization extends Component {
         path: "/season",
         component: (rest) => <Season {...rest} {...this.props} />
       },
+      {
+        exact: false,
+        path: "/productdetail/:id",
+        component: (rest) => <ProductDetail {...rest} {...this.props} />
+      },
+
 
       // {
       //   path: "*",

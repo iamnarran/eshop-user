@@ -8,7 +8,7 @@ class Newproduct extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      mainbanner: this.props.container.mainbanner
+      ...this.props.container
     };
   }
 

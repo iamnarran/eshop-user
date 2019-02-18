@@ -1705,9 +1705,10 @@ body {
 .product-detail-page .product-info h5.title {
   font-size: 1.5rem;
   color: rgba(0, 0, 0, 0.7);
-  margin: 10px auto 20px;
+  margin: 0px auto 0px !important;
 }
 .product-detail-page .product-info .big-text {
+  margin-top: 10px;
   margin-bottom: 10px;
   padding-bottom: 10px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);

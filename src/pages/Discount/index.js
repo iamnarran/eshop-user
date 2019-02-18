@@ -12,8 +12,16 @@ class Discount extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      mainbanner: this.props.container.mainbanner
+      saleproduct: [],
+      mainbanner: [],
+      subbanner: [],
+      menu: [],
+      tag: [],
     };
+  }
+
+  componentDidMount() {
+    this.setState({ ...this.props.container })
   }
 
   changeLocation = () => {
@@ -23,21 +31,9 @@ class Discount extends React.Component {
   };
 
   render() {
-    const {
-      saleproduct,
-      mainbanner,
-      subbanner,
-      menu,
-      tag
-    } = this.props.container;
-    let subbannerhtml = (
-      <img
-        alt="banner"
-        src={subbanner !== undefined ? IMAGE + subbanner.img : ""}
-        className="img-fluid"
-      />
-    );
-    let products = [];
+    const { saleproduct, mainbanner, subbanner, menu, tag } = this.state;    
+    let subbannerhtml = (<img alt="banner" src={subbanner!==undefined ? IMAGE+subbanner.img:''} className="img-fluid"/>)
+    let products = []
 
     return (
       <div className="top-container">

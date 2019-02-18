@@ -21,6 +21,7 @@ class Card extends React.Component {
   }
 
   render() {
+    const {item} = this.state
     /* console.log("card", this.props) */
     if (!this.state.item) {
       return null;
@@ -65,13 +66,8 @@ class Card extends React.Component {
           >
             <div className="single-product small-product sale-product timed-product">
               <div className="image-container">
-                <Link to="#">
-                  <span
-                    className="image"
-                    style={{
-                      backgroundImage: `url(${IMAGE + this.state.item.img})`
-                    }}
-                  />
+                <Link to={`/productdetail/${item.cd}`} params={item}>
+                  <span className="image" style={{ backgroundImage: `url(${IMAGE + item.img})` }}></span>
                 </Link>
                 {this.state.item.tags &&
                   this.state.item.tags.map((label, index) => (
@@ -118,13 +114,8 @@ class Card extends React.Component {
           <div className="col-md-4 pad10">
             <div className="single-product big-product sale-product timed-product">
               <div className="image-container">
-                <Link to="#">
-                  <span
-                    className="image"
-                    style={{
-                      backgroundImage: `url(${IMAGE + this.state.item.img})`
-                    }}
-                  />
+                <Link to="/">
+                  <span className="image" style={{ backgroundImage: `url(${IMAGE + item.img})` }}></span>
                 </Link>
                 {this.state.item.tags &&
                   this.state.item.tags.map((label, index) => (
@@ -174,13 +165,8 @@ class Card extends React.Component {
               }`}
           >
             <div className="image-container">
-              <Link to="#">
-                <span
-                  className="image"
-                  style={{
-                    backgroundImage: `url(${IMAGE + this.state.item.img})`
-                  }}
-                />
+              <Link to="/">
+                <span className="image" style={{ backgroundImage: `url(${IMAGE + item.img})` }}></span>
               </Link>
               {this.state.item.tags &&
                 this.state.item.tags.map((label, index) => (
