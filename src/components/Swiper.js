@@ -13,11 +13,9 @@ class Slider extends React.Component {
     render() {
         const params = this.props && this.props.params;
         const data = this.props && this.props.dataSource;
-        
         var indents = data.map(function (item, index) {
             return (
                 <div style={{ backgroundImage: `url(${IMAGE + item.imgnm})` }} key={index}>
-                    {/* {console.log(item.isshownm)} */}
                     <div className="container pad10">
                         <div className="slide-container">
                             <div className="slide-content text-uppercase">
@@ -29,7 +27,7 @@ class Slider extends React.Component {
                                             {
                                                 item && item.link && (
                                                     <Link to={item.link} className="btn btn-main" target="_blank">
-                                                        <i className="fa fa-long-arrow-right" aria-hidden="true"></i>
+                                                        <i className="fa fa-arrow-right" aria-hidden="true"></i>
                                                         <span className="text-uppercase">
                                                             {item.btntext && item.btntext.trim() ? item.btntext : 'Дэлгэрэнгүй'}
                                                         </span>

@@ -4,7 +4,7 @@ import { Icon, Badge, Avatar, Modal } from 'antd';
 
 import Category from '../../components/Category';
 import MainMenu from '../../components/Menu';
-import DropMenu from '../../components/DropMenu';
+/* import DropMenu from '../../components/DropMenu'; */
 import ToggleMenu from '../../components/ToggleMenu';
 import ToggleCategory from '../../components/ToggleCategory';
 import config from '../../config';
@@ -162,9 +162,9 @@ class AppHeader extends Component {
                   <div className="row row10">
                     <div className="col-xl-8 col-lg-8 col-md-5 col-4 pad10">
                       <div className="flex-this flex-space">
-                        <Link to="" className="mobile-menu-btn d-block d-md-none" onClick={this.togglePopup} >
+                        <button className="d-block d-md-none button buttonGrey" onClick={this.togglePopup} >
                           <i className="fa fa-navicon" aria-hidden="true"></i>
-                        </Link>
+                        </button>
                         <Link to={'/'} className="logo">
                           <img alt="logo" src={IMAGE + staticinfo.logopath} />
                         </Link>
@@ -211,7 +211,7 @@ class AppHeader extends Component {
                       <div className="action">
                         <ul className="list-inline text-right">
                           <li className="list-inline-item">
-                            <Link to="" className="flex-this search-mobile-btn d-flex d-lg-none" onClick={this.toggleSearch}>
+                            <Link to="" className="flex-this search-mobile-btn d-flex d-lg-none row10" onClick={this.toggleSearch}>
                               <i className="fa fa-search"></i>
                               <p>
                                 <small>Хайлт</small>
@@ -220,7 +220,7 @@ class AppHeader extends Component {
                             </Link>
                           </li>
                           <li className="list-inline-item">
-                            <Link to="">
+                            <Link to="" className="row10">
                               <Icon type="heart" theme="filled" />
                               <p>
                                 <small>Хадгалсан</small>
@@ -229,7 +229,7 @@ class AppHeader extends Component {
                             </Link>
                           </li>
                           <li className="list-inline-item">
-                            <Link to="">
+                            <Link to="" className="row10">
                               <span className="count">1</span>
                               <Icon type="shopping-cart" />
                               <p>
@@ -261,7 +261,7 @@ class AppHeader extends Component {
 
                       <div className="drop-container">
                         <div className="container pad10">
-                          <DropMenu dataSource={menus} />
+                          {/* <DropMenu dataSource={menus} /> */}
                           <Category dataSource={root} />
                         </div>
                       </div>

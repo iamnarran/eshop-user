@@ -1,25 +1,25 @@
-import client, { setAuthorizationHeader } from './Client/index';
-import homepage from './Homepage/index';
-import banner from './Banner/HompageBanner';
-import brand from './Brand/index';
-import staticinfo from './Static/index';
-import menu from './Menu/index';
-import category from './Category/index';
-import widget from './Widget/index';
-import product from './Product/index';
-import recipe from './Recipe/index';
-import packageProduct from './Package/index';
-import pagebanner from './Banner/PagesBanner';
-import tag from './Tag/index';
+import client, { setAuthorizationHeader } from "./Client/index";
+import homepage from "./Homepage/index";
+import banner from "./Banner/HompageBanner";
+import brand from "./Brand/index";
+import staticinfo from "./Static/index";
+import menu from "./Menu/index";
+import category from "./Category/index";
+import widget from "./Widget/index";
+import product from "./Product/index";
+import recipe from "./Recipe/index";
+import packageProduct from "./Package/index";
+import pagebanner from "./Banner/PagesBanner";
+import tag from "./Tag/index";
 
 let rest = {};
 
 const generateURL = (method, url, replace, data) => {
   if (!replace) return url;
   let tmpURL = url;
-  let tmp = replace.replace(/ /g, '').split(',');
+  let tmp = replace.replace(/ /g, "").split(",");
   tmp.forEach(s => {
-    tmpURL = tmpURL.replace(`:${s}`, data && data[s] ? data[s] : '');
+    tmpURL = tmpURL.replace(`:${s}`, data && data[s] ? data[s] : "");
   });
   return tmpURL;
 };
@@ -29,83 +29,81 @@ const generateAPI = (api, data) => {
     method: api.METHOD,
     url: generateURL(api.METHOD, api.URL, api.REPLACE, data),
     headers: {
-      'Content-Type': api.CONTENT_TYPE
-        ? api.CONTENT_TYPE
-        : 'application/json'
+      "Content-Type": api.CONTENT_TYPE ? api.CONTENT_TYPE : "application/json"
     }
   };
-  config[api.METHOD === 'GET' ? 'params' : 'data'] = data;
+  config[api.METHOD === "GET" ? "params" : "data"] = data;
   return client(config).then(res => res.data);
 };
 
 // HOMEPAGE
-rest['homepage'] = {};
+rest["homepage"] = {};
 homepage.forEach(api => {
   rest.homepage[api.NAME] = data => generateAPI(api, data);
 });
 
 // BANNER
-rest['banner'] = {};
+rest["banner"] = {};
 banner.forEach(api => {
   rest.banner[api.NAME] = data => generateAPI(api, data);
 });
 
 // BRAND
-rest['brand'] = {};
+rest["brand"] = {};
 brand.forEach(api => {
   rest.brand[api.NAME] = data => generateAPI(api, data);
 });
 
 // STATIC INFO
-rest['staticinfo'] = {};
+rest["staticinfo"] = {};
 staticinfo.forEach(api => {
   rest.staticinfo[api.NAME] = data => generateAPI(api, data);
 });
 
 // MENU
-rest['menu'] = {};
+rest["menu"] = {};
 menu.forEach(api => {
   rest.menu[api.NAME] = data => generateAPI(api, data);
 });
 
 // CATEGORY
-rest['category'] = {};
+rest["category"] = {};
 category.forEach(api => {
   rest.category[api.NAME] = data => generateAPI(api, data);
 });
 
 // WIDGET
-rest['widget'] = {};
+rest["widget"] = {};
 widget.forEach(api => {
   rest.widget[api.NAME] = data => generateAPI(api, data);
 });
 
 // PRODUCT
-rest['product'] = {};
+rest["product"] = {};
 product.forEach(api => {
   rest.product[api.NAME] = data => generateAPI(api, data);
 });
 
 // RECIPE
-rest['recipe'] = {};
+rest["recipe"] = {};
 recipe.forEach(api => {
   rest.recipe[api.NAME] = data => generateAPI(api, data);
 });
 
 // PACKAGE
-rest['packageProduct'] = {};
+rest["packageProduct"] = {};
 packageProduct.forEach(api => {
   rest.packageProduct[api.NAME] = data => generateAPI(api, data);
 });
 
 //PAGE'S BANNER
-rest['pagebanner'] = {};
+rest["pagebanner"] = {};
 pagebanner.forEach(api => {
   rest.pagebanner[api.NAME] = data => generateAPI(api, data);
 });
 
 //TAG
-rest['tag'] = {};
+rest["tag"] = {};
 tag.forEach(api => {
   rest.tag[api.NAME] = data => generateAPI(api, data);
 });

@@ -1,34 +1,28 @@
-import config from 'config';
+import { API } from "../../utils/consts";
 
-const API =
-  process.env.NODE_ENV === 'development'
-    ? config.api.development
-    : config.api.production;
-    
 export default [
-
   /**ONLY EMART PRODUCT */
   {
-    NAME: 'findAllEmartProducts',
-    METHOD: 'GET',
+    NAME: "findAllEmartProducts",
+    METHOD: "GET",
     URL: `${API}/api/product/emartproduct/:jumcd`,
-    REPLACE: 'id, jumcd',
+    REPLACE: "jumcd"
   },
-  
+
   /**DISCOUNT PRODUCT */
   {
-    NAME: 'findAllDiscountProducts',
-    METHOD: 'GET',
+    NAME: "findAllDiscountProducts",
+    METHOD: "GET",
     URL: `${API}/api/product/discountproduct/:jumcd`,
-    REPLACE: 'jumcd',
+    REPLACE: "jumcd"
   },
 
   /**NEW PRODUCT */
   {
-    NAME: 'findAllNewProduct',
-    METHOD: 'GET',
+    NAME: "findAllNewProducts",
+    METHOD: "GET",
     URL: `${API}/api/product/newproduct/:jumcd`,
-    REPLACE: 'id, jumcd',
+    REPLACE: 'jumcd',
   },
 
   /**PRODUCT DETAIL */

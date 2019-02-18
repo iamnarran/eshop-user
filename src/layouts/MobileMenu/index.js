@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Modal } from 'antd';
+import { Menu } from 'antd';
+const SubMenu = Menu.SubMenu;
 
 class MobileMenu extends React.Component {
     state = {
@@ -11,12 +13,28 @@ class MobileMenu extends React.Component {
     showLogInModal = () => this.setState({ logInVisible: true });
     handleLogInSave = () => this.setState({ logInVisible: false, })
     handleLogInCancel = () => this.setState({ logInVisible: false, });
-    showSingUpModal = () => this.setState({ SingUpVisible: false });
+    showSingUpModal = () => this.setState({ SingUpVisible: true });
     handleSingUpSave = () => this.setState({ SingUpVisible: false, });
     handleSingUpCancel = () => this.setState({ SingUpVisible: false, });
 
     togglePopup = () => { this.props.onChange() };
 
+    rootSubmenuKeys = ['sub1', 'sub2', 'sub4'];
+
+    state = {
+        openKeys: ['sub1'],
+    };
+
+    onOpenChange = (openKeys) => {
+        const latestOpenKey = openKeys.find(key => this.state.openKeys.indexOf(key) === -1);
+        if (this.rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
+            this.setState({ openKeys });
+        } else {
+            this.setState({
+                openKeys: latestOpenKey ? [latestOpenKey] : [],
+            });
+        }
+    }
     render() {
         const { popupClass } = this.props;
         const { staticinfo } = this.props.container;
@@ -46,27 +64,15 @@ class MobileMenu extends React.Component {
 
         var toggleCategory = root.map(function (item, index) {
             return (
-                <div className="card" key={index}>
-                    <button className="btn btn-link flex-this flex-space" key={index} type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        <strong className="text-uppercase">{item.name}</strong>
-                        {/* <i className="fa fa-chevron-down" aria-hidden="true"></i> */}
-                    </button>
-                    <div id="collapseOne" className="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-                        <ul className="list-unstyled">
-                            {
-                                item.children && item.children.map(function (it, ind) {
-                                    return (
-                                        <li key={ind}>
-                                            <Link to="">
-                                                <span>{it.name}</span>
-                                            </Link>
-                                        </li>
-                                    )
-                                })
-                            }
-                        </ul>
-                    </div>
-                </div>
+                <SubMenu key={index} title={<span><span>{item.name}</span></span>}>
+                    {
+                        item.children && item.children.map(function (it, ind) {
+                            return (
+                                <Menu.Item style={{ color: "white" }} ><a href=" " >{it.name}</a></Menu.Item>
+                            )
+                        })
+                    }
+                </SubMenu>
             )
         });
 
@@ -76,9 +82,9 @@ class MobileMenu extends React.Component {
                     <div className="single">
                         <ul className="list-unstyled flex-this flex-space top-1">
                             <li className="list-inline-item" onClick={this.togglePopup}>
-                                <Link to="">
+                                <button className="button buttonBlack">
                                     <i className="fa fa-times" aria-hidden="true"></i>
-                                </Link>
+                                </button>
                             </li>
                             <li className="list-inline-item">
                                 <Link to="" className="e-phone">
@@ -122,11 +128,15 @@ class MobileMenu extends React.Component {
                         </div>
                     }
                     {
-                        <div className="single">
-                            <div className="accordion" id="accordionExample">
-                                {toggleCategory}
-                            </div>
-                        </div>
+                        <Menu
+                            mode="inline"
+                            openKeys={this.state.openKeys}
+                            onOpenChange={this.onOpenChange}
+                            theme="dark"
+                            style={{ width: 256, backgroundColor: 'transparent' }}
+                        >
+                            {toggleCategory}
+                        </Menu>
                     }
                 </div>
                 <Modal

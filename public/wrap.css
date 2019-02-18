@@ -3799,4 +3799,21 @@ form .e-input-group .count-text {
       height: 200px !important;
   }
 }
+.button{
+  background-color: red;
+}
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 5px 10px;
+  margin-right: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+}
+.buttonGrey {background-color: #e7e7e7; color: black;}
+.buttonBlack {background-color: #555555;}
 /*# sourceMappingURL=wrap.css.map */

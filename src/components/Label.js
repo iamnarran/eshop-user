@@ -1,34 +1,55 @@
-import React from 'react';
-import Style from 'style-it';
+import React from "react";
+import Style from "style-it";
+import PropTypes from "prop-types";
 
 class Label extends React.Component {
+  state = {
+    data: null,
+    seq: 0
+  };
+
+  componentDidMount() {
+    this.setState({ ...this.props });
+  }
+
   render() {
-    const { item, label, isNew } = this.props;
+    if (!this.state.data) {
+      return null;
+    }
 
     let content = null;
-    if (isNew) {
+    if (this.state.data.content) {
+      if (this.state.data.isPackage) {
+        content = (
+          <small>
+            <span style={{ fontSize: "0.9rem" }}>
+              {this.state.data.content ? this.state.data.content : ""}
+            </span>
+            <span>{this.state.data.text ? this.state.data.text : ""}</span>
+          </small>
+        );
+      } else {
+        content = (
+          <div>
+            <strong>
+              {this.state.data.content ? this.state.data.content : ""}
+            </strong>
+            <small>{this.state.data.text ? this.state.data.text : ""}</small>
+          </div>
+        );
+      }
+    } else {
       content = (
         <div>
-          <span className="text" style={{ fontSize: '0.9rem' }}>
-            <strong>{label ? label.tagtext : ''}</strong>
+          <span className="text" style={{ fontSize: "0.9rem" }}>
+            <strong>{this.state.data.text ? this.state.data.text : ""}</strong>
           </span>
         </div>
-      )
-    } else if (item.spercent) {
-      content = (
-        <div>
-          <strong>{item.spercent}</strong>
-          <small>{label ? label.tagtext : ''}</small>
-        </div>
       );
-    } else if (item.skucnt) {
-      content = (
-        <small>
-          <span style={{ fontSize: '0.9rem' }}>{item.skucnt}</span>
-          <span>{label ? label.tagtext : ''}</span>
-        </small>
-      );
-    } 
+    }
+
+    let topSpacing = 15 + this.state.seq * 55;
+    let color = this.state.data.color ? this.state.data.color : "#f00";
 
     return (
       <Style>
@@ -36,7 +57,7 @@ class Label extends React.Component {
           .label {
             display: block;
             position: absolute;
-            top: 15px;
+            top: ${topSpacing}px;
             left: 5px;
           }
         `}
@@ -48,7 +69,7 @@ class Label extends React.Component {
                 display: block;
                 width: 46px;
                 height: 30px;
-                background-color: ${label ? label.color : '#f00'};
+                background-color: ${color};
                 text-align: center;
                 font-size: 1.5rem;
                 color: white;
@@ -62,7 +83,7 @@ class Label extends React.Component {
                 z-index: 0;
                 position: absolute;
                 content: '';
-                background-color: ${label ? label.color : '#f00'};
+                background-color: ${color};
                 width: 26px;
                 height: 26px;
                 top: -11px;
@@ -92,14 +113,17 @@ class Label extends React.Component {
                 letter-spacing: 1px;
               }
             `}
-            <span className="text">
-              {content}
-            </span>
+            <span className="text">{content}</span>
           </Style>
         </div>
       </Style>
     );
   }
+}
+
+Label.propTypes = {
+  data: PropTypes.object.isRequired,
+  seq: PropTypes.number
 };
 
 export default Label;

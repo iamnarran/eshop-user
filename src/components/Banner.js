@@ -1,42 +1,37 @@
-import React from 'react';
-import Swiper from 'react-id-swiper';
-import config from 'config';
+import React from "react";
+import PropTypes from "prop-types";
 
-const IMAGE =
-  process.env.NODE_ENV === 'development'
-    ? config.image.development
-    : config.image.production;
+import { IMAGE } from "../utils/consts";
 
 class Banner extends React.Component {
-  // handleMouseEnter = event => {
-  //   console.log('ooo');
-  // }
-
   render() {
-    const params = this.props && this.props.params;
-    const data = this.props && this.props.data;
+    const { data } = this.props;
 
-    const banner = data.map(item => {
-      return (
-        <div key={item.id}>
-          <a href={item.link ? item.link : '#'} target="_blank" rel="noopener">
-            <img alt="banner" src={IMAGE + item.imgnm} className="img-fluid" />
-          </a>
-        </div>
-      );
-    });
+    if (!data) {
+      return null;
+    }
+
+    const selected = data[Math.floor(Math.random() * data.length)];
 
     return (
-      <div className="banner-container" onMouseEnter={this.handleMouseEnter}>
+      <div className="banner-container">
+        <span style={{ backgroundImage: `url(${IMAGE + selected.imgnm})` }} />
         <div className="container pad10">
-          <span style={{ backgroundImage: `url(${IMAGE + data[0].imgnm})` }}></span>
-          <Swiper {...params}>
-            {banner}
-          </Swiper>
+          <a href={selected.link ? selected.link : "#"} target="_blank">
+            <img
+              alt="banner"
+              src={IMAGE + selected.imgnm}
+              className="img-fluid"
+            />
+          </a>
         </div>
       </div>
     );
   }
 }
+
+Banner.propTypes = {
+  data: PropTypes.array.isRequired
+};
 
 export default Banner;
