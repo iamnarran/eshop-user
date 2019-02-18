@@ -15,8 +15,8 @@ class Component extends React.Component{
           {
             product.map((product, key) => {
               return (
-                <Card key={key} item={product} extra={[]} renderType="1"/>
-               ) 
+                <Card key={key} item={product} type={1} />
+               )
             })
           }
           </div>

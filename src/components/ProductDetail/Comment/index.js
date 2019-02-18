@@ -17,7 +17,7 @@ class Component extends React.Component{
   }
   render() {
     const { comment, rate } = this.state
-    console.log(comment, rate)
+    // console.log(comment, rate)
     return <div>
       <div className="comments-container">
         <div className="write-comment">

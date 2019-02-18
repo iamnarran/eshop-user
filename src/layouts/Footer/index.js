@@ -22,7 +22,7 @@ class Footer extends React.Component {
                 <ul className="social">
                   <li>
                     <a
-                      href={IMAGE + staticinfo.facebook}
+                      href={staticinfo.facebook}
                       target="_blank "
                       rel="noopener"
                     >
@@ -40,11 +40,7 @@ class Footer extends React.Component {
                         />
                       </span>
                     </a>
-                    <a
-                      href={IMAGE + staticinfo.gmail}
-                      target="_blank "
-                      rel="noopener"
-                    >
+                    <a href={staticinfo.gmail} target="_blank " rel="noopener">
                       <span className="fa-layers fa-fw">
                         <FontAwesomeIcon
                           icon={["fas", "circle"]}
@@ -60,7 +56,7 @@ class Footer extends React.Component {
                       </span>
                     </a>
                     <a
-                      href={IMAGE + staticinfo.twitter}
+                      href={staticinfo.twitter}
                       target="_blank "
                       rel="noopener"
                     >
