@@ -98,6 +98,10 @@ class Discount extends React.Component {
             </a>
           </div>
         </div> */}
+        {
+          console.log(subbanner)
+          
+        }
         <Banner data={subbanner} />
 
         {/**FOOTER PRODUCT */}

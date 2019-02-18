@@ -13,17 +13,26 @@ class Banner extends React.Component {
 
     const selected = data[Math.floor(Math.random() * data.length)];
 
+    if (selected && data) {
+      return (
+        <div className="banner-container">
+          <span style={{ backgroundImage: `url(${IMAGE + selected.imgnm})` }} />
+          <div className="container pad10">
+            <a href={selected.link ? selected.link : "#"} target="_blank">
+              <img
+                alt="banner"
+                src={IMAGE + selected.imgnm}
+                className="img-fluid"
+              />
+            </a>
+          </div>
+        </div>
+      );
+    }
     return (
       <div className="banner-container">
-        <span style={{ backgroundImage: `url(${IMAGE + selected.imgnm})` }} />
+        <span/>
         <div className="container pad10">
-          <a href={selected.link ? selected.link : "#"} target="_blank">
-            <img
-              alt="banner"
-              src={IMAGE + selected.imgnm}
-              className="img-fluid"
-            />
-          </a>
         </div>
       </div>
     );

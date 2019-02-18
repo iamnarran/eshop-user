@@ -15,11 +15,10 @@ const fetch = async (props, onData) => {
     const subbanner = await api.pagebanner.findAll({ type: "F2" });
     const tag = await api.tag.findAll({ slug: "new" });
     const menu = await api.menu.findAll();
-
     onData(null, {
       container: {
         newproduct: newproduct.data,
-        mainbanner: mainbanner.data[0],
+        mainbanner: mainbanner.data[Math.floor(Math.random()*(subbanner.data.length))],
         subbanner: subbanner.data,
         tag: tag.data[0],
         menu: menu.data.filter(i => {
