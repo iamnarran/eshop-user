@@ -20,25 +20,38 @@ class ProductDetail extends React.Component{
     sumPrice: null,
     attribute: [],
     relationalProduct: [],
-    collectionProduct: []
+    collectionProduct: [],
+    smallImg: [],
+    mediumImg: null,
+    largeImg: [],
   }
 
   componentWillMount(){ this.setState({skucd: this.props.match.params.id})}
   componentDidMount() { this.getAll() }
 
   render() {
-    const { breadCrumb, product, productNumber, sumPrice, attribute, relationalProduct, collectionProduct, skucd } = this.state;
+    const { breadCrumb, product, productNumber, sumPrice, attribute, relationalProduct, collectionProduct, skucd,mediumImg } = this.state;
     
     let image = (
       <div className="col-xl-4 col-lg-4 col-md-5 pad10">
         <div className="product-gallery">
-            <Magnify img={product.img} />
+          <Magnify img={mediumImg===null?IMAGE+product.img:mediumImg}/>
             <div className="thumbs">
             <ul className="list-inline" onChange={this.onChangeImage}>
-                <li className="list-inline-item active image-container">
-                  <a href="/" className="image-container">
+                <li className="list-inline-item">
+                  <a className="image-container" onClick={this.onChangeImage}>
                     <img alt="image1" src={IMAGE+product.img}/>
                   </a>
+              </li>
+              <li className="list-inline-item ">
+                  <a className="image-container" onClick={this.onChangeImage}>
+                    <img alt="image1" src={p10}/>
+                </a>
+                </li>
+                <li className="list-inline-item ">
+                  <a className="image-container" onClick={this.onChangeImage}>
+                  <img alt="image1" src={p11}/>
+                </a>
                 </li>
               </ul>                    
             </div>
@@ -222,7 +235,7 @@ class ProductDetail extends React.Component{
     }
   }
   onChangeImage = (e) => {
-    console.log(e.target)
+    this.setState({mediumImg: e.target.src})
   }
 }
 const IMAGE =
