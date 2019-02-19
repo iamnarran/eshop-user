@@ -24,18 +24,6 @@ const fetch = async (props, onData) => {
         secondaryBanners: secondaryBanners.data,
         tag: tag.data[0],
         menu: menu.data
-        // widget: widget.data.filter(i => {
-        //   if (i.slug === "recipe") {
-        //     return i;
-        //   }
-        //   return null;
-        // }),
-        // menu: menu.data.filter(i => {
-        //   if (i.id === 72) {
-        //     return i;
-        //   }
-        //   return null;
-        // })
       }
     });
   } catch (e) {

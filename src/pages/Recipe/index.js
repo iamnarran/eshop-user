@@ -16,27 +16,6 @@ class Recipe extends React.Component {
 
     return (
       <div className="top-container">
-        {/* <div
-          className="whole-page-title color-blue pad10"
-          style={{
-            backgroundImage: `url(${
-              primaryBanner && primaryBanner.img
-                ? IMAGE + primaryBanner.img
-                : ""
-            })`,
-            backgroundRepeat: "no-repeat",
-            backgroundPosition: "right",
-            backgroundSize: "50% 115px",
-            marginBottom: "20px"
-          }}
-          onClick={this.changeLocation}
-        >
-          <div className="container">
-            <h1>Хоолны жор</h1>
-            <h3>Хоолны жор, Хоолны жор, Хоолны жор</h3>
-          </div>
-        </div> */}
-
         <div className="whole-page-title color-blue" style={{ padding: "0px" }}>
           <div
             className="whole-page-title color-blue class container pad10"

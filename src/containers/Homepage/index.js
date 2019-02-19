@@ -25,27 +25,19 @@ const fetch = async (props, onData) => {
     const prodsNew = await api.product.findAllNewProducts({
       jumcd: "99"
     });
-    const banners1 = await api.banner.findAll({ type: "A1" });
-    const banners2 = await api.banner.findAll({ type: "A2" });
-    const banners3 = await api.banner.findAll({ type: "A3" });
-    // const tagsRecipe = await api.tag.findAll({ slug: "recipe" });
-    // const tagsDiscount = await api.tag.findAll({ slug: "discount" });
-    // const tagsPackage = await api.tag.findAll({ slug: "package" });
+    const mainBanners = await api.banner.findAll({ type: "A1" });
+    const secondaryBanners = await api.banner.findAll({ type: "A2" });
+    const ternaryBanners = await api.banner.findAll({ type: "A3" });
 
-    const banners = [];
-    banners[0] = banners1.data;
-    banners[2] = banners2.data;
-    banners[4] = banners3.data;
-
-    // const tags = [];
-    // tags["recipe"] = tagsRecipe.data[0];
-    // tags["discount"] = tagsDiscount.data[0];
-    // tags["package"] = tagsPackage.data[0];
+    const banners = [
+      mainBanners.data,
+      secondaryBanners.data,
+      ternaryBanners.data
+    ];
 
     onData(null, {
       container: {
         banners,
-        // tags,
         widgets: widget.data,
         brands: brands.data,
         categories: category.data,

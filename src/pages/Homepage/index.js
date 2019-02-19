@@ -8,21 +8,10 @@ import Banner from "../../components/Banner";
 import { WIDGET_SLUGS } from "../../utils/consts";
 
 class Homepage extends React.Component {
-  renderWidgets(widgets, items) {
+  getBlocks(widgets, items) {
     let blocks = [];
 
-    widgets = widgets.sort((obj1, obj2) => obj1.orders - obj2.orders);
-
-    widgets.forEach((widget, index) => {
-      if (index !== 0 && index % 2 === 0) {
-        blocks.push(
-          <Banner
-            key={items.banners[index][0].id}
-            data={items.banners[index]}
-          />
-        );
-      }
-
+    widgets.forEach(widget => {
       switch (widget.slug) {
         case WIDGET_SLUGS.onlyemart:
           widget.items = items.prodsEmart;
@@ -45,17 +34,14 @@ class Homepage extends React.Component {
           break;
         case WIDGET_SLUGS.package:
           widget.items = items.prodsPackage;
-          //   items.tags.package && (widget.label = items.tags.package);
           widget.readMore = "Бусад багцыг үзэх";
           break;
         case WIDGET_SLUGS.recipe:
           widget.items = items.recipes;
-          //   items.tags.recipe && (widget.label = items.tags.recipe);
           widget.readMore = "Бусад хоолны жорыг үзэх";
           break;
         case WIDGET_SLUGS.new:
           widget.items = items.prodsNew;
-          //   items.tags.recipe && (widget.label = items.tags.recipe);
           widget.readMore = "Бусад шинэ барааг үзэх";
           break;
         default:
@@ -66,16 +52,33 @@ class Homepage extends React.Component {
       }
     });
 
-    if (widgets.length % 2 === 0) {
-      blocks.push(
-        <Banner
-          key={items.banners[widgets.length][0].id}
-          data={items.banners[widgets.length]}
-        />
-      );
-    }
-
     return blocks;
+  }
+
+  renderBlocks(items) {
+    const widgets = items.blocks.widgets.sort(
+      (obj1, obj2) => obj1.orders - obj2.orders
+    );
+
+    let blocksToRender = [];
+
+    blocksToRender.push(this.getBlocks(widgets.slice(0, 2), items.products));
+    blocksToRender.push(
+      <Banner
+        key={items.blocks.banners[1][0].id}
+        data={items.blocks.banners[1]}
+      />
+    );
+
+    blocksToRender.push(this.getBlocks(widgets.slice(2, 4), items.products));
+    blocksToRender.push(
+      <Banner
+        key={items.blocks.banners[2][0].id}
+        data={items.blocks.banners[2]}
+      />
+    );
+
+    return blocksToRender;
   }
 
   render() {
@@ -93,13 +96,18 @@ class Homepage extends React.Component {
     } = this.props.container;
 
     const items = {
-      prodsEmart,
-      prodsDiscount,
-      prodsPackage,
-      prodsNew,
-      recipes,
-      banners,
-      tags
+      tags,
+      products: {
+        prodsEmart,
+        prodsDiscount,
+        prodsPackage,
+        prodsNew,
+        recipes
+      },
+      blocks: {
+        widgets,
+        banners
+      }
     };
 
     const root = [];
@@ -131,6 +139,11 @@ class Homepage extends React.Component {
     const brandParams = {
       slidesPerView: 5,
       spaceBetween: 10,
+      loop: true,
+      autoplay: {
+        delay: 5000,
+        disableOnInteraction: false
+      },
       navigation: {
         nextEl: ".swiper-button-next",
         prevEl: ".swiper-button-prev"
@@ -154,7 +167,7 @@ class Homepage extends React.Component {
         {/* Slider end */}
 
         {/* Main content */}
-        {this.renderWidgets(widgets, items)}
+        {this.renderBlocks(items)}
         {/* Main content end */}
 
         {/* Brand list */}

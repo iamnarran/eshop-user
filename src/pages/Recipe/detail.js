@@ -8,6 +8,8 @@ class RecipeDetail extends React.Component {
   render() {
     const { recipe, productsData } = this.props.container;
 
+    console.log(productsData);
+
     const sliderParams = {
       spaceBetween: 0,
       autoplay: {
