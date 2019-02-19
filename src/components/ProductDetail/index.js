@@ -60,20 +60,7 @@ class ProductDetail extends React.Component{
     )
     return(
       <div className="section">
-        <div className="container pad10">
-
-          {/**PRODUCT CATEGORY BREADCRUMB */}
-          <div className="e-breadcrumb">
-            <ul className="list-unstyled">
-              {
-                breadCrumb.map((i, key) => {
-                  return <li key={key}>
-                    <a href="/">{i.name}</a>
-                  </li>
-                })
-              }
-            </ul>
-          </div>
+        <div className="container pad10">          
           
           <div className="product-detail-page">
             <div className="row row10">
@@ -84,7 +71,7 @@ class ProductDetail extends React.Component{
                 <div className='product-info'>
                   <h5 className="title">{product.name}</h5>
                   ({product.backtxt})
-                  <p className="big-text"> 
+                  <p className="big-text">
                     <strong>{
                       breadCrumb.map((i, e) => {
                         if (e === breadCrumb.length - 1) { return i.name }
@@ -96,24 +83,8 @@ class ProductDetail extends React.Component{
                   
                   <div className="gift">
                     <div className="image-container">
-                      {/* <a href="/">
-                        <span className="image" style={{backgroundImage: `url(${p4})`}}></span>
-                      </a> */}
-                      {/* <div className="percent">
-                        <span className="text"><strong><i className="fa fa-gift" aria-hidden="true"></i></strong><small>Бэлэг</small></span>
-                      </div> */}
                     </div>
                     <div className="info-container">
-                      {/* <a href="/" className="name">
-                        <span>Хуурай кофе Американо No Brand</span>
-                      </a>
-                      <a href="/" className="cat">
-                        <span>Лаазтай кофе латте Лаазтай кофе латте</span>
-                      </a>
-                      <a href="/" className="price">
-                        <small className="sale">6,900₮</small>
-                        <span className="current">6,500₮</span>
-                      </a> */}
                     </div>
                   </div>
                   
@@ -205,7 +176,7 @@ class ProductDetail extends React.Component{
     api.product.productDetail({ skucd: this.state.skucd })
     .then(product => api.category.findAll().then(category => {
       const { breadCrumb } = this.state
-      let parent = product.data[0].catid          
+      let parent = product.data[0].catid
       category.data.reverse().map((i) => {
         
         if (parent === i.id) {

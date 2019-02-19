@@ -35,9 +35,9 @@ import {
   NewProduct,
   Recipe,
   RecipeDetail,
-  Package
+  Package,
+  ProductDetail
 } from "./containers/index";
-import { ProductDetail } from "./components";
 
 //library.add(fab, faCheckSquare, faCoffee);
 library.add(fas, far, fab);
