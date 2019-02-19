@@ -7,6 +7,7 @@ import NewProduct from "./NewProduct";
 import Recipe from "./Recipe";
 import RecipeDetail from "./Recipe/detail";
 import Package from "./Package";
+import ProductDetail from "./ProductDetail";
 import Season from "./Season";
 import PackageDetail from "./Package/detail";
 
@@ -21,5 +22,6 @@ export {
   RecipeDetail,
   Package,
   Season,
-  PackageDetail
+  PackageDetail,
+  ProductDetail
 };

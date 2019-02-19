@@ -68,7 +68,7 @@ class MobileMenu extends React.Component {
                     {
                         item.children && item.children.map(function (it, ind) {
                             return (
-                                <Menu.Item style={{ color: "white" }} ><a href=" " >{it.name}</a></Menu.Item>
+                                <Menu.Item key={ind} style={{ color: "white" }} ><a href=" " >{it.name}</a></Menu.Item>
                             )
                         })
                     }
