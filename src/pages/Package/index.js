@@ -39,10 +39,9 @@ class Package extends React.Component {
             <div className="row row10">
               {
                 <CardList
-                  location='packagemore'
                   type={CARD_LIST_TYPES.horizontal}
                   seq={this.state.widget[0].type}
-                  items={this.state.packageProducts}
+                  items={this.state.packageProducts.slice(0, 8)}
                 />
               }
             </div>
@@ -54,10 +53,9 @@ class Package extends React.Component {
             <div className="row row10">
               {
                 <CardList
-                  location='packagemore'
                   type={CARD_LIST_TYPES.horizontal}
                   seq={this.state.widget[0].type}
-                  items={this.state.packageProducts}
+                  items={this.state.packageProducts.slice(8)}
                   second={true}
                 />
               }

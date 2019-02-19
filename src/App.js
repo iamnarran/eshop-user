@@ -35,7 +35,8 @@ import {
   NewProduct,
   Recipe,
   RecipeDetail,
-  Package
+  Package,
+  PackageDetail
 } from "./containers/index";
 import { ProductDetail } from "./components";
 
@@ -74,7 +75,7 @@ class Localization extends Component {
   render() {
     const popupClass = `fixed-mobile-menu${
       this.state.isToggle ? " activated" : ""
-    }`;
+      }`;
     const { auth } = this.props;
 
     const routes = [
@@ -104,9 +105,14 @@ class Localization extends Component {
         component: rest => <RecipeDetail {...rest} {...this.props} />
       },
       {
-        exact: false,
+        exact: true,
         path: "/package",
         component: rest => <Package {...rest} {...this.props} />
+      },
+      {
+        exact: true,
+        path: "/package/:id",
+        component: rest => <PackageDetail {...rest} {...this.props} />
       },
       {
         exact: false,
@@ -114,16 +120,15 @@ class Localization extends Component {
         component: rest => <Promotion {...rest} {...this.props} />
       },
       {
-        exact: true,
+        exact: false,
         path: "/season",
         component: rest => <Season {...rest} {...this.props} />
       },
       {
-        exact: false,
+        exact: true,
         path: "/productdetail/:id",
         component: rest => <ProductDetail {...rest} {...this.props} />
       }
-
       // {
       //   path: "*",
       //   exact: false,
@@ -148,7 +153,7 @@ class Localization extends Component {
                   <Public
                     {...this.props}
                     key={index}
-                    exact={route.exact}
+                    exact
                     path={route.path}
                     component={route.component}
                   />
@@ -175,7 +180,7 @@ class App extends Component {
 
     if (storage.has("user")) {
       try {
-      } catch (e) {}
+      } catch (e) { }
     }
   }
 
