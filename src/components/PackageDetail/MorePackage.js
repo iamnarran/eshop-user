@@ -1,7 +1,7 @@
 
 import React from 'react';
 
-class Package extends React.Component {
+class MorePackage extends React.Component {
     render() {
         return (
             <div className="block product-suggest">
@@ -40,4 +40,4 @@ class Package extends React.Component {
     }
 }
 
-export default Package;
+export default MorePackage;
