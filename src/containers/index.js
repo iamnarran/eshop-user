@@ -7,6 +7,7 @@ import NewProduct from "./NewProduct";
 import Recipe from "./Recipe";
 import RecipeDetail from "./Recipe/detail";
 import Package from "./Package";
+import Season from "./Season";
 
 export {
   Footer,
@@ -17,5 +18,6 @@ export {
   NewProduct,
   Recipe,
   RecipeDetail,
-  Package
+  Package,
+  Season
 };

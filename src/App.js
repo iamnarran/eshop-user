@@ -24,8 +24,8 @@ import { storage } from "./utils";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "scss/app.scss";
 import messages from "./messages.json";
-import Promotion from "./pages/Promotion/index";
-import Season from "./pages/Season/index";
+// import Promotion from "./pages/Promotion/index";
+// import Season from "./pages/Season/index";
 import {
   Footer,
   Header,
@@ -35,7 +35,8 @@ import {
   NewProduct,
   Recipe,
   RecipeDetail,
-  Package
+  Package,
+  Season
 } from "./containers/index";
 import { ProductDetail } from "./components";
 
@@ -108,13 +109,13 @@ class Localization extends Component {
         path: "/package",
         component: rest => <Package {...rest} {...this.props} />
       },
+      // {
+      //   exact: false,
+      //   path: "/promotion",
+      //   component: rest => <Promotion {...rest} {...this.props} />
+      // },
       {
         exact: false,
-        path: "/promotion",
-        component: rest => <Promotion {...rest} {...this.props} />
-      },
-      {
-        exact: true,
         path: "/season",
         component: rest => <Season {...rest} {...this.props} />
       },
