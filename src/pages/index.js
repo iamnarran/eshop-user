@@ -7,11 +7,11 @@ import Package from "./Package";
 import PackageDetail from "./Package/detail";
 
 export {
-    Discount,
-    Homepage,
-    NewProduct,
-    Recipe,
-    RecipeDetail,
-    Package,
-    PackageDetail
+  Discount,
+  Homepage,
+  NewProduct,
+  Recipe,
+  RecipeDetail,
+  Package,
+  PackageDetail
 };

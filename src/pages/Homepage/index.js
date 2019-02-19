@@ -139,6 +139,7 @@ class Homepage extends React.Component {
     const brandParams = {
       slidesPerView: 5,
       spaceBetween: 10,
+      loop: true,
       autoplay: {
         delay: 5000,
         disableOnInteraction: false

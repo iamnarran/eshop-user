@@ -11,19 +11,11 @@ const options = {
 
 const fetch = async (props, onData) => {
   try {
-    const products = await api.recipe.findAll();
-    const primaryBanners = await api.banner.findAll({ type: "F1" });
-    const secondaryBanners = await api.banner.findAll({ type: "F2" });
-    const tag = await api.tag.findAll({ slug: "recipe" });
-    const menu = await api.menu.findAll();
+    const products = await api.product.findAllSeasonProducts({ jumcd: "99" });
 
     onData(null, {
       container: {
-        products: products.data,
-        primaryBanner: primaryBanners.data[0],
-        secondaryBanners: secondaryBanners.data,
-        tag: tag.data[0],
-        menu: menu.data
+        products: products.data
       }
     });
   } catch (e) {

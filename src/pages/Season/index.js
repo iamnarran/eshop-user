@@ -5,6 +5,8 @@ import Banner from "../../components/Banner";
 
 class Season extends React.Component {
   render() {
+    const { products } = this.props.container;
+
     return (
       <div className="top-container">
         <div className="section">
@@ -347,7 +349,7 @@ class Season extends React.Component {
                       <div className="total-result">
                         <p className="text">
                           <strong>"Кофе"</strong>
-                          <span>32 бараа олдлоо</span>
+                          <span>{products.length} бараа олдлоо</span>
                         </p>
                       </div>
                     </div>
@@ -372,12 +374,11 @@ class Season extends React.Component {
                     </div>
                   </div>
                 </div>
-                <div className="row row10">
-                  {/* <CardList
-                    type={CARD_LIST_TYPES.horizontal}
-                    items={products.slice(0, cardsInCol * 3)}
-                  /> */}
-                </div>
+                <CardList
+                  type={CARD_LIST_TYPES.horizontal}
+                  seq="2"
+                  items={products}
+                />
                 <div className="more-link text-center">
                   <a href="#" className="btn btn-border">
                     <span className="text text-uppercase">
@@ -386,225 +387,6 @@ class Season extends React.Component {
                   </a>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-        <div className="section section-footer">
-          <div className="container pad10">
-            <div className="row row10">
-              <div className="col-xl-3 pad10">
-                <a href="#" className="logo">
-                  <img alt="logo" src="assets/icons/logo-white@3x.png" />
-                </a>
-                <ul className="list-unstyled address">
-                  <li>
-                    <span>
-                      Улаанбаатар хот, Баянзүрх дүүрэг, 1-р хороо, 12-р хороолол
-                      (13381), Токиогийн гудамж 23, Имарт Чингис
-                    </span>
-                  </li>
-                  <li>
-                    <span>976-7611 0101</span>
-                  </li>
-                  <li>
-                    <span>Шуудангийн хайрцаг-933</span>
-                  </li>
-                </ul>
-              </div>
-              <div className="col-xl-3 pad10">
-                <ul className="list-unstyled">
-                  <li>
-                    <strong>Өдөр тутмын шинэ хүнс</strong>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <span>Үхрийн мах</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <span>Гахайн мах</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <span>Шувууны мах</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <span>Дайвар</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <span>Хиам</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <span>Хагас боловсруулсан</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <span>Далайн гаралтай бүтээгдэхүүн</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <span>Өндөг</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <span>Сүү</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <span>Дайвар</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <span>Хиам</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <span>Хагас боловсруулсан</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <span>Далайн гаралтай бүтээгдэхүүн</span>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-              <div className="col-xl-3 pad10">
-                <ul className="list-unstyled">
-                  <li>
-                    <strong>Жимс / Хүнсий ногоо</strong>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <span>Алим / Лийр</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <span>Киви / Усан үзэм</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <span>Шувууны мах</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <span>Дайвар</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <span>Хиам</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <span>Хагас боловсруулсан</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <span>Далайн гаралтай бүтээгдэхүүн</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <span>Өндөг</span>
-                    </a>
-                  </li>
-                </ul>
-                <ul className="list-unstyled">
-                  <li>
-                    <strong>Ус ундаа</strong>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <span>Ус ундаа</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <span>Цай кофе</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <span>Согтууруулах ундаа</span>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-              <div className="col-xl-3 pad10">
-                <ul className="list-unstyled">
-                  <li>
-                    <strong>Үндсэн цэс</strong>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <span>Цагийн хямдрал</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <span>BEST</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <span>Хямдралтай</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <span>Хоолны жор</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <span>Шинэ</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <span>EVENT / Coupon</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <span>Улирлын</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <span>Бөөний худалдаа</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <span>Багц</span>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div className="bottom-container">
-              <p>Copyright © 2016-2018 emart. All Rights Reserved.</p>
             </div>
           </div>
         </div>

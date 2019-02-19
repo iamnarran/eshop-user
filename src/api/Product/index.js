@@ -22,54 +22,62 @@ export default [
     NAME: "findAllNewProducts",
     METHOD: "GET",
     URL: `${API}/api/product/newproduct/:jumcd`,
-    REPLACE: 'jumcd',
+    REPLACE: "jumcd"
+  },
+
+  /**SEASON PRODUCT */
+  {
+    NAME: "findAllSeasonProducts",
+    METHOD: "GET",
+    URL: `${API}/api/product/season/:jumcd`,
+    REPLACE: "jumcd"
   },
 
   /**PRODUCT DETAIL */
   {
-    NAME: 'productDetail',
-    METHOD: 'GET',
+    NAME: "productDetail",
+    METHOD: "GET",
     URL: `${API}/api/product/detail/:skucd`,
-    REPLACE: 'skucd',
+    REPLACE: "skucd"
   },
 
   /**PRODUCT DETAIL */
   {
-    NAME: 'productAttribute',
-    METHOD: 'GET',
+    NAME: "productAttribute",
+    METHOD: "GET",
     URL: `${API}/api/product/attribute/:skucd`,
-    REPLACE: 'skucd',
+    REPLACE: "skucd"
   },
 
   /**PRODUCT RELATIONAL */
   {
-    NAME: 'productRelational',
-    METHOD: 'GET',
+    NAME: "productRelational",
+    METHOD: "GET",
     URL: `${API}/api/product/relational/:skucd`,
-    REPLACE: 'skucd',
+    REPLACE: "skucd"
   },
 
   /**PRODUCT COLLECTION */
   {
-    NAME: 'productCollection',
-    METHOD: 'GET',
+    NAME: "productCollection",
+    METHOD: "GET",
     URL: `${API}/api/product/collection/:skucd`,
-    REPLACE: 'skucd',
+    REPLACE: "skucd"
   },
 
   /**PRODUCT COMMENT */
   {
-    NAME: 'productComment',
-    METHOD: 'GET',
+    NAME: "productComment",
+    METHOD: "GET",
     URL: `${API}/api/product/comment/:skucd`,
-    REPLACE: 'skucd',
+    REPLACE: "skucd"
   },
 
   /**PRODUCT RATE */
   {
-    NAME: 'productRate',
-    METHOD: 'GET',
+    NAME: "productRate",
+    METHOD: "GET",
     URL: `${API}/api/product/rate/:skucd`,
-    REPLACE: 'skucd',
+    REPLACE: "skucd"
   }
 ];
