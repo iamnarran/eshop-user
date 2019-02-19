@@ -32,7 +32,6 @@ class Discount extends React.Component {
 
   render() {
     const { saleproduct, mainbanner, subbanner, menu, tag } = this.state;    
-    let subbannerhtml = (<img alt="banner" src={subbanner!==undefined ? IMAGE+subbanner.img:''} className="img-fluid"/>)
     let products = []
 
     return (

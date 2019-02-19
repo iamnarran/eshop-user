@@ -21,8 +21,8 @@ class Card extends React.Component {
   }
 
   render() {
-    const {item} = this.state
-    /* console.log("card", this.props) */
+    const { item } = this.state;
+
     if (!this.state.item) {
       return null;
     }
@@ -37,8 +37,12 @@ class Card extends React.Component {
     if (this.state.item.sprice) {
       prices = (
         <div>
-          <small className="sale">{this.state.item.price}₮</small>
-          <span className="current">{this.state.item.sprice}₮</span>
+          <small className="sale">
+            {formatter.format(this.state.item.price)}₮
+          </small>
+          <span className="current">
+            {formatter.format(this.state.item.sprice)}₮
+          </span>
         </div>
       );
     }
@@ -62,12 +66,17 @@ class Card extends React.Component {
           <div
             className={`col-five pad10${
               this.props.none ? " d-none d-xl-block lol" : " col-md-3 col-6"
-              }`}
+            }`}
           >
             <div className="single-product small-product sale-product timed-product">
               <div className="image-container">
-                <Link to={`/productdetail/${item.cd}`} params={item}>
-                  <span className="image" style={{ backgroundImage: `url(${IMAGE + item.img})` }}></span>
+                <Link to={this.state.item.route ? this.state.item.route : "#"}>
+                  <span
+                    className="image"
+                    style={{
+                      backgroundImage: `url(${IMAGE + this.state.item.img})`
+                    }}
+                  />
                 </Link>
                 {this.state.item.tags &&
                   this.state.item.tags.map((label, index) => (
@@ -81,8 +90,8 @@ class Card extends React.Component {
                     {this.state.item.name
                       ? this.trimByWord(this.state.item.name)
                       : this.state.item.packagenm
-                        ? this.trimByWord(this.state.item.packagenm)
-                        : ""}
+                      ? this.trimByWord(this.state.item.packagenm)
+                      : ""}
                   </span>
                 </Link>
                 <Link to="#" className="cat">
@@ -90,8 +99,8 @@ class Card extends React.Component {
                     {this.state.item.shortnm
                       ? this.trimByWord(this.state.item.shortnm, 30)
                       : this.state.item.featuretxt
-                        ? this.trimByWord(this.state.item.featuretxt, 30)
-                        : ""}
+                      ? this.trimByWord(this.state.item.featuretxt, 30)
+                      : ""}
                   </span>
                 </Link>
 
@@ -114,8 +123,13 @@ class Card extends React.Component {
           <div className="col-md-4 pad10">
             <div className="single-product big-product sale-product timed-product">
               <div className="image-container">
-                <Link to="/">
-                  <span className="image" style={{ backgroundImage: `url(${IMAGE + item.img})` }}></span>
+                <Link to={this.state.item.route ? this.state.item.route : "#"}>
+                  <span
+                    className="image"
+                    style={{
+                      backgroundImage: `url(${IMAGE + this.state.item.img})`
+                    }}
+                  />
                 </Link>
                 {this.state.item.tags &&
                   this.state.item.tags.map((label, index) => (
@@ -129,8 +143,8 @@ class Card extends React.Component {
                     {this.state.item.name
                       ? this.trimByWord(this.state.item.name)
                       : this.state.item.packagenm
-                        ? this.trimByWord(this.state.item.packagenm)
-                        : ""}
+                      ? this.trimByWord(this.state.item.packagenm)
+                      : ""}
                   </span>
                 </Link>
                 <Link to="#" className="cat">
@@ -138,8 +152,8 @@ class Card extends React.Component {
                     {this.state.item.shortnm
                       ? this.trimByWord(this.state.item.shortnm, 30)
                       : this.state.item.featuretxt
-                        ? this.trimByWord(this.state.item.featuretxt, 30)
-                        : ""}
+                      ? this.trimByWord(this.state.item.featuretxt, 30)
+                      : ""}
                   </span>
                 </Link>
 
@@ -162,11 +176,16 @@ class Card extends React.Component {
           <div
             className={`single-product big-product food-post food-${
               this.state.className ? this.state.className : "short"
-              }`}
+            }`}
           >
             <div className="image-container">
-              <Link to="/">
-                <span className="image" style={{ backgroundImage: `url(${IMAGE + item.img})` }}></span>
+              <Link to={this.state.item.route ? this.state.item.route : "#"}>
+                <span
+                  className="image"
+                  style={{
+                    backgroundImage: `url(${IMAGE + this.state.item.img})`
+                  }}
+                />
               </Link>
               {this.state.item.tags &&
                 this.state.item.tags.map((label, index) => (

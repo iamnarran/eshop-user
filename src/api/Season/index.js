@@ -4,7 +4,6 @@ export default [
   {
     NAME: "findAll",
     METHOD: "GET",
-    URL: `${API}/homepage`,
-    REPLACE: "id, type"
+    URL: `${API}/api/season`
   }
 ];

@@ -1,31 +1,31 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
   BrowserRouter as Router,
   BrowserHistory,
   Switch,
   Route,
   Redirect
-} from 'react-router-dom';
-import { Provider, connect } from 'react-redux';
+} from "react-router-dom";
+import { Provider, connect } from "react-redux";
 /* import { ToastContainer } from 'react-toastify'; */
-import { addLocaleData, injectIntl } from 'react-intl';
-import { updateIntl, IntlProvider } from 'react-intl-redux';
-import en from 'react-intl/locale-data/en';
+import { addLocaleData, injectIntl } from "react-intl";
+import { updateIntl, IntlProvider } from "react-intl-redux";
+import en from "react-intl/locale-data/en";
 
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { fas } from '@fortawesome/free-solid-svg-icons';
-import { far } from '@fortawesome/free-regular-svg-icons';
-import { fab } from '@fortawesome/free-brands-svg-icons';
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { fas } from "@fortawesome/free-solid-svg-icons";
+import { far } from "@fortawesome/free-regular-svg-icons";
+import { fab } from "@fortawesome/free-brands-svg-icons";
 // import { faCheckSquare, faCoffee } from '@fortawesome/free-solid-svg-icons';
 
-import store from './store';
-import { storage } from './utils';
+import store from "./store";
+import { storage } from "./utils";
 /* import Layouts from 'layouts/Default'; */
-import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import 'scss/app.scss';
-import messages from './messages.json';
-import Promotion from './pages/Promotion/index';
-import Season from './pages/Season/index';
+import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+import "scss/app.scss";
+import messages from "./messages.json";
+import Promotion from "./pages/Promotion/index";
+import Season from "./pages/Season/index";
 import {
   Footer,
   Header,
@@ -34,9 +34,10 @@ import {
   MobileMenu,
   NewProduct,
   Recipe,
-  Package,
+  RecipeDetail,
+  Package
 } from "./containers/index";
-import { ProductDetail } from "./components"
+import { ProductDetail } from "./components";
 
 //library.add(fab, faCheckSquare, faCoffee);
 library.add(fas, far, fab);
@@ -52,7 +53,7 @@ class Public extends Component {
       <Route
         {...rest}
         render={props =>
-          !isAuth ? <Component {...props} /> : <Redirect to={''} />
+          !isAuth ? <Component {...props} /> : <Redirect to={""} />
         }
       />
     );
@@ -67,55 +68,61 @@ class Localization extends Component {
     window.formatMessage = formatMessage;
   }
 
-  state = { isToggle: false }
-  toggleMenu = () => this.setState({ isToggle: !this.state.isToggle })
+  state = { isToggle: false };
+  toggleMenu = () => this.setState({ isToggle: !this.state.isToggle });
 
   render() {
-    const popupClass = `fixed-mobile-menu${this.state.isToggle ? " activated" : ""}`;
+    const popupClass = `fixed-mobile-menu${
+      this.state.isToggle ? " activated" : ""
+    }`;
     const { auth } = this.props;
 
     const routes = [
       {
         path: "/",
         exact: true,
-        component: (rest) => <Homepage {...rest} {...this.props} />
+        component: rest => <Homepage {...rest} {...this.props} />
       },
       {
         exact: false,
         path: "/discount",
-        component: (rest) => <Discount {...rest} {...this.props} />
+        component: rest => <Discount {...rest} {...this.props} />
       },
       {
         exact: false,
         path: "/new",
-        component: (rest) => <NewProduct {...rest} {...this.props} />
+        component: rest => <NewProduct {...rest} {...this.props} />
       },
       {
-        exact: false,
+        exact: true,
         path: "/recipe",
-        component: (rest) => <Recipe {...rest} {...this.props} />
+        component: rest => <Recipe {...rest} {...this.props} />
+      },
+      {
+        exact: true,
+        path: "/recipe/:id",
+        component: rest => <RecipeDetail {...rest} {...this.props} />
       },
       {
         exact: false,
         path: "/package",
-        component: (rest) => <Package {...rest} {...this.props} />
+        component: rest => <Package {...rest} {...this.props} />
       },
       {
         exact: false,
         path: "/promotion",
-        component: (rest) => <Promotion {...rest} {...this.props} />
+        component: rest => <Promotion {...rest} {...this.props} />
       },
       {
-        exact: false,
+        exact: true,
         path: "/season",
-        component: (rest) => <Season {...rest} {...this.props} />
+        component: rest => <Season {...rest} {...this.props} />
       },
       {
         exact: false,
         path: "/productdetail/:id",
-        component: (rest) => <ProductDetail {...rest} {...this.props} />
-      },
-
+        component: rest => <ProductDetail {...rest} {...this.props} />
+      }
 
       // {
       //   path: "*",
@@ -129,22 +136,24 @@ class Localization extends Component {
         <Router history={BrowserHistory}>
           <div>
             <Header isToggle={this.state.isToggle} onChange={this.toggleMenu} />
-            <MobileMenu popupClass={popupClass} isToggle={this.state.isToggle} onChange={this.toggleMenu} />
+            <MobileMenu
+              popupClass={popupClass}
+              isToggle={this.state.isToggle}
+              onChange={this.toggleMenu}
+            />
 
             <Switch>
-              {
-                routes.map((route, index) => {
-                  return (
-                    <Public
-                      {...this.props}
-                      key={index}
-                      exact={route.exact}
-                      path={route.path}
-                      component={route.component}
-                    />
-                  );
-                })
-              }
+              {routes.map((route, index) => {
+                return (
+                  <Public
+                    {...this.props}
+                    key={index}
+                    exact={route.exact}
+                    path={route.path}
+                    component={route.component}
+                  />
+                );
+              })}
             </Switch>
 
             <Footer />
@@ -159,14 +168,14 @@ class App extends Component {
   componentWillMount() {
     store.dispatch(
       updateIntl({
-        locale: 'en',
-        messages: messages['en']
+        locale: "en",
+        messages: messages["en"]
       })
     );
 
-    if (storage.has('user')) {
+    if (storage.has("user")) {
       try {
-      } catch (e) { }
+      } catch (e) {}
     }
   }
 
@@ -203,4 +212,3 @@ class App extends Component {
               )}
             /> */
 export default App;
-

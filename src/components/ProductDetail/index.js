@@ -8,6 +8,7 @@ import Information from "./Information"
 import Collection from "./CollectionProduct"
 import Comment from "./Comment"
 import Rate from "../Rate"
+import config from "config";
 
 class ProductDetail extends React.Component{
   state = {
@@ -19,36 +20,38 @@ class ProductDetail extends React.Component{
     sumPrice: null,
     attribute: [],
     relationalProduct: [],
-    collectionProduct: []
+    collectionProduct: [],
+    smallImg: [],
+    mediumImg: null,
+    largeImg: [],
   }
 
   componentWillMount(){ this.setState({skucd: this.props.match.params.id})}
   componentDidMount() { this.getAll() }
 
   render() {
-    const { breadCrumb, product, productNumber, sumPrice, attribute, relationalProduct, collectionProduct, skucd } = this.state;
-
+    const { breadCrumb, product, productNumber, sumPrice, attribute, relationalProduct, collectionProduct, skucd,mediumImg } = this.state;
+    
     let image = (
       <div className="col-xl-4 col-lg-4 col-md-5 pad10">
         <div className="product-gallery">
-            <Magnify img={p10} />
+          <Magnify img={mediumImg===null?IMAGE+product.img:mediumImg}/>
             <div className="thumbs">
             <ul className="list-inline" onChange={this.onChangeImage}>
-                <li className="list-inline-item active">
-                  <a href="/" className="image-container">
+                <li className="list-inline-item">
+                  <a className="image-container" onClick={this.onChangeImage}>
+                    <img alt="image1" src={IMAGE+product.img}/>
+                  </a>
+              </li>
+              <li className="list-inline-item ">
+                  <a className="image-container" onClick={this.onChangeImage}>
                     <img alt="image1" src={p10}/>
-                  </a>
+                </a>
                 </li>
-                <li className="list-inline-item">
-                  <a href="/" className="image-container">
-                    <img alt="image2" src={p11}/>
-                  </a>
-                </li>
-  
-                <li className="list-inline-item">
-                  <a href="/" className="image-container">
-                    <img alt="image3" src={p10}/>
-                  </a>
+                <li className="list-inline-item ">
+                  <a className="image-container" onClick={this.onChangeImage}>
+                  <img alt="image1" src={p11}/>
+                </a>
                 </li>
               </ul>                    
             </div>
@@ -129,7 +132,7 @@ class ProductDetail extends React.Component{
                               <i className="fa fa-plus" aria-hidden="true"></i>
                             </button>
                           </div>
-                        </div>                        
+                        </div>
                         
                       </div>
                       <div className="col-xl-8 pad10">
@@ -183,8 +186,7 @@ class ProductDetail extends React.Component{
                   <span className="text-uppercase">Танилцуулга</span>
                 </h1>
                 <div className="product-bottom-images">
-                  <img alt="image6" src={p10}/>
-                  <img alt="image7" src={p11}/>
+                  <img alt="image6" src={IMAGE+product.img}/>
                 </div>
 
                 <Comment skucd={skucd}/>
@@ -233,10 +235,13 @@ class ProductDetail extends React.Component{
     }
   }
   onChangeImage = (e) => {
-    console.log(e.target)
+    this.setState({mediumImg: e.target.src})
   }
 }
-
+const IMAGE =
+  process.env.NODE_ENV === "development"
+    ? config.image.development
+    : config.image.production;
 const money = new Intl.NumberFormat('en-US');
 
 export default ProductDetail;

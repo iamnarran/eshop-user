@@ -17,7 +17,7 @@ class Component extends React.Component{
   }
   render() {
     const { comment, rate } = this.state
-    console.log(comment, rate)
+    // console.log(comment, rate)
     return <div>
       <div className="comments-container">
         <div className="write-comment">
@@ -39,33 +39,43 @@ class Component extends React.Component{
             </div>
           </form>
         </div>
-        <h1 className="title">
-          <span className="text-uppercase">Сэтгэгдэл</span>
-        </h1>
-        <div className="comments-list">
-          <div className="main-rating">
-            <Rate rate={5} numOfVotes={197} />
-            <p className="text">({rate?rate.cnt:'0'} хүн үнэлгээ өгсөн байна)</p>
-          </div>
-          {
-            comment.map((i, key) => {
-              return (
-                <div className="single" key={key}>
-                  <Rate rate={5} />
-                  <p className="text">{i.commnt}</p>
-                  <ul className="list-unstyled bottom-info">
-                    <li>
-                      <span>{moment(i.idate).format('YYYY.MM.DD')}</span>
-                    </li>
-                    <li>
-                      <strong>{i.uname}</strong>
-                    </li>
-                  </ul>
-                </div>
-              )
-            })
-          }
-        </div>
+        {
+          comment.length === 0 ? '' :
+            <div>
+              <h1 className="title">
+                <span className="text-uppercase">Сэтгэгдэл</span>
+              </h1>
+              <div className="comments-list">
+              {
+                rate === undefined ? '' : (
+                  <div className="main-rating">
+                    <Rate rate={rate.ravg} numOfVotes={rate.rsum} />
+                    <p className="text">({rate.cnt} хүн үнэлгээ өгсөн байна)</p>
+                  </div>
+                )
+                
+              }
+              {
+                comment.map((i, key) => {
+                  return (
+                    <div className="single" key={key}>
+                      <Rate rate={Math.floor(1+Math.random()*9)} numOfVotes={Math.floor(1+Math.random()*9)}/>
+                      <p className="text">{i.commnt}</p>
+                      <ul className="list-unstyled bottom-info">
+                        <li>
+                          <span>{moment(i.idate).format('YYYY.MM.DD')}</span>
+                        </li>
+                        <li>
+                          <strong>{i.uname}</strong>
+                        </li>
+                      </ul>
+                    </div>
+                  )
+                })
+              }
+            </div>
+          </div>  
+        }
       </div>
     </div>
   }
