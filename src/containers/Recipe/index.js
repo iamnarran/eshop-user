@@ -15,13 +15,15 @@ const fetch = async (props, onData) => {
     const primaryBanners = await api.banner.findAll({ type: "F1" });
     const secondaryBanners = await api.banner.findAll({ type: "F2" });
     const tag = await api.tag.findAll({ slug: "recipe" });
+    const menu = await api.menu.findAll();
 
     onData(null, {
       container: {
         products: products.data,
         primaryBanner: primaryBanners.data[0],
         secondaryBanners: secondaryBanners.data,
-        tag: tag.data[0]
+        tag: tag.data[0],
+        menu: menu.data
         // widget: widget.data.filter(i => {
         //   if (i.slug === "recipe") {
         //     return i;

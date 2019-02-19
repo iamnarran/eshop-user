@@ -2,12 +2,7 @@ import Discount from "./Discount";
 import Homepage from "./Homepage";
 import NewProduct from "./NewProduct";
 import Recipe from "./Recipe";
-import Package from "./Package"
+import RecipeDetail from "./Recipe/detail";
+import Package from "./Package";
 
-export {
-  Discount,
-  Homepage,
-  NewProduct,
-  Recipe,
-  Package,
-};
+export { Discount, Homepage, NewProduct, Recipe, RecipeDetail, Package };

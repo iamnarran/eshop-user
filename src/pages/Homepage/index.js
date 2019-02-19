@@ -61,7 +61,9 @@ class Homepage extends React.Component {
         default:
       }
 
-      blocks.push(<Widget key={widget.slug} data={widget} />);
+      if (widget.items.length > 0) {
+        blocks.push(<Widget key={widget.slug} data={widget} />);
+      }
     });
 
     if (widgets.length % 2 === 0) {

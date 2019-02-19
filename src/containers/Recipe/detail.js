@@ -1,9 +1,9 @@
 import React from "react";
+import { compose } from "react-komposer";
 
 import api from "../../api";
-import { compose } from "react-komposer";
 import Loader from "../../components/Loader";
-import { Footer } from "../../layouts/index";
+import { RecipeDetail } from "../../pages";
 
 const options = {
   loadingHandler: () => <Loader />
@@ -11,11 +11,17 @@ const options = {
 
 const fetch = async (props, onData) => {
   try {
-    const staticinfo = await api.staticinfo.findAll();
+    const recipe = await api.recipe.findOne({ id: props.match.params.id });
+    const products = await api.recipe.findAllProducts({
+      id: props.match.params.id
+    });
+
+    console.log(products);
 
     onData(null, {
       container: {
-        staticinfo: staticinfo.data[0]
+        recipe: recipe.data,
+        productsData: products.data[0]
       }
     });
   } catch (e) {
@@ -31,4 +37,4 @@ const dataLoader = (props, onData) => {
 export default compose(
   dataLoader,
   options
-)(Footer);
+)(RecipeDetail);
