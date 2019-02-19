@@ -16,8 +16,6 @@ const fetch = async (props, onData) => {
       id: props.match.params.id
     });
 
-    console.log(products);
-
     onData(null, {
       container: {
         recipe: recipe.data,

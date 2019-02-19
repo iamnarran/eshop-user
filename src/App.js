@@ -114,7 +114,7 @@ class Localization extends Component {
         component: rest => <Promotion {...rest} {...this.props} />
       },
       {
-        exact: false,
+        exact: true,
         path: "/season",
         component: rest => <Season {...rest} {...this.props} />
       },

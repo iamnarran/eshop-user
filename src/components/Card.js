@@ -22,7 +22,7 @@ class Card extends React.Component {
 
   render() {
     const { item } = this.state;
-    /* console.log("card", this.props) */
+
     if (!this.state.item) {
       return null;
     }
@@ -70,10 +70,12 @@ class Card extends React.Component {
           >
             <div className="single-product small-product sale-product timed-product">
               <div className="image-container">
-                <Link to={`/productdetail/${item.cd}`} params={item}>
+                <Link to={this.state.item.route ? this.state.item.route : "#"}>
                   <span
                     className="image"
-                    style={{ backgroundImage: `url(${IMAGE + item.img})` }}
+                    style={{
+                      backgroundImage: `url(${IMAGE + this.state.item.img})`
+                    }}
                   />
                 </Link>
                 {this.state.item.tags &&
@@ -121,10 +123,12 @@ class Card extends React.Component {
           <div className="col-md-4 pad10">
             <div className="single-product big-product sale-product timed-product">
               <div className="image-container">
-                <Link to={`/productdetail/${item.cd}`} params={item}>
+                <Link to={this.state.item.route ? this.state.item.route : "#"}>
                   <span
                     className="image"
-                    style={{ backgroundImage: `url(${IMAGE + item.img})` }}
+                    style={{
+                      backgroundImage: `url(${IMAGE + this.state.item.img})`
+                    }}
                   />
                 </Link>
                 {this.state.item.tags &&
@@ -175,7 +179,7 @@ class Card extends React.Component {
             }`}
           >
             <div className="image-container">
-              <Link to={`/recipe/${this.state.item.recipeid}`}>
+              <Link to={this.state.item.route ? this.state.item.route : "#"}>
                 <span
                   className="image"
                   style={{
