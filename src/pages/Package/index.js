@@ -9,9 +9,9 @@ class Package extends React.Component {
   render() {
     return (
       <div className="top-container">
-        <div className="whole-page-title color-blue" style={{ padding: '0px' }}>
+        <div className="whole-page-title" style={{ padding: '0px', backgroundColor: '#ff99cc' }}>
           <div
-            className="whole-page-title container color-blue pad10"
+            className="whole-page-title container pad10"
             style={{
               backgroundImage: `url(${
                 this.state.mainbanner !== undefined ? IMAGE + this.state.mainbanner.imgnm : ""
