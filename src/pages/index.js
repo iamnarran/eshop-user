@@ -5,6 +5,7 @@ import Recipe from "./Recipe";
 import RecipeDetail from "./Recipe/detail";
 import Package from "./Package";
 import PackageDetail from "./Package/detail";
+import Season from "./Season"
 
 export {
   Discount,
@@ -13,5 +14,6 @@ export {
   Recipe,
   RecipeDetail,
   Package,
-  PackageDetail
+  PackageDetail,
+  Season
 };
