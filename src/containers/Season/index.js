@@ -11,12 +11,16 @@ const options = {
 
 const fetch = async (props, onData) => {
   try {
+    const menu = await api.menu.findAll();
+    const primaryBanners = await api.banner.findAll({ type: "F1" });
     const products = await api.product.findAllSeasonProducts({ jumcd: "99" });
     const attributes = await api.product.findAllAttributes();
     const promoCats = await api.product.findAllPromoCats();
 
     onData(null, {
       container: {
+        menu: menu.data,
+        primaryBanners: primaryBanners.data,
         products: products.data,
         attributes: attributes.data,
         promoCats: promoCats.data
