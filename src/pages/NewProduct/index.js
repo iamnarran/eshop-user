@@ -25,7 +25,7 @@ class Newproduct extends React.Component {
       subbanner,
       menu
       /* tag */
-    } = this.props.container;
+    } = this.state;
     let products = [];
     // console.log(this.props);
 
@@ -61,28 +61,34 @@ class Newproduct extends React.Component {
         </div>
 
         {/**NEW PRODUCT'S PRODUCTS */}
-        <div className="section">
-          <div className="container pad10">
-            <div className="row row10">
-              {newproduct.map((product, key) => {
-                if (key >= 10) {
-                  products.push(product);
-                  return null;
-                } else {
-                  return (
-                    <Card
-                      key={key}
-                      type={1}
-                      item={product}
-                      // extra={["new"]}
-                      // label={tag}
-                    />
-                  );
-                }
-              })}
-            </div>
-          </div>
-        </div>
+        {
+          (newproduct === null) ? '' : (
+            (newproduct.length === 0) ? '' : (
+              <div className="section">
+                <div className="container pad10">
+                  <div className="row row10">
+                    {newproduct.map((product, key) => {
+                      if (key >= 10) {
+                        products.push(product);
+                        return null;
+                      } else {
+                        return (
+                          <Card
+                            key={key}
+                            type={1}
+                            item={product}
+                            // extra={["new"]}
+                            // label={tag}
+                          />
+                        );
+                      }
+                    })}
+                  </div>
+                </div>
+              </div>
+            )
+          ) 
+        }
 
         {/**SUB BANNER */}
         {/* <div className="banner-container">
@@ -115,8 +121,6 @@ class Newproduct extends React.Component {
                     key={key}
                     type={1}
                     item={product}
-                    // extra={["new"]}
-                    // label={tag}
                   />
                 );
               })}

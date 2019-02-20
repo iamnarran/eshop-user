@@ -79,5 +79,13 @@ export default [
     METHOD: "GET",
     URL: `${API}/api/product/rate/:skucd`,
     REPLACE: "skucd"
+  },
+
+  /**PRODUCT RATE */
+  {
+    NAME: "productDetailImg",
+    METHOD: "GET",
+    URL: `${API}/api/product/detailimg/:skucd`,
+    REPLACE: "skucd"
   }
 ];
