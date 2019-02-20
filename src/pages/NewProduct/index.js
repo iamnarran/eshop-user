@@ -26,8 +26,6 @@ class Newproduct extends React.Component {
       menu
       /* tag */
     } = this.props.container;
-    let products = [];
-    // console.log(this.props);
 
     return (
       <div className="top-container">
@@ -66,7 +64,7 @@ class Newproduct extends React.Component {
             <div className="row row10">
               {newproduct.map((product, key) => {
                 if (key >= 10) {
-                  products.push(product);
+                  newproduct.push(product);
                   return null;
                 } else {
                   return (
@@ -109,7 +107,7 @@ class Newproduct extends React.Component {
         <div className="section">
           <div className="container pad10">
             <div className="row row10">
-              {products.map((product, key) => {
+              {newproduct.map((product, key) => {
                 return (
                   <Card
                     key={key}

@@ -1,11 +1,13 @@
 import React from "react";
+import { Link } from "react-router-dom";
+
 import { IMAGE, CARD_LIST_TYPES } from "../../utils/consts";
 import CardList from "../../components/CardList";
 import Banner from "../../components/Banner";
 
 class Season extends React.Component {
   render() {
-    const { products } = this.props.container;
+    const { products, attributes, promoCats } = this.props.container;
 
     return (
       <div className="top-container">
@@ -14,22 +16,12 @@ class Season extends React.Component {
             <div className="e-breadcrumb">
               <ul className="list-unstyled">
                 <li>
-                  <a href="#">
-                    <span>Эхлэл</span>
-                  </a>
+                  <Link to="">
+                    <span>Нүүр хуудас</span>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#">
-                    <span>Кофе цай</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="#">
-                    <span>Кофе</span>
-                  </a>
-                </li>
-                <li>
-                  <span>Шингэн америк кофе</span>
+                  <span>Улирлын</span>
                 </li>
               </ul>
             </div>
@@ -62,12 +54,12 @@ class Season extends React.Component {
                       >
                         <div className="collapse-content">
                           <ul className="list-unstyled">
-                            <li>
-                              <a href="#">Цай</a>
-                            </li>
-                            <li className="active">
-                              <a href="#">Кофе</a>
-                            </li>
+                            {promoCats &&
+                              promoCats.map(promo => (
+                                <li>
+                                  <Link to="#">{promo.promotnm}</Link>
+                                </li>
+                              ))}
                           </ul>
                         </div>
                       </div>
@@ -104,241 +96,45 @@ class Season extends React.Component {
                     <strong>Шүүлтүүр</strong>
                   </h5>
                   <div className="left-filter">
-                    <a
-                      className="collapse-title"
-                      data-toggle="collapse"
-                      href="#collapseThree"
-                      role="button"
-                      aria-expanded="true"
-                      aria-controls="collapseExample"
-                    >
-                      Брэнд
-                    </a>
-                    <div className="collapse show" id="collapseThree">
-                      <div className="collapse-content">
-                        <ul className="list-unstyled">
-                          <li>
-                            <div className="custom-control custom-checkbox">
-                              <input
-                                type="checkbox"
-                                className="custom-control-input"
-                                id="customCheck1"
-                              />
-                              <label
-                                className="custom-control-label"
-                                for="customCheck1"
-                              >
-                                Waitrose
-                              </label>
+                    {attributes &&
+                      attributes.map(attr => (
+                        <div>
+                          <a
+                            className="collapse-title"
+                            data-toggle="collapse"
+                            href="#collapseThree"
+                            role="button"
+                            aria-expanded="true"
+                            aria-controls="collapseExample"
+                          >
+                            {attr.attrnm}
+                          </a>
+                          <div className="collapse show" id="collapseThree">
+                            <div className="collapse-content">
+                              <ul className="list-unstyled">
+                                {attr.values &&
+                                  attr.values.map(val => (
+                                    <li>
+                                      <div className="custom-control custom-checkbox">
+                                        <input
+                                          type="checkbox"
+                                          className="custom-control-input"
+                                          id={val.id}
+                                        />
+                                        <label
+                                          className="custom-control-label"
+                                          for="customCheck1"
+                                        >
+                                          {val.text}
+                                        </label>
+                                      </div>
+                                    </li>
+                                  ))}
+                              </ul>
                             </div>
-                          </li>
-                          <li>
-                            <div className="custom-control custom-checkbox">
-                              <input
-                                type="checkbox"
-                                className="custom-control-input"
-                                id="customCheck2"
-                                checked=""
-                              />
-                              <label
-                                className="custom-control-label"
-                                for="customCheck2"
-                              >
-                                Heinz
-                              </label>
-                            </div>
-                          </li>
-                          <li>
-                            <div className="custom-control custom-checkbox">
-                              <input
-                                type="checkbox"
-                                className="custom-control-input"
-                                id="customCheck3"
-                              />
-                              <label
-                                className="custom-control-label"
-                                for="customCheck3"
-                              >
-                                No-Brand
-                              </label>
-                            </div>
-                          </li>
-                          <li>
-                            <div className="custom-control custom-checkbox">
-                              <input
-                                type="checkbox"
-                                className="custom-control-input"
-                                id="customCheck4"
-                              />
-                              <label
-                                className="custom-control-label"
-                                for="customCheck4"
-                              >
-                                Dayleford
-                              </label>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="left-filter">
-                    <a
-                      className="collapse-title"
-                      data-toggle="collapse"
-                      href="#collapseFour"
-                      role="button"
-                      aria-expanded="true"
-                      aria-controls="collapseExample"
-                    >
-                      Сонголт
-                    </a>
-                    <div className="collapse show" id="collapseFour">
-                      <div className="collapse-content">
-                        <ul className="list-unstyled">
-                          <li>
-                            <div className="custom-control custom-checkbox">
-                              <input
-                                type="checkbox"
-                                className="custom-control-input"
-                                id="customCheck5"
-                                checked=""
-                              />
-                              <label
-                                className="custom-control-label"
-                                for="customCheck5"
-                              >
-                                Хямдралтай
-                              </label>
-                            </div>
-                          </li>
-                          <li>
-                            <div className="custom-control custom-checkbox">
-                              <input
-                                type="checkbox"
-                                className="custom-control-input"
-                                id="customCheck6"
-                              />
-                              <label
-                                className="custom-control-label"
-                                for="customCheck6"
-                              >
-                                Урамшуулалтай
-                              </label>
-                            </div>
-                          </li>
-                          <li>
-                            <div className="custom-control custom-checkbox">
-                              <input
-                                type="checkbox"
-                                className="custom-control-input"
-                                id="customCheck7"
-                              />
-                              <label
-                                className="custom-control-label"
-                                for="customCheck7"
-                              >
-                                Багцын бүтээгдэхүүн
-                              </label>
-                            </div>
-                          </li>
-                          <li>
-                            <div className="custom-control custom-checkbox">
-                              <input
-                                type="checkbox"
-                                className="custom-control-input"
-                                id="customCheck8"
-                              />
-                              <label
-                                className="custom-control-label"
-                                for="customCheck8"
-                              >
-                                Их борлуулалттай
-                              </label>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="left-filter">
-                    <a
-                      className="collapse-title"
-                      data-toggle="collapse"
-                      href="#collapseFive"
-                      role="button"
-                      aria-expanded="true"
-                      aria-controls="collapseExample"
-                    >
-                      Хэв маяг
-                    </a>
-                    <div className="collapse show" id="collapseFive">
-                      <div className="collapse-content">
-                        <ul className="list-unstyled">
-                          <li>
-                            <div className="custom-control custom-checkbox">
-                              <input
-                                type="checkbox"
-                                className="custom-control-input"
-                                id="customCheck9"
-                              />
-                              <label
-                                className="custom-control-label"
-                                for="customCheck9"
-                              >
-                                Цагаан хоолтон
-                              </label>
-                            </div>
-                          </li>
-                          <li>
-                            <div className="custom-control custom-checkbox">
-                              <input
-                                type="checkbox"
-                                className="custom-control-input"
-                                id="customCheck10"
-                              />
-                              <label
-                                className="custom-control-label"
-                                for="customCheck10"
-                              >
-                                Органик
-                              </label>
-                            </div>
-                          </li>
-                          <li>
-                            <div className="custom-control custom-checkbox">
-                              <input
-                                type="checkbox"
-                                className="custom-control-input"
-                                id="customCheck11"
-                                checked=""
-                              />
-                              <label
-                                className="custom-control-label"
-                                for="customCheck11"
-                              >
-                                Цавуулаггүй
-                              </label>
-                            </div>
-                          </li>
-                          <li>
-                            <div className="custom-control custom-checkbox">
-                              <input
-                                type="checkbox"
-                                className="custom-control-input"
-                                id="customCheck12"
-                              />
-                              <label
-                                className="custom-control-label"
-                                for="customCheck12"
-                              >
-                                Кошер
-                              </label>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
+                          </div>
+                        </div>
+                      ))}
                   </div>
                 </div>
               </div>

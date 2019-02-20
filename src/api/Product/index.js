@@ -33,6 +33,20 @@ export default [
     REPLACE: "jumcd"
   },
 
+  /**SEASON PRODUCT ATTRIBUTES */
+  {
+    NAME: "findAllAttributes",
+    METHOD: "GET",
+    URL: `${API}/api/product/season/attributes`
+  },
+
+  /**SEASON PROMOTION CATEGORIES */
+  {
+    NAME: "findAllPromoCats",
+    METHOD: "GET",
+    URL: `${API}/api/product/season/promocats`
+  },
+
   /**PRODUCT DETAIL */
   {
     NAME: "productDetail",

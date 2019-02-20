@@ -12,10 +12,14 @@ const options = {
 const fetch = async (props, onData) => {
   try {
     const products = await api.product.findAllSeasonProducts({ jumcd: "99" });
+    const attributes = await api.product.findAllAttributes();
+    const promoCats = await api.product.findAllPromoCats();
 
     onData(null, {
       container: {
-        products: products.data
+        products: products.data,
+        attributes: attributes.data,
+        promoCats: promoCats.data
       }
     });
   } catch (e) {
