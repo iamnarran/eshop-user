@@ -108,15 +108,7 @@ class Newproduct extends React.Component {
           <div className="container pad10">
             <div className="row row10">
               {newproduct.map((product, key) => {
-                return (
-                  <Card
-                    key={key}
-                    type={1}
-                    item={product}
-                    // extra={["new"]}
-                    // label={tag}
-                  />
-                );
+                return <Card key={key} type={1} item={product} />;
               })}
             </div>
           </div>

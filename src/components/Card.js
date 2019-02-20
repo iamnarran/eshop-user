@@ -21,8 +21,6 @@ class Card extends React.Component {
   }
 
   render() {
-    const { item } = this.state;
-
     if (!this.state.item) {
       return null;
     }

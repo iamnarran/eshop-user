@@ -2,15 +2,36 @@ import React from "react"
 import ReactImageMagnify from "react-image-magnify"
 import "./index.css"
 import Lightbox from 'react-images';
+import config from "config";
+const IMAGE = process.env.NODE_ENV==="development"?config.image.development:config.image.production
 
 class Component extends React.Component {
   state = {
     img: [],
-    isLargeImg: false
+    isLargeImg: false,
+    currentImage: 0,
+  }
+
+  onClickImage = () => {
+    this.setState({ isLargeImg : true })
+  }
+  closeLightbox = () => {
+    this.setState({isLargeImg: false})
+  }
+  gotoPrevLightboxImage = () => { this.setState({currentImage: this.state.currentImage-1}) }
+  gotoNextLightboxImage = () => { this.setState({ currentImage: this.state.currentImage + 1 }) }
+  onClickThumbnail = (e) => { this.setState({ currentImage: e }) }
+  renderImage = () => {
+    const {images} = this.props
+    let tmp = []
+    images.map(i => tmp.push({src: IMAGE+i.lrgimg}))
+    return tmp
   }
   
   render() {    
     const { img } = this.props
+    const { currentImage } = this.state
+    // console.log(this.props.images)
     return (
       <div className="perimeter">
         <div className="image" onClick={this.onClickImage}>
@@ -37,23 +58,21 @@ class Component extends React.Component {
           />
         </div>
         <Lightbox
-          images={[
-            { src: img },
-            { src: img }
-          ]}
+          images={this.renderImage()}
+          currentImage={currentImage}
+          showThumbnails
+          backdropClosesModal
+          enableKeyboardInput
           isOpen={this.state.isLargeImg}
+          onClickPrev={this.gotoPrevLightboxImage}
+          onClickNext={this.gotoNextLightboxImage}
           onClose={this.closeLightbox}
+          onClickThumbnail={this.onClickThumbnail}
         />
       </div>
     );
   }
-  onClickImage = () => {
-    console.log("h11ello")
-    this.setState({ isLargeImg : true })
-  }
-  closeLightbox = () => {
-    this.setState({isLargeImg: false})
-  }
 }
+
 
 export default Component;
