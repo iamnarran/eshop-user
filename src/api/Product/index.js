@@ -33,6 +33,20 @@ export default [
     REPLACE: "jumcd"
   },
 
+  /**SEASON PRODUCT ATTRIBUTES */
+  {
+    NAME: "findAllAttributes",
+    METHOD: "GET",
+    URL: `${API}/api/product/season/attributes`
+  },
+
+  /**SEASON PROMOTION CATEGORIES */
+  {
+    NAME: "findAllPromoCats",
+    METHOD: "GET",
+    URL: `${API}/api/product/season/promocats`
+  },
+
   /**PRODUCT DETAIL */
   {
     NAME: "productDetail",
@@ -78,6 +92,14 @@ export default [
     NAME: "productRate",
     METHOD: "GET",
     URL: `${API}/api/product/rate/:skucd`,
+    REPLACE: "skucd"
+  },
+
+  /**PRODUCT RATE */
+  {
+    NAME: "productDetailImg",
+    METHOD: "GET",
+    URL: `${API}/api/product/detailimg/:skucd`,
     REPLACE: "skucd"
   }
 ];
