@@ -12,9 +12,7 @@ const options = {
 const fetch = async (props, onData) => {
   try {
     const recipe = await api.recipe.findOne({ id: props.match.params.id });
-    const products = await api.recipe.findAllProducts({
-      id: props.match.params.id
-    });
+    const products = await api.recipe.findAllProducts({ id: props.match.params.id });
 
     onData(null, {
       container: {

@@ -23,26 +23,40 @@ class CardList extends React.Component {
 
     let cardList = [];
     if (this.state.type === CARD_LIST_TYPES.horizontal) {
-      const cardTypes = this.state.seq.split(",");
-      for (let i = 0, p = 0; i < cardTypes.length; i++) {
-        const cardType = parseInt(cardTypes[i]);
-        const cardsInRow =
-          cardType === CARD_TYPES.wide
-            ? CARD_NUMS_IN_COL.wide
-            : CARD_NUMS_IN_COL.slim;
-        for (let j = 0; j < cardsInRow; j++, p++) {
-          if (this.state.items[p]) {
-            cardList.push(
-              <Card
-                key={p}
-                type={cardType}
-                item={this.state.items[p]}
-                isLastInRow={j === cardsInRow - 1 ? true : false}
-              />
-            );
+      if (this.state.seq) {
+        const cardTypes = this.state.seq.split(",");
+        for (let i = 0, p = 0; i < cardTypes.length; i++) {
+          const cardType = parseInt(cardTypes[i]);
+          const cardsInRow =
+            cardType === CARD_TYPES.wide
+              ? CARD_NUMS_IN_COL.wide
+              : CARD_NUMS_IN_COL.slim;
+          for (let j = 0; j < cardsInRow; j++, p++) {
+            if (this.state.items[p]) {
+              cardList.push(
+                <Card
+                  key={p}
+                  type={cardType}
+                  item={this.state.items[p]}
+                  isLastInRow={j === cardsInRow - 1 ? true : false}
+                />
+              );
+            }
           }
         }
+      } else {
+        this.state.items.forEach((item, index) => {
+          cardList.push(
+            <Card
+              key={item.skucd}
+              type={CARD_TYPES.wide}
+              item={item}
+              isLastInRow={(index + 1) % 3 === 0 ? true : false}
+            />
+          );
+        });
       }
+
       return cardList;
     }
 

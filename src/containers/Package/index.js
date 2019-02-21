@@ -18,7 +18,7 @@ const fetch = async (props, onData) => {
         onData(null, {
             container: {
                 packageProducts: packageProducts.data,
-                mainbanner: mainbanner.data[0],
+                mainbanner: mainbanner.data[Math.floor(Math.random() * (mainbanner.data.length))],
                 secondaryBanners: secondaryBanners.data,
                 widget: widget.data.filter(i => {
                     if (i.slug === 'package') { return i }

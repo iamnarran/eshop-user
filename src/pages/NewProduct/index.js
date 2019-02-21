@@ -25,9 +25,7 @@ class Newproduct extends React.Component {
       subbanner,
       menu
       /* tag */
-    } = this.state;
-    let products = [];
-    // console.log(this.props);
+    } = this.props.container;
 
     return (
       <div className="top-container">
@@ -61,34 +59,28 @@ class Newproduct extends React.Component {
         </div>
 
         {/**NEW PRODUCT'S PRODUCTS */}
-        {
-          (newproduct === null) ? '' : (
-            (newproduct.length === 0) ? '' : (
-              <div className="section">
-                <div className="container pad10">
-                  <div className="row row10">
-                    {newproduct.map((product, key) => {
-                      if (key >= 10) {
-                        products.push(product);
-                        return null;
-                      } else {
-                        return (
-                          <Card
-                            key={key}
-                            type={1}
-                            item={product}
-                            // extra={["new"]}
-                            // label={tag}
-                          />
-                        );
-                      }
-                    })}
-                  </div>
-                </div>
-              </div>
-            )
-          ) 
-        }
+        <div className="section">
+          <div className="container pad10">
+            <div className="row row10">
+              {newproduct.map((product, key) => {
+                if (key >= 10) {
+                  newproduct.push(product);
+                  return null;
+                } else {
+                  return (
+                    <Card
+                      key={key}
+                      type={1}
+                      item={product}
+                      // extra={["new"]}
+                      // label={tag}
+                    />
+                  );
+                }
+              })}
+            </div>
+          </div>
+        </div>
 
         {/**SUB BANNER */}
         {/* <div className="banner-container">
@@ -115,14 +107,8 @@ class Newproduct extends React.Component {
         <div className="section">
           <div className="container pad10">
             <div className="row row10">
-              {products.map((product, key) => {
-                return (
-                  <Card
-                    key={key}
-                    type={1}
-                    item={product}
-                  />
-                );
+              {newproduct.map((product, key) => {
+                return <Card key={key} type={1} item={product} />;
               })}
             </div>
           </div>
