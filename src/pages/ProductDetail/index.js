@@ -16,8 +16,11 @@ class Component extends React.Component{
     category: [],
     breadCrumb: [],
 
-    productNumber: 1,
-    sumPrice: null,
+    saleNumber: null,         //Hudaldaalagdah too shirheg hamgiin bagdaa
+    sumPrice: null,           //Hudaldaalagdah niit dun vne (too shirhegees hamaarna)
+    kgPrice: null,            //Kg -aar zaragdah vne
+    grPrice: null,            //Gr -aar zaragdah vne
+    issalekg: false,          //kr-aar zaragdah baraa mun eseh
     
     attribute: [],    
     
@@ -59,6 +62,7 @@ class Component extends React.Component{
             {this.renderProductDescription()}
             {this.renderProductDelivery()}
             {this.renderFooter()}
+            {console.log(this.state.product)}
           </div>
         </div>
       </div>
@@ -85,7 +89,16 @@ class Component extends React.Component{
         return null
       })
       breadCrumb.reverse()
-      this.setState({product: product, breadCrumb: breadCrumb, sumPrice: product.price})
+
+      this.setState({
+        product: product,
+        breadCrumb: breadCrumb,
+        saleNumber: product.saleminqty,
+        sumPrice: product.issalekg===1? product.kgproduct[0].salegramprice*product.saleminqty: product.spercent === 100 ? product.price * product.saleminqty : product.sprice * product.saleminqty ,
+        issalekg: product.issalekg,
+        grPrice: product.issalekg === 1 ? product.kgproduct[0].salegramprice : null,
+        kgPrice: product.issalekg === 1 ? product.kgproduct[0].kilogramprice : null,
+      })
     }
   }
 
@@ -161,18 +174,18 @@ class Component extends React.Component{
     )
   }
   addProduct = () => {
-    if (this.state.productNumber < 1000000) {
+    if (this.state.saleNumber < 1000000) {
       this.setState({
-        productNumber: this.state.productNumber + 1,
-        sumPrice: this.state.sumPrice + this.state.product.price
+        saleNumber: this.state.saleNumber + 1,
+        sumPrice: this.state.issalekg ? this.state.sumPrice + this.state.grPrice : this.state.sumPrice + this.state.product.price        
       })
     }
   }
   remProduct = () => { 
-    if (this.state.productNumber > 1) {
+    if (this.state.saleNumber > this.state.product.saleminqty) {  //hamgiin  bagdaa zarag too shirhegiin hyzgaarlalt
       this.setState({
-        productNumber: this.state.productNumber - 1,
-        sumPrice: this.state.sumPrice - this.state.product.price
+        saleNumber: this.state.saleNumber - 1,
+        sumPrice: this.state.issalekg ? this.state.sumPrice - this.state.grPrice : this.state.sumPrice - this.state.product.price
       })
     }
   }
@@ -195,7 +208,7 @@ class Component extends React.Component{
     )
   }
   renderProductDescription = () => {
-    const {product, breadCrumb, productNumber, sumPrice} = this.state
+    const {product, breadCrumb, saleNumber, sumPrice, issalekg} = this.state
     return (
       <div className='col-xl-5 col-lg-5 col-md-7 pad10 magnify-image'>
         <div className='product-info'>
@@ -227,7 +240,7 @@ class Component extends React.Component{
                       <i className="fa fa-minus" aria-hidden="true"></i>
                     </button>
                   </div>
-                  <input alt="asfasd" className="form-control" placeholder="" value={productNumber} aria-label="" aria-describedby="button-addon4" />
+                  <input alt="asfasd" className="form-control" placeholder="" value={saleNumber} aria-label="" aria-describedby="button-addon4" />
                   <div className="input-group-append" id="button-addon4">
                     <button className="btn" type="button" onClick={this.addProduct}>
                       <i className="fa fa-plus" aria-hidden="true"></i>
@@ -237,11 +250,25 @@ class Component extends React.Component{
                 
               </div>
               <div className="col-xl-8 pad10">
-                  <p className="count-text text-right">
-                    {product.measure} үнэ: {' '}
-                    {money.format(product.price)}₮
+                <p className="count-text text-right">
+                  {issalekg===1?product.saleweight:''}
+                  {' ' + product.measure + ' '}                   
+                  үнэ: {' '}
+                  { //kg-aar zaragdah baraa eseh
+                    issalekg === 1 ?
+                      money.format(product.kgproduct[0].salegramprice) : money.format(product.price)
+                  }₮
+                </p>
+                {
+                  issalekg ? (
+                    <p className="count-text text-right">
+                    {
+                      'кг үнэ: ' + money.format(this.state.kgPrice)+'₮'
+                    }
                   </p>
-                </div>
+                 ) : ''
+                }
+              </div>
             </div>
             <div className="total-price text-right">
               <span>Дүн:</span>
@@ -269,7 +296,7 @@ const productParams = {
   spaceBetween: 10,
   loop: true,
   autoplay: {
-    delay: 5000,
+    delay: 3000,
     disableOnInteraction: false
   },
   navigation: {

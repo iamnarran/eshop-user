@@ -18,7 +18,7 @@ class Slider extends React.Component {
     const { data, params, elContainer } = this.props
     let indents = data.map(function(i, key) {
       return (
-        <div style={{ maxWidth: '100%'}}>
+        <div className="related-product">
           <Card key={key} item={i} type={1} />
         </div>
       )
