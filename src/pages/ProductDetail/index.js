@@ -122,9 +122,9 @@ class Component extends React.Component{
     return (
       <div className="col-xl-4 col-lg-4 col-md-5 pad10">
         <div className="product-gallery">
-          <Magnify img={selectedMediumImg === null ? IMAGE+product.img : selectedMediumImg} images={smallImg}/>
+          <Magnify img={selectedMediumImg === null ? IMAGE + product.img : selectedMediumImg} images={smallImg} tags={product.tags}/>
             <div className="thumbs">
-            <ul className="list-inline">
+              <ul className="list-inline">
               {                
                 smallImg.map((i, key) => {
                   return (
@@ -137,7 +137,24 @@ class Component extends React.Component{
                 })
               }
               </ul>                    
-            </div>
+          </div>
+          <div class="share">
+            <ul class="list-inline">
+              <li class="list-inline-item">
+                <span>Хуваалцах:</span>
+              </li>
+              <li class="list-inline-item">
+                <a href="#">
+                  <span><i class="fa fa-facebook" aria-hidden="true"></i></span>
+                </a>
+              </li>
+              <li class="list-inline-item">
+                <a href="#">
+                  <span><i class="fa fa-twitter" aria-hidden="true"></i></span>
+                </a>
+              </li>
+            </ul>
+          </div>
           </div>
       </div>
     )
@@ -174,7 +191,7 @@ class Component extends React.Component{
     )
   }
   addProduct = () => {
-    if (this.state.saleNumber < 1000000) {
+    if (this.state.saleNumber < 1000000 && this.state.product.availableqty !== 0) {
       this.setState({
         saleNumber: this.state.saleNumber + 1,
         sumPrice: this.state.issalekg ? this.state.sumPrice + this.state.grPrice : this.state.sumPrice + this.state.product.price        
@@ -252,11 +269,23 @@ class Component extends React.Component{
               <div className="col-xl-8 pad10">
                 <p className="count-text text-right">
                   {issalekg===1?product.saleweight:''}
-                  {' ' + product.measure + ' '}                   
-                  үнэ: {' '}
+                  {' ' + product.measure + ' '}
+                  
+                  үнэ: {' '}{' '}
                   { //kg-aar zaragdah baraa eseh
-                    issalekg === 1 ?
-                      money.format(product.kgproduct[0].salegramprice) : money.format(product.price)
+                    issalekg === 1 ? money.format(product.kgproduct[0].salegramprice)
+                      :
+                      product.spercent === 100 ? money.format(product.price)
+                        :
+                        <div className="price">
+                          <small className="sale" style={{textDecoration: 'line-through'}}>
+                            {' '}{money.format(product.price)}₮{' '}
+                          </small>
+                          <span className="current">
+                          {' '}{money.format(product.sprice)}
+                          </span>
+                        </div>
+                      
                   }₮
                 </p>
                 {
@@ -293,7 +322,7 @@ class Component extends React.Component{
 
 const productParams = {
   slidesPerView: 5,
-  spaceBetween: 10,
+  spaceBetween: 0,
   loop: true,
   autoplay: {
     delay: 3000,
