@@ -35,7 +35,6 @@ class Component extends React.Component {
     attribute: [],
 
     selectedMediumImg: null,
-    selectedLargeImg: null,
     smallImg: [],
   }
 
@@ -77,6 +76,7 @@ class Component extends React.Component {
             {this.renderProductDescription()}
             {this.renderProductDelivery()}
             {this.renderFooter()}
+            {console.log(this.state.product)}
           </div>
         </div>
       </div>
@@ -169,39 +169,39 @@ class Component extends React.Component {
     );
   };
   renderProductImg = () => {
-    const { product, selectedMediumImg, smallImg, selectedLargeImg } = this.state    
+    const { product, selectedMediumImg, smallImg } = this.state    
     return (
       <div className="col-xl-4 col-lg-4 col-md-5 pad10">
         <div className="product-gallery">
-          <Magnify img={selectedMediumImg === null ? IMAGE + product.img : selectedMediumImg} images={smallImg} tags={product.tags} slImg={selectedLargeImg}/>
+          <Magnify img={selectedMediumImg === null ? IMAGE + product.img : selectedMediumImg} images={smallImg} tags={product.tags}/>
             <div className="thumbs">
               <ul className="list-inline">
-              {
-                product && product.images && product.images.map((i, key) => {
+              {                
+                smallImg.map((i, key) => {
                   return (
                     <li className="list-inline-item" key={key}>
-                      <a className="image-container" onClick={this.onChangeMniImage}>
-                        <img alt={i.id} className={key} src={IMAGE+i.imgmni}/>
+                      <a className="image-container" onClick={this.onChangeMidImage}>
+                        <img alt={i.mniimg} src={IMAGE+i.mniimg}/>
                       </a>
                     </li>
                   )
                 })
               }
-              </ul>
+              </ul>                    
           </div>
-          <div className="share">
-            <ul className="list-inline">
-              <li className="list-inline-item">
+          <div class="share">
+            <ul class="list-inline">
+              <li class="list-inline-item">
                 <span>Хуваалцах:</span>
               </li>
-              <li className="list-inline-item">
-                <a href="/">
-                  <span><i className="fa fa-facebook" aria-hidden="true"></i></span>
+              <li class="list-inline-item">
+                <a href="#">
+                  <span><i class="fa fa-facebook" aria-hidden="true"></i></span>
                 </a>
               </li>
-              <li className="list-inline-item">
-                <a href="/">
-                  <span><i className="fa fa-twitter" aria-hidden="true"></i></span>
+              <li class="list-inline-item">
+                <a href="#">
+                  <span><i class="fa fa-twitter" aria-hidden="true"></i></span>
                 </a>
               </li>
             </ul>
@@ -210,12 +210,7 @@ class Component extends React.Component {
       </div>
     )
   }
-  onChangeMniImage = (e) => {
-    const { images } = this.state.product
-    images.map((index) => {
-     return Number(index.id) === Number(e.target.alt) ? this.setState({selectedMediumImg: IMAGE+index.imgmdm, selectedLargeImg: e.target.className}):''
-    })
-  }
+  onChangeMidImage = (e) => { this.setState({ selectedMediumImg: e.target.src }) }
   
   renderFooter = () => {
     const { attribute, collectionProduct, product, skucd } = this.state;
