@@ -19,8 +19,8 @@ class Component extends React.Component {
   closeLightbox = () => {
     this.setState({ isLargeImg: false })
   }
-  gotoPrevLightboxImage = () => { this.setState({currentImage: this.state.currentImage===null?Number(this.props.slImg-1):this.state.currentImage-1}) }
-  gotoNextLightboxImage = () => { this.setState({currentImage: this.state.currentImage===null?Number(this.props.slImg+1):this.state.currentImage+1 }) }
+  gotoPrevLightboxImage = () => { this.setState({currentImage: this.state.currentImage===null?Number(this.props.slImg)-1:this.state.currentImage-1}) }
+  gotoNextLightboxImage = () => { this.setState({currentImage: this.state.currentImage===null?Number(this.props.slImg)+1:this.state.currentImage+1 }) }
   onClickThumbnail = (e) => { this.setState({ currentImage: e }) }
   renderImage = () => {
     const {images} = this.props
