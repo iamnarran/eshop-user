@@ -1,18 +1,39 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 import { IMAGE } from "../../utils/consts";
+import Slider from "../../components/Slider";
 
 class PackageDetail extends React.Component {
     state = {
         ...this.props.container
     }
     render() {
-        console.log("detail", this.state)
         const formatter = new Intl.NumberFormat("en-US");
         const name = this.state.Products[0].products;
         const price = this.state.Products[0].total;
+        const data = this.state.Package;
         let products = null;
         let sameProducts = null;
+        const images = this.state.Package.images;
+        const title = this.state.Package.products[0].packagenm;
+        const date = this.state.Package.products[0].insymd.split("T")[0].split("-");;
+        const sliderParams = {
+            spaceBetween: 0,
+            autoplay: {
+                delay: 10000,
+                disableOnInteraction: false
+            },
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev"
+            },
+            pagination: {
+                el: ".swiper-pagination",
+                type: "bullets",
+                clickable: true
+            }
+        };
+
         sameProducts = (
             name.map(item => {
                 return (
@@ -21,14 +42,14 @@ class PackageDetail extends React.Component {
                             <div className="image-container">
                                 <a href=" ">
                                     <span className="image" style={{
-                                        backgroundImage: `url(${IMAGE + item.imgnm})`,
+                                        backgroundImage: `url(${IMAGE + item.sameProduct[0].tag[0].img})`,
                                     }}></span>
                                 </a>
                             </div>
                             <div className="info-container flex-space">
                                 <a href=" ">
-                                    <span>{item.skunm}</span>
-                                    <strong>{formatter.format(item.price)}₮</strong>
+                                    <span>{item.sameProduct[0].tag[0].name}</span>
+                                    <strong>{formatter.format(item.sameProduct[0].tag[0].price)}₮</strong>
                                 </a>
                                 <div className="action">
                                     <a href=" ">
@@ -102,7 +123,7 @@ class PackageDetail extends React.Component {
                                 </Link>
                             </li>
                             <li>
-                                <span>{this.state.Package.packagenm}</span>
+                                <span>{title}</span>
                             </li>
                         </ul>
                     </div>
@@ -110,22 +131,24 @@ class PackageDetail extends React.Component {
                         <div className="row row10">
                             <div className="col-xl-9 col-md-8 pad10">
                                 <h4 className="title">
-                                    <span>{this.state.Package.packagenm}</span>
+                                    <span>{title}</span>
                                 </h4>
-                                <div className="pack-product-container">
-                                    <div className="pack-total">
-                                        <div className="flex-this">
-                                            <div className="image-container default">
-                                                <span className="image" style={{
-                                                    backgroundImage: `url(${IMAGE + name[0].imgnm})`,
-                                                }}></span>
-                                            </div>
-                                            <div className="info-container">
-                                                <strong>Багц</strong>
-                                                <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id justo mi. Maecenas vel lectus id erat euismod porta sed in felis.</span>
-                                            </div>
-                                        </div>
+                                <p className="date">
+                                    <span>{`${date[0]} оны ${date[1]} сарын ${date[2]}`}</span>
+                                </p>
+                                <div className="content">
+                                    <div className="main-slide">
+                                        <Slider
+                                            data={images}
+                                            params={sliderParams}
+                                            elContainer={"images"}
+                                        />
                                     </div>
+                                    <div>
+                                        <p></p>
+                                    </div>
+                                </div>
+                                <div className="pack-product-container">
                                     <div className="pack-list">
                                         <div className="row row10">
                                             <div className="col-xl-8 pad10">
@@ -407,3 +430,23 @@ class PackageDetail extends React.Component {
 
 export default PackageDetail;
 
+/* <div className="col-md-8 pad10">
+                                <div className="food-recipe-detail">
+                                    <h4 className="title">
+                                        <span>Багц</span>
+                                    </h4>
+                                    <p className="date">
+                                        <span>2019 оны 02 сарын 22</span>
+                                    </p>
+                                    <div className="content">
+                                        <div className="main-slide">
+                                            <Slider
+                                                data={images}
+                                                params={sliderParams}
+                                                elContainer={"images"}
+                                            />
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div> */

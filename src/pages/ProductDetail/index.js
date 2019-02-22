@@ -3,9 +3,9 @@ import config from "config";
 import api from "../../api";
 import { Magnify, Rate, RelationalProduct, Information, CardSlider, Comment } from "../../components"
 
-const IMAGE = process.env.NODE_ENV==="development"?config.image.development:config.image.production
+const IMAGE = process.env.NODE_ENV === "development" ? config.image.development : config.image.production
 const money = new Intl.NumberFormat('en-US')
-class Component extends React.Component{
+class Component extends React.Component {
   state = {
     skucd: null,
     product: [],
@@ -18,17 +18,17 @@ class Component extends React.Component{
 
     productNumber: 1,
     sumPrice: null,
-    
-    attribute: [],    
-    
+
+    attribute: [],
+
     selectedMediumImg: null,
     smallImg: [],
   }
 
   componentWillMount() {
-      this.setState({
-        skucd: this.props.match.params.id, category: this.props.container.category
-      })
+    this.setState({
+      skucd: this.props.match.params.id, category: this.props.container.category
+    })
   }
   componentDidMount() { this.refresh() }
 
@@ -36,20 +36,20 @@ class Component extends React.Component{
     if (prevProps.container.category !== this.props.container.category) {
       this.setState({
         skucd: this.props.match.params.id, category: this.props.container.category
-      })      
+      })
     }
     if (prevProps.match.params.id !== this.props.match.params.id) {
       this.refresh()
     }
   }
-  
+
   render() {
     const { breadCrumb, skucd } = this.state
     if (skucd !== this.props.match.params.id) {
-      this.setState({skucd: this.props.match.params.id})
+      this.setState({ skucd: this.props.match.params.id })
       this.refresh()
     }
-    
+
     return <div className="section">
       <div className="container pad10">
         {this.renderBreadCrumb(breadCrumb)}
@@ -66,18 +66,18 @@ class Component extends React.Component{
   }
   refresh = async () => {
     const { skucd } = this.state
-    await api.product.productCollection({ skucd: skucd }).then(res => res.success?this.setState({ collectionProduct: res.data, breadCrumb:[] }):console.log("collectionProduct",res) )
+    await api.product.productCollection({ skucd: skucd }).then(res => res.success ? this.setState({ collectionProduct: res.data, breadCrumb: [] }) : console.log("collectionProduct", res))
     await api.product.productAttribute({ skucd: skucd }).then(res => res.success ? this.setState({ attribute: res.data }) : console.log("attribute", res))
     await api.product.productRelational({ skucd: skucd }).then(res => res.success ? this.setState({ relationalProduct: res.data }) : console.log("relationalProduct", res))
     await api.product.productDetail({ skucd: skucd }).then(res => res.success ? this.getCategory(res.data[0]) : console.log('productDetail', res))
-    await api.product.productDetailImg({ skucd: skucd }).then(res => res.success?this.setState({smallImg: res.data}):console.log('productDetailImg', res))
+    await api.product.productDetailImg({ skucd: skucd }).then(res => res.success ? this.setState({ smallImg: res.data }) : console.log('productDetailImg', res))
   }
 
   getCategory = (product) => {
     const { breadCrumb, category } = this.state
     if (product.length !== 0) {
       let parent = product.catid
-      category.reverse().map((i) => {     
+      category.reverse().map((i) => {
         if (parent === i.id) {
           breadCrumb.push(i)
           parent = i.parentid
@@ -85,7 +85,7 @@ class Component extends React.Component{
         return null
       })
       breadCrumb.reverse()
-      this.setState({product: product, breadCrumb: breadCrumb, sumPrice: product.price})
+      this.setState({ product: product, breadCrumb: breadCrumb, sumPrice: product.price })
     }
   }
 
@@ -105,35 +105,35 @@ class Component extends React.Component{
     )
   }
   renderProductImg = () => {
-    const { product, selectedMediumImg, smallImg } = this.state    
+    const { product, selectedMediumImg, smallImg } = this.state
     return (
       <div className="col-xl-4 col-lg-4 col-md-5 pad10">
         <div className="product-gallery">
-          <Magnify img={selectedMediumImg === null ? IMAGE+product.img : selectedMediumImg} images={smallImg}/>
-            <div className="thumbs">
+          <Magnify img={selectedMediumImg === null ? IMAGE + product.img : selectedMediumImg} images={smallImg} />
+          <div className="thumbs">
             <ul className="list-inline">
-              {                
+              {
                 smallImg.map((i, key) => {
                   return (
                     <li className="list-inline-item" key={key}>
                       <a className="image-container" onClick={this.onChangeMidImage}>
-                        <img alt={i.mniimg} src={IMAGE+i.mniimg}/>
+                        <img alt={i.mniimg} src={IMAGE + i.mniimg} />
                       </a>
                     </li>
                   )
                 })
               }
-              </ul>                    
-            </div>
+            </ul>
           </div>
+        </div>
       </div>
     )
   }
   onChangeMidImage = (e) => { this.setState({ selectedMediumImg: e.target.src }) }
-  
+
   renderFooter = () => {
     const { attribute, collectionProduct, product, skucd } = this.state
-    return(
+    return (
       <div className="row row10">
         <div className="col-xl-9 pad10">
           <Information attribute={attribute} />
@@ -142,20 +142,20 @@ class Component extends React.Component{
           </h1>
           <div className="section">
             <div className="container pad10">
-              <div className="row row10">                
+              <div className="row row10">
                 <CardSlider data={collectionProduct} params={productParams} elContainer={"collectionProduct"} />
               </div>
             </div>
           </div>
-          
+
           {/**ТАНИЛЦУУЛАГА */}
           <h1 className="title">
             <span className="text-uppercase">Танилцуулга</span>
           </h1>
           <div className="product-bottom-images">
-            <img alt="image6" src={IMAGE+product.img}/>
+            <img alt="image6" src={IMAGE + product.img} />
           </div>
-          <Comment skucd={skucd}/>
+          <Comment skucd={skucd} />
         </div>
       </div>
     )
@@ -168,7 +168,7 @@ class Component extends React.Component{
       })
     }
   }
-  remProduct = () => { 
+  remProduct = () => {
     if (this.state.productNumber > 1) {
       this.setState({
         productNumber: this.state.productNumber - 1,
@@ -177,7 +177,7 @@ class Component extends React.Component{
     }
   }
   renderProductDelivery = () => {
-    const {relationalProduct} = this.state
+    const { relationalProduct } = this.state
     return (
       <div className="col-xl-3 col-lg-3 col-md-12 pad10 magnify-image">
         <div className="product-plus">
@@ -189,13 +189,13 @@ class Component extends React.Component{
               <span>Энгийн хүргэлт (48 цагийн дотор) - 89,000₮ дээш бараа авсан тохиолдолд үнэгүй</span>
             </p>
           </div>
-          <RelationalProduct product={relationalProduct}/>
+          <RelationalProduct product={relationalProduct} />
         </div>
       </div>
     )
   }
   renderProductDescription = () => {
-    const {product, breadCrumb, productNumber, sumPrice} = this.state
+    const { product, breadCrumb, productNumber, sumPrice } = this.state
     return (
       <div className='col-xl-5 col-lg-5 col-md-7 pad10 magnify-image'>
         <div className='product-info'>
@@ -205,19 +205,19 @@ class Component extends React.Component{
             <strong>{
               breadCrumb.map((i, e) => {
                 if (e === breadCrumb.length - 1) { return i.name }
-                else {return null}
+                else { return null }
               })
             }</strong>
           </p>
           <Rate rate={5} numOfVotes={197} />
-          
+
           <div className="gift">
             <div className="image-container">
             </div>
             <div className="info-container">
             </div>
           </div>
-          
+
           <form>
             <div className="row row10">
               <div className="col-xl-4 col-6 pad10">
@@ -234,14 +234,14 @@ class Component extends React.Component{
                     </button>
                   </div>
                 </div>
-                
+
               </div>
               <div className="col-xl-8 pad10">
-                  <p className="count-text text-right">
-                    {product.measure} үнэ: {' '}
-                    {money.format(product.price)}₮
+                <p className="count-text text-right">
+                  {product.measure} үнэ: {' '}
+                  {money.format(product.price)}₮
                   </p>
-                </div>
+              </div>
             </div>
             <div className="total-price text-right">
               <span>Дүн:</span>
