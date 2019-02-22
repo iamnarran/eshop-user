@@ -17,11 +17,11 @@ const CARD_TYPES = {
 };
 Object.freeze(CARD_TYPES);
 
-const CARD_NUMS_IN_COL = {
+const CARD_NUMS_IN_ROW = {
   wide: 3,
   slim: 5
 };
-Object.freeze(CARD_NUMS_IN_COL);
+Object.freeze(CARD_NUMS_IN_ROW);
 
 const CARD_LIST_TYPES = {
   horizontal: 1,
@@ -54,7 +54,7 @@ export {
   API,
   IMAGE,
   CARD_TYPES,
-  CARD_NUMS_IN_COL,
+  CARD_NUMS_IN_ROW,
   CARD_LIST_TYPES,
   WIDGET_SLUGS
   // WIDGET_LABELS

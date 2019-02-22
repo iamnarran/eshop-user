@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { CARD_LIST_TYPES, CARD_TYPES, CARD_NUMS_IN_COL } from "../utils/consts";
+import { CARD_LIST_TYPES, CARD_TYPES, CARD_NUMS_IN_ROW } from "../utils/consts";
 import Card from "./Card";
 
 class CardList extends React.Component {
@@ -9,49 +9,90 @@ class CardList extends React.Component {
     type: CARD_LIST_TYPES.horizontal,
     seq: null,
     cardsInCol: null,
-    items: []
+    items: [],
+    showAll: false,
+    cardType: CARD_TYPES.slim
   };
 
   componentDidMount() {
     this.setState({ ...this.props });
   }
 
+  getCardsAccordingToSeq = (cardTypes, items) => {
+    console.log(items);
+    const cards = [];
+    for (let i = 0, p = 0; i < cardTypes.length; i++) {
+      const cardType = parseInt(cardTypes[i]);
+      const cardsInRow =
+        cardType === CARD_TYPES.wide
+          ? CARD_NUMS_IN_ROW.wide
+          : CARD_NUMS_IN_ROW.slim;
+      for (let j = 0; j < cardsInRow; j++, p++) {
+        if (items[p]) {
+          cards.push(
+            <Card
+              key={p}
+              type={cardType}
+              item={items[p]}
+              isLastInRow={j === cardsInRow - 1 ? true : false}
+            />
+          );
+        }
+      }
+    }
+
+    return cards;
+  };
+
   getCardList = () => {
-    if (!this.state.items.length) {
+    const { type, seq, cardsInCol, items, showAll, cardType } = this.state;
+
+    if (!items.length) {
       return null;
     }
 
     let cardList = [];
-    if (this.state.type === CARD_LIST_TYPES.horizontal) {
-      if (this.state.seq) {
-        const cardTypes = this.state.seq.split(",");
-        for (let i = 0, p = 0; i < cardTypes.length; i++) {
-          const cardType = parseInt(cardTypes[i]);
-          const cardsInRow =
-            cardType === CARD_TYPES.wide
-              ? CARD_NUMS_IN_COL.wide
-              : CARD_NUMS_IN_COL.slim;
-          for (let j = 0; j < cardsInRow; j++, p++) {
-            if (this.state.items[p]) {
-              cardList.push(
-                <Card
-                  key={p}
-                  type={cardType}
-                  item={this.state.items[p]}
-                  isLastInRow={j === cardsInRow - 1 ? true : false}
-                />
-              );
-            }
+    if (type === CARD_LIST_TYPES.horizontal) {
+      if (seq) {
+        const cardTypes = seq.split(",");
+
+        if (showAll) {
+          let cardsLength = 0;
+          cardTypes.forEach(cardType => {
+            cardsLength +=
+              parseInt(cardType) === CARD_TYPES.slim
+                ? CARD_NUMS_IN_ROW.slim
+                : CARD_NUMS_IN_ROW.wide;
+          });
+          for (let i = 0; i < Math.ceil(items.length % cardsLength); i++) {
+            const lastIndex = i * cardsLength + cardsLength - 1;
+            cardList = [
+              ...cardList,
+              ...this.getCardsAccordingToSeq(
+                cardTypes,
+                items.slice(
+                  i * cardsLength,
+                  lastIndex < items.length ? lastIndex : items.length
+                )
+              )
+            ];
           }
+        } else {
+          cardList = [...this.getCardsAccordingToSeq(cardTypes, items)];
         }
       } else {
-        this.state.items.forEach((item, index) => {
+        const cardsInRow =
+          cardType === CARD_TYPES.slim
+            ? CARD_NUMS_IN_ROW.slim
+            : CARD_NUMS_IN_ROW.wide;
+
+        items.forEach((item, index) => {
           cardList.push(
             <Card
-              key={item.skucd}
-              type={CARD_TYPES.wide}
+              key={item.cd}
+              type={cardType}
               item={item}
-              isLastInRow={(index + 1) % 3 === 0 ? true : false}
+              isLastInRow={(index + 1) % cardsInRow === 0 ? true : false}
             />
           );
         });
@@ -60,27 +101,25 @@ class CardList extends React.Component {
       return cardList;
     }
 
-    let cardsInCol = Math.ceil(this.state.items.length / 3);
+    let cardsInColCalculated = Math.ceil(items.length / 3);
 
-    if (this.state.cardsInCol) {
-      cardsInCol =
-        Math.ceil(this.state.items.length / 3) < this.state.cardsInCol
-          ? Math.ceil(this.state.items.length / 3)
-          : this.state.cardsInCol;
+    if (cardsInCol) {
+      cardsInColCalculated =
+        cardsInColCalculated < cardsInCol ? cardsInColCalculated : cardsInCol;
     }
 
     const cardsCount =
-      this.state.items.length > cardsInCol * 3
-        ? cardsInCol * 3
-        : this.state.items.length;
+      items.length > cardsInColCalculated * 3
+        ? cardsInColCalculated * 3
+        : items.length;
     let cardsTemp = [];
     for (let i = 0; i < cardsCount; i++) {
       let className = "short";
       if (
-        (cardsInCol % 2 !== 0 && i % 2 === 0) ||
-        (cardsInCol % 2 === 0 &&
-          ((Math.floor(i / cardsInCol) % 2 === 0 && i % 2 === 0) ||
-            (Math.floor(i / cardsInCol) % 2 !== 0 && i % 2 !== 0)))
+        (cardsInColCalculated % 2 !== 0 && i % 2 === 0) ||
+        (cardsInColCalculated % 2 === 0 &&
+          ((Math.floor(i / cardsInColCalculated) % 2 === 0 && i % 2 === 0) ||
+            (Math.floor(i / cardsInColCalculated) % 2 !== 0 && i % 2 !== 0)))
       ) {
         className = "long";
       }
@@ -88,11 +127,11 @@ class CardList extends React.Component {
         <Card
           key={i}
           type={CARD_TYPES.tile}
-          item={this.state.items[i]}
+          item={items[i]}
           className={className}
         />
       );
-      if ((i + 1) % cardsInCol === 0 || i === cardsCount - 1) {
+      if ((i + 1) % cardsInColCalculated === 0 || i === cardsCount - 1) {
         cardList.push(
           <div key={i} className="col-md-4 pad10">
             {cardsTemp}
@@ -113,7 +152,9 @@ CardList.propTypes = {
   type: PropTypes.number.isRequired,
   seq: PropTypes.string,
   cardsInCol: PropTypes.number,
-  items: PropTypes.array.isRequired
+  items: PropTypes.array.isRequired,
+  showAll: PropTypes.bool,
+  cardType: PropTypes.number
 };
 
 export default CardList;

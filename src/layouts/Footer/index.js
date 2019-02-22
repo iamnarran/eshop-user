@@ -145,6 +145,9 @@ class Footer extends React.Component {
                   <li>
                     <span>{staticinfo.email}</span>
                   </li>
+                  <li>
+                    <span>{staticinfo.website}</span>
+                  </li>
                 </ul>
               </div>
             </div>
