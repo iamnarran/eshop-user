@@ -3,6 +3,7 @@ import ReactImageMagnify from "react-image-magnify"
 import "./index.css"
 import Lightbox from 'react-images';
 import config from "config";
+import Label from './../Label';
 const IMAGE = process.env.NODE_ENV==="development"?config.image.development:config.image.production
 
 class Component extends React.Component {
@@ -29,7 +30,7 @@ class Component extends React.Component {
   }
   
   render() {    
-    const { img } = this.props
+    const { img, tags } = this.props
     const { currentImage } = this.state
     // console.log(this.props.images)
     return (
@@ -50,13 +51,20 @@ class Component extends React.Component {
             },
             enlargedImageContainerDimensions: {
               width: '210%',
-              height: '130%'
+              height: '150%'
             },
             isHintEnabled: true
           }}
             style={{ zIndex: 100 }}
           />
-        </div>
+        </div>   
+        <div className="image-container">
+          {
+            tags && tags.map((label, index) => (
+              <Label key={index} seq={index} data={label}/>
+            ))
+          }          
+        </div> 
         <Lightbox
           images={this.renderImage()}
           currentImage={currentImage}
@@ -68,7 +76,8 @@ class Component extends React.Component {
           onClickNext={this.gotoNextLightboxImage}
           onClose={this.closeLightbox}
           onClickThumbnail={this.onClickThumbnail}
-        />
+        >
+        </Lightbox>
       </div>
     );
   }
