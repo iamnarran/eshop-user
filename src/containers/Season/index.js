@@ -11,8 +11,8 @@ const options = {
 
 const fetch = async (props, onData) => {
   try {
-    const menu = await api.menu.findAll();
-    const primaryBanners = await api.banner.findAll({ type: "F1" });
+    const menu = await api.menu.findOne({ slug: "season" });
+    const primaryBanners = await api.pagebanner.findAll({ type: "H1" });
     const products = await api.product.findAllSeasonProducts({ jumcd: "99" });
     const attributes = await api.product.findAllAttributes();
     const promoCats = await api.product.findAllPromoCats();

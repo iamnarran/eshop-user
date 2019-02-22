@@ -1,8 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import { IMAGE, CARD_LIST_TYPES } from "../../utils/consts";
+import { CARD_LIST_TYPES, CARD_TYPES } from "../../utils/consts";
 import CardList from "../../components/CardList";
+import PageHeader from "../../components/PageHeader";
 
 class Season extends React.Component {
   render() {
@@ -16,33 +17,12 @@ class Season extends React.Component {
 
     return (
       <div className="top-container">
-        <div className="whole-page-title color-blue" style={{ padding: "0px" }}>
-          <div
-            className="whole-page-title color-blue class container pad10"
-            style={{
-              backgroundImage: `url(${
-                primaryBanners !== undefined ? IMAGE + primaryBanners.imgnm : ""
-              })`,
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "right",
-              backgroundSize: "50% 115px"
-            }}
-            onClick={this.changeLocation}
-          >
-            <div className="container pad10">
-              <div className="title-container flex-space">
-                <h2>
-                  <span className="big">
-                    {menu[0] === undefined ? "" : menu[0].menunm}
-                  </span>
-                  <strong>
-                    {menu[0] === undefined ? "" : menu[0].subtitle}
-                  </strong>
-                </h2>
-              </div>
-            </div>
-          </div>
-        </div>
+        <PageHeader
+          title={menu.menunm}
+          subtitle={menu.subtitle}
+          banners={primaryBanners}
+          bgColor="#b8f497"
+        />
 
         <div className="section">
           <div className="container pad10">
@@ -64,16 +44,13 @@ class Season extends React.Component {
                   <h5 className="title">
                     <strong>Хайлтын үр дүн</strong>
                   </h5>
-                  <p className="title">
-                    <span>Ангилал</span>
-                  </p>
                   <div className="block">
                     <div className="accordion" id="accordionExample">
                       <div className="collapse-content">
                         <ul className="list-unstyled">
                           {promoCats &&
-                            promoCats.map(promo => (
-                              <li>
+                            promoCats.map((promo, index) => (
+                              <li key={index}>
                                 <Link to="#">{promo.promotnm}</Link>
                               </li>
                             ))}
@@ -86,8 +63,8 @@ class Season extends React.Component {
                   </h5>
                   <div className="left-filter">
                     {attributes &&
-                      attributes.map(attr => (
-                        <div>
+                      attributes.map((attr, index) => (
+                        <div key={index}>
                           <a
                             className="collapse-title"
                             data-toggle="collapse"
@@ -102,8 +79,8 @@ class Season extends React.Component {
                             <div className="collapse-content">
                               <ul className="list-unstyled">
                                 {attr.values &&
-                                  attr.values.map(val => (
-                                    <li>
+                                  attr.values.map((val, index) => (
+                                    <li key={index}>
                                       <div className="custom-control custom-checkbox">
                                         <input
                                           type="checkbox"
@@ -112,7 +89,7 @@ class Season extends React.Component {
                                         />
                                         <label
                                           className="custom-control-label"
-                                          for="customCheck1"
+                                          htmlFor="customCheck1"
                                         >
                                           {val.text}
                                         </label>
@@ -128,7 +105,12 @@ class Season extends React.Component {
                 </div>
               </div>
               <div className="col-xl-9 pad10">
-                <CardList type={CARD_LIST_TYPES.horizontal} items={products} />
+                <CardList
+                  type={CARD_LIST_TYPES.horizontal}
+                  items={products}
+                  showAll
+                  cardType={CARD_TYPES.wide}
+                />
               </div>
             </div>
           </div>

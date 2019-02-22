@@ -10,24 +10,17 @@ const options = {
 
 const fetch = async (props, onData) => {
   try {
-    const discount = await api.product.findAllDiscountProducts({ jumcd: "99" });
-    const mainbanner = await api.pagebanner.findAll({ type: "D1" });
-    const subbanner = await api.pagebanner.findAll({ type: "D2" });
-    const tag = await api.tag.findAll({ slug: "discount" });
-    const menu = await api.menu.findAll();
-    
+    const products = await api.product.findAllDiscountProducts({ jumcd: "99" });
+    const primaryBanners = await api.pagebanner.findAll({ type: "D1" });
+    const secondaryBanners = await api.pagebanner.findAll({ type: "D2" });
+    const menu = await api.menu.findOne({ slug: "discount" });
+
     onData(null, {
       container: {
-        saleproduct: discount.data,
-        mainbanner: mainbanner.data[Math.floor(Math.random()*(mainbanner.data.length))],
-        subbanner: subbanner.data,
-        tag: tag.data[0],
-        menu: menu.data.filter(i => {
-          if (i.id === 70) {
-            return i;
-          }
-          return null;
-        })
+        products: products.data,
+        primaryBanners: primaryBanners.data,
+        secondaryBanners: secondaryBanners.data,
+        menu: menu.data
       }
     });
   } catch (e) {
