@@ -61,7 +61,7 @@ class Label extends React.Component {
             left: 5px;
           }
         `}
-        <div className="label">
+        <div className="label" style={{zIndex: 100}}>
           <Style>
             {`
               .text {

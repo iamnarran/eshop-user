@@ -1,37 +1,24 @@
-import React from 'react';
-import api from '../../api';
-import { compose } from 'react-komposer';
-import Loader from '../../components/Loader';
+import React from "react";
+import { compose } from "react-komposer";
+import api from "../../api";
+import Loader from "../../components/Loader";
 import { PackageDetail } from "../../pages";
-
 const options = {
     loadingHandler: () => <Loader />
 };
 
 const fetch = async (props, onData) => {
     try {
-        const packageProducts = await api.packageProduct.findAll();
-        const mainbanner = await api.banner.findAll({ type: 'L1' });
-        const secondaryBanners = await api.banner.findAll({ type: 'L2' });
-        const menu = await api.menu.findAll();
-        const widget = await api.widget.findAll();
+        const packageProduct = await api.packageProduct.findProducts({ id: props.match.params.id });
+        const packageName = await api.packageProduct.findImf({ id: props.match.params.id });
         onData(null, {
             container: {
-                packageProducts: packageProducts.data,
-                mainbanner: mainbanner.data[0],
-                secondaryBanners: secondaryBanners.data,
-                widget: widget.data.filter(i => {
-                    if (i.slug === 'package') { return i }
-                    return null
-                }),
-                menu: menu.data.filter(i => {
-                    if (i.id === 74) { return i }
-                    return null
-                }),
+                Products: packageProduct.data,
+                Package: packageName.data[0]
             }
         });
     } catch (e) {
-        console.log('CUSTOM ERROR: ');
+        console.log("CUSTOM ERROR: ");
         console.log(e);
     }
 };
