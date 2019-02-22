@@ -12,8 +12,8 @@ const options = {
 const fetch = async (props, onData) => {
   try {
     const products = await api.recipe.findAll();
-    const primaryBanners = await api.banner.findAll({ type: "E1" });
-    const secondaryBanners = await api.banner.findAll({ type: "E2" });
+    const primaryBanners = await api.banner.findAll({ type: "F1" });
+    const secondaryBanners = await api.banner.findAll({ type: "F2" });
     const menu = await api.menu.findOne({ slug: "recipe" });
 
     onData(null, {

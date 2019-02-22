@@ -29,10 +29,6 @@ class PageHeader extends React.Component {
     console.log("props", this.props);
     console.log("state", this.state);
 
-    const selected = this.props.banners[
-      Math.floor(Math.random() * this.props.banners.length)
-    ];
-
     return (
       <div
         className="whole-page-title"
@@ -42,7 +38,9 @@ class PageHeader extends React.Component {
           className="whole-page-title class container pad10"
           style={{
             backgroundImage: `url(${
-              this.props.banners === undefined ? "" : IMAGE + selected.imgnm
+              this.props.banners === undefined
+                ? ""
+                : IMAGE + this.props.banners[0].imgnm
             })`,
             backgroundRepeat: "no-repeat",
             backgroundPosition: "right",
