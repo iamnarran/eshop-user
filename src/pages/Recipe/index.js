@@ -1,13 +1,15 @@
 import React from "react";
-import { IMAGE, CARD_LIST_TYPES } from "../../utils/consts";
+
 import CardList from "../../components/CardList";
 import Banner from "../../components/Banner";
+import PageHeader from "../../components/PageHeader";
+import { IMAGE, CARD_LIST_TYPES } from "../../utils/consts";
 
 class Recipe extends React.Component {
   render() {
     const {
       products,
-      primaryBanner,
+      primaryBanners,
       secondaryBanners,
       menu
     } = this.props.container;
@@ -16,33 +18,12 @@ class Recipe extends React.Component {
 
     return (
       <div className="top-container">
-        <div className="whole-page-title color-blue" style={{ padding: "0px" }}>
-          <div
-            className="whole-page-title color-blue class container pad10"
-            style={{
-              backgroundImage: `url(${
-                primaryBanner !== undefined ? IMAGE + primaryBanner.imgnm : ""
-              })`,
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "right",
-              backgroundSize: "50% 115px"
-            }}
-            onClick={this.changeLocation}
-          >
-            <div className="container pad10">
-              <div className="title-container flex-space">
-                <h2>
-                  <span className="big">
-                    {menu[0] === undefined ? "" : menu[0].menunm}
-                  </span>
-                  <strong>
-                    {menu[0] === undefined ? "" : menu[0].subtitle}
-                  </strong>
-                </h2>
-              </div>
-            </div>
-          </div>
-        </div>
+        <PageHeader
+          title={menu.menunm}
+          subtitle={menu.subtitle}
+          banners={primaryBanners}
+          bgColor="#fffdb7"
+        />
 
         <div className="section">
           <div className="container pad10">
