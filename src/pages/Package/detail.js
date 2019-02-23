@@ -11,12 +11,11 @@ class PackageDetail extends React.Component {
         const formatter = new Intl.NumberFormat("en-US");
         const name = this.state.Products[0].products;
         const price = this.state.Products[0].total;
-        const data = this.state.Package;
         let products = null;
         let sameProducts = null;
         const images = this.state.Package.images;
         const title = this.state.Package.products[0].packagenm;
-        const date = this.state.Package.products[0].insymd.split("T")[0].split("-");;
+        const date = this.state.Package.products[0].insymd.split("T")[0].split("-");
         const sliderParams = {
             spaceBetween: 0,
             autoplay: {
@@ -62,7 +61,6 @@ class PackageDetail extends React.Component {
                 )
             })
         );
-
         products = (
             name.map(item => {
                 return (
@@ -74,7 +72,7 @@ class PackageDetail extends React.Component {
                         </div>
                         <div className="info-container">
                             <div className="flex-space">
-                                <p className="text">
+                                <p className="text col-md-5">
                                     <span>{item.skunm}</span>
                                     <strong>{formatter.format(item.price)}₮</strong>
                                 </p>
@@ -104,8 +102,6 @@ class PackageDetail extends React.Component {
                 );
             })
         )
-
-
 
         return (
             <div className="section">
@@ -144,8 +140,8 @@ class PackageDetail extends React.Component {
                                             elContainer={"images"}
                                         />
                                     </div>
-                                    <div>
-                                        <p></p>
+                                    <div className="product-plus">
+                                        <p>This is description.</p>
                                     </div>
                                 </div>
                                 <div className="pack-product-container">
@@ -195,231 +191,6 @@ class PackageDetail extends React.Component {
                                     </div>
                                 </div>
                             </div>
-                            <div className="row row10">
-                                <div className="col-xl-9 pad10">
-                                    <div className="comments-container">
-                                        <h1 className="title">
-                                            <span className="text-uppercase">Сэтгэгдэл</span>
-                                        </h1>
-                                        <div className="comments-list">
-                                            <div className="main-rating">
-                                                <a href=" " className="rating">
-                                                    <ul className="list-inline">
-                                                        <li className="list-inline-item active">
-                                                            <i className="fa fa-star" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                        </li>
-                                                        <li className="list-inline-item active">
-                                                            <i className="fa fa-star" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                        </li>
-                                                        <li className="list-inline-item half-active">
-                                                            <i className="fa fa-star" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                        </li>
-                                                        <li className="list-inline-item">
-                                                            <i className="fa fa-star" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                        </li>
-                                                        <li className="list-inline-item">
-                                                            <i className="fa fa-star" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                        </li>
-                                                        <li className="list-inline-item">
-                                                            <span className="text">197</span>
-                                                        </li>
-                                                    </ul>
-                                                </a>
-                                                <p className="text">(32 хүн үнэлгээ өгсөн байна)</p>
-                                            </div>
-                                            <div className="single">
-                                                <a href=" " className="rating">
-                                                    <ul className="list-inline">
-                                                        <li className="list-inline-item active">
-                                                            <i className="fa fa-star" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                        </li>
-                                                        <li className="list-inline-item active">
-                                                            <i className="fa fa-star" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                        </li>
-                                                        <li className="list-inline-item half-active">
-                                                            <i className="fa fa-star" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                        </li>
-                                                        <li className="list-inline-item">
-                                                            <i className="fa fa-star" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                        </li>
-                                                        <li className="list-inline-item">
-                                                            <i className="fa fa-star" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                        </li>
-                                                    </ul>
-                                                </a>
-                                                <p className="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>
-                                                <ul className="list-unstyled bottom-info">
-                                                    <li>
-                                                        <span>2018.09.12</span>
-                                                    </li>
-                                                    <li>
-                                                        <strong>Батаa</strong>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div className="single">
-                                                <a href=" " className="rating">
-                                                    <ul className="list-inline">
-                                                        <li className="list-inline-item active">
-                                                            <i className="fa fa-star" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                        </li>
-                                                        <li className="list-inline-item active">
-                                                            <i className="fa fa-star" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                        </li>
-                                                        <li className="list-inline-item half-active">
-                                                            <i className="fa fa-star" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                        </li>
-                                                        <li className="list-inline-item">
-                                                            <i className="fa fa-star" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                        </li>
-                                                        <li className="list-inline-item">
-                                                            <i className="fa fa-star" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                        </li>
-                                                    </ul>
-                                                </a>
-                                                <p className="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id justo mi. Maecenas vel lectus id erat euismod porta sed in felis. In massa mi, ornare vel sem eu, cursus vehicula leo. Curabitur vestibulum nisi at lacus dictum, non eleifend eros ullamcorper. </p>
-                                                <ul className="list-unstyled bottom-info">
-                                                    <li>
-                                                        <span>2018.09.12</span>
-                                                    </li>
-                                                    <li>
-                                                        <strong>Батаa</strong>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div className="single">
-                                                <a href=" " className="rating">
-                                                    <ul className="list-inline">
-                                                        <li className="list-inline-item active">
-                                                            <i className="fa fa-star" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                        </li>
-                                                        <li className="list-inline-item active">
-                                                            <i className="fa fa-star" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                        </li>
-                                                        <li className="list-inline-item active">
-                                                            <i className="fa fa-star" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                        </li>
-                                                        <li className="list-inline-item half-active">
-                                                            <i className="fa fa-star" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                        </li>
-                                                        <li className="list-inline-item">
-                                                            <i className="fa fa-star" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                        </li>
-                                                    </ul>
-                                                </a>
-                                                <p className="text">Curabitur vestibulum nisi at lacus dictum, non eleifend eros ullamcorper. </p>
-                                                <ul className="list-unstyled bottom-info">
-                                                    <li>
-                                                        <span>2018.09.12</span>
-                                                    </li>
-                                                    <li>
-                                                        <strong>Батаa</strong>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div className="single">
-                                                <a href=" " className="rating">
-                                                    <ul className="list-inline">
-                                                        <li className="list-inline-item active">
-                                                            <i className="fa fa-star" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                        </li>
-                                                        <li className="list-inline-item active">
-                                                            <i className="fa fa-star" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                        </li>
-                                                        <li className="list-inline-item half-active">
-                                                            <i className="fa fa-star" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                        </li>
-                                                        <li className="list-inline-item">
-                                                            <i className="fa fa-star" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                        </li>
-                                                        <li className="list-inline-item">
-                                                            <i className="fa fa-star" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                            <i className="fa fa-star-o" aria-hidden="true"></i>
-                                                        </li>
-                                                    </ul>
-                                                </a>
-                                                <p className="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id justo mi. Maecenas vel lectus id erat euismod porta sed in felis. In massa mi, ornare vel sem eu, cursus vehicula leo. </p>
-                                                <ul className="list-unstyled bottom-info">
-                                                    <li>
-                                                        <span>2018.09.12</span>
-                                                    </li>
-                                                    <li>
-                                                        <strong>Батаa</strong>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div className="write-comment">
-                                            <div className="author">
-                                                <div className="image-container">
-                                                    <span className="image8" style={{ backgroundImage: 'url(http://www.sparkawards.com/wp-content/uploads/2011/05/Product_Lg_Type.jpg)' }}></span>
-                                                </div>
-                                                <p className="name">
-                                                    <strong>Болд<br />Ганзориг</strong>
-                                                </p>
-                                            </div>
-                                            <form>
-                                                <div className="form-group">
-                                                    <textarea className="form-control" placeholder="Сэтгэгдэл үлдээх хэсэг" rows="5"></textarea>
-                                                    <small id="emailHelp" className="form-text text-muted text-right">0 / 120</small>
-                                                </div>
-                                                <div className="btn btn-dark">
-                                                    <span className="text-uppercase">Сэтгэгдэл үлдээх</span>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -429,24 +200,3 @@ class PackageDetail extends React.Component {
 }
 
 export default PackageDetail;
-
-/* <div className="col-md-8 pad10">
-                                <div className="food-recipe-detail">
-                                    <h4 className="title">
-                                        <span>Багц</span>
-                                    </h4>
-                                    <p className="date">
-                                        <span>2019 оны 02 сарын 22</span>
-                                    </p>
-                                    <div className="content">
-                                        <div className="main-slide">
-                                            <Slider
-                                                data={images}
-                                                params={sliderParams}
-                                                elContainer={"images"}
-                                            />
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div> */
