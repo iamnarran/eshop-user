@@ -177,7 +177,7 @@ class Component extends React.Component{
   }
   
   renderFooter = () => {
-    const { attribute, collectionProduct, product, skucd } = this.state
+    const { attribute, collectionProduct, skucd } = this.state
     return(
       <div className="row row10">
         <div className="col-xl-9 pad10">

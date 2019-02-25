@@ -2434,26 +2434,8 @@ form {
       background-color: $black05;
     }
   }
-  .user-profile-container {
+  .user-profile-contain {
     padding: 30px;
-
-    .form-group {
-      position: relative;
-      margin-bottom: 30px;
-    }
-    label {
-      position: absolute;
-      color: $black5;
-      font-size: 0.8rem;
-      font-weight: 700;
-      background-color: $white;
-      padding: 0 5px;
-      left: 5px;
-      top: -10px;
-    }
-    .text {
-      color: $black5;
-    }
   }
 }
 .success-message-container {
@@ -2638,4 +2620,8 @@ form {
   margin-bottom: 20px;
   padding: 30px 50px;
   margin: 20px 0;
+}
+
+.delivery-address{
+  margin-top: 20px;
 }

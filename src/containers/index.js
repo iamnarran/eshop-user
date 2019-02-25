@@ -10,6 +10,7 @@ import Package from "./Package";
 import ProductDetail from "./ProductDetail";
 import Season from "./Season";
 import PackageDetail from "./Package/detail";
+import DeliveryAddress from "./UsrProfDeliveryAddress"
 
 export {
   Footer,
@@ -23,5 +24,6 @@ export {
   Package,
   Season,
   PackageDetail,
-  ProductDetail
+  ProductDetail,
+  DeliveryAddress
 };
