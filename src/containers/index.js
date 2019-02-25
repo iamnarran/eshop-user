@@ -11,6 +11,7 @@ import ProductDetail from "./ProductDetail";
 import Season from "./Season";
 import PackageDetail from "./Package/detail";
 import Profile from "./Profile";
+import DeliveryAddress from "./UsrProfDeliveryAddress";
 
 export {
   Footer,
@@ -25,5 +26,6 @@ export {
   Season,
   PackageDetail,
   ProductDetail,
-  Profile
+  Profile,
+  DeliveryAddress,
 };

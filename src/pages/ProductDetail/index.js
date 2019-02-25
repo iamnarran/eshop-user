@@ -2,6 +2,8 @@ import React from "react"
 import config from "config";
 import api from "../../api";
 import { Magnify, Rate, RelationalProduct, Information, CardSlider, Comment } from "../../components"
+import { Spin } from "antd";
+
 
 const IMAGE = process.env.NODE_ENV==="development"?config.image.development:config.image.production
 const money = new Intl.NumberFormat('en-US')
@@ -27,6 +29,8 @@ class Component extends React.Component{
     selectedMediumImg: null,
     selectedLargeImg: null,
     smallImg: [],
+
+    isLoading: false,
   }
 
   componentWillMount() {
@@ -48,13 +52,14 @@ class Component extends React.Component{
   }
   
   render() {
-    const { breadCrumb, skucd } = this.state
+    const { breadCrumb, skucd, isLoading } = this.state
     if (skucd !== this.props.match.params.id) {
       this.setState({skucd: this.props.match.params.id})
       this.refresh()
     }
     
-    return <div className="section">
+    if (isLoading) {
+      return <div className="section">
       <div className="container pad10">
         {this.renderBreadCrumb(breadCrumb)}
         <div className="product-detail-page">
@@ -66,6 +71,10 @@ class Component extends React.Component{
           </div>
         </div>
       </div>
+    </div>
+    }
+    return <div className="e-mart-loading">
+      <Spin />
     </div>
   }
   refresh = async () => {
@@ -98,6 +107,7 @@ class Component extends React.Component{
         issalekg: product.issalekg,
         grPrice: product.issalekg === 1 ? product.kgproduct[0].salegramprice : null,
         kgPrice: product.issalekg === 1 ? product.kgproduct[0].kilogramprice : null,
+        isLoading: true,
       })
     }
   }
@@ -167,7 +177,7 @@ class Component extends React.Component{
   }
   
   renderFooter = () => {
-    const { attribute, collectionProduct, product, skucd } = this.state
+    const { attribute, collectionProduct, skucd } = this.state
     return(
       <div className="row row10">
         <div className="col-xl-9 pad10">
@@ -188,7 +198,13 @@ class Component extends React.Component{
             <span className="text-uppercase">Танилцуулга</span>
           </h1>
           <div className="product-bottom-images">
-            <img alt="image6" src={IMAGE+product.img}/>
+            {
+              this.state.product && this.state.product.images && this.state.product.images.map((index, key) => {
+                return (
+                  <img alt={index.id} src={IMAGE + index.imglrg} key={key}/>
+                );
+              })
+            }            
           </div>
           <Comment skucd={skucd}/>
         </div>

@@ -39,9 +39,9 @@ import {
   PackageDetail,
   Season,
   ProductDetail,
-  Profile
+  Profile,
+  DeliveryAddress,
 } from "./containers/index";
-
 //library.add(fab, faCheckSquare, faCoffee);
 library.add(fas, far, fab);
 
@@ -135,12 +135,17 @@ class Localization extends Component {
         exact: true,
         path: "/Profile",
         component: rest => <Profile {...rest} {...this.props} />
-      }
+      },
       // {
       //   path: "*",
       //   exact: false,
       //   component: () => <NotFound />
       // },
+      {
+        path: "/delivery",
+        exact: false,
+        component: () => <DeliveryAddress />
+      },
     ];
 
     return (
