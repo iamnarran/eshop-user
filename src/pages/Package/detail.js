@@ -14,6 +14,7 @@ class PackageDetail extends React.Component {
         let products = null;
         let sameProducts = null;
         const images = this.state.Package.images;
+        const description = this.state.Package.products[0].description;
         const title = this.state.Package.products[0].packagenm;
         const date = this.state.Package.products[0].insymd.split("T")[0].split("-");
         const sliderParams = {
@@ -34,12 +35,12 @@ class PackageDetail extends React.Component {
         };
 
         sameProducts = (
-            name.map(item => {
+            name.map((item, index) => {
                 return (
-                    <li>
+                    <li key={index}>
                         <div className="single flex-this">
                             <div className="image-container">
-                                <a href=" ">
+                                <a href={item.route}>
                                     <span className="image" style={{
                                         backgroundImage: `url(${IMAGE + item.sameProduct[0].tag[0].img})`,
                                     }}></span>
@@ -62,13 +63,16 @@ class PackageDetail extends React.Component {
             })
         );
         products = (
-            name.map(item => {
+            name.map((item, index) => {
                 return (
-                    <li className="flex-this">
+                    <li className="flex-this" key={index}>
                         <div className="image-container default">
-                            <span className="image" style={{
-                                backgroundImage: `url(${IMAGE + item.imgnm})`,
-                            }}></span>
+                            <a href={item.route}>
+                                <span className="image" style={{
+                                    backgroundImage: `url(${IMAGE + item.imgnm})`,
+                                }}></span>
+                            </a>
+
                         </div>
                         <div className="info-container">
                             <div className="flex-space">
@@ -141,7 +145,8 @@ class PackageDetail extends React.Component {
                                         />
                                     </div>
                                     <div className="product-plus">
-                                        <p>This is description.</p>
+                                        <br></br>
+                                        <p>{description}</p>
                                     </div>
                                 </div>
                                 <div className="pack-product-container">
