@@ -10,7 +10,7 @@ import Package from "./Package";
 import ProductDetail from "./ProductDetail";
 import Season from "./Season";
 import PackageDetail from "./Package/detail";
-import Profile from "./Profile";
+import WishList from "./WishList";
 import DeliveryAddress from "./UsrProfDeliveryAddress";
 
 export {
@@ -26,6 +26,6 @@ export {
   Season,
   PackageDetail,
   ProductDetail,
-  Profile,
+  WishList,
   DeliveryAddress,
 };

@@ -7,7 +7,7 @@ import Package from "./Package";
 import ProductDetail from "./ProductDetail";
 import Season from "./Season";
 import PackageDetail from "./Package/detail"
-import Profile from "./Profile";
+import WishList from "./WishList";
 
 export {
     Discount,
@@ -19,6 +19,6 @@ export {
     ProductDetail,
     Season,
     PackageDetail,
-    Profile
+    WishList
 };
 

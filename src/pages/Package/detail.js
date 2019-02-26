@@ -5,18 +5,24 @@ import Slider from "../../components/Slider";
 
 class PackageDetail extends React.Component {
     state = {
-        ...this.props.container
+        name: this.props.container.Products[0].products,
+        price: this.props.container.Products[0].total,
+        products: null,
+        sameProducts: null,
+        addProduct: null,
+        remProduct: null,
+        images: this.props.container.Package.images,
+        description: this.props.container.Package.products[0].description,
+        title: this.props.container.Package.products[0].packagenm,
+        date: this.props.container.Package.products[0].insymd.split("T")[0].split("-"),
+        countNumber: 1
     }
+    addProduct = () => { }
+    remProduct = () => { }
     render() {
         const formatter = new Intl.NumberFormat("en-US");
-        const name = this.state.Products[0].products;
-        const price = this.state.Products[0].total;
         let products = null;
         let sameProducts = null;
-        const images = this.state.Package.images;
-        const description = this.state.Package.products[0].description;
-        const title = this.state.Package.products[0].packagenm;
-        const date = this.state.Package.products[0].insymd.split("T")[0].split("-");
         const sliderParams = {
             spaceBetween: 0,
             autoplay: {
@@ -35,7 +41,7 @@ class PackageDetail extends React.Component {
         };
 
         sameProducts = (
-            name.map((item, index) => {
+            this.state.name.map((item, index) => {
                 return (
                     <li key={index}>
                         <div className="single flex-this">
@@ -63,7 +69,7 @@ class PackageDetail extends React.Component {
             })
         );
         products = (
-            name.map((item, index) => {
+            this.state.name.map((item, index) => {
                 return (
                     <li className="flex-this" key={index}>
                         <div className="image-container default">
@@ -83,13 +89,35 @@ class PackageDetail extends React.Component {
                                 <form>
                                     <div className="input-group e-input-group">
                                         <div className="input-group-prepend" id="button-addon4">
-                                            <button className="btn" type="button" >
+                                            <button className="btn" type="button"
+                                                style={{
+                                                    color: 'rgba(0,0,0,.5)',
+                                                    textAlign: 'center',
+                                                    backgroundColor: 'rgb(204, 204, 204)',
+                                                    borderTopLeftRadius: '20px',
+                                                    borderBottomLeftRadius: '20px',
+                                                    marginRight: '5px'
+                                                }}
+                                                onClick={this.remProduct}
+                                            >
                                                 <i className="fa fa-minus" aria-hidden="true"></i>
                                             </button>
                                         </div>
-                                        <input type="text" className="form-control" placeholder="" defaultValue="1" aria-label="" aria-describedby="button-addon4" />
+                                        <input type="text" className="form-control"
+                                            placeholder="" defaultValue={this.state.countNumber}
+                                            aria-label="" aria-describedby="button-addon4" />
                                         <div className="input-group-append" id="button-addon4">
-                                            <button className="btn" type="button">
+                                            <button className="btn" type="button"
+                                                style={{
+                                                    color: 'rgba(0,0,0,.5)',
+                                                    textAlign: 'center',
+                                                    backgroundColor: 'rgb(204, 204, 204)',
+                                                    borderTopRightRadius: '20px',
+                                                    borderBottomRightRadius: '20px',
+                                                    marginLeft: '5px'
+                                                }}
+                                                onClick={this.addProduct}
+                                            >
                                                 <i className="fa fa-plus" aria-hidden="true"></i>
                                             </button>
                                         </div>
@@ -123,7 +151,7 @@ class PackageDetail extends React.Component {
                                 </Link>
                             </li>
                             <li>
-                                <span>{title}</span>
+                                <span>{this.state.title}</span>
                             </li>
                         </ul>
                     </div>
@@ -131,22 +159,22 @@ class PackageDetail extends React.Component {
                         <div className="row row10">
                             <div className="col-xl-9 col-md-8 pad10">
                                 <h4 className="title">
-                                    <span>{title}</span>
+                                    <span>{this.state.title}</span>
                                 </h4>
                                 <p className="date">
-                                    <span>{`${date[0]} оны ${date[1]} сарын ${date[2]}`}</span>
+                                    <span>{`${this.state.date[0]} оны ${this.state.date[1]} сарын ${this.state.date[2]}`}</span>
                                 </p>
                                 <div className="content">
                                     <div className="main-slide">
                                         <Slider
-                                            data={images}
+                                            data={this.state.images}
                                             params={sliderParams}
                                             elContainer={"images"}
                                         />
                                     </div>
                                     <div className="product-plus">
                                         <br></br>
-                                        <p>{description}</p>
+                                        <p>{this.state.description}</p>
                                     </div>
                                 </div>
                                 <div className="pack-product-container">
@@ -161,7 +189,7 @@ class PackageDetail extends React.Component {
                                                 <div className="pack-price">
                                                     <p className="text flex-this end">
                                                         <span>Дүн:</span>
-                                                        <strong>{formatter.format(price)}₮</strong>
+                                                        <strong>{formatter.format(this.state.price)}₮</strong>
                                                     </p>
                                                     <a href=" " className="btn btn-main">
                                                         <i className="fa fa-cart-plus" aria-hidden="true"></i>
