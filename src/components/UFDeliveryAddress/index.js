@@ -1,14 +1,17 @@
 import React from "react"
-import {TextField, Select} from "../"
+import { TextField, Select } from "../"
+import { Form } from "antd"
 
 class Component extends React.Component{
   state = {
     cityOrProvince: [],
     districtOrSum: [],
-    selectedCity: 'Улаанбаатар',
     city: false,
   }
-  componentDidMount() { this.setState({ ...this.props.container }) }
+  componentDidMount() {
+    this.setState({ ...this.props.container })
+    this.onChangeCity('11') //defualt UB
+  }
   
   handleSubmit = (e) => {
     e.preventDefault();
@@ -29,7 +32,9 @@ class Component extends React.Component{
     })
     this.setState({districtOrSum: tmp})
   }
-  render() {   
+
+  render() {
+    const { getFieldDecorator } = this.props.form;
     return (
       <div className="section section-gray">        
         <div className="container pad10">          
@@ -46,30 +51,48 @@ class Component extends React.Component{
                     <form>
                       <div className="row row10">
                         <div className="col-xl-6 pad10">
-                          <div className="e-mart-input">
-                          <TextField label="Овог" />
+                          <div className="e-mart-input">                            
+                            <Form.Item>
+                              {getFieldDecorator('name', {
+                                rules: [{ required: true, message: 'Нэрээ заавал оруулна уу!' }],
+                              })(
+                                <TextField label="Нэр"/>
+                              )}
+                            </Form.Item>
                           </div>
                         </div>
                         <div className="col-xl-6 pad10">
                           <div className="form-group">
-                            <TextField label="Утас" />
+                            <Form.Item>
+                              {getFieldDecorator('phone', {
+                                rules: [{ required: true, message: 'Утасаа заавал оруулна уу!' }],
+                              })(
+                                <TextField label="Утас" />
+                              )}
+                            </Form.Item>                            
                           </div>
-                        </div>
-                        <div className="col-xl-12 pad10">
-                          <div className="form-group">
-                            <TextField label="Гэрийн хаяг" />
-                          </div>
-                        </div>
+                        </div>                        
                       </div>
                       <div className="row row10">
                         <div className="col-xl-6 pad10">
                           <div className="form-group">
-                            <Select label="Хот/Аймаг" option={this.state.cityOrProvince} city onChange={this.onChangeCity}/>
+                            <Select label="Хот/Аймаг" option={this.state.cityOrProvince} city onChange={this.onChangeCity} />
                           </div>
                         </div>
                         <div className="col-xl-6 pad10">
                           <div className="form-group">
                             <Select label="Сум/Дүүрэг" option={this.state.districtOrSum}/>
+                          </div>
+                        </div>
+                        <div className="col-xl-12 pad10">
+                          <div className="form-group">
+                            <Form.Item>
+                              {getFieldDecorator('homeaddress', {
+                                rules: [{ required: true, message: 'Гэрийн хаягаа заавал оруулна уу!' }],
+                              })(
+                                <TextField label="Гэрийн хаяг" />
+                              )}
+                            </Form.Item>
                           </div>
                         </div>
                       </div>                      
@@ -94,4 +117,6 @@ class Component extends React.Component{
     )
   }
 }
-export default Component;
+
+const App = Form.create({ name: 'delivery' })(Component);
+export default App;

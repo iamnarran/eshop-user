@@ -212,7 +212,7 @@ class Component extends React.Component{
     )
   }
   addProduct = () => {
-    if (this.state.saleNumber < 1000000 && this.state.product.availableqty !== 0) {
+    if (this.state.saleNumber < this.state.product.availableqty && this.state.product.availableqty !== 0) {
       this.setState({
         saleNumber: this.state.saleNumber + 1,
         sumPrice: this.state.issalekg ? this.state.sumPrice + this.state.grPrice : this.state.sumPrice + this.state.product.price        

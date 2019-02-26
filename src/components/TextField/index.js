@@ -27,16 +27,18 @@ class OutlinedTextFields extends React.Component {
     const { classes, label, value } = this.props;
 
     return (
-      <form className={classes.container}>
+      <form className={classes.container}>      
         <TextField
-          id="outlined-dense"
+          id="outlined-full-width"
           label={label}
-          className={classNames(classes.textField, classes.dense)}
-          margin="dense"
+          placeholder={label+'*'}
+          fullWidth
+          margin="normal"
           variant="outlined"
-          onChange={this.onChange}
-          style={{width: '100%'}}
-        />        
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
       </form>
     );
   }
