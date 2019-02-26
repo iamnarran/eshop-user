@@ -9,6 +9,7 @@ import CardSlider from "./CardSlider/index"
 import DeliveryAddress from "./UFDeliveryAddress"
 import TextField from "./TextField"
 import Select from "./Select"
+import UserProfile from "./UserProfile"
 
 export {
   ProductDetail,
@@ -22,4 +23,5 @@ export {
   DeliveryAddress,
   TextField,
   Select,
+  UserProfile,
 }

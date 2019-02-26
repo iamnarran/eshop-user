@@ -21,16 +21,16 @@ const styles = theme => ({
 
 class OutlinedTextFields extends React.Component {
   onChange = (e) => {
-    console.log(e.target.value)
   }
   render() {
-    const { classes, label, value } = this.props;
-
+    const { classes, label, value, type } = this.props;
+    console.log(this.props.type)
     return (
       <form className={classes.container}>      
         <TextField
           id="outlined-full-width"
           label={label}
+          type={ type === undefined ? '' : type}
           placeholder={label+'*'}
           fullWidth
           margin="normal"
@@ -38,6 +38,8 @@ class OutlinedTextFields extends React.Component {
           InputLabelProps={{
             shrink: true,
           }}
+          value={value}
+          onChange={this.props.onChange}
         />
       </form>
     );
