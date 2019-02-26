@@ -13,7 +13,6 @@ class PageHeader extends React.Component {
   };
 
   componentDidMount() {
-    console.log("In componentDidMount");
     this.setState({ ...this.props });
   }
 
@@ -25,9 +24,6 @@ class PageHeader extends React.Component {
     //   },
     //   spaceBetween: 0
     // };
-
-    console.log("props", this.props);
-    console.log("state", this.state);
 
     return (
       <div
@@ -41,7 +37,7 @@ class PageHeader extends React.Component {
               this.props.banners === undefined
                 ? ""
                 : IMAGE + this.props.banners[0].imgnm
-            })`,
+              })`,
             backgroundRepeat: "no-repeat",
             backgroundPosition: "right",
             backgroundSize: "50% 115px",

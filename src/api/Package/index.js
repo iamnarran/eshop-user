@@ -17,5 +17,11 @@ export default [
     METHOD: "GET",
     URL: `${API}/api/packageImf/:id`,
     REPLACE: "id"
+  },
+  {
+    NAME: 'findWishList',
+    METHOD: "GET",
+    URL: `${API}/api/wishlist/:id`,
+    REPLACE: "id"
   }
 ];
