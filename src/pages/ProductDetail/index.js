@@ -177,21 +177,27 @@ class Component extends React.Component{
   }
   
   renderFooter = () => {
-    const { attribute, collectionProduct, skucd } = this.state
+    const { attribute, collectionProduct, skucd, product } = this.state
     return(
       <div className="row row10">
         <div className="col-xl-9 pad10">
           <Information attribute={attribute} />
-          <h1 className="title">
-            <span className="text-uppercase">Ижил бараа</span>
-          </h1>
-          <div className="section">
-            <div className="container pad10">
-              <div className="row row10">                
-                <CardSlider data={collectionProduct} params={productParams} elContainer={"collectionProduct"} />
+          {
+            collectionProduct.length === 0 ? '' :
+              <div>
+                <h1 className="title">
+                  <span className="text-uppercase">Ижил бараа</span>
+                </h1>
+                <div className="section">
+                  <div className="container pad10">
+                    <div className="row row10">                
+                      <CardSlider data={collectionProduct} params={productParams} elContainer={"collectionProduct"} />
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+          }
+          
           
           {/**ТАНИЛЦУУЛАГА */}
           <h1 className="title">
@@ -206,24 +212,28 @@ class Component extends React.Component{
               })
             }            
           </div>
-          <Comment skucd={skucd}/>
+          <Comment skucd={skucd} rate={product !== undefined ? product.rate : []}/>
         </div>
       </div>
     )
   }
   addProduct = () => {
-    if (this.state.saleNumber < this.state.product.availableqty && this.state.product.availableqty !== 0) {
-      this.setState({
-        saleNumber: this.state.saleNumber + 1,
-        sumPrice: this.state.issalekg ? this.state.sumPrice + this.state.grPrice : this.state.sumPrice + this.state.product.price        
-      })
+    const { saleNumber, product, issalekg, sumPrice, grPrice } = this.state
+    if (saleNumber < product.availableqty && product.availableqty !== 0) {
+      if (saleNumber < product.salemaxqty || product.salemaxqty === 0) {
+        this.setState({
+          saleNumber: saleNumber + 1,
+          sumPrice: issalekg ? sumPrice + grPrice : product.spercent !== 100 ? sumPrice + product.sprice : sumPrice + product.price        
+        })
+      }
     }
   }
   remProduct = () => { 
-    if (this.state.saleNumber > this.state.product.saleminqty) {  //hamgiin  bagdaa zarag too shirhegiin hyzgaarlalt
+    const { saleNumber, product, issalekg, sumPrice, grPrice } = this.state
+    if (saleNumber > product.saleminqty) {  //hamgiin  bagdaa zarag too shirhegiin hyzgaarlalt
       this.setState({
-        saleNumber: this.state.saleNumber - 1,
-        sumPrice: this.state.issalekg ? this.state.sumPrice - this.state.grPrice : this.state.sumPrice - this.state.product.price
+        saleNumber: saleNumber - 1,
+        sumPrice: issalekg ? sumPrice - grPrice : product.spercent !== 100 ? sumPrice - product.sprice : sumPrice - this.state.product.price
       })
     }
   }
@@ -274,18 +284,17 @@ class Component extends React.Component{
               <div className="col-xl-4 col-6 pad10">
                 <div className="input-group">
                   <div className="input-group-prepend" id="button-addon4">
-                    <button className="btn" type="button" onClick={this.remProduct}>
+                    <button className="btn product-detail-btn" type="button" onClick={this.remProduct}>
                       <i className="fa fa-minus" aria-hidden="true"></i>
                     </button>
                   </div>
                   <input alt="asfasd" className="form-control" placeholder="" value={saleNumber} aria-label="" aria-describedby="button-addon4" />
                   <div className="input-group-append" id="button-addon4">
-                    <button className="btn" type="button" onClick={this.addProduct}>
+                    <button className="btn product-detail-btn" type="button" onClick={this.addProduct}>
                       <i className="fa fa-plus" aria-hidden="true"></i>
                     </button>
                   </div>
-                </div>
-                
+                </div>                
               </div>
               <div className="col-xl-8 pad10">
                 <p className="count-text text-right">
@@ -342,7 +351,7 @@ class Component extends React.Component{
 }
 
 const productParams = {
-  slidesPerView: 5,
+  slidesPerView: 4,
   spaceBetween: 0,
   loop: true,
   autoplay: {

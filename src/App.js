@@ -145,13 +145,12 @@ class Localization extends Component {
       // },
       {
         path: "/delivery",
-        exact: false,
         component: () => <DeliveryAddress />
       },
       {
         path: "/userprofile",
-        exact: false,
-        component: () => <UserProfile />
+        exact: true,
+        component: rest => <UserProfile {...rest} {...this.props}/>
       },
     ];
 
@@ -172,7 +171,7 @@ class Localization extends Component {
                   <Public
                     {...this.props}
                     key={index}
-                    exact
+                    exact={route.exact}
                     path={route.path}
                     component={route.component}
                   />

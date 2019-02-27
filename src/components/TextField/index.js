@@ -28,7 +28,6 @@ class OutlinedTextFields extends React.Component {
     return (
       <form className={classes.container}>      
         <TextField
-          id="outlined-full-width"
           label={label}
           type={ type === undefined ? '' : type}
           placeholder={label+'*'}
@@ -40,6 +39,7 @@ class OutlinedTextFields extends React.Component {
           }}
           value={value}
           onChange={this.props.onChange}
+          style={{borderColor: 'red'}}
         />
       </form>
     );
