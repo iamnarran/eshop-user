@@ -21,22 +21,26 @@ const styles = theme => ({
 
 class OutlinedTextFields extends React.Component {
   onChange = (e) => {
-    console.log(e.target.value)
   }
   render() {
-    const { classes, label, value } = this.props;
-
+    const { classes, label, value, type } = this.props;
+    console.log(this.props.type)
     return (
-      <form className={classes.container}>
+      <form className={classes.container}>      
         <TextField
-          id="outlined-dense"
+          id="outlined-full-width"
           label={label}
-          className={classNames(classes.textField, classes.dense)}
-          margin="dense"
+          type={ type === undefined ? '' : type}
+          placeholder={label+'*'}
+          fullWidth
+          margin="normal"
           variant="outlined"
-          onChange={this.onChange}
-          style={{width: '100%'}}
-        />        
+          InputLabelProps={{
+            shrink: true,
+          }}
+          value={value}
+          onChange={this.props.onChange}
+        />
       </form>
     );
   }

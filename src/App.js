@@ -41,7 +41,9 @@ import {
   ProductDetail,
   WishList,
   DeliveryAddress,
+  UserProfile,
 } from "./containers/index";
+
 //library.add(fab, faCheckSquare, faCoffee);
 library.add(fas, far, fab);
 
@@ -145,6 +147,11 @@ class Localization extends Component {
         path: "/delivery",
         exact: false,
         component: () => <DeliveryAddress />
+      },
+      {
+        path: "/userprofile",
+        exact: false,
+        component: () => <UserProfile />
       },
     ];
 

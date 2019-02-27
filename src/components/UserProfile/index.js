@@ -11,18 +11,10 @@ class Component extends React.Component{
     phone: null,
     homeaddress: null
   }
+  
   componentDidMount() {
     this.setState({ ...this.props.container })
     this.onChangeCity('11') //defualt UB
-  }
-  
-  handleSubmit = (e) => {
-    e.preventDefault();
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        message.success("Хүргэлтийн хаяг амжилттай бүртгэгдлээ")
-      }
-    });
   }
 
   onChangeCity = (e) => {
@@ -34,6 +26,15 @@ class Component extends React.Component{
       return ''
     })
     this.setState({districtOrSum: tmp})
+  }
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        message.success("Хүргэлтийн хаяг амжилттай бүртгэгдлээ")
+      }
+    });
   }
 
   handleName = (e) => { this.setState({ name: e.target.value }) }  
@@ -53,15 +54,27 @@ class Component extends React.Component{
                 <div className="user-menu-content">
                 
                   <p className="title">
-                    <span>Хүргэлтийн хаяг</span>
+                    <span>Профайл хуудас</span>
                   </p>
                   <div className="user-profile-contain">                  
                     <form>
                       <div className="row row10">
                         <div className="col-xl-6 pad10">
-                          <div className="e-mart-input">                            
+                          <div className="form-group">                            
                             <Form.Item>
-                              {getFieldDecorator('name', {
+                              {getFieldDecorator('fname', {
+                                rules: [{ required: true, message: 'Овогоо заавал оруулна уу!' }],
+                              })(
+                                <TextField label="Овог" onChange={this.handleName} value={name}/>
+                              )}
+                            </Form.Item>
+                          </div>
+                        </div>
+
+                        <div className="col-xl-6 pad10">
+                          <div className="form-group">                            
+                            <Form.Item>
+                              {getFieldDecorator('fname', {
                                 rules: [{ required: true, message: 'Нэрээ заавал оруулна уу!' }],
                               })(
                                 <TextField label="Нэр" onChange={this.handleName} value={name}/>
@@ -69,29 +82,55 @@ class Component extends React.Component{
                             </Form.Item>
                           </div>
                         </div>
+
                         <div className="col-xl-6 pad10">
-                          <div className="form-group">
+                          <div className="form-group">                            
                             <Form.Item>
                               {getFieldDecorator('phone', {
                                 rules: [{ required: true, message: 'Утасаа заавал оруулна уу!' }],
                               })(
-                                <TextField label="Утас" onChange={this.handlePhone} value={phone}/>
+                                <TextField label="Утас" onChange={this.handleName} value={name}/>
                               )}
-                            </Form.Item>                            
+                            </Form.Item>
                           </div>
-                        </div>                        
-                      </div>
-                      <div className="row row10">
+                        </div>
+
+                        <div className="col-xl-6 pad10">
+                          <div className="form-group">                            
+                            <Form.Item>
+                              {getFieldDecorator('email', {
+                                rules: [{ required: true, message: 'Имейл хаягаа заавал оруулна уу!' }],
+                              })(
+                                <TextField label="Имейл" onChange={this.handleName} value={name}/>
+                              )}
+                            </Form.Item>
+                          </div>
+                        </div>
+
+                        <div className="col-xl-12 pad10">
+                          <div className="form-group">
+                            <Form.Item>
+                              {getFieldDecorator('password', {
+                                rules: [{ required: true, message: 'Нууц үгээ заавал оруулна уу!' }],
+                              })(
+                                <TextField label="Нууц үг" onChange={this.handleHomeAddress} value={homeaddress} type={"password"}/>
+                              )}
+                            </Form.Item>
+                          </div>
+                        </div>
+
                         <div className="col-xl-6 pad10">
                           <div className="form-group">
                             <Select label="Хот/Аймаг" option={this.state.cityOrProvince} city onChange={this.onChangeCity} />
                           </div>
                         </div>
+
                         <div className="col-xl-6 pad10">
                           <div className="form-group">
                             <Select label="Сум/Дүүрэг" option={this.state.districtOrSum}/>
                           </div>
                         </div>
+
                         <div className="col-xl-12 pad10">
                           <div className="form-group">
                             <Form.Item>
@@ -103,7 +142,34 @@ class Component extends React.Component{
                             </Form.Item>
                           </div>
                         </div>
-                      </div>                      
+
+
+                        <div className="col-xl-12 pad10"><b>И-март карт холбох</b></div>
+                        <div className="col-xl-6 pad10">
+                          <div className="form-group">                            
+                            <Form.Item>
+                              {getFieldDecorator('emart-card-number', {
+                                rules: [{ required: true, message: 'И-март картын дугаараа заавал оруулна уу!' }],
+                              })(
+                                <TextField label="И-март картын дугаар" onChange={this.handleName} value={name}/>
+                              )}
+                            </Form.Item>
+                          </div>
+                        </div>
+
+                        <div className="col-xl-6 pad10">
+                          <div className="form-group">                            
+                            <Form.Item>
+                              {getFieldDecorator('emart-card-pass', {
+                                rules: [{ required: true, message: 'И-март картын нууц үгээ заавал оруулна уу!' }],
+                              })(
+                                <TextField label="И-март картын нууц үг" onChange={this.handleName} value={name} type={"password"}/>
+                              )}
+                            </Form.Item>
+                          </div>
+                        </div>
+
+                      </div>
                     </form>
                     <div className="text-right">
                       <button className="btn btn-dark">
@@ -126,5 +192,5 @@ class Component extends React.Component{
   }
 }
 
-const App = Form.create({ name: 'delivery' })(Component);
+const App = Form.create({ name: 'profile' })(Component);
 export default App;
