@@ -20,6 +20,7 @@ class PackageDetail extends React.Component {
     addProduct = () => { }
     remProduct = () => { }
     render() {
+        console.log(this.state)
         const formatter = new Intl.NumberFormat("en-US");
         let products = null;
         let sameProducts = null;
@@ -42,11 +43,12 @@ class PackageDetail extends React.Component {
 
         sameProducts = (
             this.state.name.map((item, index) => {
+                console.log(item.sameProduct[0].tag[0])
                 return (
                     <li key={index}>
                         <div className="single flex-this">
                             <div className="image-container">
-                                <a href={item.route}>
+                                <a href={item.sameProduct[0].tag[0].route}>
                                     <span className="image" style={{
                                         backgroundImage: `url(${IMAGE + item.sameProduct[0].tag[0].img})`,
                                     }}></span>
@@ -55,7 +57,7 @@ class PackageDetail extends React.Component {
                             <div className="info-container flex-space">
                                 <a href=" ">
                                     <span>{item.sameProduct[0].tag[0].name}</span>
-                                    <strong>{formatter.format(item.sameProduct[0].tag[0].price)}₮</strong>
+                                    <strong>{formatter.format(item.sameProduct[0].tag[0].rprice)}₮</strong>
                                 </a>
                                 <div className="action">
                                     <a href=" ">
@@ -82,11 +84,11 @@ class PackageDetail extends React.Component {
                         </div>
                         <div className="info-container">
                             <div className="flex-space">
-                                <p className="text col-md-5">
+                                <p className="text col-md-5 col-sm-5">
                                     <span>{item.skunm}</span>
                                     <strong>{formatter.format(item.price)}₮</strong>
                                 </p>
-                                <form>
+                                <form style={{ width: '100px' }}>
                                     <div className="input-group e-input-group">
                                         <div className="input-group-prepend" id="button-addon4">
                                             <button className="btn" type="button"
@@ -105,7 +107,7 @@ class PackageDetail extends React.Component {
                                         </div>
                                         <input type="text" className="form-control"
                                             placeholder="" defaultValue={this.state.countNumber}
-                                            aria-label="" aria-describedby="button-addon4" />
+                                            aria-label="" aria-describedby="button-addon4" style={{ width: '40px' }} />
                                         <div className="input-group-append" id="button-addon4">
                                             <button className="btn" type="button"
                                                 style={{

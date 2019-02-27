@@ -1,5 +1,6 @@
 import React from 'react';
 import { IMAGE } from "../../utils/consts";
+import Rate from "../../components/Rate";
 
 class WishList extends React.Component {
     state = {
@@ -11,6 +12,7 @@ class WishList extends React.Component {
         const formatter = new Intl.NumberFormat("en-US");
         tableList = (
             list.map((item, index) => {
+                console.log(item.route)
                 return (
                     <div className="single flex-space">
                         <div className="product">
@@ -27,43 +29,20 @@ class WishList extends React.Component {
                                         <p className="name">{item.skunm}</p>
                                         <p className="text">{item.bibrandnm}</p>
                                     </a>
-                                    <a href=" " className="rating">
-                                        <ul className="list-inline">
-                                            <li className="list-inline-item active">
-                                                <i className="fa fa-star" aria-hidden="true"></i>
-                                                <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                <i className="fa fa-star-o" aria-hidden="true"></i>
-                                            </li>
-                                            <li className="list-inline-item active">
-                                                <i className="fa fa-star" aria-hidden="true"></i>
-                                                <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                <i className="fa fa-star-o" aria-hidden="true"></i>
-                                            </li>
-                                            <li className="list-inline-item half-active">
-                                                <i className="fa fa-star" aria-hidden="true"></i>
-                                                <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                <i className="fa fa-star-o" aria-hidden="true"></i>
-                                            </li>
-                                            <li className="list-inline-item">
-                                                <i className="fa fa-star" aria-hidden="true"></i>
-                                                <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                <i className="fa fa-star-o" aria-hidden="true"></i>
-                                            </li>
-                                            <li className="list-inline-item">
-                                                <i className="fa fa-star" aria-hidden="true"></i>
-                                                <i className="fa fa-star-half-o" aria-hidden="true"></i>
-                                                <i className="fa fa-star-o" aria-hidden="true"></i>
-                                            </li>
-                                            <li className="list-inline-item">
-                                                <span className="text">197</span>
-                                            </li>
-                                        </ul>
-                                    </a>
+                                    {item.rate[0].rate[0] ? (
+                                        <Rate
+                                            rate={item.rate[0].rate[0].ravg}
+                                            numOfVotes={item.rate[0].rate[0].cnt}
+                                        />
+                                    ) : <Rate
+                                            rate={0}
+                                            numOfVotes={0}
+                                        />}
                                 </div>
                             </div>
                         </div>
                         <div className="price">
-                            <strong>{formatter.format(item.price)}</strong>
+                            <strong>{formatter.format(item.price)}₮</strong>
                         </div>
                         <div className="action">
                             <ul className="list-unstyled flex-this end">

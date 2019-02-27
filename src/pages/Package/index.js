@@ -7,33 +7,33 @@ class Package extends React.Component {
     ...this.props.container
   }
   render() {
+    console.log("haha", this.state.mainbanner)
     return (
       <div className="top-container">
         <div className="whole-page-title" style={{ padding: '0px', backgroundColor: '#ff99cc' }}>
-          <div
-            className="whole-page-title container pad10"
-            style={{
-              backgroundImage: `url(${
-                this.state.mainbanner !== undefined ? IMAGE + this.state.mainbanner.imgnm : ""
-                })`,
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "right",
-              backgroundSize: "50% 115px",
-            }}
-            onClick={this.changeLocation}
-          >
-            <div className="container pad10">
-              <div className="title-container flex-space">
-                <h2>
-                  <span className="big">
-                    {this.state.menu[0] === undefined ? "" : this.state.menu[0].menunm}
-                  </span>
-                  <strong>{this.state.menu[0] === undefined ? "" : this.state.menu[0].subtitle}</strong>
-                </h2>
-              </div>
+          <div className="container whole-page-title" style={{ height: '115px', padding: '0px' }}>
+            <div className="title-container flex-space col-sm-12 col-md-6 col-ls-6" style={{ float: 'left', padding: '25px 0px' }}>
+              <h2>
+                <span className="big">
+                  {this.state.menu[0] === undefined ? "" : this.state.menu[0].menunm}
+                </span>
+                <strong>{this.state.menu[0] === undefined ? "" : this.state.menu[0].subtitle}</strong>
+              </h2>
             </div>
+            <a href={this.state.mainbanner.link ? this.state.mainbanner.link : ' '}>
+              <div className="whole-page-title container col-md-6 col-ls-6"
+                style={{
+                  backgroundImage: `url(${
+                    this.state.mainbanner !== undefined ? IMAGE + this.state.mainbanner.imgnm : ""
+                    })`,
+                  float: 'right',
+                  height: '100%'
+                }}>
+              </div>
+            </a>
           </div>
         </div>
+
         <div className="section">
           <div className="container pad10">
             <div className="row row10">
@@ -68,3 +68,25 @@ class Package extends React.Component {
 }
 
 export default Package;
+
+{/* <div className="whole-page-title container pad10"
+            style={{
+              backgroundImage: `url(${
+                this.state.mainbanner !== undefined ? IMAGE + this.state.mainbanner.imgnm : ""
+                })`,
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "right",
+              backgroundSize: "50% 115px",
+            }}>
+
+            <div className="container pad10">
+              <div className="title-container flex-space">
+                <h2>
+                  <span className="big">
+                    {this.state.menu[0] === undefined ? "" : this.state.menu[0].menunm}
+                  </span>
+                  <strong>{this.state.menu[0] === undefined ? "" : this.state.menu[0].subtitle}</strong>
+                </h2>
+              </div>
+            </div>
+          </div> */}
