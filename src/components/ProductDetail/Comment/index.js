@@ -8,16 +8,26 @@ import moment from "moment"
 class Component extends React.Component{
   state = {
     comment: [],
-    rate: []
+    rate: [],
+    ratesum: 0,
   }
   componentDidMount() {
+    this.getRatesum()
     api.product.productComment({ skucd: this.props.skucd })
-      .then(comment => api.product.productRate({ skucd: this.props.skucd })
-        .then(rate => this.setState({rate: rate.data[0], comment: comment.data})))    
+      .then(comment => this.setState({ comment: comment.data }))    
+  }
+
+  getRatesum = () => {
+    const { rate } = this.props
+    let sum = 0
+    if (rate !== undefined && rate.length !== 0) {
+      rate.map(i => sum += i.rate)
+    }
+    this.setState({ratesum: sum/rate.length+1, rate: rate})
   }
   render() {
-    const { comment, rate } = this.state
-    // console.log(comment, rate)
+    const { comment, rate, ratesum } = this.state
+    
     return <div>
       <div className="comments-container">
         <div className="write-comment">
@@ -49,17 +59,21 @@ class Component extends React.Component{
               {
                 rate === undefined ? '' : (
                   <div className="main-rating">
-                    <Rate rate={rate.ravg} numOfVotes={rate.rsum} />
-                    <p className="text">({rate.cnt} хүн үнэлгээ өгсөн байна)</p>
+                      <Rate rate={ratesum} numOfVotes={ratesum}/>   
+                    <p className="text">({rate.length+1} хүн үнэлгээ өгсөн байна)</p>
                   </div>
-                )
-                
+                )                
               }
               {
                 comment.map((i, key) => {
                   return (
                     <div className="single" key={key}>
-                      <Rate rate={Math.floor(1+Math.random()*9)} numOfVotes={Math.floor(1+Math.random()*9)}/>
+                      {                        
+                        this.props.rate.map((rate) => {
+                          if (i.custid === rate.custid) { return <Rate rate={rate.rate} numOfVotes={rate.rate} /> }
+                          return ''
+                        })
+                      }
                       <p className="text">{i.commnt}</p>
                       <ul className="list-unstyled bottom-info">
                         <li>

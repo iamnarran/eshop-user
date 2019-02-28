@@ -1461,7 +1461,7 @@ body {
 }
 
 .small-product .info-container .name {
-  height: 48px;
+  height: auto;
   overflow: hidden;
 }
 

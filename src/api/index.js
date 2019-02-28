@@ -11,6 +11,7 @@ import recipe from "./Recipe/index";
 import packageProduct from "./Package/index";
 import pagebanner from "./Banner/PagesBanner";
 import tag from "./Tag/index";
+import location from "./Location"
 
 let rest = {};
 
@@ -106,6 +107,12 @@ pagebanner.forEach(api => {
 rest["tag"] = {};
 tag.forEach(api => {
   rest.tag[api.NAME] = data => generateAPI(api, data);
+});
+
+//SYSTEM lOCATION
+rest["location"] = {};
+location.forEach(api => {
+  rest.location[api.NAME] = data => generateAPI(api, data);
 });
 
 export { rest as default, setAuthorizationHeader };

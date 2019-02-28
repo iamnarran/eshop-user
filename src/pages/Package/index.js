@@ -6,6 +6,13 @@ class Package extends React.Component {
   state = {
     ...this.props.container
   }
+
+  changeLocation = () => {
+    if (this.state.mainbanner !== undefined) {
+      window.open(this.state.mainbanner.link, "_blank");
+    }
+  };
+
   render() {
     return (
       <div className="top-container">

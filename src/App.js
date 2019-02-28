@@ -38,7 +38,10 @@ import {
   Package,
   PackageDetail,
   Season,
-  ProductDetail
+  ProductDetail,
+  WishList,
+  DeliveryAddress,
+  UserProfile,
 } from "./containers/index";
 
 //library.add(fab, faCheckSquare, faCoffee);
@@ -129,12 +132,26 @@ class Localization extends Component {
         exact: true,
         path: "/productdetail/:id",
         component: rest => <ProductDetail {...rest} {...this.props} />
-      }
+      },
+      {
+        exact: true,
+        path: "/WishList/:id",
+        component: rest => <WishList {...rest} {...this.props} />
+      },
       // {
       //   path: "*",
       //   exact: false,
       //   component: () => <NotFound />
       // },
+      {
+        path: "/delivery",
+        component: () => <DeliveryAddress />
+      },
+      {
+        path: "/userprofile",
+        exact: true,
+        component: rest => <UserProfile {...rest} {...this.props}/>
+      },
     ];
 
     return (
@@ -155,7 +172,7 @@ class Localization extends Component {
                   <Public
                     {...this.props}
                     key={index}
-                    exact
+                    exact={route.exact}
                     path={route.path}
                     component={route.component}
                   />

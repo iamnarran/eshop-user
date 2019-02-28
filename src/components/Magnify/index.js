@@ -10,17 +10,17 @@ class Component extends React.Component {
   state = {
     img: [],
     isLargeImg: false,
-    currentImage: 0,
+    currentImage: null,
   }
 
   onClickImage = () => {
-    this.setState({ isLargeImg : true })
+    this.setState({ isLargeImg : true, currentImage: null })
   }
   closeLightbox = () => {
-    this.setState({isLargeImg: false})
+    this.setState({ isLargeImg: false })
   }
-  gotoPrevLightboxImage = () => { this.setState({currentImage: this.state.currentImage-1}) }
-  gotoNextLightboxImage = () => { this.setState({ currentImage: this.state.currentImage + 1 }) }
+  gotoPrevLightboxImage = () => { this.setState({currentImage: this.state.currentImage===null?Number(this.props.slImg)-1:this.state.currentImage-1}) }
+  gotoNextLightboxImage = () => { this.setState({currentImage: this.state.currentImage===null?Number(this.props.slImg)+1:this.state.currentImage+1 }) }
   onClickThumbnail = (e) => { this.setState({ currentImage: e }) }
   renderImage = () => {
     const {images} = this.props
@@ -55,10 +55,10 @@ class Component extends React.Component {
             },
             isHintEnabled: true
           }}
-            style={{ zIndex: 100 }}
+            style={{ zIndex: 15 }}
           />
         </div>   
-        <div className="image-container">
+        <div className="image-container medium-magnify">
           {
             tags && tags.map((label, index) => (
               <Label key={index} seq={index} data={label}/>
@@ -67,7 +67,7 @@ class Component extends React.Component {
         </div> 
         <Lightbox
           images={this.renderImage()}
-          currentImage={currentImage}
+          currentImage={currentImage === null ? Number(this.props.slImg): currentImage}
           showThumbnails
           backdropClosesModal
           enableKeyboardInput
