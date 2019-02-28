@@ -17,9 +17,10 @@ class PackageDetail extends React.Component {
         date: this.props.container.Package.products[0].insymd.split("T")[0].split("-"),
         countNumber: 1
     }
-    addProduct = () => { }
-    remProduct = () => { }
+    plusProduct = (e) => { console.log("this is plus", e) }
+    minusProduct = (e) => { console.log("this is minus", e) }
     render() {
+        console.log(this.state.name)
         const formatter = new Intl.NumberFormat("en-US");
         let products = null;
         let sameProducts = null;
@@ -101,7 +102,7 @@ class PackageDetail extends React.Component {
                                                     borderBottomLeftRadius: '20px',
                                                     marginRight: '5px'
                                                 }}
-                                                onClick={this.remProduct}
+                                                onClick={this.minusProduct(item.id)}
                                             >
                                                 <i className="fa fa-minus" aria-hidden="true"></i>
                                             </button>
@@ -119,7 +120,7 @@ class PackageDetail extends React.Component {
                                                     borderBottomRightRadius: '20px',
                                                     marginLeft: '5px'
                                                 }}
-                                                onClick={this.addProduct}
+                                                onClick={this.plusProduct(item.id)}
                                             >
                                                 <i className="fa fa-plus" aria-hidden="true"></i>
                                             </button>

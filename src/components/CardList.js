@@ -20,14 +20,37 @@ class CardList extends React.Component {
 
   getCardsAccordingToSeq = (cardTypes, items) => {
     const cards = [];
-    for (let p = 0; p <= items.length;) {
+    if (this.props.second) {
+      for (let p = 0; p <= items.length;) {
+        for (let i = 0; i < cardTypes.length; i++) {
+          const cardType = parseInt(cardTypes[i]);
+          const cardsInRow =
+            cardType === CARD_TYPES.wide
+              ? CARD_NUMS_IN_ROW.wide
+              : CARD_NUMS_IN_ROW.slim;
+          for (let j = 0; j < cardsInRow; j++ , p++) {
+            if (items[p]) {
+              cards.push(
+                <Card
+                  key={p}
+                  type={cardType}
+                  item={items[p]}
+                  isLastInRow={j === cardsInRow - 1 ? true : false}
+                />
+              );
+            }
+          }
+        }
+      }
+    }
+    else {
       for (let i = 0; i < cardTypes.length; i++) {
         const cardType = parseInt(cardTypes[i]);
         const cardsInRow =
           cardType === CARD_TYPES.wide
             ? CARD_NUMS_IN_ROW.wide
             : CARD_NUMS_IN_ROW.slim;
-        for (let j = 0; j < cardsInRow; j++ , p++) {
+        for (let j = 0, p = 0; j < cardsInRow; j++ , p++) {
           if (items[p]) {
             cards.push(
               <Card
@@ -40,8 +63,8 @@ class CardList extends React.Component {
           }
         }
       }
-
     }
+
 
     return cards;
   };
