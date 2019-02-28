@@ -299,18 +299,18 @@ class Component extends React.Component{
               <div className="col-xl-8 pad10">
                 <p className="count-text text-right">
                   {issalekg===1?product.saleweight:''}
-                  {' ' + product.measure + ' '}
+                  {' ' + product.measure + ' -н '}
                   
-                  үнэ: {' '}{' '}
+                  үнэ: &emsp;
                   { //kg-aar zaragdah baraa eseh
                     issalekg === 1 ? money.format(product.kgproduct[0].salegramprice)
                       :
                       product.spercent === 100 ? money.format(product.price)
                         :
-                        <div className="price">
+                        <div className="price product-detail">
                           <small className="sale" style={{textDecoration: 'line-through'}}>
                             {' '}{money.format(product.price)}₮{' '}
-                          </small>
+                          </small>&nbsp;&nbsp;
                           <span className="current">
                           {' '}{money.format(product.sprice)}
                           </span>

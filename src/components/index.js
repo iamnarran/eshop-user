@@ -10,6 +10,9 @@ import DeliveryAddress from "./UFDeliveryAddress"
 import TextField from "./TextField"
 import Select from "./Select"
 import UserProfile from "./UserProfile"
+import ChangePass from "./UFChangePass"
+import History from "./UFHistory"
+import WishList from "./UFWishlist"
 
 export {
   ProductDetail,
@@ -24,4 +27,7 @@ export {
   TextField,
   Select,
   UserProfile,
+  ChangePass,
+  History,
+  WishList,
 }

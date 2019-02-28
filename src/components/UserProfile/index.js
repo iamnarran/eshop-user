@@ -1,6 +1,7 @@
 import React from "react"
 import { TextField, Select } from "../"
 import { Form, message } from "antd"
+import api from "../../api"
 
 class Component extends React.Component{
   state = {
@@ -13,12 +14,26 @@ class Component extends React.Component{
   }
   
   componentDidMount() {
-    this.setState({ ...this.props })
-    this.onChangeCity('11') //defualt UB
+    api.location.findAll().then(res => {
+      if (res.success) {
+        const cityOrProvince = []
+        const map = new Map()
+        res.data.map((index) => {
+          if (!map.has(index.provinceid)) { 
+            map.set(index.provinceid, true)
+            cityOrProvince.push(index)
+          }
+          return ''
+        })
+        console.log(res.data)
+        this.setState({ cityOrProvince: cityOrProvince, districtOrSum: res.data })
+        this.onChangeCity('11') //defualt UB
+      }
+    })    
   }
 
   onChangeCity = (e) => {
-    const { districtOrSum } = this.props
+    const { districtOrSum } = this.state
     let tmp = []
     
     districtOrSum.map((i) => {
@@ -44,11 +59,10 @@ class Component extends React.Component{
   render() {
     const { getFieldDecorator } = this.props.form;
     const { name, phone, homeaddress } = this.state
-    const { cityOrProvince, districtOrSum } = this.props
+    const { cityOrProvince, districtOrSum } = this.state
     return (
-              
-        <div className="user-menu-content">
-        
+      <div className="col-md-8 pad10">              
+        <div className="user-menu-content">        
           <p className="title">
             <span>Профайл хуудас</span>
           </p>
@@ -85,7 +99,7 @@ class Component extends React.Component{
                       {getFieldDecorator('phone', {
                         rules: [{ required: true, message: 'Утасаа заавал оруулна уу!' }],
                       })(
-                        <TextField label="Утас" onChange={this.handleName} value={name}/>
+                        <TextField label="Утас" onChange={this.handleName} value={phone}/>
                       )}
                     </Form.Item>
                   </div>
@@ -174,6 +188,7 @@ class Component extends React.Component{
             </div>
           </div>
         </div>
+      </div>
     )
   }
 }
