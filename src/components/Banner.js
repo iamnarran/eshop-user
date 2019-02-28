@@ -31,9 +31,8 @@ class Banner extends React.Component {
     }
     return (
       <div className="banner-container">
-        <span/>
-        <div className="container pad10">
-        </div>
+        <span />
+        <div className="container pad10" />
       </div>
     );
   }

@@ -76,7 +76,7 @@ class Localization extends Component {
   render() {
     const popupClass = `fixed-mobile-menu${
       this.state.isToggle ? " activated" : ""
-      }`;
+    }`;
     const { auth } = this.props;
 
     const routes = [
@@ -142,6 +142,7 @@ class Localization extends Component {
         <Router history={BrowserHistory}>
           <div>
             <Header isToggle={this.state.isToggle} onChange={this.toggleMenu} />
+
             <MobileMenu
               popupClass={popupClass}
               isToggle={this.state.isToggle}
@@ -181,7 +182,8 @@ class App extends Component {
 
     if (storage.has("user")) {
       try {
-      } catch (e) { }
+        console.log(storage.user);
+      } catch (e) {}
     }
   }
 
@@ -195,6 +197,7 @@ class App extends Component {
     );
   }
 }
+
 /* <Route
               path={'/Account'}
               render={props => (

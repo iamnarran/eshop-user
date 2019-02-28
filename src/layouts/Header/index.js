@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Icon, Badge, Avatar, Modal } from "antd";
+import ls from "local-storage";
 
+import FacebookLogin from "../../components/FacebookLogin";
+// import GoogleLogin from "../../components/GoogleLogin";
 import Category from "../../components/Category";
 import MainMenu from "../../components/Menu";
 /* import DropMenu from '../../components/DropMenu'; */
@@ -38,8 +41,25 @@ class AppHeader extends Component {
   handleSingUpSave = () => this.setState({ SingUpVisible: false });
   handleSingUpCancel = () => this.setState({ SingUpVisible: false });
 
+  componentClicked = () => {
+    console.log("componentClicked");
+  };
+
+  responseFacebook = response => {
+    console.log(response);
+  };
+
   togglePopup = () => {
     this.props.onChange();
+  };
+
+  handleLogoutClick = () => {
+    window.FB.logout();
+  };
+
+  isExpired = expiresIn => {
+    const now = new Date().getTime();
+    return expiresIn < now;
   };
 
   render() {
@@ -65,6 +85,129 @@ class AppHeader extends Component {
       this.state.isSearch ? " activated" : ""
     }`;
     const togglePopup = `${this.props.isToggle ? " activated" : ""}`;
+
+    let loginButtonContent = (
+      <li className="list-inline-item">
+        <Link to="#" onClick={this.showLogInModal}>
+          <span className="text-uppercase">Нэвтрэх</span>
+        </Link>
+      </li>
+    );
+    if (ls.get("user") && !this.isExpired(ls.get("user").expiresIn)) {
+      loginButtonContent = (
+        <li className="list-inline-item user">
+          <Link to="#" className="flex-this">
+            <div className="image-container default">
+              <span
+                className="image"
+                style={{ backgroundImage: `url(${ls.get("user").picture})` }}
+              />
+            </div>
+            <span className="">{ls.get("user").name}</span>
+          </Link>
+          <div className="dropdown">
+            <div className="drop-content">
+              <div className="profile-menu">
+                <div className="menu-header">
+                  <div className="flex-this">
+                    <div className="image-container default">
+                      <span
+                        className="image"
+                        style={{
+                          backgroundImage: `url(${ls.get("user").picture})`
+                        }}
+                      />
+                    </div>
+                    <p className="name">{ls.get("user").name}</p>
+                  </div>
+                  <div className="progress">
+                    <div
+                      className="progress-bar"
+                      role="progressbar"
+                      style={{ width: "100%" }}
+                      aria-valuenow="100"
+                      aria-valuemin="0"
+                      aria-valuemax="100"
+                    />
+                  </div>
+                  <p className="text text-center">
+                    <strong>Таны мэдээлэл</strong>
+                    <span>100% / 100%</span>
+                  </p>
+                </div>
+                <ul className="list-unstyled">
+                  <li className="active">
+                    <Link to="#" className="flex-this">
+                      <i className="fa fa-user" aria-hidden="true" />
+                      <span>Профайл хуудас</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="#" className="flex-this">
+                      <i className="fa fa-check-square" aria-hidden="true" />
+                      <span>Таны үзсэн барааны түүх</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="#" className="flex-this">
+                      <i className="fa fa-history" aria-hidden="true" />
+                      <span>Худалдан авалтын түүх</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="#" className="flex-this">
+                      <i className="fa fa-heart" aria-hidden="true" />
+                      <span>Хадгалсан бараа</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="#" className="flex-this">
+                      <i className="fa fa-bell" aria-hidden="true" />
+                      <span>Мэдэгдэл</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="#" className="flex-this">
+                      <i className="fa fa-database" aria-hidden="true" />
+                      <span>Купон</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="#" className="flex-this">
+                      <i className="fa fa-credit-card" aria-hidden="true" />
+                      <span>ePoint карт</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="#" className="flex-this">
+                      <i className="fa fa-compass" aria-hidden="true" />
+                      <span>Хүргэлтийн хаяг</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="#" className="flex-this">
+                      <i className="fa fa-lock" aria-hidden="true" />
+                      <span>Нууц үгээ солих</span>
+                    </Link>
+                  </li>
+                </ul>
+                <div className="text-left">
+                  <Link
+                    onClick={this.handleLogoutClick}
+                    to="#"
+                    className="btn btn-gray"
+                  >
+                    <i className="fa fa-chevron-left" aria-hidden="true" />
+                    <span className="text-uppercase">Гарах</span>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+      );
+    }
+
     return (
       <div>
         <div className={togglePopup}>
@@ -103,11 +246,11 @@ class AppHeader extends Component {
                     <span className="text-uppercase">Нэвтрэх</span>
                   </Link>
                 </li>
-                <li className="list-inline-item">
+                {/* <li className="list-inline-item">
                   <Link to="#" onClick={this.showSingUpModal}>
                     <span className="text-uppercase">Бүртгүүлэх</span>
                   </Link>
-                </li>
+                </li> */}
               </ul>
             </div>
             <ToggleMenu dataSource={menus} />
@@ -146,7 +289,7 @@ class AppHeader extends Component {
                               </select>
                             </form>
                           </li>
-                          <li className="list-inline-item notification">
+                          {/* <li className="list-inline-item notification">
                             <Badge dot>
                               <Avatar
                                 shape="square"
@@ -156,17 +299,8 @@ class AppHeader extends Component {
                                 style={{ lineHeight: "20px" }}
                               />
                             </Badge>
-                          </li>
-                          <li className="list-inline-item">
-                            <Link to="#" onClick={this.showLogInModal}>
-                              <span className="text-uppercase">Нэвтрэх</span>
-                            </Link>
-                          </li>
-                          <li className="list-inline-item">
-                            <Link to="" onClick={this.showSingUpModal}>
-                              <span className="text-uppercase">Бүртгүүлэх</span>
-                            </Link>
-                          </li>
+                          </li> */}
+                          {loginButtonContent}
                         </ul>
                       </div>
                     </div>
@@ -333,6 +467,7 @@ class AppHeader extends Component {
               </div>
             </div>
           </div>
+
           <Modal
             title="Нэвтрэх"
             visible={this.state.logInVisible}
@@ -399,23 +534,13 @@ class AppHeader extends Component {
                 </button>
               </form>
               <span className="divide-maker">Эсвэл</span>
-              <button
-                type="submit"
-                className="btn btn-block btn-social btn-facebook"
-              >
-                <span>Facebook-р бүртгүүлэх</span>
-              </button>
-              <button
-                type="submit"
-                className="btn btn-block btn-social btn-gmail"
-              >
-                Gmail-р бүртгүүлэх
-              </button>
+              <FacebookLogin onLogin={this.handleLogInSave} />
+              {/* <GoogleLogin /> */}
               <button
                 type="submit"
                 className="btn btn-block btn-social btn-emart"
               >
-                Имарт картаар бүртгүүлэх
+                Имарт картаар нэвтрэх
               </button>
               <div className="text-center">
                 <Link to="#" className="btn btn-link">
@@ -425,7 +550,7 @@ class AppHeader extends Component {
             </div>
           </Modal>
 
-          <Modal
+          {/* <Modal
             title="Бүртгүүлэх"
             visible={this.state.SingUpVisible}
             onOk={this.showSingUpModal}
@@ -530,10 +655,11 @@ class AppHeader extends Component {
                 Имарт картаар бүртгүүлэх
               </button>
             </div>
-          </Modal>
+          </Modal> */}
         </div>
       </div>
     );
   }
 }
+
 export default AppHeader;

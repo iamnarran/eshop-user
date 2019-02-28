@@ -6,7 +6,16 @@ import RecipeDetail from "./Recipe/detail";
 import Package from "./Package";
 import ProductDetail from "./ProductDetail";
 import Season from "./Season";
-import PackageDetail from "./Package/detail"
+import PackageDetail from "./Package/detail";
 
-export { Discount, Homepage, NewProduct, Recipe, RecipeDetail, Package, ProductDetail, Season, PackageDetail };
-
+export {
+  Discount,
+  Homepage,
+  NewProduct,
+  Recipe,
+  RecipeDetail,
+  Package,
+  ProductDetail,
+  Season,
+  PackageDetail
+};

@@ -1,12 +1,12 @@
 export default key => {
   const queries = window.location.href
-    .split('?')
+    .split("?")
     .pop()
-    .split('&');
+    .split("&");
 
   const params = {};
   queries.forEach(query => {
-    const set = query.split('=');
+    const set = query.split("=");
     params[set[0]] = set[1];
   });
 

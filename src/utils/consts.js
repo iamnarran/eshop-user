@@ -38,6 +38,13 @@ const WIDGET_SLUGS = {
 };
 Object.freeze(WIDGET_SLUGS);
 
+const SOCIAL_IDS = {
+  google:
+    "385681945952-cuekq38feemk8gk2elbtctbpanregnnj.apps.googleusercontent.com",
+  facebook: "2202198193174497"
+};
+Object.freeze(SOCIAL_IDS);
+
 // let WIDGET_LABELS = {};
 // WIDGET_LABELS[WIDGET_SLUGS.onlyemart] = [];
 // WIDGET_LABELS[WIDGET_SLUGS.discount] = [
@@ -56,6 +63,7 @@ export {
   CARD_TYPES,
   CARD_NUMS_IN_ROW,
   CARD_LIST_TYPES,
-  WIDGET_SLUGS
+  WIDGET_SLUGS,
+  SOCIAL_IDS
   // WIDGET_LABELS
 };

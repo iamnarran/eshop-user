@@ -1,22 +1,19 @@
-import React, { Component } from 'react';
-import Fontawesome from '@fortawesome/react-fontawesome';
-import faUpload from '@fortawesome/fontawesome-free-solid/faUpload';
-import faTimes from '@fortawesome/fontawesome-free-solid/faTimes';
+import React, { Component } from "react";
+import Fontawesome from "@fortawesome/react-fontawesome";
+import faUpload from "@fortawesome/fontawesome-free-solid/faUpload";
+import faTimes from "@fortawesome/fontawesome-free-solid/faTimes";
 
 export class ActiveImage extends Component {
   render() {
     const { src, active, onClick, remove } = this.props;
 
     return (
-      <div
-        className={ `active-image ${ active && 'active' }` }
-        onClick={ onClick }
-      >
-        <div className="times" onClick={ remove }>
-          <Fontawesome icon={ faTimes } />
+      <div className={`active-image ${active && "active"}`} onClick={onClick}>
+        <div className="times" onClick={remove}>
+          <Fontawesome icon={faTimes} />
         </div>
-        <img src={ src } alt="" width = { this.props.width || '100px' }/>
-        { active && <div className="active-text">Featured Image</div> }
+        <img src={src} alt="" width={this.props.width || "100px"} />
+        {active && <div className="active-text">Featured Image</div>}
       </div>
     );
   }
@@ -24,8 +21,8 @@ export class ActiveImage extends Component {
 
 class Upload extends Component {
   state = {
-    file: '',
-    imagePreviewUrl: '',
+    file: "",
+    imagePreviewUrl: "",
     files: [],
     previews: [],
     current: 0
@@ -38,7 +35,7 @@ class Upload extends Component {
     }
   }
   componentDidUpdate() {
-    console.log('state: ', this.state);
+    console.log("state: ", this.state);
   }
 
   _handleImageChange = e => {
@@ -54,8 +51,8 @@ class Upload extends Component {
         tmp.push(file);
         tmpPreview.push(reader.result);
         this.setState({
-            files: tmp,
-            previews: tmpPreview
+          files: tmp,
+          previews: tmpPreview
         });
         this.props.upload(tmp);
       };
@@ -68,34 +65,28 @@ class Upload extends Component {
     return (
       <div className="file-input-container">
         <div className="input-images">
-          {
-            previews.map((p, index) => {
-              return (
-                <ActiveImage
-                  key={`active-${index}`}
-                  src={p}
-                  index={index}
-                  active={current === index}
-                  onClick={() => {
-                    this.setState({ current: index });
-                    this.props.setCurrent(index);
-                  }}
-                  remove={e => {
-                    e.preventDefault();
-                    e.persist();
-                    this.setState({
-                      previews: previews.filter(
-                        (p, i) => index !== i
-                      ),
-                      files: files.filter(
-                        (p, i) => index !== i
-                      )
-                    });
-                  }}
-                />
-              );
-            })
-          }
+          {previews.map((p, index) => {
+            return (
+              <ActiveImage
+                key={`active-${index}`}
+                src={p}
+                index={index}
+                active={current === index}
+                onClick={() => {
+                  this.setState({ current: index });
+                  this.props.setCurrent(index);
+                }}
+                remove={e => {
+                  e.preventDefault();
+                  e.persist();
+                  this.setState({
+                    previews: previews.filter((p, i) => index !== i),
+                    files: files.filter((p, i) => index !== i)
+                  });
+                }}
+              />
+            );
+          })}
           <div className="wrapper">
             <input
               type="file"
@@ -111,14 +102,11 @@ class Upload extends Component {
             </div>
           </div>
         </div>
-        {
-          previews &&
-            previews.length > 0 && (
-              <div className="form-group">
-                <hr />
-              </div>
-            )
-        }
+        {previews && previews.length > 0 && (
+          <div className="form-group">
+            <hr />
+          </div>
+        )}
       </div>
     );
   }
@@ -140,10 +128,7 @@ class ImageUploader extends Component {
     return (
       <div className="row">
         <div className="col-xs-12">
-          <Upload
-            insert={ this._insert }
-            { ...this.props }
-          />
+          <Upload insert={this._insert} {...this.props} />
         </div>
       </div>
     );

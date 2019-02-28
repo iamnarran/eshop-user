@@ -1,9 +1,9 @@
-import api from '../api';
-import Static from '../api/Static';
+import api from "../api";
+import Static from "../api/Static";
 
 let actions = {};
 Static.forEach(a => {
-  if (a.METHOD !== 'GET') {
+  if (a.METHOD !== "GET") {
     actions[a.NAME] = data => dispatch => api.staticinfo[a.NAME](data);
   }
 });

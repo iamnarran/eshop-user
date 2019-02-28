@@ -1,8 +1,8 @@
 export default translations => {
-  let defaultLang = '';
+  let defaultLang = "";
 
   translations.forEach(t => {
-    if (t.defaultStatus === 'default') {
+    if (t.defaultStatus === "default") {
       defaultLang = t;
     }
   });

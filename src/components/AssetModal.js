@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import { Modal, ModalHeader } from 'reactstrap';
-import { createForm } from 'rc-form';
-import { connect } from 'react-redux';
-import { toast } from 'react-toastify';
+import React, { Component } from "react";
+import { Modal, ModalHeader } from "reactstrap";
+import { createForm } from "rc-form";
+import { connect } from "react-redux";
+import { toast } from "react-toastify";
 
-import Actions from '../actions/assets';
-import Gallery from './Gallery';
+import Actions from "../actions/assets";
+import Gallery from "./Gallery";
 
 @connect(
   null,
@@ -13,13 +13,12 @@ import Gallery from './Gallery';
     insert: Actions.insert
   }
 )
-
 class AssetModal extends Component {
   state = {
     loading: false,
     submitCount: 0,
-    file: '',
-    imagePreviewUrl: ''
+    file: "",
+    imagePreviewUrl: ""
   };
 
   _submit = async fileUrl => {
@@ -31,11 +30,11 @@ class AssetModal extends Component {
           assetSrc: fileUrl
         }
       });
-      toast.success('Successfully added.');
+      toast.success("Successfully added.");
       const { pathname } = this.props.location;
       this.props.history.replace(pathname);
     } catch (e) {
-      console.error('CUSTOM ERROR: ', JSON.stringify(e));
+      console.error("CUSTOM ERROR: ", JSON.stringify(e));
     }
   };
 
@@ -47,7 +46,7 @@ class AssetModal extends Component {
       try {
         const { id } = this.props;
         let formData = new FormData();
-        formData.append('file', file);
+        formData.append("file", file);
         const res = await this.props.upload(formData);
         await this.props.insert({
           id,
@@ -55,11 +54,11 @@ class AssetModal extends Component {
             assetSrc: res.data
           }
         });
-        toast.success('Successfully added.');
+        toast.success("Successfully added.");
         const { pathname } = this.props.location;
         this.props.history.replace(pathname);
       } catch (e) {
-        console.log('error: ', JSON.stringify(e), e);
+        console.log("error: ", JSON.stringify(e), e);
       }
 
       this.setState({ loading: false });
@@ -85,21 +84,16 @@ class AssetModal extends Component {
   };
 
   render() {
-    const { isOpen, toggle, fileType = 'image', ...props } = this.props;
+    const { isOpen, toggle, fileType = "image", ...props } = this.props;
 
     return (
-      <Modal
-        isOpen={isOpen}
-        toggle={toggle}
-        className="custom-modal"
-        size="lg"
-      >
+      <Modal isOpen={isOpen} toggle={toggle} className="custom-modal" size="lg">
         <ModalHeader toggle={toggle}>Insert Asset</ModalHeader>
         <Gallery
           single
           onChange={file => {
-              this._submit(file.fileUrl);
-              toggle();
+            this._submit(file.fileUrl);
+            toggle();
           }}
           close={toggle}
           {...props}

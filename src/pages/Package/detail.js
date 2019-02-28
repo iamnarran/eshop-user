@@ -11,7 +11,6 @@ class PackageDetail extends React.Component {
         const formatter = new Intl.NumberFormat("en-US");
         const name = this.state.Products[0].products;
         const price = this.state.Products[0].total;
-        const data = this.state.Package;
         let products = null;
         let sameProducts = null;
         const images = this.state.Package.images;

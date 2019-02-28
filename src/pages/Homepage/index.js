@@ -5,7 +5,7 @@ import MessengerCustomerChat from "react-messenger-customer-chat";
 import Slider from "../../components/Slider";
 import Widget from "../../components/Widget";
 import Banner from "../../components/Banner";
-import { WIDGET_SLUGS } from "../../utils/consts";
+import { WIDGET_SLUGS, SOCIAL_IDS } from "../../utils/consts";
 
 class Homepage extends React.Component {
   getBlocks(widgets, items) {
@@ -181,7 +181,8 @@ class Homepage extends React.Component {
         {/* Messenger */}
         <MessengerCustomerChat
           pageId="169275059877520"
-          appId="570055533421847"
+          // appId="570055533421847"
+          appId={SOCIAL_IDS.facebook}
           htmlRef={window.location.pathname}
         />
         {/* Messenger */}

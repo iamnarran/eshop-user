@@ -19,7 +19,6 @@ class CardList extends React.Component {
   }
 
   getCardsAccordingToSeq = (cardTypes, items) => {
-    console.log(items);
     const cards = [];
     for (let i = 0, p = 0; i < cardTypes.length; i++) {
       const cardType = parseInt(cardTypes[i]);
