@@ -20,7 +20,6 @@ class PackageDetail extends React.Component {
     addProduct = () => { }
     remProduct = () => { }
     render() {
-        console.log(this.state)
         const formatter = new Intl.NumberFormat("en-US");
         let products = null;
         let sameProducts = null;
@@ -43,12 +42,11 @@ class PackageDetail extends React.Component {
 
         sameProducts = (
             this.state.name.map((item, index) => {
-                console.log(item.sameProduct[0].tag[0])
-                return (
-                    <li key={index}>
+                if (item.sameProduct[0].tag[0]) {
+                    return (<li key={index}>
                         <div className="single flex-this">
                             <div className="image-container">
-                                <a href={item.sameProduct[0].tag[0].route}>
+                                <a href={item.sameProduct[0].tag[0].route ? item.sameProduct[0].tag[0].route : " "}>
                                     <span className="image" style={{
                                         backgroundImage: `url(${IMAGE + item.sameProduct[0].tag[0].img})`,
                                     }}></span>
@@ -66,8 +64,11 @@ class PackageDetail extends React.Component {
                                 </div>
                             </div>
                         </div>
-                    </li>
-                )
+                    </li>);
+                }
+                else {
+                    return (null);
+                }
             })
         );
         products = (
