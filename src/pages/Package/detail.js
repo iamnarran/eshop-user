@@ -20,7 +20,7 @@ class PackageDetail extends React.Component {
     plusProduct = (e) => { console.log("this is plus", e) }
     minusProduct = (e) => { console.log("this is minus", e) }
     render() {
-        console.log(this.state.name)
+        
         const formatter = new Intl.NumberFormat("en-US");
         let products = null;
         let sameProducts = null;
@@ -41,6 +41,7 @@ class PackageDetail extends React.Component {
             }
         };
 
+        // Багцад орсон барааны ижил бараанууд
         sameProducts = (
             this.state.name.map((item, index) => {
                 if (item.sameProduct[0].tag[0]) {
@@ -72,6 +73,8 @@ class PackageDetail extends React.Component {
                 }
             })
         );
+
+        // Багцад орсон бараанууд
         products = (
             this.state.name.map((item, index) => {
                 return (
@@ -82,7 +85,6 @@ class PackageDetail extends React.Component {
                                     backgroundImage: `url(${IMAGE + item.imgnm})`,
                                 }}></span>
                             </a>
-
                         </div>
                         <div className="info-container">
                             <div className="flex-space">

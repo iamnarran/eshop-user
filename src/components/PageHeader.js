@@ -28,7 +28,7 @@ class PageHeader extends React.Component {
         <div
           className="whole-page-title class container pad10"
           style={{
-            backgroundImage: `url(${IMAGE + selected.imgnm})`,
+            backgroundImage: `url(${selected === undefined ? '' : IMAGE + selected.imgnm})`,
             backgroundRepeat: "no-repeat",
             backgroundPosition: "right",
             backgroundSize: "50% 115px",
