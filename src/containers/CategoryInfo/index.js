@@ -1,23 +1,20 @@
 import React from "react";
-
-import api from "../../api";
 import { compose } from "react-komposer";
+import api from "../../api";
 import Loader from "../../components/Loader";
-import { Footer } from "../../layouts/index";
-
+import { CategoryInfo } from "../../pages";
 const options = {
   loadingHandler: () => <Loader />
 };
 
 const fetch = async (props, onData) => {
   try {
-    const staticinfo = await api.staticinfo.findAll();
-    const staticPages = await api.staticPages.findAll();
-
+    const categoryProduct = await api.categoryInfo.findProducts({
+      id: props.match.params.id
+    });
     onData(null, {
       container: {
-        staticinfo: staticinfo.data[0],
-        staticPages: staticPages.data
+        categoryProduct: categoryProduct.data
       }
     });
   } catch (e) {
@@ -33,4 +30,4 @@ const dataLoader = (props, onData) => {
 export default compose(
   dataLoader,
   options
-)(Footer);
+)(CategoryInfo);

@@ -9,6 +9,8 @@ import Season from "./Season";
 import PackageDetail from "./Package/detail";
 import WishList from "./WishList";
 import UserProfile from "./UserProfile";
+import StaticPage from "./StaticPage";
+import CategoryInfo from "./CategoryInfo";
 
 export {
   Discount,
@@ -21,5 +23,7 @@ export {
   Season,
   PackageDetail,
   WishList,
-  UserProfile
+  UserProfile,
+  StaticPage,
+  CategoryInfo
 };

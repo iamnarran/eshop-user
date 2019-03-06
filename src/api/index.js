@@ -11,7 +11,9 @@ import recipe from "./Recipe/index";
 import packageProduct from "./Package/index";
 import pagebanner from "./Banner/PagesBanner";
 import tag from "./Tag/index";
-import location from "./Location"
+import location from "./Location";
+import staticPages from "./StaticPages";
+import categoryInfo from "./CategoryInfo";
 
 let rest = {};
 
@@ -113,6 +115,18 @@ tag.forEach(api => {
 rest["location"] = {};
 location.forEach(api => {
   rest.location[api.NAME] = data => generateAPI(api, data);
+});
+
+//STATIC PAGE
+rest["staticPages"] = {};
+staticPages.forEach(api => {
+  rest.staticPages[api.NAME] = data => generateAPI(api, data);
+});
+
+//CATEGORY PRODUCT
+rest["categoryInfo"] = {};
+categoryInfo.forEach(api => {
+  rest.categoryInfo[api.NAME] = data => generateAPI(api, data);
 });
 
 export { rest as default, setAuthorizationHeader };

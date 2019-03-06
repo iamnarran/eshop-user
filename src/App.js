@@ -42,6 +42,9 @@ import {
   WishList,
   DeliveryAddress,
   UserProfile,
+  StaticPage,
+  CategoryInfo,
+  Temp
 } from "./containers/index";
 
 //library.add(fab, faCheckSquare, faCoffee);
@@ -133,16 +136,12 @@ class Localization extends Component {
         path: "/productdetail/:id",
         component: rest => <ProductDetail {...rest} {...this.props} />
       },
+
       {
         exact: true,
         path: "/WishList/:id",
         component: rest => <WishList {...rest} {...this.props} />
       },
-      // {
-      //   path: "*",
-      //   exact: false,
-      //   component: () => <NotFound />
-      // },
       {
         path: "/delivery",
         component: () => <DeliveryAddress />
@@ -150,8 +149,23 @@ class Localization extends Component {
       {
         path: "/userprofile",
         exact: true,
-        component: rest => <UserProfile {...rest} {...this.props}/>
+        component: rest => <UserProfile {...rest} {...this.props} />
       },
+      {
+        exact: true,
+        path: "/agreement/:id",
+        component: rest => <StaticPage {...rest} {...this.props} />
+      },
+      {
+        exact: true,
+        path: "/CategoryInfo/:id",
+        component: rest => <CategoryInfo {...rest} {...this.props} />
+      },
+      {
+        exact: true,
+        path: "/temp",
+        component: rest => <Temp {...rest} {...this.props} />
+      }
     ];
 
     return (
