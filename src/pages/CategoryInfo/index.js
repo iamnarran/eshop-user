@@ -6,15 +6,108 @@ class CategoryInfo extends React.Component {
   render() {
     const products = this.props.container.categoryProduct[0].products;
     const attributes = this.props.container.categoryProduct[0].attributes;
-    console.log("asdf", attributes);
-    console.log(products);
+    const SubCategory = this.props.container.categoryProduct[0].SubCategorys[0];
+    let attibute = null;
+    console.log("props", this.props);
+    console.log("subCategory", products.length);
+
+    attibute = attributes.map((item, index) => {
+      if (attributes) {
+        return (
+          <div>
+            <div className="left-filter">
+              <a
+                className="collapse-title"
+                data-toggle="collapse"
+                href="#collapseFive"
+                role="button"
+                aria-expanded="true"
+                aria-controls="collapseExample"
+              >
+                Хэв маяг
+              </a>
+              <div className="collapse show" id="collapseFive">
+                <div className="collapse-content">
+                  <ul className="list-unstyled">
+                    <li>
+                      <div className="custom-control custom-checkbox">
+                        <input
+                          type="checkbox"
+                          className="custom-control-input"
+                          id="customCheck9"
+                        />
+                        <label
+                          className="custom-control-label"
+                          for="customCheck9"
+                        >
+                          Цагаан хоолтон
+                        </label>
+                      </div>
+                    </li>
+                    <li>
+                      <div className="custom-control custom-checkbox">
+                        <input
+                          type="checkbox"
+                          className="custom-control-input"
+                          id="customCheck10"
+                        />
+                        <label
+                          className="custom-control-label"
+                          for="customCheck10"
+                        >
+                          Органик
+                        </label>
+                      </div>
+                    </li>
+                    <li>
+                      <div className="custom-control custom-checkbox">
+                        <input
+                          type="checkbox"
+                          className="custom-control-input"
+                          id="customCheck11"
+                          checked=""
+                        />
+                        <label
+                          className="custom-control-label"
+                          for="customCheck11"
+                        >
+                          Цавуулаггүй
+                        </label>
+                      </div>
+                    </li>
+                    <li>
+                      <div className="custom-control custom-checkbox">
+                        <input
+                          type="checkbox"
+                          className="custom-control-input"
+                          id="customCheck12"
+                        />
+                        <label
+                          className="custom-control-label"
+                          for="customCheck12"
+                        >
+                          Кошер
+                        </label>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      } else {
+        return null;
+      }
+    });
+
     return (
       <div className="section">
         <div className="container pad10">
           <div className="e-breadcrumb">
             <ul className="list-unstyled">
               <li>
-                <a href=" ">
+                <a href="/">
                   <span>Эхлэл</span>
                 </a>
               </li>
@@ -24,7 +117,7 @@ class CategoryInfo extends React.Component {
                 </a>
               </li>
               <li>
-                <span>Шингэн америк кофе</span>
+                <span>{SubCategory.catnm}</span>
               </li>
             </ul>
           </div>
@@ -107,6 +200,67 @@ class CategoryInfo extends React.Component {
                 <h5 className="title">
                   <strong>Шүүлтүүр</strong>
                 </h5>
+                {attibute}
+                <div className="text-center">
+                  <a href=" " className="btn btn-main">
+                    <span className="text-uppercase">Хадгалах</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div className="col-xl-9 col-lg-9 col-md-8 pad10">
+              <div className="list-filter">
+                <div className="row row10">
+                  <div className="col-lg-4 pad10">
+                    <div className="total-result">
+                      <p className="text">
+                        <strong>"{SubCategory.catnm}"</strong>
+                        <span>{products.length} бараа олдлоо</span>
+                      </p>
+                    </div>
+                  </div>
+                  <div className="col-lg-8 pad10">
+                    <form className="flex-this end">
+                      <div className="form-group my-select flex-this">
+                        <label for="inputState" style={{ marginTop: "5px" }}>
+                          Эрэмбэ:
+                        </label>
+                        <select id="inputState" className="form-control">
+                          <option selected>Үнэ ихээс багаруу</option>
+                          <option>Үнэ багаас ихрүү</option>
+                        </select>
+                      </div>
+                      <div className="form-group flex-this">
+                        <button type="submit" className="btn">
+                          <i className="fa fa-th-list" aria-hidden="true" />
+                        </button>
+                        <button type="submit" className="btn active">
+                          <i className="fa fa-th" aria-hidden="true" />
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              <CardList
+                type={CARD_LIST_TYPES.horizontal}
+                items={products}
+                showAll
+                cardType={CARD_TYPES.wide}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
+
+export default CategoryInfo;
+
+/* <h5 className="title">
+                  <strong>Шүүлтүүр</strong>
+                </h5>
 
                 <div className="left-filter">
                   <a
@@ -186,60 +340,4 @@ class CategoryInfo extends React.Component {
                       </ul>
                     </div>
                   </div>
-                </div>
-                <div className="text-center">
-                  <a href=" " className="btn btn-main">
-                    <span className="text-uppercase">Хадгалах</span>
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div className="col-xl-9 col-lg-9 col-md-8 pad10">
-              <div className="list-filter">
-                <div className="row row10">
-                  <div className="col-lg-4 pad10">
-                    <div className="total-result">
-                      <p className="text">
-                        <strong>"Кофе"</strong>
-                        <span>32 бараа олдлоо</span>
-                      </p>
-                    </div>
-                  </div>
-                  <div className="col-lg-8 pad10">
-                    <form className="flex-this end">
-                      <div className="form-group my-select flex-this">
-                        <label for="inputState" style={{ marginTop: "5px" }}>
-                          Эрэмбэ:
-                        </label>
-                        <select id="inputState" className="form-control">
-                          <option selected>Үнэ ихээс багаруу</option>
-                          <option>Үнэ багаас ихрүү</option>
-                        </select>
-                      </div>
-                      <div className="form-group flex-this">
-                        <button type="submit" className="btn">
-                          <i className="fa fa-th-list" aria-hidden="true" />
-                        </button>
-                        <button type="submit" className="btn active">
-                          <i className="fa fa-th" aria-hidden="true" />
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              </div>
-              <CardList
-                type={CARD_LIST_TYPES.horizontal}
-                items={products}
-                showAll
-                cardType={CARD_TYPES.wide}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-}
-
-export default CategoryInfo;
+                </div> */
