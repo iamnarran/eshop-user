@@ -1,24 +1,27 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Icon, Badge, Avatar, Modal } from "antd";
-import ls from "local-storage";
+import { Icon } from "antd";
+import { connect } from "react-redux";
 
-import FacebookLogin from "../../components/FacebookLogin";
 // import GoogleLogin from "../../components/GoogleLogin";
+/* import DropMenu from '../../components/DropMenu'; */
 import Category from "../../components/Category";
 import MainMenu from "../../components/Menu";
-/* import DropMenu from '../../components/DropMenu'; */
 import ToggleMenu from "../../components/ToggleMenu";
 import ToggleCategory from "../../components/ToggleCategory";
-import config from "../../config";
+import LoginModal from "../../components/LoginModal";
+import { signOut } from "../../actions/Login";
+import FacebookLogin from "../../components/FacebookLogin";
+import { IMAGE } from "../../utils/consts";
+import storage from "../../utils/storage";
 
 import "./style.css";
+import { ImageCollectionsBookmark } from "material-ui/svg-icons";
 
-const IMAGE =
-  process.env.NODE_ENV === "development"
-    ? config.image.development
-    : config.image.production;
-
+@connect(
+  null,
+  { signOut }
+)
 class AppHeader extends Component {
   constructor(props) {
     super(props);
@@ -32,6 +35,12 @@ class AppHeader extends Component {
     };
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.visible !== prevProps.visible) {
+      this.setState({ visible: this.props.visible });
+    }
+  }
+
   toggleOpen = () => this.setState({ isOpen: !this.state.isOpen });
   toggleSearch = () => this.setState({ isSearch: !this.state.isSearch });
   showLogInModal = () => this.setState({ logInVisible: true });
@@ -41,25 +50,13 @@ class AppHeader extends Component {
   handleSingUpSave = () => this.setState({ SingUpVisible: false });
   handleSingUpCancel = () => this.setState({ SingUpVisible: false });
 
-  componentClicked = () => {
-    console.log("componentClicked");
-  };
-
-  responseFacebook = response => {
-    console.log(response);
-  };
-
   togglePopup = () => {
     this.props.onChange();
   };
 
-  handleLogoutClick = () => {
-    window.FB.logout();
-  };
-
-  isExpired = expiresIn => {
-    const now = new Date().getTime();
-    return expiresIn < now;
+  handleLogout = () => {
+    this.props.signOut();
+    window.location.reload();
   };
 
   render() {
@@ -86,24 +83,27 @@ class AppHeader extends Component {
     }`;
     const togglePopup = `${this.props.isToggle ? " activated" : ""}`;
 
-    let loginButtonContent = (
-      <li className="list-inline-item">
-        <Link to="#" onClick={this.showLogInModal}>
-          <span className="text-uppercase">Нэвтрэх</span>
-        </Link>
-      </li>
-    );
-    if (ls.get("user") && !this.isExpired(ls.get("user").expiresIn)) {
-      loginButtonContent = (
+    let userButton = null;
+    if (storage.get("user")) {
+      let user = storage.get("user");
+      if (user.customerInfo) {
+        user = user.customerInfo;
+      }
+
+      userButton = (
         <li className="list-inline-item user">
-          <Link to="#" className="flex-this">
+          <Link to="" className="flex-this">
             <div className="image-container default">
               <span
                 className="image"
-                style={{ backgroundImage: `url(${ls.get("user").picture})` }}
+                style={{
+                  backgroundImage: `url(${user.picture ? user.picture : ""})`
+                }}
               />
             </div>
-            <span className="">{ls.get("user").name}</span>
+            <span className="">
+              {user.name ? user.name : user.email ? user.email : ""}
+            </span>
           </Link>
           <div className="dropdown">
             <div className="drop-content">
@@ -114,11 +114,15 @@ class AppHeader extends Component {
                       <span
                         className="image"
                         style={{
-                          backgroundImage: `url(${ls.get("user").picture})`
+                          backgroundImage: `url(${
+                            user.picture ? user.picture : ""
+                          })`
                         }}
                       />
                     </div>
-                    <p className="name">{ls.get("user").name}</p>
+                    <p className="name">
+                      {user.name ? user.name : user.email ? user.email : ""}
+                    </p>
                   </div>
                   <div className="progress">
                     <div
@@ -137,55 +141,55 @@ class AppHeader extends Component {
                 </div>
                 <ul className="list-unstyled">
                   <li className="active">
-                    <Link to="#" className="flex-this">
+                    <Link to="/userprofile" className="flex-this">
                       <i className="fa fa-user" aria-hidden="true" />
                       <span>Профайл хуудас</span>
                     </Link>
                   </li>
                   <li>
-                    <Link to="#" className="flex-this">
+                    <Link to="" className="flex-this">
                       <i className="fa fa-check-square" aria-hidden="true" />
                       <span>Таны үзсэн барааны түүх</span>
                     </Link>
                   </li>
                   <li>
-                    <Link to="#" className="flex-this">
+                    <Link to="" className="flex-this">
                       <i className="fa fa-history" aria-hidden="true" />
                       <span>Худалдан авалтын түүх</span>
                     </Link>
                   </li>
                   <li>
-                    <Link to="#" className="flex-this">
+                    <Link to="" className="flex-this">
                       <i className="fa fa-heart" aria-hidden="true" />
                       <span>Хадгалсан бараа</span>
                     </Link>
                   </li>
                   <li>
-                    <Link to="#" className="flex-this">
+                    <Link to="" className="flex-this">
                       <i className="fa fa-bell" aria-hidden="true" />
                       <span>Мэдэгдэл</span>
                     </Link>
                   </li>
                   <li>
-                    <Link to="#" className="flex-this">
+                    <Link to="" className="flex-this">
                       <i className="fa fa-database" aria-hidden="true" />
                       <span>Купон</span>
                     </Link>
                   </li>
                   <li>
-                    <Link to="#" className="flex-this">
+                    <Link to="" className="flex-this">
                       <i className="fa fa-credit-card" aria-hidden="true" />
                       <span>ePoint карт</span>
                     </Link>
                   </li>
                   <li>
-                    <Link to="#" className="flex-this">
+                    <Link to="" className="flex-this">
                       <i className="fa fa-compass" aria-hidden="true" />
                       <span>Хүргэлтийн хаяг</span>
                     </Link>
                   </li>
                   <li>
-                    <Link to="#" className="flex-this">
+                    <Link to="" className="flex-this">
                       <i className="fa fa-lock" aria-hidden="true" />
                       <span>Нууц үгээ солих</span>
                     </Link>
@@ -193,8 +197,8 @@ class AppHeader extends Component {
                 </ul>
                 <div className="text-left">
                   <Link
-                    onClick={this.handleLogoutClick}
-                    to="#"
+                    onClick={this.handleLogout}
+                    to=""
                     className="btn btn-gray"
                   >
                     <i className="fa fa-chevron-left" aria-hidden="true" />
@@ -204,6 +208,14 @@ class AppHeader extends Component {
               </div>
             </div>
           </div>
+        </li>
+      );
+    } else {
+      userButton = (
+        <li className="list-inline-item">
+          <Link to="" onClick={this.showLogInModal}>
+            <span className="text-uppercase">Нэвтрэх</span>
+          </Link>
         </li>
       );
     }
@@ -236,18 +248,18 @@ class AppHeader extends Component {
               </ul>
               <ul className="list-unstyled flex-this flex-space top-2">
                 <li className="list-inline-item notification">
-                  <Link to="#">
+                  <Link to="">
                     <i className="fa fa-bell" aria-hidden="true" />
                     <span>5</span>
                   </Link>
                 </li>
                 <li className="list-inline-item">
-                  <Link to="#" onClick={this.showLogInModal}>
+                  <Link to="" onClick={this.showLogInModal}>
                     <span className="text-uppercase">Нэвтрэх</span>
                   </Link>
                 </li>
                 {/* <li className="list-inline-item">
-                  <Link to="#" onClick={this.showSingUpModal}>
+                  <Link to="" onClick={this.showSingUpModal}>
                     <span className="text-uppercase">Бүртгүүлэх</span>
                   </Link>
                 </li> */}
@@ -256,7 +268,6 @@ class AppHeader extends Component {
             <ToggleMenu dataSource={menus} />
             <ToggleCategory dataSource={root} />
           </div>
-
           <div className="wrap">
             <div className="top-container">
               <div className="top-nav">
@@ -265,7 +276,7 @@ class AppHeader extends Component {
                     <div className="col-lg-6 col-md-6 d-none d-md-block pad10">
                       <ul className="list-inline left-panel">
                         <li className="list-inline-item">
-                          <Link to="#" className="e-phone">
+                          <Link to="" className="e-phone">
                             <Icon
                               type="phone"
                               theme="filled"
@@ -300,7 +311,7 @@ class AppHeader extends Component {
                               />
                             </Badge>
                           </li> */}
-                          {loginButtonContent}
+                          {userButton}
                         </ul>
                       </div>
                     </div>
@@ -467,195 +478,7 @@ class AppHeader extends Component {
               </div>
             </div>
           </div>
-
-          <Modal
-            title="Нэвтрэх"
-            visible={this.state.logInVisible}
-            onOk={this.handleLogInSave}
-            onCancel={this.handleLogInCancel}
-            footer={[]}
-          >
-            <div className="modal-body">
-              <form>
-                <div className="form-group">
-                  <label htmlFor="exampleInputEmail1" className="sr-only">
-                    Email address
-                  </label>
-                  <input
-                    type="email"
-                    className="form-control"
-                    id="exampleInputEmail9"
-                    aria-describedby="emailHelp"
-                    placeholder="Имэйл хаяг"
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="exampleInputPassword1" className="sr-only">
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    className="form-control"
-                    id="exampleInputPassword2"
-                    placeholder="Нууц үг"
-                  />
-                </div>
-                <div className="form-group">
-                  <div className="row row10">
-                    <div className="col-xl-6 pad10">
-                      <div className="custom-control custom-checkbox">
-                        <input
-                          type="checkbox"
-                          className="custom-control-input"
-                          id="customCheck1"
-                        />
-                        <label
-                          className="custom-control-label"
-                          htmlFor="customCheck1"
-                        >
-                          Сануулах
-                        </label>
-                      </div>
-                    </div>
-                    <div className="col-xl-6 pad10">
-                      <div className="text-right">
-                        <Link to="#" className="btn btn-link">
-                          Нууц үгээ мартсан
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <button
-                  type="submit"
-                  className="btn btn-block btn-login text-uppercase"
-                >
-                  Нэвтрэх
-                </button>
-              </form>
-              <span className="divide-maker">Эсвэл</span>
-              <FacebookLogin onLogin={this.handleLogInSave} />
-              {/* <GoogleLogin /> */}
-              <button
-                type="submit"
-                className="btn btn-block btn-social btn-emart"
-              >
-                Имарт картаар нэвтрэх
-              </button>
-              <div className="text-center">
-                <Link to="#" className="btn btn-link">
-                  Та шинээр бүртгүүлэх бол ЭНД ДАРЖ бүртгүүлнэ үү
-                </Link>
-              </div>
-            </div>
-          </Modal>
-
-          {/* <Modal
-            title="Бүртгүүлэх"
-            visible={this.state.SingUpVisible}
-            onOk={this.showSingUpModal}
-            onCancel={this.handleSingUpCancel}
-            footer={[]}
-          >
-            <div className="modal-body">
-              <form>
-                <div className="form-group">
-                  <label htmlFor="exampleInputEmail1" className="sr-only">
-                    Email address
-                  </label>
-                  <input
-                    type="email"
-                    className="form-control"
-                    id="exampleInputEmail3"
-                    aria-describedby="emailHelp"
-                    placeholder="Овог"
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="exampleInputPassword1" className="sr-only">
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    className="form-control"
-                    id="exampleInputPassword4"
-                    placeholder="Нэр"
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="exampleInputEmail1" className="sr-only">
-                    Email address
-                  </label>
-                  <input
-                    type="email"
-                    className="form-control"
-                    id="exampleInputEmail5"
-                    aria-describedby="emailHelp"
-                    placeholder="Имэйл хаяг"
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="exampleInputPassword1" className="sr-only">
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    className="form-control"
-                    id="exampleInputPassword6"
-                    placeholder="Утасны дугаар"
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="exampleInputEmail1" className="sr-only">
-                    Email address
-                  </label>
-                  <input
-                    type="email"
-                    className="form-control"
-                    id="exampleInputEmail7"
-                    aria-describedby="emailHelp"
-                    placeholder="Нууц үг"
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="exampleInputPassword1" className="sr-only">
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    className="form-control"
-                    id="exampleInputPassword8"
-                    placeholder="Нууц үг давтах"
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="btn btn-block btn-login text-uppercase"
-                >
-                  Бүртгүүлэх
-                </button>
-              </form>
-              <span className="divide-maker">Эсвэл</span>
-              <button
-                type="submit"
-                className="btn btn-block btn-social btn-facebook"
-              >
-                <span>Facebook-р бүртгүүлэх</span>
-              </button>
-              <button
-                type="submit"
-                className="btn btn-block btn-social btn-gmail"
-              >
-                Gmail-р бүртгүүлэх
-              </button>
-              <button
-                type="submit"
-                className="btn btn-block btn-social btn-emart"
-              >
-                Имарт картаар бүртгүүлэх
-              </button>
-            </div>
-          </Modal> */}
+          <LoginModal visible={this.state.logInVisible} />
         </div>
       </div>
     );
