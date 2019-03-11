@@ -9,25 +9,38 @@ import CardList from "./CardList";
 import "./Widget.css";
 
 class Widget extends React.Component {
-  state = {
-    data: null
-  };
-
-  componentDidMount() {
-    this.setState({ ...this.props });
-  }
-
   render() {
-    if (!this.state.data) {
+    const { data } = this.props;
+
+    if (!data) {
       return null;
     }
 
     let subtitle = null;
-    if (this.state.data.subtitle) {
+    if (data.subtitle) {
       subtitle = (
         <p className="text">
-          <Icon type="clock-circle" /> {this.state.data.subtitle}
+          <Icon type="clock-circle" /> {data.subtitle}
         </p>
+      );
+    }
+
+    let cardList = null;
+    if (data.slug === WIDGET_SLUGS.recipe) {
+      cardList = (
+        <CardList
+          type={CARD_LIST_TYPES.vertical}
+          items={data.items}
+          cardsInCol={2}
+        />
+      );
+    } else {
+      cardList = (
+        <CardList
+          type={CARD_LIST_TYPES.horizontal}
+          items={data.items}
+          seq={data.type}
+        />
       );
     }
 
@@ -35,30 +48,16 @@ class Widget extends React.Component {
       <div className="section">
         <div className="container pad10">
           <h1 className="title">
-            <span className="text-uppercase">{this.state.data.name}</span>
+            <span className="text-uppercase">{data.name}</span>
             {subtitle}
-            {this.state.data.interval ? this.state.data.interval : ""}
+            {data.interval ? data.interval : ""}
           </h1>
 
-          <CardList
-            type={
-              this.state.data.slug === WIDGET_SLUGS.recipe
-                ? CARD_LIST_TYPES.vertical
-                : CARD_LIST_TYPES.horizontal
-            }
-            seq={this.state.data.type}
-            cardsInCol={2}
-            items={this.state.data.items}
-          />
+          {cardList}
 
           <div className="more-link text-center">
-            <Link
-              to={this.state.data.link ? this.state.data.link : ""}
-              className="btn btn-border"
-            >
-              <span className="text text-uppercase">
-                {this.state.data.readMore}
-              </span>
+            <Link to={data.link ? data.link : ""} className="btn btn-border">
+              <span className="text text-uppercase">{data.readMore}</span>
             </Link>
           </div>
         </div>

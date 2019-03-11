@@ -8,17 +8,17 @@ import Banner from "../../components/Banner";
 import { WIDGET_SLUGS, SOCIAL_IDS } from "../../utils/consts";
 
 class Homepage extends React.Component {
-  getBlocks(widgets, items) {
+  getBlocks(widgets, products) {
     let blocks = [];
 
     widgets.forEach(widget => {
       switch (widget.slug) {
         case WIDGET_SLUGS.onlyemart:
-          widget.items = items.prodsEmart;
+          widget.items = products.prodsEmart;
           widget.readMore = "Бусад Имартын барааг үзэх";
           break;
         case WIDGET_SLUGS.discount:
-          widget.items = items.prodsDiscount;
+          widget.items = products.prodsDiscount;
           widget.interval = (
             <span>
               {moment()
@@ -33,15 +33,15 @@ class Homepage extends React.Component {
           widget.readMore = "Бусад хямдралтай барааг үзэх";
           break;
         case WIDGET_SLUGS.package:
-          widget.items = items.prodsPackage;
+          widget.items = products.prodsPackage;
           widget.readMore = "Бусад багцыг үзэх";
           break;
         case WIDGET_SLUGS.recipe:
-          widget.items = items.recipes;
+          widget.items = products.recipes;
           widget.readMore = "Бусад хоолны жорыг үзэх";
           break;
         case WIDGET_SLUGS.new:
-          widget.items = items.prodsNew;
+          widget.items = products.prodsNew;
           widget.readMore = "Бусад шинэ барааг үзэх";
           break;
         default:
@@ -69,7 +69,6 @@ class Homepage extends React.Component {
         data={items.blocks.banners[1]}
       />
     );
-
     blocksToRender.push(this.getBlocks(widgets.slice(2, 4), items.products));
     blocksToRender.push(
       <Banner
@@ -111,14 +110,14 @@ class Homepage extends React.Component {
     };
 
     const root = [];
-    categories.forEach(entry => {
-      if (entry.parentid === 0) {
-        entry.children = [];
-        root.push(entry);
+    categories.forEach(category => {
+      if (category.parentid === 0) {
+        category.children = [];
+        root.push(category);
       }
-      root.forEach(ent => {
-        if (ent.id === entry.parentid) {
-          ent.children.push(entry);
+      root.forEach(entry => {
+        if (entry.id === category.parentid) {
+          entry.children.push(category);
         }
       });
     });
@@ -156,7 +155,6 @@ class Homepage extends React.Component {
 
     return (
       <div className="top-container">
-        {/* Slider */}
         <div className="main-slide">
           <Slider
             data={banners[0]}
@@ -164,28 +162,21 @@ class Homepage extends React.Component {
             elContainer={"banner"}
           />
         </div>
-        {/* Slider end */}
 
-        {/* Main content */}
         {this.renderBlocks(items)}
-        {/* Main content end */}
 
-        {/* Brand list */}
         <div className="main-slide brands-list">
           <div className="container pad10">
             <Slider data={brands} params={brandParams} elContainer={"brands"} />
           </div>
         </div>
-        {/* Brand list */}
 
-        {/* Messenger */}
         <MessengerCustomerChat
           pageId="169275059877520"
           // appId="570055533421847"
           appId={SOCIAL_IDS.facebook}
           htmlRef={window.location.pathname}
         />
-        {/* Messenger */}
       </div>
     );
   }

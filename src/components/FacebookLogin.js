@@ -3,6 +3,7 @@ import ReactFacebookLogin from "react-facebook-login";
 import ls from "local-storage";
 
 import { SOCIAL_IDS } from "../utils/consts";
+import { isLoggedIn } from "../utils/global";
 
 class FacebookLogin extends React.Component {
   handleFacebookLoginClick = () => {
@@ -10,9 +11,6 @@ class FacebookLogin extends React.Component {
   };
 
   handleFacebookLoginResponse = res => {
-    console.log("now", new Date().getTime());
-    console.log("expiresIn", new Date().getTime() + 60 * 60 * 2);
-
     if (res && res.userID) {
       ls.set("user", {
         userID: res.userID,
@@ -21,19 +19,16 @@ class FacebookLogin extends React.Component {
         picture: res.picture.data.url,
         expiresIn: new Date().getTime() + 1000 * 60 * 60 * 2
       });
+      console.log(ls.get("user"));
       this.props.onLogin();
     } else {
+      ls.remove("user");
       this.props.signOut();
     }
   };
 
-  isExpired = expiresIn => {
-    const now = new Date().getTime();
-    return expiresIn < now;
-  };
-
   render() {
-    if (ls.get("user") && !this.isExpired(ls.get("user").expiresIn)) {
+    if (isLoggedIn) {
       return null;
     } else {
       return (

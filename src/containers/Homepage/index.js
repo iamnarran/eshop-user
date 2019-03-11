@@ -1,11 +1,16 @@
 import React from "react";
-import api from "../../api";
 import { compose } from "react-komposer";
+import { Spin } from "antd";
+
+import api from "../../api";
 import { Homepage } from "../../pages";
-import Loader from "../../components/Loader";
 
 const options = {
-  loadingHandler: () => <Loader />,
+  loadingHandler: () => (
+    <div className="e-mart-loading">
+      <Spin />
+    </div>
+  ),
   errorHandler: err => <p style={{ color: "red" }}>{err.message}</p>
 };
 

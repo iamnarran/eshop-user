@@ -52,16 +52,23 @@ library.add(fas, far, fab);
 
 addLocaleData([...en]);
 
-class Public extends Component {
+class Private extends Component {
   render() {
-    const { auth, component: Component, ...rest } = this.props;
-    const isAuth = auth.user;
+    // const { auth, component: Component, ...rest } = this.props;
+    // console.log("auth", auth);
+    // const isAuth = auth.user;
+
+    const { component: Component, ...rest } = this.props;
 
     return (
       <Route
         {...rest}
         render={props =>
-          !isAuth ? <Component {...props} /> : <Redirect to={""} />
+          localStorage.getItem("user") ? (
+            <Component {...props} />
+          ) : (
+            <Redirect to="/login" />
+          )
         }
       />
     );
@@ -149,6 +156,7 @@ class Localization extends Component {
       {
         path: "/userprofile",
         exact: true,
+        isPrivate: true,
         component: rest => <UserProfile {...rest} {...this.props} />
       },
       {
@@ -182,8 +190,16 @@ class Localization extends Component {
 
             <Switch>
               {routes.map((route, index) => {
-                return (
-                  <Public
+                return route.isPrivate ? (
+                  <Private
+                    {...this.props}
+                    key={index}
+                    exact={route.exact}
+                    path={route.path}
+                    component={route.component}
+                  />
+                ) : (
+                  <Route
                     {...this.props}
                     key={index}
                     exact={route.exact}

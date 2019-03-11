@@ -5,5 +5,5 @@ export default [
     NAME: "findAll",
     METHOD: "GET",
     URL: `${API}/api/systemlocation`
-  },
+  }
 ];
