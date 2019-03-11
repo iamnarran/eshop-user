@@ -6,13 +6,18 @@ class WishList extends React.Component {
     state = {
         ...this.props.container
     }
+
+    changeNumber = () => {
+        console.log("this state");
+    }
+
     render() {
         let tableList = null;
         const list = this.state.wishList;
         const formatter = new Intl.NumberFormat("en-US");
+        
         tableList = (
             list.map((item, index) => {
-                console.log(item.route)
                 return (
                     <div className="single flex-space">
                         <div className="product">
@@ -47,12 +52,12 @@ class WishList extends React.Component {
                         <div className="action">
                             <ul className="list-unstyled flex-this end">
                                 <li>
-                                    <a href=" ">
+                                    <a >
                                         <i className="fa fa-cart-plus" aria-hidden="true"></i>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href=" ">
+                                    <a onClick={this.changeNumber}>
                                         <i className="fa fa-times" aria-hidden="true"></i>
                                     </a>
                                 </li>
