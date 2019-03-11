@@ -8,7 +8,7 @@ class RecipeDetail extends React.Component {
   render() {
     const { recipe, productsData } = this.props.container;
 
-    console.log(productsData);
+    console.log(recipe.description);
 
     const sliderParams = {
       spaceBetween: 0,

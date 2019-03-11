@@ -14,6 +14,8 @@ import tag from "./Tag/index";
 import location from "./Location";
 import login from "./User/login";
 import register from "./User/register";
+import staticPages from "./StaticPages";
+import categoryInfo from "./CategoryInfo";
 
 let rest = {};
 
@@ -127,6 +129,16 @@ login.forEach(api => {
 rest["register"] = {};
 register.forEach(api => {
   rest.register[api.NAME] = data => generateAPI(api, data);
+//STATIC PAGE
+rest["staticPages"] = {};
+staticPages.forEach(api => {
+  rest.staticPages[api.NAME] = data => generateAPI(api, data);
+});
+
+//CATEGORY PRODUCT
+rest["categoryInfo"] = {};
+categoryInfo.forEach(api => {
+  rest.categoryInfo[api.NAME] = data => generateAPI(api, data);
 });
 
 export { rest as default, setAuthorizationHeader };

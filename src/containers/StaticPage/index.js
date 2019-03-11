@@ -1,18 +1,22 @@
 import React from "react";
-import { compose } from "react-komposer";
 import api from "../../api";
+import { compose } from "react-komposer";
+import { StaticPage } from "../../pages";
 import Loader from "../../components/Loader";
-import { WishList } from "../../components/index";
+
 const options = {
-  loadingHandler: () => <Loader />
+  loadingHandler: () => <Loader />,
+  errorHandler: err => <p style={{ color: "red" }}>{err.message}</p>
 };
 
 const fetch = async (props, onData) => {
   try {
-    const wishList = await api.packageProduct.findWishList({ id: 1 });
+    const staticPages = await api.staticPages.findPage({
+      id: props.match.params.id
+    });
     onData(null, {
       container: {
-        wishList: wishList.data
+        staticPages: staticPages.data[0]
       }
     });
   } catch (e) {
@@ -28,4 +32,4 @@ const dataLoader = (props, onData) => {
 export default compose(
   dataLoader,
   options
-)(WishList);
+)(StaticPage);

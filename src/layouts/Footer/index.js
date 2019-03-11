@@ -1,24 +1,21 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
-import config from "../../config";
 import { IMAGE } from "../../utils/consts";
 import "./style.css";
 
 class Footer extends React.Component {
   render() {
     const { staticinfo } = this.props.container;
-
+    const { staticPages } = this.props.container;
     return (
       <div className="top-container">
         <div className="section section-footer">
           <div className="container pad10">
             <div className="row row10">
               <div className="col-sm-12 col-md-6 col-lg-3 pad10">
-                <Link to="" className="logo">
+                <a to="" className="logo">
                   <img alt="logo" src={IMAGE + staticinfo.logopath2} />
-                </Link>
+                </a>
                 <ul className="social">
                   <li>
                     <a
@@ -82,26 +79,19 @@ class Footer extends React.Component {
                   <li>
                     <strong>Бидний тухай</strong>
                   </li>
-                  <li>
-                    <Link to="">
-                      <span>Үйлчилгээний нөхцөл</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="">
-                      <span>Нууцлалын баталгаа</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="">
-                      <span>Хүргэлтийн журам</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="">
-                      <span>Бараа буцаах солиулах нөхцөл</span>
-                    </Link>
-                  </li>
+                  {staticPages.map((item, index) => {
+                    if (item.pagetype == "1") {
+                      return (
+                        <li key={index}>
+                          <a href={item.slug + "/" + item.id}>
+                            <span>{item.name}</span>
+                          </a>
+                        </li>
+                      );
+                    } else {
+                      return;
+                    }
+                  })}
                 </ul>
               </div>
               <div className="col-sm-12 col-md-6 col-lg-3 pad10">
@@ -109,26 +99,19 @@ class Footer extends React.Component {
                   <li>
                     <strong>Үйлчилгээний нөхцөл</strong>
                   </li>
-                  <li>
-                    <Link to="">
-                      <span>Гишүүнчилэл</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="">
-                      <span>Худалдан авалт хийх заавар</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="">
-                      <span>Түгээмэл асуулт хариулт</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="">
-                      <span>Урамшуулал</span>
-                    </Link>
-                  </li>
+                  {staticPages.map((item, index) => {
+                    if (item.pagetype == "2") {
+                      return (
+                        <li key={index}>
+                          <a href={item.slug + "/" + item.id}>
+                            <span>{item.name}</span>
+                          </a>
+                        </li>
+                      );
+                    } else {
+                      return;
+                    }
+                  })}
                 </ul>
               </div>
               <div className="col-sm-12 col-md-6 col-lg-3 pad10">

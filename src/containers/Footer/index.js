@@ -12,10 +12,12 @@ const options = {
 const fetch = async (props, onData) => {
   try {
     const staticinfo = await api.staticinfo.findAll();
+    const staticPages = await api.staticPages.findAll();
 
     onData(null, {
       container: {
-        staticinfo: staticinfo.data[0]
+        staticinfo: staticinfo.data[0],
+        staticPages: staticPages.data
       }
     });
   } catch (e) {
