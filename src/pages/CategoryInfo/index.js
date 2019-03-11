@@ -1,100 +1,109 @@
 import React from "react";
-import { CARD_LIST_TYPES, CARD_TYPES } from "../../utils/consts";
 import CardList from "../../components/CardList";
+import { CARD_TYPES, CARD_LIST_TYPES } from "../../utils/consts";
+import { SearchList } from "../../components";
+import { Checkbox, Progress } from "antd";
+import { Menu } from "antd";
+const SubMenu = Menu.SubMenu;
 
 class CategoryInfo extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isToggleOn: false,
+      isSort: false,
+      openKeys: ["sub01"],
+      products: this.props.container
+    };
+
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  rootSubmenuKeys = ["sub01", "sub02", "sub04", "sub04"];
+
+  handleClick() {
+    this.setState(state => ({
+      isToggleOn: !state.isToggleOn
+    }));
+  }
+
+  onOpenChange = openKeys => {
+    const latestOpenKey = openKeys.find(
+      key => this.state.openKeys.indexOf(key) === -1
+    );
+    if (this.rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
+      this.setState({ openKeys });
+    } else {
+      this.setState({
+        openKeys: latestOpenKey ? [latestOpenKey] : []
+      });
+    }
+  };
+
   render() {
     const products = this.props.container.categoryProduct[0].products;
-    const attributes = this.props.container.categoryProduct[0].attributes;
     const SubCategory = this.props.container.categoryProduct[0].SubCategorys[0];
-    let attibute = null;
-    console.log("props", this.props);
-    console.log("subCategory", products.length);
+    const attributes = this.props.container.categoryProduct[0].attributes[0]
+      .attributes;
+    const ColorList = this.props.container.categoryProduct[0].attributes[1]
+      ? this.props.container.categoryProduct[0].attributes[1].attributes[0]
+          .values
+      : null;
+    let attribute = null;
+    let colors = null;
 
-    attibute = attributes.map((item, index) => {
+    console.log("this.props", this.state.products);
+
+    colors = ColorList.map((item, index) => {
+      if (ColorList) {
+        return (
+          <a
+            key={index}
+            href=" "
+            className="dot"
+            style={{
+              height: "25px",
+              width: "25px",
+              backgroundColor: item.valuecd,
+              borderRadius: "50%",
+              display: "inline-block",
+              marginTop: "10px",
+              marginRight: "10px"
+            }}
+          />
+        );
+      } else {
+        return null;
+      }
+    });
+
+    attribute = attributes.map((item, index) => {
       if (attributes) {
         return (
-          <div>
-            <div className="left-filter">
-              <a
-                className="collapse-title"
-                data-toggle="collapse"
-                href="#collapseFive"
-                role="button"
-                aria-expanded="true"
-                aria-controls="collapseExample"
-              >
-                Хэв маяг
-              </a>
-              <div className="collapse show" id="collapseFive">
-                <div className="collapse-content">
-                  <ul className="list-unstyled">
-                    <li>
-                      <div className="custom-control custom-checkbox">
-                        <input
-                          type="checkbox"
-                          className="custom-control-input"
-                          id="customCheck9"
-                        />
-                        <label
-                          className="custom-control-label"
-                          for="customCheck9"
-                        >
-                          Цагаан хоолтон
-                        </label>
-                      </div>
-                    </li>
-                    <li>
-                      <div className="custom-control custom-checkbox">
-                        <input
-                          type="checkbox"
-                          className="custom-control-input"
-                          id="customCheck10"
-                        />
-                        <label
-                          className="custom-control-label"
-                          for="customCheck10"
-                        >
-                          Органик
-                        </label>
-                      </div>
-                    </li>
-                    <li>
-                      <div className="custom-control custom-checkbox">
-                        <input
-                          type="checkbox"
-                          className="custom-control-input"
-                          id="customCheck11"
-                          checked=""
-                        />
-                        <label
-                          className="custom-control-label"
-                          for="customCheck11"
-                        >
-                          Цавуулаггүй
-                        </label>
-                      </div>
-                    </li>
-                    <li>
-                      <div className="custom-control custom-checkbox">
-                        <input
-                          type="checkbox"
-                          className="custom-control-input"
-                          id="customCheck12"
-                        />
-                        <label
-                          className="custom-control-label"
-                          for="customCheck12"
-                        >
-                          Кошер
-                        </label>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
+          <Menu
+            key={index}
+            mode="inline"
+            openKeys={this.state.openKeys}
+            onOpenChange={this.onOpenChange}
+            style={{ width: 256 }}
+          >
+            <SubMenu
+              title={
+                <span>
+                  <span>{item.name}</span>
+                </span>
+              }
+            >
+              {item.values.map((it, ind) => {
+                console.log("index", ind);
+                return (
+                  <Menu.Item key={ind} style={{ color: "white" }}>
+                    <Checkbox>{it.valuename}</Checkbox>
+                  </Menu.Item>
+                );
+              })}
+            </SubMenu>
+          </Menu>
         );
       } else {
         return null;
@@ -102,7 +111,7 @@ class CategoryInfo extends React.Component {
     });
 
     return (
-      <div className="section">
+      <div className="section" style={{ minHeight: "2" }}>
         <div className="container pad10">
           <div className="e-breadcrumb">
             <ul className="list-unstyled">
@@ -130,7 +139,7 @@ class CategoryInfo extends React.Component {
                 </a>
               </div>
               <div className="left-panel">
-                <a href=" " className="btn-filter d-block d-md-none">
+                <a href=" " className="d-block d-md-none">
                   <i className="fa fa-times" aria-hidden="true" />
                 </a>
                 <h5 className="title">
@@ -140,72 +149,32 @@ class CategoryInfo extends React.Component {
                   <span>Ангилал</span>
                 </p>
                 <div className="block">
-                  <div className="accordion" id="accordionExample">
-                    <a
-                      href=" "
-                      className="collapse-title"
-                      data-toggle="collapse"
-                      data-target="#collapseOne"
-                      aria-expanded="true"
-                      aria-controls="collapseOne"
-                    >
-                      Цай / Кофе
-                    </a>
-                    <div
-                      id="collapseOne"
-                      className="collapse show"
-                      aria-labelledby="headingOne"
-                      data-parent="#accordionExample"
-                    >
-                      <div className="collapse-content">
-                        <ul className="list-unstyled">
-                          <li>
-                            <a href=" ">Цай</a>
-                          </li>
-                          <li className="active">
-                            <a href=" ">Кофе</a>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    <a
-                      href=" "
-                      className="collapse-title"
-                      data-toggle="collapse"
-                      data-target="#collapseTwo"
-                      aria-expanded="false"
-                      aria-controls="collapseTwo"
-                    >
-                      Бусад ангилал
-                    </a>
-                    <div
-                      id="collapseTwo"
-                      className="collapse"
-                      aria-labelledby="headingOne"
-                      data-parent="#accordionExample"
-                    >
-                      <div className="collapse-content">
-                        <ul className="list-unstyled">
-                          <li>
-                            <a href=" ">Сироп</a>
-                          </li>
-                          <li>
-                            <a href=" ">Чацаргана</a>
-                          </li>
-                        </ul>
-                      </div>
+                  {/* SubCategory.map((index, item) => {
+                    return (
+                      <a href="#" className="collapse-title">
+                        {item.catnm}
+                      </a>
+                    );
+                  }) */}
+                  <div
+                    id="collapseOne"
+                    className="collapse show"
+                    aria-labelledby="headingOne"
+                    data-parent="#accordionExample"
+                  >
+                    <div className="collapse-content">
+                      <ul className="list-unstyled" />
                     </div>
                   </div>
                 </div>
                 <h5 className="title">
                   <strong>Шүүлтүүр</strong>
                 </h5>
-                {attibute}
-                <div className="text-center">
-                  <a href=" " className="btn btn-main">
-                    <span className="text-uppercase">Хадгалах</span>
-                  </a>
-                </div>
+                {attribute}
+                <a className="collapse-title">Үнэ</a>
+                <Progress percent={30} />
+                <a className="collapse-title">Өнгө</a>
+                {colors}
               </div>
             </div>
             <div className="col-xl-9 col-lg-9 col-md-8 pad10">
@@ -226,28 +195,42 @@ class CategoryInfo extends React.Component {
                           Эрэмбэ:
                         </label>
                         <select id="inputState" className="form-control">
-                          <option selected>Үнэ ихээс багаруу</option>
+                          <option>Үнэ ихээс багаруу</option>
                           <option>Үнэ багаас ихрүү</option>
                         </select>
                       </div>
                       <div className="form-group flex-this">
-                        <button type="submit" className="btn">
+                        <a
+                          className={
+                            this.state.isToggleOn ? "btn active" : "btn"
+                          }
+                          onClick={this.handleClick}
+                        >
                           <i className="fa fa-th-list" aria-hidden="true" />
-                        </button>
-                        <button type="submit" className="btn active">
+                        </a>
+                        <a
+                          className={
+                            this.state.isToggleOn ? "btn" : "btn active"
+                          }
+                          onClick={this.handleClick}
+                        >
                           <i className="fa fa-th" aria-hidden="true" />
-                        </button>
+                        </a>
                       </div>
                     </form>
                   </div>
                 </div>
               </div>
-              <CardList
-                type={CARD_LIST_TYPES.horizontal}
-                items={products}
-                showAll
-                cardType={CARD_TYPES.wide}
-              />
+              {this.state.isToggleOn ? (
+                <SearchList products={products} />
+              ) : (
+                <CardList
+                  type={CARD_LIST_TYPES.horizontal}
+                  items={products}
+                  showAll
+                  cardType={CARD_TYPES.wide}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -257,87 +240,3 @@ class CategoryInfo extends React.Component {
 }
 
 export default CategoryInfo;
-
-/* <h5 className="title">
-                  <strong>Шүүлтүүр</strong>
-                </h5>
-
-                <div className="left-filter">
-                  <a
-                    className="collapse-title"
-                    data-toggle="collapse"
-                    href="#collapseFive"
-                    role="button"
-                    aria-expanded="true"
-                    aria-controls="collapseExample"
-                  >
-                    Хэв маяг
-                  </a>
-                  <div className="collapse show" id="collapseFive">
-                    <div className="collapse-content">
-                      <ul className="list-unstyled">
-                        <li>
-                          <div className="custom-control custom-checkbox">
-                            <input
-                              type="checkbox"
-                              className="custom-control-input"
-                              id="customCheck9"
-                            />
-                            <label
-                              className="custom-control-label"
-                              for="customCheck9"
-                            >
-                              Цагаан хоолтон
-                            </label>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="custom-control custom-checkbox">
-                            <input
-                              type="checkbox"
-                              className="custom-control-input"
-                              id="customCheck10"
-                            />
-                            <label
-                              className="custom-control-label"
-                              for="customCheck10"
-                            >
-                              Органик
-                            </label>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="custom-control custom-checkbox">
-                            <input
-                              type="checkbox"
-                              className="custom-control-input"
-                              id="customCheck11"
-                              checked=""
-                            />
-                            <label
-                              className="custom-control-label"
-                              for="customCheck11"
-                            >
-                              Цавуулаггүй
-                            </label>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="custom-control custom-checkbox">
-                            <input
-                              type="checkbox"
-                              className="custom-control-input"
-                              id="customCheck12"
-                            />
-                            <label
-                              className="custom-control-label"
-                              for="customCheck12"
-                            >
-                              Кошер
-                            </label>
-                          </div>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div> */

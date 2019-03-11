@@ -47,7 +47,7 @@ class PackageDetail extends React.Component {
     };
 
     // Багцад орсон барааны ижил бараанууд
-    sameProducts = this.state.name.map((item, index) => {
+    /* sameProducts = this.state.name.map((item, index) => {
       if (item.sameProduct[0].tag[0]) {
         return (
           <li key={index}>
@@ -89,7 +89,7 @@ class PackageDetail extends React.Component {
         return null;
       }
     });
-
+ */
     // Багцад орсон бараанууд
     products = this.state.name.map((item, index) => {
       return (
@@ -264,7 +264,7 @@ class PackageDetail extends React.Component {
                     <p className="title">
                       <strong>Ижил бараа</strong>
                     </p>
-                    <ul className="list-unstyled">{sameProducts}</ul>
+                    {/* <ul className="list-unstyled">{sameProducts}</ul> */}
                   </div>
                 </div>
               </div>
