@@ -6,6 +6,7 @@ import Card from "./Card";
 
 class CardList extends React.Component {
   getCardsAccordingToSeq = (cardTypes, items) => {
+    let p = 0;
     let cards = [];
 
     for (let i = 0; i < cardTypes.length; i++) {
@@ -16,7 +17,7 @@ class CardList extends React.Component {
           ? CARD_NUMS_IN_ROW.wide
           : CARD_NUMS_IN_ROW.slim;
 
-      for (let j = 0, p = 0; j < cardsInRow; j++, p++) {
+      for (let j = 0; j < cardsInRow; j++, p++) {
         if (!items[p]) {
           break;
         }
