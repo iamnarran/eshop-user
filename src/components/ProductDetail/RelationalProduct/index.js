@@ -5,11 +5,22 @@ import { Button } from "antd"
 class Compenent extends React.Component {
   state = {
     more: false,
+    product: []
+  }
+
+  componentDidMount(){
+    if(this.props.product.length !== 0){
+      this.setState({product: this.props.product.slice(0,4)})
+    }
+  }
+
+
+  onClickSeeMore = () => { 
+    this.setState({ more: true, product: this.props.product }) 
   }
 
   render() {
-    const { product } = this.props
-    
+    const { product } = this.state
     if (product.length !== 0) {
       return (
         <div className="block product-suggest">
@@ -51,12 +62,6 @@ class Compenent extends React.Component {
       </div>
       )
     }else return null
-  }
-  onClickSeeMore = () => { this.setState({ more: true }) }
-  getProductList = () => {
-    const { product, more } = this.state
-      if(more && product.length !== 0){ product.slice(0,4)}
-      
   }
 }
 const money = new Intl.NumberFormat('en-US');

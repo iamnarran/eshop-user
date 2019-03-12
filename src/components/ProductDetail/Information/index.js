@@ -2,8 +2,7 @@ import React from 'react'
 
 class Compenent extends React.Component {
   render() {
-    const { attribute } = this.props 
-    
+    const { attribute } = this.props
     if (attribute.length !== 0) {
       return <div>
         <h1 className="title">

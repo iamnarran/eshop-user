@@ -5,10 +5,10 @@ import Slider from "../../components/Slider";
 
 class PackageDetail extends React.Component {
   state = {
-    name: this.props.container.Products[0].products,
+    products: this.props.container.Products[0].products,
     price: this.props.container.Products[0].total,
+    sameProducts: this.props.container.Products[0].sameproducts,
     products: null,
-    sameProducts: null,
     addProduct: null,
     remProduct: null,
     images: this.props.container.Package.images,
@@ -47,7 +47,7 @@ class PackageDetail extends React.Component {
     };
 
     // Багцад орсон барааны ижил бараанууд
-    sameProducts = this.state.name.map((item, index) => {
+    sameProducts = this.state.sameProducts.map((item, index) => {
       if (item.sameProduct[0].tag[0]) {
         return (
           <li key={index}>
@@ -91,7 +91,7 @@ class PackageDetail extends React.Component {
     });
 
     // Багцад орсон бараанууд
-    products = this.state.name.map((item, index) => {
+    products = this.state.products.map((item, index) => {
       return (
         <li className="flex-this" key={index}>
           <div className="image-container default">
