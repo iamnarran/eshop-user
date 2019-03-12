@@ -1,7 +1,14 @@
-import React from "react"
+import React from "react";
 import config from "config";
 import api from "../../api";
-import { Magnify, Rate, RelationalProduct, Information, CardSlider, Comment } from "../../components"
+import {
+  Magnify,
+  Rate,
+  RelationalProduct,
+  Information,
+  CardSlider,
+  Comment
+} from "../../components";
 import { Spin } from "antd";
 import {
   FacebookShareButton,
@@ -38,48 +45,56 @@ class Component extends React.Component{
   }
 
   componentWillMount() {
-      this.setState({
-        skucd: this.props.match.params.id, category: this.props.container.category
-      })
+    this.setState({
+      skucd: this.props.match.params.id,
+      category: this.props.container.category
+    });
   }
-  componentDidMount() { this.refresh() }
+  componentDidMount() {
+    this.refresh();
+  }
 
   componentWillUpdate(prevProps) {
     if (prevProps.container.category !== this.props.container.category) {
       this.setState({
-        skucd: this.props.match.params.id, category: this.props.container.category
-      })      
+        skucd: this.props.match.params.id,
+        category: this.props.container.category
+      });
     }
     if (prevProps.match.params.id !== this.props.match.params.id) {
-      this.refresh()
+      this.refresh();
     }
   }
-  
+
   render() {
-    const { breadCrumb, skucd, isLoading } = this.state
+    const { breadCrumb, skucd, isLoading } = this.state;
     if (skucd !== this.props.match.params.id) {
-      this.setState({skucd: this.props.match.params.id})
-      this.refresh()
+      this.setState({ skucd: this.props.match.params.id });
+      this.refresh();
     }
-    
+
     if (isLoading) {
-      return <div className="section">
-      <div className="container pad10">
-        {this.renderBreadCrumb(breadCrumb)}
-        <div className="product-detail-page">
-          <div className="row row10">
-            {this.renderProductImg()}
-            {this.renderProductDescription()}
-            {this.renderProductDelivery()}
-            {this.renderFooter()}
+      return (
+        <div className="section">
+          <div className="container pad10">
+            {this.renderBreadCrumb(breadCrumb)}
+            <div className="product-detail-page">
+              <div className="row row10">
+                {this.renderProductImg()}
+                {this.renderProductDescription()}
+                {this.renderProductDelivery()}
+                {this.renderFooter()}
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+      );
     }
-    return <div className="e-mart-loading">
-      <Spin />
-    </div>
+    return (
+      <div className="e-mart-loading">
+        <Spin />
+      </div>
+    );
   }
   refresh = async () => {
     const { skucd } = this.state
@@ -126,43 +141,52 @@ generateSaleMinQty = (saleminqty) => {
         })
     }
     }
-  }
+  };
 
-  renderBreadCrumb = (e) => {
+  renderBreadCrumb = e => {
     return (
       <div className="e-breadcrumb">
         <ul className="list-unstyled">
-          {
-            e.map((i, key) => {
-              return <li key={key}>
+          {e.map((i, key) => {
+            return (
+              <li key={key}>
                 <a href="/">{i.name}</a>
               </li>
-            })
-          }
+            );
+          })}
         </ul>
       </div>
-    )
-  }
+    );
+  };
   renderProductImg = () => {
     const { product, selectedMediumImg, smallImg, selectedLargeImg } = this.state
     return (
       <div className="col-xl-4 col-lg-4 col-md-5 pad10">
         <div className="product-gallery">
-          <Magnify img={selectedMediumImg === null ? IMAGE + product.img : selectedMediumImg} images={smallImg} tags={product.tags} slImg={selectedLargeImg}/>
-            <div className="thumbs">
-              <ul className="list-inline">
-              {
-                product && product.images && product.images.map((i, key) => {
+          <Magnify
+            img={
+              selectedMediumImg === null
+                ? IMAGE + product.img
+                : selectedMediumImg
+            }
+            images={smallImg}
+            tags={product.tags}
+            slImg={selectedLargeImg}
+          />
+          <div className="thumbs">
+            <ul className="list-inline">
+              {product &&
+                product.images &&
+                product.images.map((i, key) => {
                   return (
                     <li className="list-inline-item" key={key}>
                       <a className="image-container" onClick={this.onChangeMniImage}>
                         <img alt={i.seq} className={key} src={IMAGE+i.imgmni}/>
                       </a>
                     </li>
-                  )
-                })
-              }
-              </ul>
+                  );
+                })}
+            </ul>
           </div>
           <div className="share">
             <ul className="list-inline">
@@ -193,7 +217,7 @@ generateSaleMinQty = (saleminqty) => {
               </li>
             </ul>
           </div>
-          </div>
+        </div>
       </div>
     )
   }
@@ -210,37 +234,44 @@ generateSaleMinQty = (saleminqty) => {
       <div className="col-xl-12 col-lg-12 col-md-12 pad10">
         <div className="col-xl-12">
           <Information attribute={attribute} />
-          {
-            collectionProduct.length === 0 ? '' :
-              <div>
-                <h1 className="title">
-                  <span className="text-uppercase">Ижил бараа</span>
-                </h1>
-                <div className="section">
-                  <div className="container pad10">
-                    <div className="row row10">                
-                      <CardSlider data={collectionProduct} params={productParams} elContainer={"collectionProduct"} />
-                    </div>
+          {collectionProduct.length === 0 ? (
+            ""
+          ) : (
+            <div>
+              <h1 className="title">
+                <span className="text-uppercase">Ижил бараа</span>
+              </h1>
+              <div className="section">
+                <div className="container pad10">
+                  <div className="row row10">
+                    <CardSlider
+                      data={collectionProduct}
+                      params={productParams}
+                      elContainer={"collectionProduct"}
+                    />
                   </div>
                 </div>
               </div>
-          }
-          
-          
+            </div>
+          )}
+
           {/**ТАНИЛЦУУЛАГА */}
           <h1 className="title">
             <span className="text-uppercase">Танилцуулга</span>
           </h1>
           <div className="product-bottom-images">
-            {
-              this.state.product && this.state.product.images && this.state.product.images.map((index, key) => {
+            {this.state.product &&
+              this.state.product.images &&
+              this.state.product.images.map((index, key) => {
                 return (
-                  <img alt={index.id} src={IMAGE + index.imglrg} key={key}/>
+                  <img alt={index.id} src={IMAGE + index.imglrg} key={key} />
                 );
-              })
-            }            
+              })}
           </div>
-          <Comment skucd={skucd} rate={product !== undefined ? product.rate : []}/>
+          <Comment
+            skucd={skucd}
+            rate={product !== undefined ? product.rate : []}
+          />
         </div>
       </div>
     )
@@ -278,9 +309,9 @@ generateSaleMinQty = (saleminqty) => {
         sumPrice: issalekg ? (grPrice * (saleNumber - addminqty)) : product.spercent !== 100 ? (product.sprice * (saleNumber - addminqty)) : (product.price * (saleNumber - addminqty))
       })
     }
-  }
+  };
   renderProductDelivery = () => {
-    const {relationalProduct} = this.state
+    const { relationalProduct } = this.state;
     return (
       <div className="col-xl-3 col-lg-3 col-md-12 pad10 magnify-image">
         <div className="product-plus">
@@ -289,28 +320,33 @@ generateSaleMinQty = (saleminqty) => {
               <strong>Хүргэлтийн мэдээлэл</strong>
             </p>
             <p className="text">
-              <span>Энгийн хүргэлт (48 цагийн дотор) - 89,000₮ дээш бараа авсан тохиолдолд үнэгүй</span>
+              <span>
+                Энгийн хүргэлт (48 цагийн дотор) - 89,000₮ дээш бараа авсан
+                тохиолдолд үнэгүй
+              </span>
             </p>
           </div>
-          <RelationalProduct product={relationalProduct}/>
+          <RelationalProduct product={relationalProduct} />
         </div>
       </div>
-    )
-  }
+    );
+  };
   renderProductDescription = () => {
-    const {product, breadCrumb, saleNumber, sumPrice, issalekg} = this.state
+    const { product, breadCrumb, saleNumber, sumPrice, issalekg } = this.state;
     return (
-      <div className='col-xl-5 col-lg-5 col-md-7 pad10 magnify-image'>
-        <div className='product-info'>
-          <h5 className="title">{product.name}</h5>
-          ({product.backtxt})
+      <div className="col-xl-5 col-lg-5 col-md-7 pad10 magnify-image">
+        <div className="product-info">
+          <h5 className="title">{product.name}</h5>({product.backtxt})
           <p className="big-text">
-            <strong>{
-              breadCrumb.map((i, e) => {
-                if (e === breadCrumb.length - 1) { return i.name }
-                else {return null}
-              })
-            }</strong>
+            <strong>
+              {breadCrumb.map((i, e) => {
+                if (e === breadCrumb.length - 1) {
+                  return i.name;
+                } else {
+                  return null;
+                }
+              })}
+            </strong>
           </p>
           <div className="main-rating">
           <Rate rate={this.getRatesum()} numOfVotes={this.getRatesum()} /> 
@@ -319,60 +355,69 @@ generateSaleMinQty = (saleminqty) => {
          
           
           <div className="gift">
-            <div className="image-container">
-            </div>
-            <div className="info-container">
-            </div>
+            <div className="image-container" />
+            <div className="info-container" />
           </div>
-          
           <form>
             <div className="row row10">
               <div className="col-xl-4 col-6 pad10">
                 <div className="input-group">
                   <div className="input-group-prepend" id="button-addon4">
-                    <button className="btn product-detail-btn" type="button" onClick={this.remProduct}>
-                      <i className="fa fa-minus" aria-hidden="true"></i>
+                    <button
+                      className="btn product-detail-btn"
+                      type="button"
+                      onClick={this.remProduct}
+                    >
+                      <i className="fa fa-minus" aria-hidden="true" />
                     </button>
                   </div>
                   <input alt="asfasd" className="form-control" placeholder="" value={saleNumber} aria-label=""  aria-describedby="button-addon4" />
                   <div className="input-group-append" id="button-addon4">
-                    <button className="btn product-detail-btn" type="button" onClick={this.addProduct}>
-                      <i className="fa fa-plus" aria-hidden="true"></i>
+                    <button
+                      className="btn product-detail-btn"
+                      type="button"
+                      onClick={this.addProduct}
+                    >
+                      <i className="fa fa-plus" aria-hidden="true" />
                     </button>
                   </div>
-                </div>                
+                </div>
               </div>
               <div className="col-xl-8 pad10">
                 <p className="count-text text-right">
-                  {issalekg===1?product.saleweight:''}
-                  {' ' + product.measure + ' -н '}
-                  
+                  {issalekg === 1 ? product.saleweight : ""}
+                  {" " + product.measure + " -н "}
                   үнэ: &emsp;
-                  { //kg-aar zaragdah baraa eseh
-                    issalekg === 1 ? money.format(product.kgproduct[0].salegramprice)
-                      :
-                      product.spercent === 100 ? money.format(product.price)
-                        :
-                        <div className="price product-detail">
-                          <small className="sale" style={{textDecoration: 'line-through'}}>
-                            {' '}{money.format(product.price)}₮{' '}
-                          </small>&nbsp;&nbsp;
-                          <span className="current">
-                          {' '}{money.format(product.sprice)}
-                          </span>
-                        </div>
-                      
-                  }₮
+                  {//kg-aar zaragdah baraa eseh
+                  issalekg === 1 ? (
+                    money.format(product.kgproduct[0].salegramprice)
+                  ) : product.spercent === 100 ? (
+                    money.format(product.price)
+                  ) : (
+                    <div className="price product-detail">
+                      <small
+                        className="sale"
+                        style={{ textDecoration: "line-through" }}
+                      >
+                        {" "}
+                        {money.format(product.price)}₮{" "}
+                      </small>
+                      &nbsp;&nbsp;
+                      <span className="current">
+                        {" "}
+                        {money.format(product.sprice)}
+                      </span>
+                    </div>
+                  )}
+                  ₮
                 </p>
-                {
-                  issalekg ? (
-                    <p className="count-text text-right">
-                    {
-                      'кг үнэ: ' + money.format(this.state.kgPrice)+'₮'
-                    }
+                {issalekg ? (
+                  <p className="count-text text-right">
+                    {"кг үнэ: " + money.format(this.state.kgPrice) + "₮"}
                   </p>
-                 ) : ''
-                }
+                ) : (
+                  ""
+                )}
               </div>
             </div>
             <div className="total-price text-right">
@@ -384,7 +429,7 @@ generateSaleMinQty = (saleminqty) => {
                 <span>Хадгалах</span>
               </a>
               <a href="/" className="btn btn-main text-uppercase">
-                <i className="fa fa-shopping-cart" aria-hidden="true"></i>
+                <i className="fa fa-shopping-cart" aria-hidden="true" />
                 <span>Сагсанд нэмэх</span>
               </a>
               {/* <p className="text text-right">Урамшуулал 2 хоногийн дараа дуусна</p> */}
@@ -392,8 +437,8 @@ generateSaleMinQty = (saleminqty) => {
           </form>
         </div>
       </div>
-    )
-  }
+    );
+  };
 }
 
 const productParams = {

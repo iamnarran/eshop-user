@@ -12,6 +12,8 @@ import packageProduct from "./Package/index";
 import pagebanner from "./Banner/PagesBanner";
 import tag from "./Tag/index";
 import location from "./Location";
+import login from "./User/login";
+import register from "./User/register";
 import staticPages from "./StaticPages";
 import categoryInfo from "./CategoryInfo";
 
@@ -115,6 +117,18 @@ tag.forEach(api => {
 rest["location"] = {};
 location.forEach(api => {
   rest.location[api.NAME] = data => generateAPI(api, data);
+});
+
+//LOGIN
+rest["login"] = {};
+login.forEach(api => {
+  rest.login[api.NAME] = data => generateAPI(api, data);
+});
+
+//REGISTER
+rest["register"] = {};
+register.forEach(api => {
+  rest.register[api.NAME] = data => generateAPI(api, data);
 });
 
 //STATIC PAGE

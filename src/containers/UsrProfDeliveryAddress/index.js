@@ -12,21 +12,21 @@ const options = {
 const fetch = async (props, onData) => {
   try {
     const location = await api.location.findAll();
-    
-    const cityOrProvince = []
-    const map = new Map()
-    location.data.map((index) => {
-      if (!map.has(index.provinceid)) { 
-        map.set(index.provinceid, true)
-        cityOrProvince.push(index)
+
+    const cityOrProvince = [];
+    const map = new Map();
+    location.data.map(index => {
+      if (!map.has(index.provinceid)) {
+        map.set(index.provinceid, true);
+        cityOrProvince.push(index);
       }
-      return ''
-    })
+      return "";
+    });
 
     onData(null, {
       container: {
         cityOrProvince: cityOrProvince,
-        districtOrSum: location.data,
+        districtOrSum: location.data
       }
     });
   } catch (e) {
