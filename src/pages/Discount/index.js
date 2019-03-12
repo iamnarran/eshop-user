@@ -3,7 +3,7 @@ import React from "react";
 import CardList from "../../components/CardList";
 import Banner from "../../components/Banner";
 import PageHeader from "../../components/PageHeader";
-import { IMAGE, CARD_TYPES, CARD_LIST_TYPES } from "../../utils/consts";
+import {CARD_TYPES, CARD_LIST_TYPES } from "../../utils/consts";
 
 class Discount extends React.Component {
   // state = {

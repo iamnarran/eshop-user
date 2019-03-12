@@ -55,15 +55,17 @@ class Component extends React.Component{
   }
 
   componentWillUpdate(prevProps) {
-    if (prevProps.container.category !== this.props.container.category) {
+    if (prevProps.container.category !== this.props.container.category || this.state.skucd !== this.props.match.params.id) {
       this.setState({
         skucd: this.props.match.params.id,
         category: this.props.container.category
+      }, () => {
+        this.refresh();
       });
     }
-    if (prevProps.match.params.id !== this.props.match.params.id) {
-      this.refresh();
-    }
+   // if (prevProps.match.params.id !== this.props.match.params.id) {
+    //  this.refresh();
+  //  }
   }
 
   render() {
@@ -98,7 +100,6 @@ class Component extends React.Component{
   }
   refresh = async () => {
     const { skucd } = this.state
-    console.log(skucd)
     await api.product.productCollection({ skucd: skucd }).then(res => res.success?this.setState({ collectionProduct: res.data, breadCrumb:[] }):console.log("collectionProduct",res) )
     await api.product.productAttribute({ skucd: skucd }).then(res => res.success ? this.setState({ attribute: res.data }) : console.log("attribute", res))
     await api.product.productRelational({ skucd: skucd }).then(res => res.success ? this.setState({ relationalProduct: res.data }) : console.log("relationalProduct", res))
@@ -127,7 +128,7 @@ generateSaleMinQty = (saleminqty) => {
           return null
         })
         breadCrumb.reverse()
-  
+        
         this.setState({
           product: product,
           breadCrumb: breadCrumb,
@@ -290,26 +291,54 @@ generateSaleMinQty = (saleminqty) => {
 
 
   addProduct = () => {
-    const { saleNumber, addminqty, product, issalekg, sumPrice, grPrice } = this.state
+    const { saleNumber, addminqty, product, issalekg, grPrice } = this.state
+
     if (saleNumber < product.availableqty && product.availableqty !== 0) {
       if (saleNumber < product.salemaxqty || product.salemaxqty === 0) {
-        this.setState({
-          saleNumber: saleNumber + addminqty,
-          sumPrice: issalekg === 1 ? (grPrice * (saleNumber + addminqty)) : product.spercent !== 100 ? (product.sprice * (saleNumber + addminqty)) : (product.price * (saleNumber + addminqty))        
-        })
+        if(product.salemaxqty !== 0){
+          if(product.salemaxqty > saleNumber + addminqty){
+           this.addProductLimit(saleNumber + addminqty);
+          }else{
+            this.addProductLimit(product.salemaxqty);
+          }
+        }else{
+          this.addProductLimit(saleNumber + addminqty);
+        }
       }
     }
+  }
+
+  addProductLimit = (value) => {
+    const { saleNumber, addminqty, product, issalekg, grPrice } = this.state
+    this.setState({
+      saleNumber: value,
+      sumPrice: issalekg === 1 ? (grPrice * value) : product.spercent !== 100 ? (product.sprice * value) : (product.price * value)        
+    })
   }
 
   remProduct = () => { 
     const { saleNumber, product, addminqty, issalekg, sumPrice, grPrice } = this.state
     if (saleNumber > product.saleminqty) {  //hamgiin  bagdaa zarag too shirhegiin hyzgaarlalt
-      this.setState({
-        saleNumber: saleNumber - addminqty,
-        sumPrice: issalekg ? (grPrice * (saleNumber - addminqty)) : product.spercent !== 100 ? (product.sprice * (saleNumber - addminqty)) : (product.price * (saleNumber - addminqty))
-      })
+      if(product.saleminqty !== 0){
+        if(product.saleminqty < saleNumber - addminqty){
+          this.remProductLimit(saleNumber - addminqty)
+        }else{
+          this.remProductLimit(product.saleminqty);
+        }
+      }else{
+        this.remProductLimit(saleNumber - addminqty)
+      }
     }
   };
+
+  remProductLimit = (value) => {
+    const { saleNumber, product, addminqty, issalekg, sumPrice, grPrice } = this.state
+    this.setState({
+      saleNumber: value,
+      sumPrice: issalekg ? (grPrice * value) : product.spercent !== 100 ? (product.sprice * value) : (product.price * value)
+    })
+  }
+
   renderProductDelivery = () => {
     const { relationalProduct } = this.state;
     return (
@@ -371,7 +400,7 @@ generateSaleMinQty = (saleminqty) => {
                       <i className="fa fa-minus" aria-hidden="true" />
                     </button>
                   </div>
-                  <input alt="asfasd" className="form-control" placeholder="" value={saleNumber} aria-label=""  aria-describedby="button-addon4" />
+                  <input alt="asfasd" min="1" max="999" type="number" className="form-control" placeholder="" value={saleNumber} aria-label=""  aria-describedby="button-addon4" />
                   <div className="input-group-append" id="button-addon4">
                     <button
                       className="btn product-detail-btn"
@@ -425,13 +454,13 @@ generateSaleMinQty = (saleminqty) => {
               <strong>{money.format(sumPrice)}₮</strong>
             </div>
             <div className="btn-container text-right">
-              <a href="/" className="btn btn-gray text-uppercase">
+              <button className="btn btn-gray text-uppercase">
                 <span>Хадгалах</span>
-              </a>
-              <a href="/" className="btn btn-main text-uppercase">
+              </button>
+              <button className="btn btn-main text-uppercase" disabled={product.availableqty > 0 ? false : true}>
                 <i className="fa fa-shopping-cart" aria-hidden="true" />
                 <span>Сагсанд нэмэх</span>
-              </a>
+              </button>
               {/* <p className="text text-right">Урамшуулал 2 хоногийн дараа дуусна</p> */}
             </div>
           </form>
