@@ -23,7 +23,7 @@ class Component extends React.Component{
     if (rate !== undefined && rate.length !== 0) {
       rate.map(i => sum += i.rate)
     }
-    this.setState({ratesum: sum/rate.length+1, rate: rate})
+    this.setState({ratesum: sum/rate.length, rate: rate})
   }
   render() {
     const { comment, rate, ratesum } = this.state
@@ -60,7 +60,7 @@ class Component extends React.Component{
                 rate === undefined ? '' : (
                   <div className="main-rating">
                       <Rate rate={ratesum} numOfVotes={ratesum}/>   
-                    <p className="text">({rate.length+1} хүн үнэлгээ өгсөн байна)</p>
+                    <p className="text">({rate.length} хүн үнэлгээ өгсөн байна)</p>
                   </div>
                 )                
               }
