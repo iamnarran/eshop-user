@@ -10,13 +10,16 @@ import {
   Comment
 } from "../../components";
 import { Spin } from "antd";
+import {
+  FacebookShareButton,
+  TwitterShareButton,
+  FacebookIcon,
+  TwitterIcon,
+} from 'react-share';
 
-const IMAGE =
-  process.env.NODE_ENV === "development"
-    ? config.image.development
-    : config.image.production;
-const money = new Intl.NumberFormat("en-US");
-class Component extends React.Component {
+const IMAGE = process.env.NODE_ENV==="development"?config.image.development:config.image.production
+const money = new Intl.NumberFormat('en-US')
+class Component extends React.Component{
   state = {
     skucd: null,
     product: [],
@@ -27,20 +30,19 @@ class Component extends React.Component {
     category: [],
     breadCrumb: [],
 
-    saleNumber: null, //Hudaldaalagdah too shirheg hamgiin bagdaa
-    sumPrice: null, //Hudaldaalagdah niit dun vne (too shirhegees hamaarna)
-    kgPrice: null, //Kg -aar zaragdah vne
-    grPrice: null, //Gr -aar zaragdah vne
-    issalekg: false, //kr-aar zaragdah baraa mun eseh
-
-    attribute: [],
-
+    saleNumber: null,         //Hudaldaalagdah too shirheg hamgiin bagdaa
+    sumPrice: null,           //Hudaldaalagdah niit dun vne (too shirhegees hamaarna)
+    kgPrice: null,            //Kg -aar zaragdah vne
+    grPrice: null,            //Gr -aar zaragdah vne
+    issalekg: false,          //kr-aar zaragdah baraa mun eseh
+    addminqty: null,
+    attribute: [],    
     selectedMediumImg: null,
     selectedLargeImg: null,
     smallImg: [],
-
-    isLoading: false
-  };
+    currentUrl: null,
+    isLoading: false,
+  }
 
   componentWillMount() {
     this.setState({
@@ -95,74 +97,49 @@ class Component extends React.Component {
     );
   }
   refresh = async () => {
-    const { skucd } = this.state;
-    await api.product
-      .productCollection({ skucd: skucd })
-      .then(res =>
-        res.success
-          ? this.setState({ collectionProduct: res.data, breadCrumb: [] })
-          : console.log("collectionProduct", res)
-      );
-    await api.product
-      .productAttribute({ skucd: skucd })
-      .then(res =>
-        res.success
-          ? this.setState({ attribute: res.data })
-          : console.log("attribute", res)
-      );
-    await api.product
-      .productRelational({ skucd: skucd })
-      .then(res =>
-        res.success
-          ? this.setState({ relationalProduct: res.data })
-          : console.log("relationalProduct", res)
-      );
-    await api.product
-      .productDetail({ skucd: skucd })
-      .then(res =>
-        res.success
-          ? this.getCategory(res.data[0])
-          : console.log("productDetail", res)
-      );
-    await api.product
-      .productDetailImg({ skucd: skucd })
-      .then(res =>
-        res.success
-          ? this.setState({ smallImg: res.data })
-          : console.log("productDetailImg", res)
-      );
-  };
+    const { skucd } = this.state
+    console.log(skucd)
+    await api.product.productCollection({ skucd: skucd }).then(res => res.success?this.setState({ collectionProduct: res.data, breadCrumb:[] }):console.log("collectionProduct",res) )
+    await api.product.productAttribute({ skucd: skucd }).then(res => res.success ? this.setState({ attribute: res.data }) : console.log("attribute", res))
+    await api.product.productRelational({ skucd: skucd }).then(res => res.success ? this.setState({ relationalProduct: res.data }) : console.log("relationalProduct", res))
+    await api.product.productDetail({ skucd: skucd }).then(res => res.success ? this.getCategory(res.data[0]) : console.log('productDetail', res))
+    await api.product.productDetailImg({ skucd: skucd }).then(res => res.success?this.setState({smallImg: res.data}):console.log('productDetailImg', res))
+  }
 
-  getCategory = product => {
-    const { breadCrumb, category } = this.state;
-    if (product.length !== 0) {
-      let parent = product.catid;
-      category.reverse().map(i => {
-        if (parent === i.id) {
-          breadCrumb.push(i);
-          parent = i.parentid;
-        }
-        return null;
-      });
-      breadCrumb.reverse();
+generateSaleMinQty = (saleminqty) => {
+  if(saleminqty === 0){
+    return 1
+  }else{
+    return saleminqty
+  }
+}
 
-      this.setState({
-        product: product,
-        breadCrumb: breadCrumb,
-        saleNumber: product.saleminqty,
-        sumPrice:
-          product.issalekg === 1
-            ? product.kgproduct[0].salegramprice * product.saleminqty
-            : product.spercent === 100
-            ? product.price * product.saleminqty
-            : product.sprice * product.saleminqty,
-        issalekg: product.issalekg,
-        grPrice:
-          product.issalekg === 1 ? product.kgproduct[0].salegramprice : null,
-        kgPrice:
-          product.issalekg === 1 ? product.kgproduct[0].kilogramprice : null,
-        isLoading: true
-      });
+  getCategory = (product) => {
+    const { breadCrumb, category } = this.state
+    if(product !== undefined){
+      if (product.length !== 0 ) {
+        let parent = product.catid
+        category.reverse().map((i) => {     
+          if (parent === i.id) {
+            breadCrumb.push(i)
+            parent = i.parentid
+          }
+          return null
+        })
+        breadCrumb.reverse()
+  
+        this.setState({
+          product: product,
+          breadCrumb: breadCrumb,
+          addminqty: product.addminqty,
+          saleNumber: this.generateSaleMinQty(product.saleminqty),
+          sumPrice: product.issalekg === 1 ? product.kgproduct[0].salegramprice * this.generateSaleMinQty(product.saleminqty) : product.spercent === 100 ? product.price * this.generateSaleMinQty(product.saleminqty) : product.sprice * this.generateSaleMinQty(product.saleminqty),
+          issalekg: product.issalekg,
+          grPrice: product.issalekg === 1 ? product.kgproduct[0].salegramprice : null,
+          kgPrice: product.issalekg === 1 ? product.kgproduct[0].kilogramprice : null,
+          isLoading: true,
+        })
+    }
     }
   };
 
@@ -182,12 +159,7 @@ class Component extends React.Component {
     );
   };
   renderProductImg = () => {
-    const {
-      product,
-      selectedMediumImg,
-      smallImg,
-      selectedLargeImg
-    } = this.state;
+    const { product, selectedMediumImg, smallImg, selectedLargeImg } = this.state
     return (
       <div className="col-xl-4 col-lg-4 col-md-5 pad10">
         <div className="product-gallery">
@@ -208,15 +180,8 @@ class Component extends React.Component {
                 product.images.map((i, key) => {
                   return (
                     <li className="list-inline-item" key={key}>
-                      <a
-                        className="image-container"
-                        onClick={this.onChangeMniImage}
-                      >
-                        <img
-                          alt={i.id}
-                          className={key}
-                          src={IMAGE + i.imgmni}
-                        />
+                      <a className="image-container" onClick={this.onChangeMniImage}>
+                        <img alt={i.seq} className={key} src={IMAGE+i.imgmni}/>
                       </a>
                     </li>
                   );
@@ -229,42 +194,45 @@ class Component extends React.Component {
                 <span>Хуваалцах:</span>
               </li>
               <li className="list-inline-item">
-                <a href="/">
-                  <span>
-                    <i className="fa fa-facebook" aria-hidden="true" />
-                  </span>
-                </a>
+              <FacebookShareButton
+            url={window.location.href}
+            quote={product.name}
+            className="Demo__some-network__share-button">
+            <FacebookIcon
+              size={25}
+              round 
+              />
+          </FacebookShareButton>
               </li>
               <li className="list-inline-item">
-                <a href="/">
-                  <span>
-                    <i className="fa fa-twitter" aria-hidden="true" />
-                  </span>
-                </a>
+              <TwitterShareButton
+            url={window.location.href}
+            quote={product.name}
+            className="Demo__some-network__share-button">
+            <TwitterIcon
+              size={25}
+              round 
+              />
+          </TwitterShareButton>
               </li>
             </ul>
           </div>
         </div>
       </div>
-    );
-  };
-  onChangeMniImage = e => {
-    const { images } = this.state.product;
-    images.map(index => {
-      return Number(index.id) === Number(e.target.alt)
-        ? this.setState({
-            selectedMediumImg: IMAGE + index.imgmdm,
-            selectedLargeImg: e.target.className
-          })
-        : "";
-    });
-  };
-
+    )
+  }
+  onChangeMniImage = (e) => {
+    const { images } = this.state.product
+    images.map((index) => {
+     return Number(index.seq) === Number(e.target.alt) ? this.setState({selectedMediumImg: IMAGE+index.imgmdm, selectedLargeImg: e.target.className}):''
+    })
+  }
+  
   renderFooter = () => {
-    const { attribute, collectionProduct, skucd, product } = this.state;
-    return (
-      <div className="row row10">
-        <div className="col-xl-9 pad10">
+    const { attribute, collectionProduct, skucd, product } = this.state
+    return(
+      <div className="col-xl-12 col-lg-12 col-md-12 pad10">
+        <div className="col-xl-12">
           <Information attribute={attribute} />
           {collectionProduct.length === 0 ? (
             ""
@@ -306,35 +274,40 @@ class Component extends React.Component {
           />
         </div>
       </div>
-    );
-  };
+    )
+  }
+
+  getRatesum = () => {
+    const {product} = this.state
+    let sum = 0
+    if(product !== undefined){
+      if (product.rate !== undefined && product.rate.length !== 0) {
+        product.rate.map(i => sum += i.rate)
+      }
+    }
+    return (sum/product.rate.length).toFixed(2)
+  }
+
+
   addProduct = () => {
-    const { saleNumber, product, issalekg, sumPrice, grPrice } = this.state;
+    const { saleNumber, addminqty, product, issalekg, sumPrice, grPrice } = this.state
     if (saleNumber < product.availableqty && product.availableqty !== 0) {
       if (saleNumber < product.salemaxqty || product.salemaxqty === 0) {
         this.setState({
-          saleNumber: saleNumber + 1,
-          sumPrice: issalekg
-            ? sumPrice + grPrice
-            : product.spercent !== 100
-            ? sumPrice + product.sprice
-            : sumPrice + product.price
-        });
+          saleNumber: saleNumber + addminqty,
+          sumPrice: issalekg === 1 ? (grPrice * (saleNumber + addminqty)) : product.spercent !== 100 ? (product.sprice * (saleNumber + addminqty)) : (product.price * (saleNumber + addminqty))        
+        })
       }
     }
-  };
-  remProduct = () => {
-    const { saleNumber, product, issalekg, sumPrice, grPrice } = this.state;
-    if (saleNumber > product.saleminqty) {
-      //hamgiin  bagdaa zarag too shirhegiin hyzgaarlalt
+  }
+
+  remProduct = () => { 
+    const { saleNumber, product, addminqty, issalekg, sumPrice, grPrice } = this.state
+    if (saleNumber > product.saleminqty) {  //hamgiin  bagdaa zarag too shirhegiin hyzgaarlalt
       this.setState({
-        saleNumber: saleNumber - 1,
-        sumPrice: issalekg
-          ? sumPrice - grPrice
-          : product.spercent !== 100
-          ? sumPrice - product.sprice
-          : sumPrice - this.state.product.price
-      });
+        saleNumber: saleNumber - addminqty,
+        sumPrice: issalekg ? (grPrice * (saleNumber - addminqty)) : product.spercent !== 100 ? (product.sprice * (saleNumber - addminqty)) : (product.price * (saleNumber - addminqty))
+      })
     }
   };
   renderProductDelivery = () => {
@@ -375,7 +348,12 @@ class Component extends React.Component {
               })}
             </strong>
           </p>
-          <Rate rate={5} numOfVotes={197} />
+          <div className="main-rating">
+          <Rate rate={this.getRatesum()} numOfVotes={this.getRatesum()} /> 
+                    <p className="text">({product.rate.length} хүн үнэлгээ өгсөн байна)</p>
+                  </div>
+         
+          
           <div className="gift">
             <div className="image-container" />
             <div className="info-container" />
@@ -393,14 +371,7 @@ class Component extends React.Component {
                       <i className="fa fa-minus" aria-hidden="true" />
                     </button>
                   </div>
-                  <input
-                    alt="asfasd"
-                    className="form-control"
-                    placeholder=""
-                    value={saleNumber}
-                    aria-label=""
-                    aria-describedby="button-addon4"
-                  />
+                  <input alt="asfasd" className="form-control" placeholder="" value={saleNumber} aria-label=""  aria-describedby="button-addon4" />
                   <div className="input-group-append" id="button-addon4">
                     <button
                       className="btn product-detail-btn"
