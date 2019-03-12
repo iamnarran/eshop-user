@@ -84,7 +84,6 @@ class Homepage extends React.Component {
     const {
       categories,
       banners,
-      tags,
       brands,
       widgets,
       prodsEmart,
@@ -95,7 +94,6 @@ class Homepage extends React.Component {
     } = this.props.container;
 
     const items = {
-      tags,
       products: {
         prodsEmart,
         prodsDiscount,

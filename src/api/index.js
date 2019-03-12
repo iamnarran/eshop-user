@@ -129,6 +129,8 @@ login.forEach(api => {
 rest["register"] = {};
 register.forEach(api => {
   rest.register[api.NAME] = data => generateAPI(api, data);
+});
+
 //STATIC PAGE
 rest["staticPages"] = {};
 staticPages.forEach(api => {
