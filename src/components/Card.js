@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
+import api from "../api";
 import Rate from "./Rate";
 import Label from "./Label";
 import { IMAGE, CARD_TYPES } from "../utils/consts";
@@ -9,6 +10,16 @@ import { IMAGE, CARD_TYPES } from "../utils/consts";
 import "./Card.css";
 
 class Card extends React.Component {
+  handleAddToCart = e => {
+    e.preventDefault();
+    console.log("clicked", e);
+
+    // api.product.isAvailable({ skucd: "8656020651047" }).then(res => {
+    //   if (parseInt(res.data[0].availableqty) > 0) {
+    //     console.log("can be added");
+    //   }
+    // });
+  };
 
   trimByWord(text, maxChars = 20) {
     const textWords = text.split(" ");
@@ -54,7 +65,7 @@ class Card extends React.Component {
           <i className="fa fa-heart-o" aria-hidden="true" />
           <span />
         </Link>
-        <Link to="">
+        <Link to="" onClick={this.handleAddToCart}>
           <i className="fa fa-cart-plus" aria-hidden="true" />
           <span />
         </Link>
@@ -70,9 +81,7 @@ class Card extends React.Component {
           >
             <div className="single-product small-product sale-product timed-product">
               <div className="image-container">
-                <Link
-                  to={item.route ? item.route : ""}
-                >
+                <Link to={item.route ? item.route : ""}>
                   <span
                     className="image"
                     style={{

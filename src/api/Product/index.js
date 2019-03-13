@@ -101,5 +101,13 @@ export default [
     METHOD: "GET",
     URL: `${API}/api/product/detailimg/:skucd`,
     REPLACE: "skucd"
+  },
+
+  /**AVAILABILITY */
+  {
+    NAME: "isAvailable",
+    METHOD: "GET",
+    URL: `${API}/api/product/ProdAvailable/:skucd`,
+    REPLACE: "skucd"
   }
 ];
