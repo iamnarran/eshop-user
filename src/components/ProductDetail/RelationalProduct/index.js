@@ -1,14 +1,20 @@
 import React from 'react'
 import p5 from "../../../scss/assets/images/demo/2.jpg"
 import { Button } from "antd"
+import { IMAGE } from "../../../utils/consts";
+import { Link } from "react-router-dom";
+import ls from "local-storage";
+import PropTypes from "prop-types";
 
 class Compenent extends React.Component {
+
   state = {
     more: false,
     product: []
   }
 
   componentDidMount(){
+    console.log(this.props.product, "test")
     if(this.props.product.length !== 0){
       this.setState({product: this.props.product.slice(0,4)})
     }
@@ -18,6 +24,8 @@ class Compenent extends React.Component {
   onClickSeeMore = () => { 
     this.setState({ more: true, product: this.props.product }) 
   }
+
+ 
 
   render() {
     const { product } = this.state
@@ -33,16 +41,18 @@ class Compenent extends React.Component {
             return (
               <li key={key}>
                 <div className="single flex-this">
+               
                   <div className="image-container">
-                    <a href="/">
-                      <span className="image" style={{backgroundImage: `url(${p5})`}}></span>
-                    </a>
+                  <Link  to={i.route ? i.route : ""}>
+                      <span className="image" style={{backgroundImage: `url(${IMAGE + i.imgnm})`}}></span>
+                      </Link>
                   </div>
+                  
                   <div className="info-container flex-space">
-                    <a href="/">
+                  <Link  to={i.route ? i.route : ""}>
                       <span>{i.name}</span>
                       <strong>{money.format(i.price)}₮</strong>
-                    </a>
+                    </Link>
                     <div className="action">
                       <a href="/">
                         <i className="fa fa-cart-plus" aria-hidden="true"></i>
@@ -65,5 +75,9 @@ class Compenent extends React.Component {
   }
 }
 const money = new Intl.NumberFormat('en-US');
+
+Compenent.propTypes = {
+  item: PropTypes.object.isRequired,
+};
 
 export default Compenent;

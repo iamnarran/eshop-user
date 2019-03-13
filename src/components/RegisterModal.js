@@ -16,7 +16,6 @@ import actions from "../actions/Register";
 )
 class RegisterModal extends React.Component {
   state = {
-    visible: false,
     loading: false
   };
 
@@ -26,16 +25,12 @@ class RegisterModal extends React.Component {
     }
   }
 
-  showModal = () => {
-    this.setState({ visible: true });
+  handleOk = e => {
+    this.props.onVisibleChange(e);
   };
 
-  handleOk = () => {
-    this.setState({ visible: false });
-  };
-
-  handleCancel = () => {
-    this.setState({ visible: false });
+  handleCancel = e => {
+    this.props.onVisibleChange(e);
   };
 
   _submit = e => {
@@ -70,7 +65,7 @@ class RegisterModal extends React.Component {
     return (
       <Modal
         title="Бүртгүүлэх"
-        visible={this.state.visible}
+        visible={this.props.visible}
         onOk={this.handleOk}
         onCancel={this.handleCancel}
         footer={[]}
@@ -204,7 +199,6 @@ class RegisterModal extends React.Component {
               type="primary"
               className="btn btn-block btn-login text-uppercase"
               loading={this.state.loading}
-              onClick={this.toggle}
               data-style={EXPAND_LEFT}
               htmlType="submit"
             >

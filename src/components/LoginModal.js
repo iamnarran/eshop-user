@@ -18,7 +18,6 @@ import RegisterModal from "./RegisterModal";
 )
 class LoginModal extends React.Component {
   state = {
-    visible: false,
     loading: false,
     isRegisterModalVisible: false
   };
@@ -29,24 +28,29 @@ class LoginModal extends React.Component {
     }
   }
 
-  showModal = () => {
-    this.setState({ visible: true });
+  handleOk = e => {
+    this.props.onVisibleChange(e);
   };
 
-  hideModal = () => {
-    this.setState({ visible: false });
+  handleCancel = e => {
+    this.props.onVisibleChange(e);
   };
 
-  handleOk = () => {
-    this.setState({ visible: false });
+  toggleRegisterModal = e => {
+    e.preventDefault();
+    this.setState({
+      isRegisterModalVisible: !this.state.isRegisterModalVisible
+    });
   };
 
-  handleCancel = () => {
-    this.setState({ visible: false });
-  };
-
-  handleRegisterClick = () => {
+  showRegisterModal = e => {
+    e.preventDefault();
     this.setState({ isRegisterModalVisible: true });
+  };
+
+  hideRegisterModal = e => {
+    e.preventDefault();
+    this.setState({ isRegisterModalVisible: false });
   };
 
   _submit = e => {
@@ -58,13 +62,14 @@ class LoginModal extends React.Component {
         try {
           res = await this.props.login(form);
 
-          if (res.status === "failed") {
-            message.error(res.message);
+          if (!res.success) {
+            message.error("Таны нэвтрэх нэр эсвэл нууц үг буруу байна");
             this.setState({ loading: false });
           } else {
             // successful
             this.props.setUser(res.data);
             window.location.reload();
+            // console.log("res", res);
           }
         } catch (err) {
           console.log(err);
@@ -82,16 +87,15 @@ class LoginModal extends React.Component {
       <div>
         <Modal
           title="Нэвтрэх"
-          visible={this.state.visible}
+          visible={this.props.visible}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
-          footer={[]}
         >
           <div className="modal-body">
             <form onSubmit={this._submit}>
               <div className="form-group">
                 <label htmlFor="email" className="sr-only">
-                  Email
+                  Имэйл
                 </label>
                 {getFieldDecorator("email", {
                   rule: [
@@ -113,7 +117,7 @@ class LoginModal extends React.Component {
               </div>
               <div className="form-group">
                 <label htmlFor="password" className="sr-only">
-                  Password
+                  Нууц үг
                 </label>
                 {getFieldDecorator("password", {
                   rule: [
@@ -140,11 +144,11 @@ class LoginModal extends React.Component {
                       <input
                         type="checkbox"
                         className="custom-control-input"
-                        id="customCheck1"
+                        id="rememberMe"
                       />
                       <label
                         className="custom-control-label"
-                        htmlFor="customCheck1"
+                        htmlFor="rememberMe"
                       >
                         Сануулах
                       </label>
@@ -164,7 +168,6 @@ class LoginModal extends React.Component {
                 type="primary"
                 className="btn btn-block btn-login text-uppercase"
                 loading={this.state.loading}
-                onClick={this.toggle}
                 data-style={EXPAND_LEFT}
                 htmlType="submit"
               >
@@ -188,14 +191,17 @@ class LoginModal extends React.Component {
               <Link
                 to=""
                 className="btn btn-link"
-                onClick={this.handleRegisterClick}
+                onClick={this.showRegisterModal}
               >
                 Та шинээр бүртгүүлэх бол ЭНД ДАРЖ бүртгүүлнэ үү
               </Link>
             </div>
           </div>
         </Modal>
-        <RegisterModal visible={this.state.isRegisterModalVisible} />
+        <RegisterModal
+          onVisibleChange={this.toggleRegisterModal}
+          visible={this.state.isRegisterModalVisible}
+        />
       </div>
     );
   }

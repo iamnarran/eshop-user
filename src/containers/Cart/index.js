@@ -3,7 +3,7 @@ import { compose } from "react-komposer";
 import { Spin } from "antd";
 
 import api from "../../api";
-import { NewProduct } from "../../pages";
+import { Cart } from "../../pages";
 
 const options = {
   loadingHandler: () => (
@@ -16,17 +16,12 @@ const options = {
 
 const fetch = async (props, onData) => {
   try {
-    const products = await api.product.findAllNewProducts({ jumcd: "99" });
-    const primaryBanners = await api.pagebanner.findAll({ type: "F1" });
-    const secondaryBanners = await api.pagebanner.findAll({ type: "F2" });
-    const menu = await api.menu.findOne({ slug: "new" });
+    // const products = await api.cart.findAllWishlistProds();
 
     onData(null, {
       container: {
-        products: products.data,
-        primaryBanners: primaryBanners.data,
-        secondaryBanners: secondaryBanners.data,
-        menu: menu.data
+        // products: products.data
+        wishlistProducts: []
       }
     });
   } catch (e) {
@@ -42,4 +37,4 @@ const dataLoader = (props, onData) => {
 export default compose(
   dataLoader,
   options
-)(NewProduct);
+)(Cart);

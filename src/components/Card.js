@@ -5,15 +5,10 @@ import PropTypes from "prop-types";
 import Rate from "./Rate";
 import Label from "./Label";
 import { IMAGE, CARD_TYPES } from "../utils/consts";
-import ls from "local-storage";
 
 import "./Card.css";
 
 class Card extends React.Component {
-  onClickProduct = () => {
-    const { item } = this.state;
-    ls.set("skucd", item.cd);
-  };
 
   trimByWord(text, maxChars = 20) {
     const textWords = text.split(" ");
@@ -34,7 +29,6 @@ class Card extends React.Component {
 
   render() {
     const { type, item, isLastInRow, className } = this.props;
-
     if (!item) {
       return null;
     }
@@ -66,7 +60,6 @@ class Card extends React.Component {
         </Link>
       </div>
     );
-
     switch (type) {
       case CARD_TYPES.slim:
         return (
@@ -79,7 +72,6 @@ class Card extends React.Component {
               <div className="image-container">
                 <Link
                   to={item.route ? item.route : ""}
-                  onClick={this.onClickProduct}
                 >
                   <span
                     className="image"

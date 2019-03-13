@@ -1,6 +1,9 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import { IMAGE } from "../../utils/consts";
+
 import "./style.css";
 
 class Footer extends React.Component {
@@ -13,9 +16,9 @@ class Footer extends React.Component {
           <div className="container pad10">
             <div className="row row10">
               <div className="col-sm-12 col-md-6 col-lg-3 pad10">
-                <a to="" className="logo">
+                <Link to="/" className="logo">
                   <img alt="logo" src={IMAGE + staticinfo.logopath2} />
-                </a>
+                </Link>
                 <ul className="social">
                   <li>
                     <a

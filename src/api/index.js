@@ -1,21 +1,22 @@
-import client, { setAuthorizationHeader } from "./Client/index";
-import homepage from "./Homepage/index";
+import client, { setAuthorizationHeader } from "./Client";
+import homepage from "./Homepage";
 import banner from "./Banner/HompageBanner";
-import brand from "./Brand/index";
-import staticinfo from "./Static/index";
-import menu from "./Menu/index";
-import category from "./Category/index";
-import widget from "./Widget/index";
-import product from "./Product/index";
-import recipe from "./Recipe/index";
-import packageProduct from "./Package/index";
+import brand from "./Brand";
+import staticinfo from "./Static";
+import menu from "./Menu";
+import category from "./Category";
+import widget from "./Widget";
+import product from "./Product";
+import recipe from "./Recipe";
+import packageProduct from "./Package";
 import pagebanner from "./Banner/PagesBanner";
-import tag from "./Tag/index";
+import tag from "./Tag";
 import location from "./Location";
 import login from "./User/login";
 import register from "./User/register";
 import staticPages from "./StaticPages";
 import categoryInfo from "./CategoryInfo";
+import cart from "./Cart";
 
 let rest = {};
 
@@ -141,6 +142,12 @@ staticPages.forEach(api => {
 rest["categoryInfo"] = {};
 categoryInfo.forEach(api => {
   rest.categoryInfo[api.NAME] = data => generateAPI(api, data);
+});
+
+//CART
+rest["cart"] = {};
+cart.forEach(api => {
+  rest.cart[api.NAME] = data => generateAPI(api, data);
 });
 
 export { rest as default, setAuthorizationHeader };
