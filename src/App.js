@@ -44,6 +44,7 @@ import {
   UserProfile,
   StaticPage,
   CategoryInfo,
+  Cart,
   Temp
 } from "./containers/index";
 
@@ -54,10 +55,6 @@ addLocaleData([...en]);
 
 class Private extends Component {
   render() {
-    // const { auth, component: Component, ...rest } = this.props;
-    // console.log("auth", auth);
-    // const isAuth = auth.user;
-
     const { component: Component, ...rest } = this.props;
 
     return (
@@ -123,11 +120,6 @@ class Localization extends Component {
         path: "/package",
         component: rest => <Package {...rest} {...this.props} />
       },
-      // {
-      //   exact: false,
-      //   path: "/promotion",
-      //   component: rest => <Promotion {...rest} {...this.props} />
-      // },
       {
         exact: true,
         path: "/package/:id",
@@ -168,6 +160,11 @@ class Localization extends Component {
         exact: true,
         path: "/CategoryInfo/:id",
         component: rest => <CategoryInfo {...rest} {...this.props} />
+      },
+      {
+        exact: true,
+        path: "/cart",
+        component: rest => <Cart {...rest} {...this.props} />
       },
       {
         exact: true,
@@ -245,26 +242,4 @@ class App extends Component {
   }
 }
 
-/* <Route
-              path={'/Account'}
-              render={props => (
-                <Layouts {...props} {...this.props}>
-                  <ToastContainer />
-                  <Switch>
-                    <Private
-                      { ...this.props }
-                      { ...props }
-                      exact
-                      path="/"
-                      component={rest => (
-                        <Account
-                          { ...props }
-                          { ...rest }
-                        />
-                      )}
-                    /> 
-                  </Switch>
-                </Layouts>
-              )}
-            /> */
 export default App;

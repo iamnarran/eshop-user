@@ -14,6 +14,7 @@ import WishList from "./WishList";
 import UserProfile from "./UserProfile";
 import StaticPage from "./StaticPage";
 import CategoryInfo from "./CategoryInfo";
+import Cart from "./Cart";
 
 export {
   Footer,
@@ -31,5 +32,6 @@ export {
   WishList,
   UserProfile,
   StaticPage,
-  CategoryInfo
+  CategoryInfo,
+  Cart
 };

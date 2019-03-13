@@ -2,21 +2,18 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Icon } from "antd";
 import { connect } from "react-redux";
+import NotificationBadge, { Effect } from "react-notification-badge";
 
-// import GoogleLogin from "../../components/GoogleLogin";
-/* import DropMenu from '../../components/DropMenu'; */
 import Category from "../../components/Category";
 import MainMenu from "../../components/Menu";
 import ToggleMenu from "../../components/ToggleMenu";
 import ToggleCategory from "../../components/ToggleCategory";
 import LoginModal from "../../components/LoginModal";
 import { signOut } from "../../actions/Login";
-import FacebookLogin from "../../components/FacebookLogin";
 import { IMAGE } from "../../utils/consts";
-import storage from "../../utils/storage";
+import UserButton from "../../components/UserButton";
 
 import "./style.css";
-import { ImageCollectionsBookmark } from "material-ui/svg-icons";
 
 @connect(
   null,
@@ -26,37 +23,23 @@ class AppHeader extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isOpen: false,
-      isLogin: false,
-      isToggle: false,
-      logInVisible: false,
-      SingUpVisible: false,
-      isSearch: false
+      isLoginModalVisible: false
     };
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (this.props.visible !== prevProps.visible) {
-      this.setState({ visible: this.props.visible });
-    }
-  }
-
-  toggleOpen = () => this.setState({ isOpen: !this.state.isOpen });
-  toggleSearch = () => this.setState({ isSearch: !this.state.isSearch });
-  showLogInModal = () => this.setState({ logInVisible: true });
-  handleLogInSave = () => this.setState({ logInVisible: false });
-  handleLogInCancel = () => this.setState({ logInVisible: false });
-  showSingUpModal = () => this.setState({ SingUpVisible: true });
-  handleSingUpSave = () => this.setState({ SingUpVisible: false });
-  handleSingUpCancel = () => this.setState({ SingUpVisible: false });
-
-  togglePopup = () => {
-    this.props.onChange();
+  toggleLoginModal = e => {
+    e.preventDefault();
+    this.setState({ isLoginModalVisible: !this.state.isLoginModalVisible });
   };
 
-  handleLogout = () => {
-    this.props.signOut();
-    window.location.reload();
+  showLoginModal = e => {
+    e.preventDefault();
+    this.setState({ isLoginModalVisible: true });
+  };
+
+  hideLoginModal = e => {
+    e.preventDefault();
+    this.setState({ isLoginModalVisible: false });
   };
 
   render() {
@@ -83,143 +66,6 @@ class AppHeader extends Component {
     }`;
     const togglePopup = `${this.props.isToggle ? " activated" : ""}`;
 
-    let userButton = null;
-    if (storage.get("user")) {
-      let user = storage.get("user");
-      if (user.customerInfo) {
-        user = user.customerInfo;
-      }
-
-      userButton = (
-        <li className="list-inline-item user">
-          <Link to="" className="flex-this">
-            <div className="image-container default">
-              <span
-                className="image"
-                style={{
-                  backgroundImage: `url(${user.picture ? user.picture : ""})`
-                }}
-              />
-            </div>
-            <span className="">
-              {user.name ? user.name : user.email ? user.email : ""}
-            </span>
-          </Link>
-          <div className="dropdown">
-            <div className="drop-content">
-              <div className="profile-menu">
-                <div className="menu-header">
-                  <div className="flex-this">
-                    <div className="image-container default">
-                      <span
-                        className="image"
-                        style={{
-                          backgroundImage: `url(${
-                            user.picture ? user.picture : ""
-                          })`
-                        }}
-                      />
-                    </div>
-                    <p className="name">
-                      {user.name ? user.name : user.email ? user.email : ""}
-                    </p>
-                  </div>
-                  <div className="progress">
-                    <div
-                      className="progress-bar"
-                      role="progressbar"
-                      style={{ width: "100%" }}
-                      aria-valuenow="100"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                    />
-                  </div>
-                  <p className="text text-center">
-                    <strong>Таны мэдээлэл</strong>
-                    <span>100% / 100%</span>
-                  </p>
-                </div>
-                <ul className="list-unstyled">
-                  <li className="active">
-                    <Link to="/userprofile" className="flex-this">
-                      <i className="fa fa-user" aria-hidden="true" />
-                      <span>Профайл хуудас</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="" className="flex-this">
-                      <i className="fa fa-check-square" aria-hidden="true" />
-                      <span>Таны үзсэн барааны түүх</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="" className="flex-this">
-                      <i className="fa fa-history" aria-hidden="true" />
-                      <span>Худалдан авалтын түүх</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="" className="flex-this">
-                      <i className="fa fa-heart" aria-hidden="true" />
-                      <span>Хадгалсан бараа</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="" className="flex-this">
-                      <i className="fa fa-bell" aria-hidden="true" />
-                      <span>Мэдэгдэл</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="" className="flex-this">
-                      <i className="fa fa-database" aria-hidden="true" />
-                      <span>Купон</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="" className="flex-this">
-                      <i className="fa fa-credit-card" aria-hidden="true" />
-                      <span>ePoint карт</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="" className="flex-this">
-                      <i className="fa fa-compass" aria-hidden="true" />
-                      <span>Хүргэлтийн хаяг</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="" className="flex-this">
-                      <i className="fa fa-lock" aria-hidden="true" />
-                      <span>Нууц үгээ солих</span>
-                    </Link>
-                  </li>
-                </ul>
-                <div className="text-left">
-                  <Link
-                    onClick={this.handleLogout}
-                    to=""
-                    className="btn btn-gray"
-                  >
-                    <i className="fa fa-chevron-left" aria-hidden="true" />
-                    <span className="text-uppercase">Гарах</span>
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </li>
-      );
-    } else {
-      userButton = (
-        <li className="list-inline-item">
-          <Link to="" onClick={this.showLogInModal}>
-            <span className="text-uppercase">Нэвтрэх</span>
-          </Link>
-        </li>
-      );
-    }
-
     return (
       <div>
         <div className={togglePopup}>
@@ -237,14 +83,6 @@ class AppHeader extends Component {
                     <span>Тусламж</span>
                   </Link>
                 </li>
-                {/* <li className="list-inline-item language">
-                  <form>
-                    <select className="custom-select" defaultValue="0">
-                      <option value="0">МОН</option>
-                      <option value="1">ENG</option>
-                    </select>
-                  </form>
-                </li> */}
               </ul>
               <ul className="list-unstyled flex-this flex-space top-2">
                 <li className="list-inline-item notification">
@@ -254,15 +92,10 @@ class AppHeader extends Component {
                   </Link>
                 </li>
                 <li className="list-inline-item">
-                  <Link to="" onClick={this.showLogInModal}>
+                  <Link to="" onClick={this.showLoginModal}>
                     <span className="text-uppercase">Нэвтрэх</span>
                   </Link>
                 </li>
-                {/* <li className="list-inline-item">
-                  <Link to="" onClick={this.showSingUpModal}>
-                    <span className="text-uppercase">Бүртгүүлэх</span>
-                  </Link>
-                </li> */}
               </ul>
             </div>
             <ToggleMenu dataSource={menus} />
@@ -300,18 +133,7 @@ class AppHeader extends Component {
                               </select>
                             </form>
                           </li>
-                          {/* <li className="list-inline-item notification">
-                            <Badge dot>
-                              <Avatar
-                                shape="square"
-                                icon="bell"
-                                theme="filled"
-                                size="small"
-                                style={{ lineHeight: "20px" }}
-                              />
-                            </Badge>
-                          </li> */}
-                          {userButton}
+                          <UserButton onUserButtonClick={this.showLoginModal} />
                         </ul>
                       </div>
                     </div>
@@ -431,8 +253,12 @@ class AppHeader extends Component {
                             </Link>
                           </li>
                           <li className="list-inline-item">
-                            <Link to="" className="row10">
-                              <span className="count">1</span>
+                            <Link to="/cart" className="row10">
+                              {/* <span className="count">1</span> */}
+                              <NotificationBadge
+                                count={this.state.prodsInCart}
+                                effect={Effect.SCALE}
+                              />
                               <Icon type="shopping-cart" />
                               <p>
                                 <small>Миний</small>
@@ -467,7 +293,6 @@ class AppHeader extends Component {
 
                       <div className="drop-container">
                         <div className="container pad10">
-                          {/* <DropMenu dataSource={menus} /> */}
                           <Category dataSource={root} />
                         </div>
                       </div>
@@ -478,7 +303,10 @@ class AppHeader extends Component {
               </div>
             </div>
           </div>
-          <LoginModal visible={this.state.logInVisible} />
+          <LoginModal
+            onVisibleChange={this.toggleLoginModal}
+            visible={this.state.isLoginModalVisible}
+          />
         </div>
       </div>
     );

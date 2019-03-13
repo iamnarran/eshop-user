@@ -1,116 +1,76 @@
 import React from "react";
-import Card from "../../components/Card";
+
+import CardList from "../../components/CardList";
 import Banner from "../../components/Banner";
+import PageHeader from "../../components/PageHeader";
+import {
+  CARD_TYPES,
+  CARD_LIST_TYPES,
+  CARD_NUMS_IN_ROW
+} from "../../utils/consts";
 
-import { IMAGE } from "../../utils/consts";
+class NewProduct extends React.Component {
+  // constructor(props) {
+  //   super(props);
+  //   this.state = {
+  //     ...this.props.container
+  //   };
+  // }
 
-class Newproduct extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      ...this.props.container
-    };
-  }
-
-  changeLocation = () => {
-    if (this.state.mainbanner !== undefined) {
-      window.open(this.state.mainbanner.link, "_blank");
-    }
-  };
+  // changeLocation = () => {
+  //   if (this.state.mainbanner !== undefined) {
+  //     window.open(this.state.mainbanner.link, "_blank");
+  //   }
+  // };
 
   render() {
     const {
-      newproduct,
-      mainbanner,
-      subbanner,
+      products,
+      primaryBanners,
+      secondaryBanners,
       menu
-      /* tag */
     } = this.props.container;
+
+    const seq = "1,1";
+    const cardTypes = seq.split(",");
+
+    let cardsLength = 0;
+    cardTypes.forEach(cardType => {
+      cardsLength +=
+        parseInt(cardType) === CARD_TYPES.slim
+          ? CARD_NUMS_IN_ROW.slim
+          : CARD_NUMS_IN_ROW.wide;
+    });
 
     return (
       <div className="top-container">
-        {/**NEW PRODUCT TITLE */}
-        <div className="whole-page-title color-blue" style={{ padding: "0px" }}>
-          <div
-            className="whole-page-title color-blue class container pad10"
-            style={{
-              backgroundImage: `url(${
-                mainbanner !== undefined ? IMAGE + mainbanner.imgnm : ""
-              })`,
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "right",
-              backgroundSize: "50% 115px"
-            }}
-            onClick={this.changeLocation}
-          >
-            <div className="container pad10">
-              <div className="title-container flex-space">
-                <h2>
-                  <span className="big">
-                    {menu[0] === undefined ? "" : menu[0].menunm}
-                  </span>
-                  <strong>
-                    {menu[0] === undefined ? "" : menu[0].subtitle}
-                  </strong>
-                </h2>
-              </div>
-            </div>
+        <PageHeader
+          title={menu.menunm}
+          subtitle={menu.subtitle}
+          banners={primaryBanners}
+          bgColor="#bbdefb"
+        />
+
+        <div className="section">
+          <div className="container pad10">
+            <CardList
+              type={CARD_LIST_TYPES.horizontal}
+              seq={seq}
+              items={products.slice(0, cardsLength)}
+            />
           </div>
         </div>
 
-        {/**NEW PRODUCT'S PRODUCTS */}
+        <Banner data={secondaryBanners} />
+
         <div className="section">
           <div className="container pad10">
-            <div className="row row10">
-              {newproduct.map((product, key) => {
-                if (key >= 10) {
-                  newproduct.push(product);
-                  return null;
-                } else {
-                  return (
-                    <Card
-                      key={key}
-                      type={1}
-                      item={product}
-                      // extra={["new"]}
-                      // label={tag}
-                    />
-                  );
-                }
-              })}
-            </div>
-          </div>
-        </div>
-
-        {/**SUB BANNER */}
-        {/* <div className="banner-container">
-          <span
-            style={{
-              backgroundImage: `url(${
-                subbanner !== undefined ? IMAGE + subbanner.img : ""
-                })`
-            }}
-          />
-          <div className="container pad10">
-            <a
-              href={subbanner !== undefined ? subbanner.link : ""}
-              target="_blank"
-              rel="noopener"
-            >
-              {subbanner !== undefined ? subbannerhtml : null}
-            </a>
-          </div>
-        </div> */}
-        <Banner data={subbanner} />
-
-        {/**NEW PRODUCT'S PRODUCTS */}
-        <div className="section">
-          <div className="container pad10">
-            <div className="row row10">
-              {newproduct.map((product, key) => {
-                return <Card key={key} type={1} item={product} />;
-              })}
-            </div>
+            <CardList
+              type={CARD_LIST_TYPES.horizontal}
+              items={products.slice(cardsLength)}
+              showAll
+              cardType={CARD_TYPES.slim}
+            />
           </div>
         </div>
       </div>
@@ -118,8 +78,4 @@ class Newproduct extends React.Component {
   }
 }
 
-Newproduct.default = {
-  newproduct: []
-};
-
-export default Newproduct;
+export default NewProduct;

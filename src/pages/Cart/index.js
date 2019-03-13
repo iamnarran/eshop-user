@@ -1,9 +1,27 @@
 import React from "react";
 
+import storage from "../../utils/storage";
 import { IMAGE } from "../../utils/consts";
 
 class Cart extends React.Component {
+  add = () => {
+    
+  };
+
+  remove = () => {
+    this.setState({
+      prodCount: this.state.prodCount > 1 ? this.state.prodCount - 1 : 0
+    });
+  };
+
   render() {
+    const { wishlistProducts } = this.props.container;
+
+    let products = [];
+    if (storage.get("cart")) {
+      products = storage.get("cart").products;
+    }
+
     return (
       <div className="section">
         <div className="container pad10">
@@ -35,184 +53,102 @@ class Cart extends React.Component {
                         </th>
                       </tr>
                     </thead>
-                    <tbody>
-                      <tr>
-                        <td>
-                          <div className="flex-this">
-                            <div className="image-container default">
-                              <span
-                                className="image"
-                                style={{ backgroundImage: `url(${IMAGE})` }}
-                              />
-                            </div>
-                            <div className="info-container">
-                              <strong>Хар кофе американо</strong>
-                              <span>Шингэн хар американо лаазтай</span>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <p className="price">
-                            <strong>5,700₮</strong>
-                          </p>
-                        </td>
-                        <td>
-                          <form>
-                            <div className="input-group e-input-group">
-                              <div
-                                className="input-group-prepend"
-                                id="button-addon4"
-                              >
-                                <button className="btn" type="button">
-                                  <i
-                                    className="fa fa-minus"
-                                    aria-hidden="true"
+                    {products.map(product => {
+                      return (
+                        <tbody>
+                          <tr>
+                            <td>
+                              <div className="flex-this">
+                                <div className="image-container default">
+                                  <span
+                                    className="image"
+                                    style={{
+                                      backgroundImage: `url(${IMAGE})`
+                                    }}
                                   />
-                                </button>
+                                </div>
+                                <div className="info-container">
+                                  <strong>Хар кофе американо</strong>
+                                  <span>Шингэн хар американо лаазтай</span>
+                                </div>
                               </div>
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder=""
-                                value="1"
-                                aria-label=""
-                                aria-describedby="button-addon4"
-                              />
-                              <div
-                                className="input-group-append"
-                                id="button-addon4"
-                              >
-                                <button className="btn" type="button">
-                                  <i
-                                    className="fa fa-plus"
-                                    aria-hidden="true"
+                            </td>
+                            <td>
+                              <p className="price">
+                                <strong>5,700₮</strong>
+                              </p>
+                            </td>
+                            <td>
+                              <form>
+                                <div className="input-group e-input-group">
+                                  <div
+                                    className="input-group-prepend"
+                                    id="button-addon4"
+                                  >
+                                    <button className="btn" type="button">
+                                      <i
+                                        className="fa fa-minus"
+                                        aria-hidden="true"
+                                      />
+                                    </button>
+                                  </div>
+                                  <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder=""
+                                    value="1"
+                                    aria-label=""
+                                    aria-describedby="button-addon4"
                                   />
-                                </button>
+                                  <div
+                                    className="input-group-append"
+                                    id="button-addon4"
+                                  >
+                                    <button className="btn" type="button">
+                                      <i
+                                        className="fa fa-plus"
+                                        aria-hidden="true"
+                                      />
+                                    </button>
+                                  </div>
+                                </div>
+                              </form>
+                            </td>
+                            <td>
+                              <p className="price total">
+                                <strong>5,700₮</strong>
+                              </p>
+                            </td>
+                          </tr>
+                          <tr className="table-action">
+                            <td colspan="5">
+                              <div className="text-right single-action">
+                                <ul className="list-unstyled">
+                                  <li>
+                                    <a href="#">
+                                      <i
+                                        className="fa fa-heart"
+                                        aria-hidden="true"
+                                      />
+                                      <span>Хадгалах</span>
+                                    </a>
+                                  </li>
+                                  <li>
+                                    <a href="#">
+                                      <i
+                                        className="fa fa-times"
+                                        aria-hidden="true"
+                                      />
+                                      <span>Устгах</span>
+                                    </a>
+                                  </li>
+                                </ul>
                               </div>
-                            </div>
-                          </form>
-                        </td>
-                        <td>
-                          <p className="price total">
-                            <strong>5,700₮</strong>
-                          </p>
-                        </td>
-                      </tr>
-                      <tr className="table-action">
-                        <td colspan="5">
-                          <div className="text-right single-action">
-                            <ul className="list-unstyled">
-                              <li>
-                                <a href="#">
-                                  <i
-                                    className="fa fa-heart"
-                                    aria-hidden="true"
-                                  />
-                                  <span>Хадгалах</span>
-                                </a>
-                              </li>
-                              <li>
-                                <a href="#">
-                                  <i
-                                    className="fa fa-times"
-                                    aria-hidden="true"
-                                  />
-                                  <span>Устгах</span>
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <div className="flex-this">
-                            <div className="image-container default">
-                              <span
-                                className="image"
-                                style={{ backgroundImage: `url(${IMAGE})` }}
-                              />
-                            </div>
-                            <div className="info-container">
-                              <strong>Хар кофе американо</strong>
-                              <span>Шингэн хар американо лаазтай</span>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <p className="price">
-                            <strong>5,700₮</strong>
-                          </p>
-                        </td>
-                        <td>
-                          <form>
-                            <div className="input-group e-input-group">
-                              <div
-                                className="input-group-prepend"
-                                id="button-addon4"
-                              >
-                                <button className="btn" type="button">
-                                  <i
-                                    className="fa fa-minus"
-                                    aria-hidden="true"
-                                  />
-                                </button>
-                              </div>
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder=""
-                                value="1"
-                                aria-label=""
-                                aria-describedby="button-addon4"
-                              />
-                              <div
-                                className="input-group-append"
-                                id="button-addon4"
-                              >
-                                <button className="btn" type="button">
-                                  <i
-                                    className="fa fa-plus"
-                                    aria-hidden="true"
-                                  />
-                                </button>
-                              </div>
-                            </div>
-                          </form>
-                        </td>
-                        <td>
-                          <p className="price total">
-                            <strong>5,700₮</strong>
-                          </p>
-                        </td>
-                      </tr>
-                      <tr className="table-action">
-                        <td colspan="5">
-                          <div className="text-right single-action">
-                            <ul className="list-unstyled">
-                              <li>
-                                <a href="#">
-                                  <i
-                                    className="fa fa-heart"
-                                    aria-hidden="true"
-                                  />
-                                  <span>Хадгалах</span>
-                                </a>
-                              </li>
-                              <li>
-                                <a href="#">
-                                  <i
-                                    className="fa fa-times"
-                                    aria-hidden="true"
-                                  />
-                                  <span>Устгах</span>
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
+                            </td>
+                          </tr>
+                        </tbody>
+                      );
+                    })}
                   </table>
                 </div>
               </div>

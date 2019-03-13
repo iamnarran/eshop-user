@@ -10,15 +10,29 @@ import { signOut } from "../actions/Login";
   { signOut }
 )
 class UserButton extends React.Component {
-  handleLogout = () => {
+  showLoginModal = e => {
+    e.preventDefault();
+    this.props.onUserButtonClick(e);
+  };
+
+  handleLogout = e => {
+    e.preventDefault();
     this.props.signOut();
+    window.location.reload();
   };
 
   render() {
-    let content = null;
+    let content = (
+      <li className="list-inline-item">
+        <Link to="" onClick={this.showLoginModal}>
+          <span className="text-uppercase">Нэвтрэх</span>
+        </Link>
+      </li>
+    );
 
     if (storage.get("user")) {
       let user = storage.get("user");
+
       if (user.customerInfo) {
         user = user.customerInfo;
       }
@@ -141,14 +155,6 @@ class UserButton extends React.Component {
               </div>
             </div>
           </div>
-        </li>
-      );
-    } else {
-      content = (
-        <li className="list-inline-item">
-          <Link to="" onClick={this.showLogInModal}>
-            <span className="text-uppercase">Нэвтрэх</span>
-          </Link>
         </li>
       );
     }
