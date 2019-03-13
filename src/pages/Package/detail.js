@@ -4,29 +4,37 @@ import { IMAGE } from "../../utils/consts";
 import Slider from "../../components/Slider";
 
 class PackageDetail extends React.Component {
-  state = {
-    products: this.props.container.Products[0].products,
-    price: this.props.container.Products[0].total,
-    sameProducts: this.props.container.Products[0].sameproducts,
-    products: null,
-    addProduct: null,
-    remProduct: null,
-    images: this.props.container.Package.images,
-    description: this.props.container.Package.products[0].description,
-    title: this.props.container.Package.products[0].packagenm,
-    date: this.props.container.Package.products[0].insymd
-      .split("T")[0]
-      .split("-"),
-    countNumber: 1
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      products: [],
+      price: this.props.container.Products[0].total,
+      sameProducts: this.props.container.Products[0].sameproducts,
+      products: null,
+      addProduct: null,
+      remProduct: null,
+      images: this.props.container.Package.images,
+      description: this.props.container.Package.products[0].description,
+      title: this.props.container.Package.products[0].packagenm,
+      date: this.props.container.Package.products[0].insymd
+        .split("T")[0]
+        .split("-"),
+      countNumber: 1
+    };
+  }
+
   plusProduct = e => {
-    console.log("this is plus", e);
+    /* console.log("this is plus", e); */
   };
   minusProduct = e => {
-    console.log("this is minus", e);
+    /* console.log("this is minus", e); */
   };
+
   render() {
+    console.log(this.props);
     const formatter = new Intl.NumberFormat("en-US");
+    const sameproduct = this.props.container.Products[0].sameproducts;
+    const product = this.props.container.Products[0].products;
     let products = null;
     let sameProducts = null;
     const sliderParams = {
@@ -45,35 +53,27 @@ class PackageDetail extends React.Component {
         clickable: true
       }
     };
-
     // Багцад орсон барааны ижил бараанууд
-    sameProducts = this.state.sameProducts.map((item, index) => {
-      if (item.sameProduct[0].tag[0]) {
+    sameProducts = sameproduct.map((item, index) => {
+      if (product) {
         return (
           <li key={index}>
             <div className="single flex-this">
               <div className="image-container">
-                <a
-                  href={
-                    item.sameProduct[0].tag[0].route
-                      ? item.sameProduct[0].tag[0].route
-                      : " "
-                  }
-                >
+                <a href={item.route ? item.route : " "}>
                   <span
                     className="image"
                     style={{
-                      backgroundImage: `url(${IMAGE +
-                        item.sameProduct[0].tag[0].img})`
+                      backgroundImage: `url(${IMAGE + item.url})`
                     }}
                   />
                 </a>
               </div>
               <div className="info-container flex-space">
                 <a href=" ">
-                  <span>{item.sameProduct[0].tag[0].name}</span>
+                  <span>{item.name}</span>
                   <strong>
-                    {formatter.format(item.sameProduct[0].tag[0].rprice)}₮
+                    {formatter.format(item.price1 ? item.price1 : item.price2)}₮
                   </strong>
                 </a>
                 <div className="action">
@@ -91,7 +91,7 @@ class PackageDetail extends React.Component {
     });
 
     // Багцад орсон бараанууд
-    products = this.state.products.map((item, index) => {
+    products = product.map((item, index) => {
       return (
         <li className="flex-this" key={index}>
           <div className="image-container default">

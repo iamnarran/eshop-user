@@ -2,10 +2,15 @@ import React from "react";
 import CardList from "../../components/CardList";
 import { CARD_TYPES, CARD_LIST_TYPES } from "../../utils/consts";
 import { SearchList } from "../../components";
-import { Checkbox, Progress } from "antd";
+import { Checkbox, Progress, Col } from "antd";
 import { Menu } from "antd";
 const SubMenu = Menu.SubMenu;
-
+const CheckboxGroup = Checkbox.Group;
+const plainOptions = [
+  { label: "Apple", value: "Apple" },
+  { label: "Pear", value: "Pear" },
+  { label: "Orange", value: "Orange" }
+];
 class CategoryInfo extends React.Component {
   constructor(props) {
     super(props);
@@ -13,7 +18,8 @@ class CategoryInfo extends React.Component {
       isToggleOn: false,
       isSort: false,
       openKeys: ["sub01"],
-      products: this.props.container
+      products: this.props.container,
+      checkedValues: []
     };
 
     this.handleClick = this.handleClick.bind(this);
@@ -39,74 +45,107 @@ class CategoryInfo extends React.Component {
       });
     }
   };
-  /* return (
-   */
+
+  onChange = val => {
+    console.log(val);
+  };
 
   render() {
     const products = this.props.container.categoryProduct[0].products;
-    const SubCategory = this.props.container.categoryProduct[0].SubCategorys[0];
+    const SubCategory = this.props.container.categoryProduct[0].SubCategorys;
     const attributes = this.props.container.categoryProduct[0].attributes;
     let filters = null;
     let colorList = null;
+    let category = null;
+
+    category = SubCategory.map((item, index) => {
+      return (
+        <li key={index}>
+          <a>{item.catnm}</a>
+        </li>
+      );
+    });
+
     filters = attributes.map((item, index) => {
       switch (item.type) {
         case "ATTRIBUTE":
           let filter = null;
-          filter = item.attributes.map((item, index) => {
-            return (
-              <Menu
-                key={index}
-                mode="inline"
-                openKeys={this.state.openKeys}
-                onOpenChange={this.onOpenChange}
-                style={{ width: 256 }}
-              >
-                <SubMenu
-                  title={
-                    <span>
-                      <span>{item.name}</span>
-                    </span>
-                  }
-                >
-                  {item.values.map((it, ind) => {
-                    return (
-                      <Menu.Item key={ind} style={{ color: "white" }}>
-                        <Checkbox>{it.valuename}</Checkbox>
-                      </Menu.Item>
-                    );
-                  })}
-                </SubMenu>
-              </Menu>
-            );
-          });
+
+          if (item.attributes) {
+            filter = item.attributes.map((item, index) => {
+              return (
+                <div className="left-filter" key={index}>
+                  <a
+                    className="collapse-title"
+                    data-toggle="collapse"
+                    role="button"
+                    aria-expanded="true"
+                    aria-controls="collapseExample"
+                  >
+                    {item.name}
+                  </a>
+                  <div class="collapse show" id="collapseThree">
+                    <div class="collapse-content">
+                      <ul class="list-unstyled">
+                        {
+                          <Checkbox.Group
+                            style={{ width: "100%" }}
+                            onChange={this.onChange}
+                          >
+                            <Col>
+                              {item.values.map((it, ind) => {
+                                return (
+                                  <li>
+                                    <Checkbox value={it.valueid}>
+                                      {it.valuename}
+                                    </Checkbox>
+                                  </li>
+                                );
+                              })}
+                            </Col>
+                          </Checkbox.Group>
+                        }
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              );
+            });
+          } else return null;
           return <div>{filter}</div>;
         case "COLOR":
-          colorList = item.attributes[0].values.map((item, index) => {
-            return (
-              <a
-                key={index}
-                className="dot"
-                style={{
-                  height: "25px",
-                  width: "25px",
-                  backgroundColor: item.valuecd,
-                  borderRadius: "50%",
-                  display: "inline-block",
-                  marginTop: "10px",
-                  marginRight: "10px"
-                }}
-              />
-            );
-          });
+          if (item.attributes[0].values) {
+            colorList = item.attributes[0].values.map((item, index) => {
+              return (
+                <a
+                  key={index}
+                  className="dot"
+                  style={{
+                    height: "25px",
+                    width: "25px",
+                    backgroundColor: item.valuecd,
+                    borderRadius: "50%",
+                    display: "inline-block",
+                    marginTop: "10px",
+                    marginRight: "10px"
+                  }}
+                />
+              );
+            });
+          } else return null;
           return (
             <div>
               <a className="collapse-title">Өнгө</a>
               {colorList}
             </div>
           );
-          break;
         case "PRICE":
-          return null;
+          return (
+            <div>
+              <a className="collapse-title">Үнэ</a>
+              <Progress percent={30} />
+            </div>
+          );
         default:
           return null;
       }
@@ -127,9 +166,6 @@ class CategoryInfo extends React.Component {
                   <span>Ангилал</span>
                 </a>
               </li>
-              <li>
-                <span>{SubCategory.catnm}</span>
-              </li>
             </ul>
           </div>
           <div className="row row10">
@@ -141,16 +177,40 @@ class CategoryInfo extends React.Component {
                 </a>
               </div>
               <div className="left-panel">
-                <a href=" " className="d-block d-md-none">
+                {/* <a href=" " className="d-block d-md-none">
                   <i className="fa fa-times" aria-hidden="true" />
-                </a>
+                </a> */}
                 <h5 className="title">
                   <strong>Хайлтын үр дүн</strong>
                 </h5>
                 <p className="title">
                   <span>Ангилал</span>
                 </p>
-                {/* SubCategory.catnm */}
+                <div className="block">
+                  <div className="accordion" id="accordionExample">
+                    <a
+                      href="#"
+                      className="collapse-title"
+                      data-toggle="collapse"
+                      data-target="#collapseOne"
+                      aria-expanded="true"
+                      aria-controls="collapseOne"
+                    >
+                      Цай / Кофе
+                    </a>
+                    <div
+                      id="collapseOne"
+                      className="collapse show"
+                      aria-labelledby="headingOne"
+                      data-parent="#accordionExample"
+                    >
+                      <div className="collapse-content">
+                        <ul className="list-unstyled">{category}</ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="block">
                   <div
                     id="collapseOne"
@@ -164,13 +224,6 @@ class CategoryInfo extends React.Component {
                   </div>
                 </div>
                 {filters}
-                {/* <h5 className="title">
-                  <strong>Шүүлтүүр</strong>
-                </h5>
-                {attribute}
-                <a className="collapse-title">Үнэ</a>
-                <Progress percent={30} />
-                 */}
               </div>
             </div>
             <div className="col-xl-9 col-lg-9 col-md-8 pad10">
@@ -236,3 +289,30 @@ class CategoryInfo extends React.Component {
 }
 
 export default CategoryInfo;
+{
+  /* <Menu
+                key={index}
+                mode="inline"
+                openKeys={this.state.openKeys}
+                onOpenChange={this.onOpenChange}
+                style={{ width: 256 }}
+              >
+                <SubMenu
+                  title={
+                    <span>
+                      <span>{item.name}</span>
+                    </span>
+                  }
+                >
+                  {item.values.map((it, ind) => {
+                    return (
+                      <Menu.Item key={ind} style={{ color: "white" }}>
+                        <Checkbox onChange={sd => console.log(sd)}>
+                          {it.valuename}
+                        </Checkbox>
+                      </Menu.Item>
+                    );
+                  })}
+                </SubMenu>
+              </Menu> */
+}
