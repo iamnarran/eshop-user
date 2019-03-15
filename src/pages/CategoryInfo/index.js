@@ -81,7 +81,7 @@ class CategoryInfo extends React.Component {
 
   componentWillMount() {
     this.setState({
-      products: this.props.container.categoryProduct[0].products[0]
+      products: this.props.container.categoryProduct[0].products
     });
   }
 
@@ -282,16 +282,8 @@ class CategoryInfo extends React.Component {
                           Эрэмбэ:
                         </label>
                         <select id="inputState" className="form-control">
-                          <option>
-                            <a onClick={this.handleClickDesc}>
-                              <span>Үнэ ихээс багаруу</span>
-                            </a>
-                          </option>
-                          <option>
-                            <a onClick={this.handleClickAsc}>
-                              <span>Үнэ багаас ихрүү</span>
-                            </a>
-                          </option>
+                          <option>Үнэ ихээс багаруу</option>
+                          <option>Үнэ багаас ихрүү</option>
                         </select>
                       </div>
                       <div className="form-group flex-this">
