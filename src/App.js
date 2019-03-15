@@ -45,6 +45,7 @@ import {
   StaticPage,
   CategoryInfo,
   Cart,
+  Checkout,
   Temp
 } from "./containers/index";
 
@@ -170,6 +171,11 @@ class Localization extends Component {
         exact: true,
         path: "/temp",
         component: rest => <Temp {...rest} {...this.props} />
+      },
+      {
+        exact: true,
+        path: "/checkout",
+        component: rest => <Checkout {...rest} {...this.props} />
       }
     ];
 

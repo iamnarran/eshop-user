@@ -1,6 +1,8 @@
 import React from "react";
 import config from "config";
 import api from "../../api";
+import storage from "../../utils/storage";
+import { Link } from "react-router-dom";
 import {
   Magnify,
   Rate,
@@ -25,11 +27,11 @@ class Component extends React.Component{
     product: [],
     relationalProduct: [],
     collectionProduct: [],
-
+    loggedin: false,
     parentCategory: [],
     category: [],
     breadCrumb: [],
-
+    userInfo: [],
     saleNumber: null,         //Hudaldaalagdah too shirheg hamgiin bagdaa
     sumPrice: null,           //Hudaldaalagdah niit dun vne (too shirhegees hamaarna)
     kgPrice: null,            //Kg -aar zaragdah vne
@@ -49,6 +51,13 @@ class Component extends React.Component{
       skucd: this.props.match.params.id,
       category: this.props.container.category
     });
+    if(storage.get("user")){
+      let user = storage.get("user")
+      if(user.customerInfo){
+        user = user.customerInfo
+      }
+      this.setState({userInfo: user, loggedin: true})
+    }
   }
   componentDidMount() {
     this.refresh();
@@ -78,14 +87,17 @@ class Component extends React.Component{
     if (isLoading) {
       return (
         <div className="section">
-          <div className="container pad10">
+          <div className="container">
             {this.renderBreadCrumb(breadCrumb)}
-            <div className="product-detail-page">
+            <div className="product-detail-page col-md-12 col-sm-12 col-lg-12">
               <div className="row row10">
+              <div className="col-sm-9 col-md-9 col-lg-9 row">
                 {this.renderProductImg()}
                 {this.renderProductDescription()}
-                {this.renderProductDelivery()}
                 {this.renderFooter()}
+              </div>
+              {this.renderProductDelivery()}
+              
               </div>
             </div>
           </div>
@@ -151,7 +163,9 @@ generateSaleMinQty = (saleminqty) => {
           {e.map((i, key) => {
             return (
               <li key={key}>
-                <a href="/">{i.name}</a>
+              <Link  to={i.route ? i.route : ""}>
+                {i.name}
+              </Link>
               </li>
             );
           })}
@@ -162,7 +176,7 @@ generateSaleMinQty = (saleminqty) => {
   renderProductImg = () => {
     const { product, selectedMediumImg, smallImg, selectedLargeImg } = this.state
     return (
-      <div className="col-xl-4 col-lg-4 col-md-5 pad10">
+      <div className="col-xl-5 col-lg-5 col-md-5">
         <div className="product-gallery">
           <Magnify
             img={
@@ -222,6 +236,7 @@ generateSaleMinQty = (saleminqty) => {
       </div>
     )
   }
+
   onChangeMniImage = (e) => {
     const { images } = this.state.product
     images.map((index) => {
@@ -232,8 +247,7 @@ generateSaleMinQty = (saleminqty) => {
   renderFooter = () => {
     const { attribute, collectionProduct, skucd, product } = this.state
     return(
-      <div className="col-xl-12 col-lg-12 col-md-12 pad10">
-        <div className="col-xl-12">
+      <div className="col-md-12 col-lg-12 col-sm-12 col-xl-12">
           <Information attribute={attribute} />
           {collectionProduct.length === 0 ? (
             ""
@@ -243,14 +257,12 @@ generateSaleMinQty = (saleminqty) => {
                 <span className="text-uppercase">Ижил бараа</span>
               </h1>
               <div className="section">
-                <div className="container pad10">
                   <div className="row row10">
                     <CardSlider
                       data={collectionProduct}
                       params={productParams}
                       elContainer={"collectionProduct"}
                     />
-                  </div>
                 </div>
               </div>
             </div>
@@ -269,11 +281,14 @@ generateSaleMinQty = (saleminqty) => {
                 );
               })}
           </div>
-          <Comment
+          
+            <Comment
             skucd={skucd}
             rate={product !== undefined ? product.rate : []}
+            userInfo={this.state.loggedin == true ? this.state.userInfo : null}
+            loggedin={this.state.loggedin == true ? this.state.loggedin : false}
           />
-        </div>
+          
       </div>
     )
   }
@@ -342,7 +357,7 @@ generateSaleMinQty = (saleminqty) => {
   renderProductDelivery = () => {
     const { relationalProduct } = this.state;
     return (
-      <div className="col-xl-3 col-lg-3 col-md-12 pad10 magnify-image">
+      <div className="col-xl-3 col-lg-3 col-sm-3 col-md-3">
         <div className="product-plus">
           <div className="block product-delivery">
             <p className="title">
@@ -355,7 +370,7 @@ generateSaleMinQty = (saleminqty) => {
               </span>
             </p>
           </div>
-          <RelationalProduct product={relationalProduct} />
+            <RelationalProduct product={relationalProduct} />
         </div>
       </div>
     );
@@ -363,7 +378,7 @@ generateSaleMinQty = (saleminqty) => {
   renderProductDescription = () => {
     const { product, breadCrumb, saleNumber, sumPrice, issalekg } = this.state;
     return (
-      <div className="col-xl-5 col-lg-5 col-md-7 pad10 magnify-image">
+      <div className="col-xl-7 col-lg-7 col-md-7">
         <div className="product-info">
           <h5 className="title">{product.name}</h5>({product.backtxt})
           <p className="big-text">
@@ -389,7 +404,7 @@ generateSaleMinQty = (saleminqty) => {
           </div>
           <form>
             <div className="row row10">
-              <div className="col-xl-4 col-6 pad10">
+              <div className="col-xl-4 col-6">
                 <div className="input-group">
                   <div className="input-group-prepend" id="button-addon4">
                     <button
@@ -400,7 +415,7 @@ generateSaleMinQty = (saleminqty) => {
                       <i className="fa fa-minus" aria-hidden="true" />
                     </button>
                   </div>
-                  <input alt="asfasd" min="1" max="999" type="number" className="form-control" placeholder="" value={saleNumber} aria-label=""  aria-describedby="button-addon4" />
+                  <input alt="asfasd" className="form-control" placeholder="" value={saleNumber} aria-label=""  aria-describedby="button-addon4" />
                   <div className="input-group-append" id="button-addon4">
                     <button
                       className="btn product-detail-btn"
@@ -412,7 +427,7 @@ generateSaleMinQty = (saleminqty) => {
                   </div>
                 </div>
               </div>
-              <div className="col-xl-8 pad10">
+              <div className="col-xl-8">
                 <p className="count-text text-right">
                   {issalekg === 1 ? product.saleweight : ""}
                   {" " + product.measure + " -н "}

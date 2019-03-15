@@ -263,6 +263,15 @@ h1.title .text span {
   display: inline-block;
 }
 
+.radio{
+  position: absolute;
+}
+
+.flex-this input[type='radio']{
+  margin-left: -50px;
+}
+
+
 h1.title .date {
   font-size: 1rem;
   background-color: white;
@@ -2990,10 +2999,7 @@ form .e-input-group .count-text {
   margin-top: 20px;
 }
 
-.checkout-container .card {
-  border: none;
-  border-radius: 0;
-}
+
 
 .checkout-container .card-header {
   border: none;
@@ -3006,8 +3012,7 @@ form .e-input-group .count-text {
 }
 
 .checkout-container .title-container {
-  padding: 5px 20px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 5px 10px;
 }
 
 .checkout-container h5 {
@@ -3144,6 +3149,30 @@ form .e-input-group .count-text {
   height: 100%;
   margin: auto;
   cursor: pointer;
+}
+
+.radio-card{
+  display: flex;
+  position: relative;
+}
+
+.radio-button{
+  width: 20px;
+  height: 20px;
+  position: relative;
+  left: -15px;
+}
+
+.radio-button-title{
+  display: flex;
+}
+
+.radio-button-container{
+  position: absolute;
+  top: 30%;
+  left: 60px;
+  margin-left: 0px;
+  display: flex;
 }
 
 .checkout-container .content-container .hand-pay .form-check {
@@ -4638,6 +4667,10 @@ form .e-input-group .count-text {
   display: inline-block;
   font-size: 16px;
   cursor: pointer;
+}
+
+.inline-cont{
+  display: inline-block;
 }
 
 .buttonGrey {

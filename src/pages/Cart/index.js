@@ -1,12 +1,10 @@
 import React from "react";
-
+import { Link } from "react-router-dom";
 import storage from "../../utils/storage";
 import { IMAGE } from "../../utils/consts";
 
 class Cart extends React.Component {
-  add = () => {
-    
-  };
+  add = () => {};
 
   remove = () => {
     this.setState({
@@ -176,9 +174,9 @@ class Cart extends React.Component {
                       <span>Нийт дүн:</span>
                       <strong>5,700₮</strong>
                     </p>
-                    <a href="#" className="btn btn-main btn-block">
-                      <span className="text-uppercase">Баталгаажуулах</span>
-                    </a>
+                    <Link to="/checkout" className="btn btn-main btn-block">
+                      <span className="text-uppercase">Баталгаажуулах1</span>
+                    </Link>
                   </div>
                   <div className="block fav-products">
                     <p className="title">

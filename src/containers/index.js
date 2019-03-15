@@ -15,7 +15,7 @@ import UserProfile from "./UserProfile";
 import StaticPage from "./StaticPage";
 import CategoryInfo from "./CategoryInfo";
 import Cart from "./Cart";
-
+import Checkout from "./Checkout";
 export {
   Footer,
   Header,
@@ -33,5 +33,6 @@ export {
   UserProfile,
   StaticPage,
   CategoryInfo,
-  Cart
+  Cart,
+  Checkout
 };
