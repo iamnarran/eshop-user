@@ -14,12 +14,15 @@ import {
   FacebookShareButton,
   TwitterShareButton,
   FacebookIcon,
-  TwitterIcon,
-} from 'react-share';
+  TwitterIcon
+} from "react-share";
 
-const IMAGE = process.env.NODE_ENV==="development"?config.image.development:config.image.production
-const money = new Intl.NumberFormat('en-US')
-class Component extends React.Component{
+const IMAGE =
+  process.env.NODE_ENV === "development"
+    ? config.image.development
+    : config.image.production;
+const money = new Intl.NumberFormat("en-US");
+class Component extends React.Component {
   state = {
     skucd: null,
     product: [],
@@ -30,19 +33,19 @@ class Component extends React.Component{
     category: [],
     breadCrumb: [],
 
-    saleNumber: null,         //Hudaldaalagdah too shirheg hamgiin bagdaa
-    sumPrice: null,           //Hudaldaalagdah niit dun vne (too shirhegees hamaarna)
-    kgPrice: null,            //Kg -aar zaragdah vne
-    grPrice: null,            //Gr -aar zaragdah vne
-    issalekg: false,          //kr-aar zaragdah baraa mun eseh
+    saleNumber: null, //Hudaldaalagdah too shirheg hamgiin bagdaa
+    sumPrice: null, //Hudaldaalagdah niit dun vne (too shirhegees hamaarna)
+    kgPrice: null, //Kg -aar zaragdah vne
+    grPrice: null, //Gr -aar zaragdah vne
+    issalekg: false, //kr-aar zaragdah baraa mun eseh
     addminqty: null,
-    attribute: [],    
+    attribute: [],
     selectedMediumImg: null,
     selectedLargeImg: null,
     smallImg: [],
     currentUrl: null,
-    isLoading: false,
-  }
+    isLoading: false
+  };
 
   componentWillMount() {
     this.setState({
@@ -55,17 +58,23 @@ class Component extends React.Component{
   }
 
   componentWillUpdate(prevProps) {
-    if (prevProps.container.category !== this.props.container.category || this.state.skucd !== this.props.match.params.id) {
-      this.setState({
-        skucd: this.props.match.params.id,
-        category: this.props.container.category
-      }, () => {
-        this.refresh();
-      });
+    if (
+      prevProps.container.category !== this.props.container.category ||
+      this.state.skucd !== this.props.match.params.id
+    ) {
+      this.setState(
+        {
+          skucd: this.props.match.params.id,
+          category: this.props.container.category
+        },
+        () => {
+          this.refresh();
+        }
+      );
     }
-   // if (prevProps.match.params.id !== this.props.match.params.id) {
+    // if (prevProps.match.params.id !== this.props.match.params.id) {
     //  this.refresh();
-  //  }
+    //  }
   }
 
   render() {
@@ -99,48 +108,86 @@ class Component extends React.Component{
     );
   }
   refresh = async () => {
-    const { skucd } = this.state
-    await api.product.productCollection({ skucd: skucd }).then(res => res.success?this.setState({ collectionProduct: res.data, breadCrumb:[] }):console.log("collectionProduct",res) )
-    await api.product.productAttribute({ skucd: skucd }).then(res => res.success ? this.setState({ attribute: res.data }) : console.log("attribute", res))
-    await api.product.productRelational({ skucd: skucd }).then(res => res.success ? this.setState({ relationalProduct: res.data }) : console.log("relationalProduct", res))
-    await api.product.productDetail({ skucd: skucd }).then(res => res.success ? this.getCategory(res.data[0]) : console.log('productDetail', res))
-    await api.product.productDetailImg({ skucd: skucd }).then(res => res.success?this.setState({smallImg: res.data}):console.log('productDetailImg', res))
-  }
+    const { skucd } = this.state;
+    await api.product
+      .productCollection({ skucd: skucd })
+      .then(res =>
+        res.success
+          ? this.setState({ collectionProduct: res.data, breadCrumb: [] })
+          : console.log("collectionProduct", res)
+      );
+    await api.product
+      .productAttribute({ skucd: skucd })
+      .then(res =>
+        res.success
+          ? this.setState({ attribute: res.data })
+          : console.log("attribute", res)
+      );
+    await api.product
+      .productRelational({ skucd: skucd })
+      .then(res =>
+        res.success
+          ? this.setState({ relationalProduct: res.data })
+          : console.log("relationalProduct", res)
+      );
+    await api.product
+      .productDetail({ skucd: skucd })
+      .then(res =>
+        res.success
+          ? this.getCategory(res.data[0])
+          : console.log("productDetail", res)
+      );
+    await api.product
+      .productDetailImg({ skucd: skucd })
+      .then(res =>
+        res.success
+          ? this.setState({ smallImg: res.data })
+          : console.log("productDetailImg", res)
+      );
+  };
 
-generateSaleMinQty = (saleminqty) => {
-  if(saleminqty === 0){
-    return 1
-  }else{
-    return saleminqty
-  }
-}
+  generateSaleMinQty = saleminqty => {
+    if (saleminqty === 0) {
+      return 1;
+    } else {
+      return saleminqty;
+    }
+  };
 
-  getCategory = (product) => {
-    const { breadCrumb, category } = this.state
-    if(product !== undefined){
-      if (product.length !== 0 ) {
-        let parent = product.catid
-        category.reverse().map((i) => {     
+  getCategory = product => {
+    const { breadCrumb, category } = this.state;
+    if (product !== undefined) {
+      if (product.length !== 0) {
+        let parent = product.catid;
+        category.reverse().map(i => {
           if (parent === i.id) {
-            breadCrumb.push(i)
-            parent = i.parentid
+            breadCrumb.push(i);
+            parent = i.parentid;
           }
-          return null
-        })
-        breadCrumb.reverse()
-        
+          return null;
+        });
+        breadCrumb.reverse();
+
         this.setState({
           product: product,
           breadCrumb: breadCrumb,
           addminqty: product.addminqty,
           saleNumber: this.generateSaleMinQty(product.saleminqty),
-          sumPrice: product.issalekg === 1 ? product.kgproduct[0].salegramprice * this.generateSaleMinQty(product.saleminqty) : product.spercent === 100 ? product.price * this.generateSaleMinQty(product.saleminqty) : product.sprice * this.generateSaleMinQty(product.saleminqty),
+          sumPrice:
+            product.issalekg === 1
+              ? product.kgproduct[0].salegramprice *
+                this.generateSaleMinQty(product.saleminqty)
+              : product.spercent === 100
+              ? product.price * this.generateSaleMinQty(product.saleminqty)
+              : product.sprice * this.generateSaleMinQty(product.saleminqty),
           issalekg: product.issalekg,
-          grPrice: product.issalekg === 1 ? product.kgproduct[0].salegramprice : null,
-          kgPrice: product.issalekg === 1 ? product.kgproduct[0].kilogramprice : null,
-          isLoading: true,
-        })
-    }
+          grPrice:
+            product.issalekg === 1 ? product.kgproduct[0].salegramprice : null,
+          kgPrice:
+            product.issalekg === 1 ? product.kgproduct[0].kilogramprice : null,
+          isLoading: true
+        });
+      }
     }
   };
 
@@ -160,7 +207,12 @@ generateSaleMinQty = (saleminqty) => {
     );
   };
   renderProductImg = () => {
-    const { product, selectedMediumImg, smallImg, selectedLargeImg } = this.state
+    const {
+      product,
+      selectedMediumImg,
+      smallImg,
+      selectedLargeImg
+    } = this.state;
     return (
       <div className="col-xl-4 col-lg-4 col-md-5 pad10">
         <div className="product-gallery">
@@ -181,8 +233,15 @@ generateSaleMinQty = (saleminqty) => {
                 product.images.map((i, key) => {
                   return (
                     <li className="list-inline-item" key={key}>
-                      <a className="image-container" onClick={this.onChangeMniImage}>
-                        <img alt={i.seq} className={key} src={IMAGE+i.imgmni}/>
+                      <a
+                        className="image-container"
+                        onClick={this.onChangeMniImage}
+                      >
+                        <img
+                          alt={i.seq}
+                          className={key}
+                          src={IMAGE + i.imgmni}
+                        />
                       </a>
                     </li>
                   );
@@ -195,43 +254,44 @@ generateSaleMinQty = (saleminqty) => {
                 <span>Хуваалцах:</span>
               </li>
               <li className="list-inline-item">
-              <FacebookShareButton
-            url={window.location.href}
-            quote={product.name}
-            className="Demo__some-network__share-button">
-            <FacebookIcon
-              size={25}
-              round 
-              />
-          </FacebookShareButton>
+                <FacebookShareButton
+                  url={window.location.href}
+                  quote={product.name}
+                  className="Demo__some-network__share-button"
+                >
+                  <FacebookIcon size={25} round />
+                </FacebookShareButton>
               </li>
               <li className="list-inline-item">
-              <TwitterShareButton
-            url={window.location.href}
-            quote={product.name}
-            className="Demo__some-network__share-button">
-            <TwitterIcon
-              size={25}
-              round 
-              />
-          </TwitterShareButton>
+                <TwitterShareButton
+                  url={window.location.href}
+                  quote={product.name}
+                  className="Demo__some-network__share-button"
+                >
+                  <TwitterIcon size={25} round />
+                </TwitterShareButton>
               </li>
             </ul>
           </div>
         </div>
       </div>
-    )
-  }
-  onChangeMniImage = (e) => {
-    const { images } = this.state.product
-    images.map((index) => {
-     return Number(index.seq) === Number(e.target.alt) ? this.setState({selectedMediumImg: IMAGE+index.imgmdm, selectedLargeImg: e.target.className}):''
-    })
-  }
-  
+    );
+  };
+  onChangeMniImage = e => {
+    const { images } = this.state.product;
+    images.map(index => {
+      return Number(index.seq) === Number(e.target.alt)
+        ? this.setState({
+            selectedMediumImg: IMAGE + index.imgmdm,
+            selectedLargeImg: e.target.className
+          })
+        : "";
+    });
+  };
+
   renderFooter = () => {
-    const { attribute, collectionProduct, skucd, product } = this.state
-    return(
+    const { attribute, collectionProduct, skucd, product } = this.state;
+    return (
       <div className="col-xl-12 col-lg-12 col-md-12 pad10">
         <div className="col-xl-12">
           <Information attribute={attribute} />
@@ -275,69 +335,92 @@ generateSaleMinQty = (saleminqty) => {
           />
         </div>
       </div>
-    )
-  }
+    );
+  };
 
   getRatesum = () => {
-    const {product} = this.state
-    let sum = 0
-    if(product !== undefined){
+    const { product } = this.state;
+    let sum = 0;
+    if (product !== undefined) {
       if (product.rate !== undefined && product.rate.length !== 0) {
-        product.rate.map(i => sum += i.rate)
+        product.rate.map(i => (sum += i.rate));
       }
     }
-    return (sum/product.rate.length).toFixed(2)
-  }
-
+    return (sum / product.rate.length).toFixed(2);
+  };
 
   addProduct = () => {
-    const { saleNumber, addminqty, product, issalekg, grPrice } = this.state
+    const { saleNumber, addminqty, product, issalekg, grPrice } = this.state;
 
     if (saleNumber < product.availableqty && product.availableqty !== 0) {
       if (saleNumber < product.salemaxqty || product.salemaxqty === 0) {
-        if(product.salemaxqty !== 0){
-          if(product.salemaxqty > saleNumber + addminqty){
-           this.addProductLimit(saleNumber + addminqty);
-          }else{
+        if (product.salemaxqty !== 0) {
+          if (product.salemaxqty > saleNumber + addminqty) {
+            this.addProductLimit(saleNumber + addminqty);
+          } else {
             this.addProductLimit(product.salemaxqty);
           }
-        }else{
+        } else {
           this.addProductLimit(saleNumber + addminqty);
         }
       }
     }
-  }
+  };
 
-  addProductLimit = (value) => {
-    const { saleNumber, addminqty, product, issalekg, grPrice } = this.state
+  addProductLimit = value => {
+    const { saleNumber, addminqty, product, issalekg, grPrice } = this.state;
     this.setState({
       saleNumber: value,
-      sumPrice: issalekg === 1 ? (grPrice * value) : product.spercent !== 100 ? (product.sprice * value) : (product.price * value)        
-    })
-  }
+      sumPrice:
+        issalekg === 1
+          ? grPrice * value
+          : product.spercent !== 100
+          ? product.sprice * value
+          : product.price * value
+    });
+  };
 
-  remProduct = () => { 
-    const { saleNumber, product, addminqty, issalekg, sumPrice, grPrice } = this.state
-    if (saleNumber > product.saleminqty) {  //hamgiin  bagdaa zarag too shirhegiin hyzgaarlalt
-      if(product.saleminqty !== 0){
-        if(product.saleminqty < saleNumber - addminqty){
-          this.remProductLimit(saleNumber - addminqty)
-        }else{
+  remProduct = () => {
+    const {
+      saleNumber,
+      product,
+      addminqty,
+      issalekg,
+      sumPrice,
+      grPrice
+    } = this.state;
+    if (saleNumber > product.saleminqty) {
+      //hamgiin  bagdaa zarag too shirhegiin hyzgaarlalt
+      if (product.saleminqty !== 0) {
+        if (product.saleminqty < saleNumber - addminqty) {
+          this.remProductLimit(saleNumber - addminqty);
+        } else {
           this.remProductLimit(product.saleminqty);
         }
-      }else{
-        this.remProductLimit(saleNumber - addminqty)
+      } else {
+        this.remProductLimit(saleNumber - addminqty);
       }
     }
   };
 
-  remProductLimit = (value) => {
-    const { saleNumber, product, addminqty, issalekg, sumPrice, grPrice } = this.state
+  remProductLimit = value => {
+    const {
+      saleNumber,
+      product,
+      addminqty,
+      issalekg,
+      sumPrice,
+      grPrice
+    } = this.state;
     this.setState({
       saleNumber: value,
-      sumPrice: issalekg ? (grPrice * value) : product.spercent !== 100 ? (product.sprice * value) : (product.price * value)
-    })
-  }
+      sumPrice: issalekg
+        ? grPrice * value
+        : product.spercent !== 100
+        ? product.sprice * value
+        : product.price * value
+    });
+  };
 
   renderProductDelivery = () => {
     const { relationalProduct } = this.state;
@@ -378,11 +461,11 @@ generateSaleMinQty = (saleminqty) => {
             </strong>
           </p>
           <div className="main-rating">
-          <Rate rate={this.getRatesum()} numOfVotes={this.getRatesum()} /> 
-                    <p className="text">({product.rate.length} хүн үнэлгээ өгсөн байна)</p>
-                  </div>
-         
-          
+            <Rate rate={this.getRatesum()} numOfVotes={this.getRatesum()} />
+            <p className="text">
+              ({product.rate.length} хүн үнэлгээ өгсөн байна)
+            </p>
+          </div>
           <div className="gift">
             <div className="image-container" />
             <div className="info-container" />
@@ -400,7 +483,17 @@ generateSaleMinQty = (saleminqty) => {
                       <i className="fa fa-minus" aria-hidden="true" />
                     </button>
                   </div>
-                  <input alt="asfasd" min="1" max="999" type="number" className="form-control" placeholder="" value={saleNumber} aria-label=""  aria-describedby="button-addon4" />
+                  <input
+                    alt="asfasd"
+                    min="1"
+                    max="999"
+                    type="number"
+                    className="form-control"
+                    placeholder=""
+                    value={saleNumber}
+                    aria-label=""
+                    aria-describedby="button-addon4"
+                  />
                   <div className="input-group-append" id="button-addon4">
                     <button
                       className="btn product-detail-btn"
@@ -457,7 +550,10 @@ generateSaleMinQty = (saleminqty) => {
               <button className="btn btn-gray text-uppercase">
                 <span>Хадгалах</span>
               </button>
-              <button className="btn btn-main text-uppercase" disabled={product.availableqty > 0 ? false : true}>
+              <button
+                className="btn btn-main text-uppercase"
+                disabled={product.availableqty > 0 ? false : true}
+              >
                 <i className="fa fa-shopping-cart" aria-hidden="true" />
                 <span>Сагсанд нэмэх</span>
               </button>

@@ -1,6 +1,8 @@
 import React from "react";
 import { IMAGE } from "../utils/consts";
 import Rate from "./Rate";
+import Label from "./Label";
+import { Link } from "react-router-dom";
 
 class SearchList extends React.Component {
   render() {
@@ -20,22 +22,28 @@ class SearchList extends React.Component {
             </a>
           </div>
           <div className="info-container">
-            <a href="#" className="name">
+            <Link to="" className="name">
               <span>{item.name}</span>
-            </a>
-            <a href="#" className="cat">
+            </Link>
+            <Link to="" className="cat">
               <span>{item.featuretxt}</span>
-            </a>
+            </Link>
+
+            {item.tags &&
+              item.tags.map((label, index) => (
+                <Label key={index} seq={index} data={label} />
+              ))}
+
             {item.rate ? (
               <Rate rate={item.rate} numOfVotes={item.user_rate_cnt} />
             ) : (
               " "
             )}
-            <a href="#" className="price">
+            <Link to="" className="price">
               <small className="sale">{formatter.format(item.price)}₮}</small>
               <span className="current">{formatter.format(item.sprice)}₮</span>
-              <a
-                href=" "
+              <Link
+                to=" "
                 style={{
                   float: "left",
                   marginRight: "20px",
@@ -44,12 +52,12 @@ class SearchList extends React.Component {
               >
                 <i className="fa fa-heart-o" aria-hidden="true" />
                 <span />
-              </a>
-              <a href=" " style={{ float: "left", marginTop: "20px" }}>
+              </Link>
+              <Link to=" " style={{ float: "left", marginTop: "20px" }}>
                 <i className="fa fa-cart-plus" aria-hidden="true" />
                 <span />
-              </a>
-            </a>
+              </Link>
+            </Link>
           </div>
           <div className="search-hover" />
         </div>

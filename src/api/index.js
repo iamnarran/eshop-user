@@ -17,6 +17,7 @@ import register from "./User/register";
 import staticPages from "./StaticPages";
 import categoryInfo from "./CategoryInfo";
 import cart from "./Cart";
+import catFilter from "./Category";
 
 let rest = {};
 
@@ -143,6 +144,12 @@ rest["categoryInfo"] = {};
 categoryInfo.forEach(api => {
   rest.categoryInfo[api.NAME] = data => generateAPI(api, data);
 });
+
+//CATEGORY FILTER
+rest["catFilter"] = {};
+catFilter.forEach(api => {
+    rest.catFilter[api.NAME] = data => generateAPI(api, data);
+  });
 
 //CART
 rest["cart"] = {};
