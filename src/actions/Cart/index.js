@@ -1,5 +1,13 @@
-import api from "../api";
-import Cart from "../api/Cart";
+import api from "../../api";
+import Cart from "../../api/Cart";
+import { UPDATE_CART } from "../types";
+
+export const updateCart = productInfo => {
+  return {
+    type: UPDATE_CART,
+    payload: productInfo
+  };
+};
 
 let actions = {};
 Cart.forEach(cart => {

@@ -107,7 +107,7 @@ export default [
   {
     NAME: "isAvailable",
     METHOD: "GET",
-    URL: `${API}/api/product/ProdAvailable/:skucd`,
-    REPLACE: "skucd"
+    URL: `${API}/api/product/ProdAvailableSku/:skucd/:qty`,
+    REPLACE: "skucd,qty"
   }
 ];

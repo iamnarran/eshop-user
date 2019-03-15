@@ -1,24 +1,87 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import { Link, Icon } from "react-router-dom";
 import PropTypes from "prop-types";
+import { toast } from "react-toastify";
 
 import api from "../api";
 import Rate from "./Rate";
 import Label from "./Label";
+import storage from "../utils/storage";
+import { updateCart } from "../actions/Cart";
 import { IMAGE, CARD_TYPES } from "../utils/consts";
 
 import "./Card.css";
 
-class Card extends React.Component {
-  handleAddToCart = e => {
-    e.preventDefault();
-    console.log("clicked", e);
+// const Msg = message => (
+//   <div className="warning">
+//     <Icon type="warning" />
+//     <p>{message}</p>
+//   </div>
+// );
 
-    // api.product.isAvailable({ skucd: "8656020651047" }).then(res => {
-    //   if (parseInt(res.data[0].availableqty) > 0) {
-    //     console.log("can be added");
-    //   }
-    // });
+class Card extends React.Component {
+  notify = message => toast(message, { autoClose: 5000 });
+
+  handleAddToCart = item => e => {
+    e.preventDefault();
+
+    let cart = storage.get("cart")
+      ? storage.get("cart")
+      : { products: [], totalQty: 0, totalPrice: 0 };
+
+    const found = cart.products.find(product => product.cd === item.cd);
+
+    let itemQty = 0;
+    if (found) {
+      itemQty = found.qty;
+    }
+
+    console.log("itemQty", itemQty);
+
+    api.product
+      .isAvailable({
+        skucd: item.id ? item.id : item.cd ? item.cd : null,
+        qty: itemQty + 1
+      })
+      .then(res => {
+        if (res.success) {
+          if (found) {
+            found.qty++;
+            const i = cart.products
+              .map(product => product.cd)
+              .indexOf(found.cd);
+            cart.products.splice(i, 1, found);
+          } else {
+            item.qty = 1;
+            cart.products.push(item);
+          }
+
+          const qties = cart.products.map(product => product.qty);
+          cart.totalQty = qties.reduce((acc, curr) => acc + curr);
+
+          const prices = cart.products.map(product => {
+            const price = product.sprice
+              ? product.sprice
+              : product.price
+              ? product.price
+              : 0;
+            return product.qty * price;
+          });
+          cart.totalPrice = prices.reduce((acc, curr) => acc + curr);
+
+          storage.set("cart", cart);
+
+          // TODO: stop page refreshing
+          this.props.updateCart({
+            products: cart.products,
+            totalQty: cart.totalQty,
+            totalPrice: cart.totalPrice
+          });
+        } else {
+          this.notify(res.message);
+        }
+      });
   };
 
   trimByWord(text, maxChars = 20) {
@@ -40,6 +103,7 @@ class Card extends React.Component {
 
   render() {
     const { type, item, isLastInRow, className } = this.props;
+
     if (!item) {
       return null;
     }
@@ -65,12 +129,13 @@ class Card extends React.Component {
           <i className="fa fa-heart-o" aria-hidden="true" />
           <span />
         </Link>
-        <Link to="" onClick={this.handleAddToCart}>
+        <Link to="" onClick={this.handleAddToCart(item)}>
           <i className="fa fa-cart-plus" aria-hidden="true" />
           <span />
         </Link>
       </div>
     );
+
     switch (type) {
       case CARD_TYPES.slim:
         return (
@@ -223,4 +288,7 @@ Card.propTypes = {
   className: PropTypes.string
 };
 
-export default Card;
+export default connect(
+  null,
+  { updateCart }
+)(Card);
