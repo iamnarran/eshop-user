@@ -69,7 +69,6 @@ class LoginModal extends React.Component {
             // successful
             this.props.setUser(res.data);
             window.location.reload();
-            // console.log("res", res);
           }
         } catch (err) {
           console.log(err);

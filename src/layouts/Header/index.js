@@ -1,24 +1,18 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Icon } from "antd";
-import { connect } from "react-redux";
-import NotificationBadge, { Effect } from "react-notification-badge";
 
 import Category from "../../components/Category";
 import MainMenu from "../../components/Menu";
 import ToggleMenu from "../../components/ToggleMenu";
 import ToggleCategory from "../../components/ToggleCategory";
 import LoginModal from "../../components/LoginModal";
-import { signOut } from "../../actions/Login";
-import { IMAGE } from "../../utils/consts";
 import UserButton from "../../components/UserButton";
+import CartButton from "../../components/CartButton";
+import { IMAGE } from "../../utils/consts";
 
 import "./style.css";
 
-@connect(
-  null,
-  { signOut }
-)
 class AppHeader extends Component {
   constructor(props) {
     super(props);
@@ -253,19 +247,7 @@ class AppHeader extends Component {
                             </Link>
                           </li>
                           <li className="list-inline-item">
-                            <Link to="/cart" className="row10">
-                              {/* <span className="count">1</span> */}
-                              <NotificationBadge
-                                count={this.state.prodsInCart}
-                                effect={Effect.SCALE}
-                              />
-                              <Icon type="shopping-cart" />
-                              <p>
-                                <small>Миний</small>
-                                <span className="text-uppercase">сагс</span>
-                              </p>
-                              <strong>0₮</strong>
-                            </Link>
+                            <CartButton />
                           </li>
                         </ul>
                       </div>
