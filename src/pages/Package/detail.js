@@ -60,26 +60,26 @@ class PackageDetail extends React.Component {
           <li key={index}>
             <div className="single flex-this">
               <div className="image-container">
-                <a href={item.route ? item.route : " "}>
+                <Link to={item.route ? item.route : " "}>
                   <span
                     className="image"
                     style={{
                       backgroundImage: `url(${IMAGE + item.url})`
                     }}
                   />
-                </a>
+                </Link>
               </div>
               <div className="info-container flex-space">
-                <a href=" ">
+                <Link to=" ">
                   <span>{item.name}</span>
                   <strong>
                     {formatter.format(item.price1 ? item.price1 : item.price2)}₮
                   </strong>
-                </a>
+                </Link>
                 <div className="action">
-                  <a href=" ">
+                  <Link to=" ">
                     <i className="fa fa-cart-plus" aria-hidden="true" />
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -95,14 +95,14 @@ class PackageDetail extends React.Component {
       return (
         <li className="flex-this" key={index}>
           <div className="image-container default">
-            <a href={item.route ? item.route : " "}>
+            <Link to={item.route ? item.route : " "}>
               <span
                 className="image"
                 style={{
                   backgroundImage: `url(${IMAGE + item.imgnm})`
                 }}
               />
-            </a>
+            </Link>
           </div>
           <div className="info-container">
             <div className="flex-space">
@@ -158,9 +158,9 @@ class PackageDetail extends React.Component {
                 </div>
               </form>
               <div className="action">
-                <a href=" ">
+                <Link to=" ">
                   <i className="fa fa-cart-plus" aria-hidden="true" />
-                </a>
+                </Link>
               </div>
             </div>
           </div>

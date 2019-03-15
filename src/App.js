@@ -7,7 +7,7 @@ import {
   Redirect
 } from "react-router-dom";
 import { Provider, connect } from "react-redux";
-/* import { ToastContainer } from 'react-toastify'; */
+import { ToastContainer } from "react-toastify";
 import { addLocaleData, injectIntl } from "react-intl";
 import { updateIntl, IntlProvider } from "react-intl-redux";
 import en from "react-intl/locale-data/en";
@@ -24,6 +24,7 @@ import { storage } from "./utils";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "scss/app.scss";
 import messages from "./messages.json";
+import "react-toastify/dist/ReactToastify.css";
 // import Promotion from "./pages/Promotion/index";
 // import Season from "./pages/Season/index";
 import {
@@ -149,7 +150,7 @@ class Localization extends Component {
       {
         path: "/userprofile",
         exact: true,
-        isPrivate: true,
+        // isPrivate: true,
         component: rest => <UserProfile {...rest} {...this.props} />
       },
       {
@@ -214,6 +215,7 @@ class Localization extends Component {
             </Switch>
 
             <Footer />
+            <ToastContainer />
           </div>
         </Router>
       )

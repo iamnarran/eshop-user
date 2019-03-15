@@ -5,10 +5,6 @@ import { Link } from "react-router-dom";
 import storage from "../utils/storage";
 import { signOut } from "../actions/Login";
 
-@connect(
-  null,
-  { signOut }
-)
 class UserButton extends React.Component {
   showLoginModal = e => {
     e.preventDefault();
@@ -163,4 +159,7 @@ class UserButton extends React.Component {
   }
 }
 
-export default UserButton;
+export default connect(
+  null,
+  { signOut }
+)(UserButton);
