@@ -37,8 +37,6 @@ class Card extends React.Component {
       itemQty = found.qty;
     }
 
-    console.log("itemQty", itemQty);
-
     api.product
       .isAvailable({
         skucd: item.id ? item.id : item.cd ? item.cd : null,

@@ -2661,3 +2661,20 @@ MuiInputBase-input-49 MuiOutlinedInput-input-34 MuiInputBase-inputType-52 {
     font-size: 17px;
   }
 }
+
+.hidden-submit {
+  border: 0 none;
+  height: 0;
+  width: 0;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.cart-table .column-2 {
+  width: 15%;
+}
+
+.cart-table .column-3 {
+  width: 21%;
+}

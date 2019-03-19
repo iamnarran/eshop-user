@@ -7,6 +7,8 @@ import {
   Redirect
 } from "react-router-dom";
 import { Provider, connect } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import { persistStore } from "redux-persist";
 import { ToastContainer } from "react-toastify";
 import { addLocaleData, injectIntl } from "react-intl";
 import { updateIntl, IntlProvider } from "react-intl-redux";
@@ -234,11 +236,15 @@ class App extends Component {
   }
 
   render() {
+    const persistor = persistStore(store);
+
     return (
       <Provider store={store}>
-        <IntlProvider>
-          <Localization />
-        </IntlProvider>
+        <PersistGate persistor={persistor}>
+          <IntlProvider>
+            <Localization />
+          </IntlProvider>
+        </PersistGate>
       </Provider>
     );
   }
