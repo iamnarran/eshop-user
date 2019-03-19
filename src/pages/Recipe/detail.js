@@ -3,13 +3,13 @@ import { Link } from "react-router-dom";
 
 import Slider from "../../components/Slider";
 import { IMAGE } from "../../utils/consts";
+import { Divider } from "antd";
 
 class RecipeDetail extends React.Component {
   render() {
+    console.log("this.props", this.props);
     const { recipe, productsData } = this.props.container;
-
-    console.log(recipe.description);
-
+    const step = this.props.container.recipe[0].steps;
     const sliderParams = {
       spaceBetween: 0,
       autoplay: {
@@ -26,11 +26,49 @@ class RecipeDetail extends React.Component {
         clickable: true
       }
     };
-
-    const date = recipe.insymd.split("T")[0].split("-");
+    console.log(step);
+    const date = recipe[0].recipe.insymd.split("T")[0].split("-");
     const formatter = new Intl.NumberFormat("en-US");
-
     let products = null;
+    let steps = null;
+
+    steps = step.map((item, index) => {
+      console.log(item);
+      return (
+        <div className="row row10" key={index}>
+          <div className="col-md-4">
+            <div
+              style={{
+                backgroundImage: `url(${IMAGE + item.imgnm})`,
+                backgroundSize: "cover",
+                width: "100%",
+                height: "200px",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center center",
+                borderRadius: "10px"
+              }}
+            />
+          </div>
+
+          <div className="col-md-8">
+            <p
+              className="title"
+              style={{
+                textDecoration: "uppercase",
+                fontSize: "20px",
+                marginBottom: "0px"
+              }}
+            >
+              <span>&#8226;</span>
+              {item.stepnm}
+            </p>
+            {item.description}
+            <p />
+          </div>
+        </div>
+      );
+    });
+
     if (productsData.products) {
       products = (
         <div className="block product-suggest">
@@ -101,32 +139,58 @@ class RecipeDetail extends React.Component {
                 </Link>
               </li>
               <li>
-                <span>{recipe.recipenm}</span>
+                <span>{recipe[0].recipe.recipenm}</span>
               </li>
             </ul>
+            <h4 className="title">
+              <span>{recipe[0].recipe.recipenm}</span>
+            </h4>
+            <p className="date">
+              <span>{`${date[0]} оны ${date[1]} сарын ${date[2]}`}</span>
+            </p>
           </div>
           <div className="product-detail-page">
             <div className="row row10">
               <div className="col-md-8 pad10">
+                <hr />
                 <div className="food-recipe-detail">
-                  <h4 className="title">
-                    <span>{recipe.recipenm}</span>
-                  </h4>
-                  <p className="date">
-                    <span>{`${date[0]} оны ${date[1]} сарын ${date[2]}`}</span>
-                  </p>
                   <div className="content">
                     <div className="main-slide">
                       <Slider
-                        data={recipe.images}
+                        data={recipe[0].recipe.images}
                         params={sliderParams}
                         elContainer={"images"}
                       />
                     </div>
-                    <div
-                      dangerouslySetInnerHTML={{ __html: recipe.description }}
-                    />
                   </div>
+                  <p className="title">
+                    <strong>ЭНД ICON ууд нь харагдана.</strong>
+                  </p>
+                  <hr />
+                  <p className="text">
+                    <span>Энд нөгөө орц, амтлагч нар нь харагдана.</span>
+                  </p>
+                  <hr />
+                </div>
+                <div>
+                  <h4 className="title" style={{ textTransform: "uppercase" }}>
+                    <span>Зөвлөгөө</span>
+                  </h4>
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: recipe[0].recipe.description
+                    }}
+                  />
+                </div>
+                <br />
+                <div>
+                  <h4
+                    className="title"
+                    style={{ textTransform: "uppercase", marginBottom: "20px" }}
+                  >
+                    <span>Хоол хийх заавар</span>
+                  </h4>
+                  {steps}
                 </div>
               </div>
               <div className="col-md-4 pad10">
@@ -154,3 +218,31 @@ class RecipeDetail extends React.Component {
 }
 
 export default RecipeDetail;
+
+/* 
+<div className="single-product list-product">
+                      <div className="image-container">
+                        <a href=" ">
+                          <span
+                            className="image"
+                            style={{
+                              backgroundImage: `url(${IMAGE +
+                                recipe.images[0].imgnm})`
+                            }}
+                          />
+                        </a>
+                      </div>
+                      <div>
+                        Lorem Ipsum is simply dummy text of the printing and
+                        typesetting industry. Lorem Ipsum has been the
+                        industry's standard dummy text ever since the 1500s,
+                        when an unknown printer took a galley of type and
+                        scrambled it to make a type specimen book. It has
+                        survived not only five centuries, but also the leap into
+                        electronic typesetting, remaining essentially unchanged.
+                        It was popularised in the 1960s with the release of
+                        Letraset sheets containing Lorem Ipsum passages, and
+                        more recently with desktop publishing software like
+                        Aldus PageMaker including versions of Lorem Ipsum
+                      </div>
+                    </div> */
