@@ -2,35 +2,47 @@ import React from "react";
 import CardList from "../../components/CardList";
 import { CARD_TYPES, CARD_LIST_TYPES } from "../../utils/consts";
 import { SearchList } from "../../components";
-import { Checkbox, Progress, Col } from "antd";
-import { Menu } from "antd";
+import { Checkbox, Progress, Col, Menu } from "antd";
+import { Link } from "react-router-dom";
+import api from "../../api";
 const SubMenu = Menu.SubMenu;
-const CheckboxGroup = Checkbox.Group;
-const plainOptions = [
-  { label: "Apple", value: "Apple" },
-  { label: "Pear", value: "Pear" },
-  { label: "Orange", value: "Orange" }
-];
+
+let temp = [];
+
 class CategoryInfo extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       isToggleOn: false,
-      isSort: false,
+      isSort: true,
       openKeys: ["sub01"],
-      products: this.props.container,
-      checkedValues: []
+      products: [],
+      checkedValues: [],
+      value: []
     };
+    this.checkref = React.createRef();
+    this.handleClickList = this.handleClickList.bind(this);
+    this.handleClickGrid = this.handleClickGrid.bind(this);
 
-    this.handleClick = this.handleClick.bind(this);
+    this.handleClickAsc = this.handleClickAsc.bind(this);
+    this.handleClickDesc = this.handleClickDesc.bind(this);
   }
 
   rootSubmenuKeys = ["sub01", "sub02", "sub04", "sub04"];
 
-  handleClick() {
-    this.setState(state => ({
-      isToggleOn: !state.isToggleOn
-    }));
+  handleClickAsc() {
+    console.log("this is asc");
+  }
+  handleClickDesc() {
+    console.log("this is desc");
+  }
+
+  handleClickList() {
+    this.setState({ isToggleOn: true });
+  }
+
+  handleClickGrid() {
+    this.setState({ isToggleOn: false });
   }
 
   onOpenChange = openKeys => {
@@ -46,78 +58,67 @@ class CategoryInfo extends React.Component {
     }
   };
 
-  onChange = val => {
-    console.log(val);
+  onChangeCheckbox = e => {
+    /* console.log(this.checkref.current.props);
+    console.log(this.props); */
+    console.log(e);
+    /* this.onSubmit();
+    this.props.updateFilter(val); */
   };
 
+  onSubmit = e => {
+    e.preventDefault();
+    console.log(
+      "sda",
+      e
+    ); /* 
+    let tmp = this.state.checkedValues;
+    console.log(e);
+    tmp.push(e.target.value);
+    this.setState({ checkedValues: tmp });
+    console.log("checkedValue", this.state.checkedValues); */
+  };
+
+  componentWillMount() {
+    this.setState({
+      products: this.props.container.categoryProduct[0].products
+    });
+  }
+
   render() {
-    const products = this.props.container.categoryProduct[0].products;
+    console.log(this.props);
     const SubCategory = this.props.container.categoryProduct[0].SubCategorys;
     const attributes = this.props.container.categoryProduct[0].attributes;
+    const parent = this.props.container.categoryProduct[0].parents;
+    const length = SubCategory ? SubCategory[0].parentid : null;
     let filters = null;
     let colorList = null;
     let category = null;
+    let parentCategory1 = null;
+
+    parent.map((item, index) => {
+      if (item.id == length) {
+        parentCategory1 = item.catnm;
+        return <p>{item.catnm}</p>;
+      } else return null;
+    });
 
     category = SubCategory.map((item, index) => {
       return (
         <li key={index}>
-          <a>{item.catnm}</a>
+          <Link to={item.route ? item.route : " "}>{item.catnm}</Link>
         </li>
       );
     });
 
     filters = attributes.map((item, index) => {
       switch (item.type) {
-        case "ATTRIBUTE":
-          let filter = null;
-
-          if (item.attributes) {
-            filter = item.attributes.map((item, index) => {
-              return (
-                <div className="left-filter" key={index}>
-                  <a
-                    className="collapse-title"
-                    data-toggle="collapse"
-                    role="button"
-                    aria-expanded="true"
-                    aria-controls="collapseExample"
-                  >
-                    {item.name}
-                  </a>
-                  <div class="collapse show" id="collapseThree">
-                    <div class="collapse-content">
-                      <ul class="list-unstyled">
-                        {
-                          <Checkbox.Group
-                            style={{ width: "100%" }}
-                            onChange={this.onChange}
-                          >
-                            <Col>
-                              {item.values.map((it, ind) => {
-                                return (
-                                  <li>
-                                    <Checkbox value={it.valueid}>
-                                      {it.valuename}
-                                    </Checkbox>
-                                  </li>
-                                );
-                              })}
-                            </Col>
-                          </Checkbox.Group>
-                        }
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              );
-            });
-          } else return null;
-          return <div>{filter}</div>;
         case "COLOR":
           if (item.attributes[0].values) {
             colorList = item.attributes[0].values.map((item, index) => {
               return (
                 <a
+                  onClick={this.onSubmit}
                   key={index}
                   className="dot"
                   style={{
@@ -127,7 +128,8 @@ class CategoryInfo extends React.Component {
                     borderRadius: "50%",
                     display: "inline-block",
                     marginTop: "10px",
-                    marginRight: "10px"
+                    marginRight: "10px",
+                    border: "1px solid grey"
                   }}
                 />
               );
@@ -147,7 +149,44 @@ class CategoryInfo extends React.Component {
             </div>
           );
         default:
-          return null;
+          let filter = null;
+          if (item.attributes) {
+            filter = item.attributes.map((item, index) => {
+              return (
+                <div className="left-filter" key={index}>
+                  <a
+                    className="collapse-title"
+                    data-toggle="collapse"
+                    role="button"
+                    aria-expanded="true"
+                    aria-controls="collapseExample"
+                  >
+                    {item.name}
+                  </a>
+                  <div className="collapse show" id="collapseThree">
+                    <div className="collapse-content">
+                      <ul className="list-unstyled">
+                        {item.values.map((it, ind) => {
+                          return (
+                            <li>
+                              <Checkbox
+                                name={item.id}
+                                value={it.valueid}
+                                onClick={this.onSubmit}
+                              >
+                                {it.valuename}
+                              </Checkbox>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              );
+            });
+          } else return null;
+          return <div>{filter}</div>;
       }
     });
 
@@ -156,16 +195,15 @@ class CategoryInfo extends React.Component {
         <div className="container pad10">
           <div className="e-breadcrumb">
             <ul className="list-unstyled">
-              <li>
-                <a href="/">
-                  <span>Эхлэл</span>
-                </a>
-              </li>
-              <li>
-                <a href=" ">
-                  <span>Ангилал</span>
-                </a>
-              </li>
+              {parent.map((item, index) => {
+                return (
+                  <li key={index}>
+                    <Link to={item.route ? item.route : " "}>
+                      <span>{item.catnm}</span>
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
           <div className="row row10">
@@ -188,16 +226,16 @@ class CategoryInfo extends React.Component {
                 </p>
                 <div className="block">
                   <div className="accordion" id="accordionExample">
-                    <a
-                      href="#"
+                    <Link
+                      to=" "
                       className="collapse-title"
                       data-toggle="collapse"
                       data-target="#collapseOne"
                       aria-expanded="true"
                       aria-controls="collapseOne"
                     >
-                      Цай / Кофе
-                    </a>
+                      {parentCategory1}
+                    </Link>
                     <div
                       id="collapseOne"
                       className="collapse show"
@@ -232,8 +270,8 @@ class CategoryInfo extends React.Component {
                   <div className="col-lg-4 pad10">
                     <div className="total-result">
                       <p className="text">
-                        <strong>"{SubCategory.catnm}"</strong>
-                        <span>{products.length} бараа олдлоо</span>
+                        <strong>"{parentCategory1} "</strong>
+                        <span>{this.state.products.length} бараа олдлоо</span>
                       </p>
                     </div>
                   </div>
@@ -253,7 +291,7 @@ class CategoryInfo extends React.Component {
                           className={
                             this.state.isToggleOn ? "btn active" : "btn"
                           }
-                          onClick={this.handleClick}
+                          onClick={this.handleClickList}
                         >
                           <i className="fa fa-th-list" aria-hidden="true" />
                         </a>
@@ -261,7 +299,7 @@ class CategoryInfo extends React.Component {
                           className={
                             this.state.isToggleOn ? "btn" : "btn active"
                           }
-                          onClick={this.handleClick}
+                          onClick={this.handleClickGrid}
                         >
                           <i className="fa fa-th" aria-hidden="true" />
                         </a>
@@ -271,11 +309,21 @@ class CategoryInfo extends React.Component {
                 </div>
               </div>
               {this.state.isToggleOn ? (
-                <SearchList products={products} />
+                <SearchList
+                  products={
+                    this.state.isSort
+                      ? this.state.products
+                      : this.state.products.reverse()
+                  }
+                />
               ) : (
                 <CardList
                   type={CARD_LIST_TYPES.horizontal}
-                  items={products}
+                  items={
+                    this.state.isSort
+                      ? this.state.products
+                      : this.state.products.reverse()
+                  }
                   showAll
                   cardType={CARD_TYPES.wide}
                 />
@@ -289,8 +337,8 @@ class CategoryInfo extends React.Component {
 }
 
 export default CategoryInfo;
-{
-  /* <Menu
+
+/* <Menu
                 key={index}
                 mode="inline"
                 openKeys={this.state.openKeys}
@@ -315,4 +363,25 @@ export default CategoryInfo;
                   })}
                 </SubMenu>
               </Menu> */
-}
+
+/*
+                          <Checkbox.Group
+                            style={{ width: "100%" }}
+                            onChange={this.onChangeCheckbox}
+                            ref={this.checkref}
+                            name="aaaaaaaaaaaaaaa"
+                          >
+                            {item.id}
+                            <Col>
+                              {item.values.map((it, ind) => {
+                                return (
+                                  <li>
+                                    <Checkbox value={it.valueid}>
+                                      {it.valuename}
+                                    </Checkbox>
+                                  </li>
+                                );
+                              })}
+                            </Col>
+                          </Checkbox.Group>
+                        */

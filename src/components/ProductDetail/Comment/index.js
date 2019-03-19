@@ -27,16 +27,18 @@ class Component extends React.Component{
   }
   render() {
     const { comment, rate, ratesum } = this.state
-    
+    const {userInfo, loggedin} = this.props
     return <div>
       <div className="comments-container">
+      {
+        loggedin == true ?
         <div className="write-comment">
           <div className="author">
             <div className="image-container">
               <span className="image8" style={{backgroundImage: `url(${p9})`}}></span>
             </div>
             <p className="name">
-              <strong>Болд<br/>Ганзориг</strong>
+              <strong>{userInfo.firstname}<br/>{userInfo.lastname}</strong>
             </p>
           </div>
           <form>
@@ -48,7 +50,9 @@ class Component extends React.Component{
               <span className="text-uppercase">Сэтгэгдэл үлдээх</span>
             </div>
           </form>
-        </div>
+        </div> : ''
+      }
+        
         {
           comment.length === 0 ? '' :
             <div>

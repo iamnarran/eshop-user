@@ -105,7 +105,6 @@ class Card extends React.Component {
     if (!item) {
       return null;
     }
-
     const formatter = new Intl.NumberFormat("en-US");
 
     let prices = (
@@ -159,7 +158,7 @@ class Card extends React.Component {
                 {hover}
               </div>
               <div className="info-container">
-                <Link to="" className="name">
+                <Link to={item.route ? item.route : ""} className="name">
                   <span>
                     {item.name
                       ? this.trimByWord(item.name)
@@ -168,7 +167,7 @@ class Card extends React.Component {
                       : ""}
                   </span>
                 </Link>
-                <Link to="" className="cat">
+                <Link to={item.route ? item.route : ""} className="cat">
                   <span>
                     {item.shortnm
                       ? this.trimByWord(item.shortnm, 30)
@@ -182,7 +181,7 @@ class Card extends React.Component {
                   <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} />
                 ) : null}
                 <br />
-                <Link to="" className="price">
+                <Link to={item.route ? item.route : ""} className="price">
                   {prices}
                 </Link>
               </div>
@@ -209,7 +208,7 @@ class Card extends React.Component {
                 {hover}
               </div>
               <div className="info-container">
-                <Link to="" className="name">
+                <Link to={item.route ? item.route : ""} className="name">
                   <span>
                     {item.name
                       ? this.trimByWord(item.name)
@@ -218,7 +217,7 @@ class Card extends React.Component {
                       : ""}
                   </span>
                 </Link>
-                <Link to="" className="cat">
+                <Link to={item.route ? item.route : ""} className="cat">
                   <span>
                     {item.shortnm
                       ? this.trimByWord(item.shortnm, 30)
@@ -232,7 +231,7 @@ class Card extends React.Component {
                   <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} />
                 ) : null}
                 <br />
-                <Link to="" className="price">
+                <Link to={item.route ? item.route : ""} className="price">
                   {prices}
                 </Link>
               </div>
@@ -262,10 +261,10 @@ class Card extends React.Component {
               {hover}
             </div>
             <div className="info-container">
-              <Link to="" className="name">
+              <Link to={item.route ? item.route : ""} className="name">
                 <span>{this.trimByWord(item.recipenm)}</span>
               </Link>
-              <Link to="" className="cat">
+              <Link to={item.route ? item.route : ""} className="cat">
                 <span>{this.trimByWord(item.featuretxt, 30)}</span>
               </Link>
               <br />

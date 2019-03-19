@@ -17,6 +17,7 @@ import register from "./User/register";
 import staticPages from "./StaticPages";
 import categoryInfo from "./CategoryInfo";
 import cart from "./Cart";
+import checkout from "./Checkout";
 
 let rest = {};
 
@@ -148,6 +149,12 @@ categoryInfo.forEach(api => {
 rest["cart"] = {};
 cart.forEach(api => {
   rest.cart[api.NAME] = data => generateAPI(api, data);
+});
+
+//CHECKOUT
+rest["checkout"] = {};
+checkout.forEach(api => {
+  rest.checkout[api.NAME] = data => generateAPI(api, data);
 });
 
 export { rest as default, setAuthorizationHeader };

@@ -426,9 +426,9 @@ class Cart extends React.Component {
                       <span>Нийт дүн:</span>
                       <strong>{formatter.format(totalPrice)}₮</strong>
                     </p>
-                    <a href="#" className="btn btn-main btn-block">
-                      <span className="text-uppercase">Баталгаажуулах</span>
-                    </a>
+                    <Link to="/checkout" className="btn btn-main btn-block">
+                      <span className="text-uppercase">Баталгаажуулах1</span>
+                    </Link>
                   </div>
                   <div className="block fav-products">
                     <p className="title">

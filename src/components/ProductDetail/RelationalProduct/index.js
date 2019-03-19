@@ -14,7 +14,6 @@ class Compenent extends React.Component {
   }
 
   componentDidMount(){
-    console.log(this.props.product, "test")
     if(this.props.product.length !== 0){
       this.setState({product: this.props.product.slice(0,4)})
     }
@@ -31,7 +30,7 @@ class Compenent extends React.Component {
     const { product } = this.state
     if (product.length !== 0) {
       return (
-        <div className="block product-suggest">
+        <div className="product-suggest">
         <p className="title">
           <strong>Хослох бараа</strong>
         </p>
