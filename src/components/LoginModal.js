@@ -6,7 +6,7 @@ import { EXPAND_LEFT } from "react-ladda";
 import { createForm } from "rc-form";
 
 import FacebookLogin from "./FacebookLogin";
-import actions, { setUser } from "../actions/Login";
+import actions, { setUser } from "../actions/login";
 import RegisterModal from "./RegisterModal";
 
 @connect(

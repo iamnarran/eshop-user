@@ -18,17 +18,14 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { far } from "@fortawesome/free-regular-svg-icons";
 import { fab } from "@fortawesome/free-brands-svg-icons";
-// import { faCheckSquare, faCoffee } from '@fortawesome/free-solid-svg-icons';
 
 import store from "./store";
 import { storage } from "./utils";
-/* import Layouts from 'layouts/Default'; */
+
+import messages from "./messages.json";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "scss/app.scss";
-import messages from "./messages.json";
 import "react-toastify/dist/ReactToastify.css";
-// import Promotion from "./pages/Promotion/index";
-// import Season from "./pages/Season/index";
 import {
   Footer,
   Header,
@@ -50,7 +47,7 @@ import {
   Cart,
   Checkout,
   Temp
-} from "./containers/index";
+} from "./containers";
 
 //library.add(fab, faCheckSquare, faCoffee);
 library.add(fas, far, fab);

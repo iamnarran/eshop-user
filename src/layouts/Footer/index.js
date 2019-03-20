@@ -8,8 +8,8 @@ import "./style.css";
 
 class Footer extends React.Component {
   render() {
-    const { staticinfo } = this.props.container;
-    const { staticPages } = this.props.container;
+    const { staticInfo } = this.props.container;
+    const { staticPage } = this.props.container;
     return (
       <div className="top-container">
         <div className="section section-footer">
@@ -17,12 +17,12 @@ class Footer extends React.Component {
             <div className="row row10">
               <div className="col-sm-12 col-md-6 col-lg-3 pad10">
                 <Link to="/" className="logo">
-                  <img alt="logo" src={IMAGE + staticinfo.logopath2} />
+                  <img alt="logo" src={IMAGE + staticInfo.logopath2} />
                 </Link>
                 <ul className="social">
                   <li>
                     <a
-                      href={staticinfo.facebook}
+                      href={staticInfo.facebook}
                       target="_blank "
                       rel="noopener"
                     >
@@ -40,7 +40,7 @@ class Footer extends React.Component {
                         />
                       </span>
                     </a>
-                    <a href={staticinfo.gmail} target="_blank " rel="noopener">
+                    <a href={staticInfo.gmail} target="_blank " rel="noopener">
                       <span className="fa-layers fa-fw">
                         <FontAwesomeIcon
                           icon={["fas", "circle"]}
@@ -56,7 +56,7 @@ class Footer extends React.Component {
                       </span>
                     </a>
                     <a
-                      href={staticinfo.twitter}
+                      href={staticInfo.twitter}
                       target="_blank "
                       rel="noopener"
                     >
@@ -82,7 +82,7 @@ class Footer extends React.Component {
                   <li>
                     <strong>Бидний тухай</strong>
                   </li>
-                  {staticPages.map((item, index) => {
+                  {staticPage.map((item, index) => {
                     if (item.pagetype == "1") {
                       return (
                         <li key={index}>
@@ -102,7 +102,7 @@ class Footer extends React.Component {
                   <li>
                     <strong>Үйлчилгээний нөхцөл</strong>
                   </li>
-                  {staticPages.map((item, index) => {
+                  {staticPage.map((item, index) => {
                     if (item.pagetype == "2") {
                       return (
                         <li key={index}>
@@ -123,16 +123,16 @@ class Footer extends React.Component {
                     <strong>Холбоо барих</strong>
                   </li>
                   <li>
-                    <span>{staticinfo.address}</span>
+                    <span>{staticInfo.address}</span>
                   </li>
                   <li>
-                    <span>{staticinfo.phone}</span>
+                    <span>{staticInfo.phone}</span>
                   </li>
                   <li>
-                    <span>{staticinfo.email}</span>
+                    <span>{staticInfo.email}</span>
                   </li>
                   <li>
-                    <span>{staticinfo.website}</span>
+                    <span>{staticInfo.website}</span>
                   </li>
                 </ul>
               </div>

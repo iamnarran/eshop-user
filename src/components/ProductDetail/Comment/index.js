@@ -2,7 +2,7 @@ import React from "react"
 import p9 from "../../../scss/assets/images/demo/1.jpg"
 import api from "../../../api"
 import PropTypes from 'prop-types'
-import Rate from "../../Rate"
+import Rate from "../../Rate/Rate"
 import moment from "moment"
 
 class Component extends React.Component{

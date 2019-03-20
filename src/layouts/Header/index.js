@@ -37,7 +37,7 @@ class AppHeader extends Component {
   };
 
   render() {
-    const { staticinfo } = this.props.container;
+    const { staticInfo } = this.props.container;
     const { menus } = this.props.container;
     const { categories } = this.props.container;
 
@@ -69,7 +69,7 @@ class AppHeader extends Component {
                 <li className="list-inline-item">
                   <Link to="" className="e-phone">
                     <i className="fa fa-phone" aria-hidden="true" />
-                    <strong>{staticinfo.phone}</strong>
+                    <strong>{staticInfo.phone}</strong>
                   </Link>
                 </li>
                 <li className="list-inline-item">
@@ -109,7 +109,7 @@ class AppHeader extends Component {
                               theme="filled"
                               style={{ color: "rgba(254, 180, 21, 1)" }}
                             />
-                            <strong> {staticinfo.phone} </strong>
+                            <strong> {staticInfo.phone} </strong>
                           </Link>
                         </li>
                       </ul>
@@ -146,7 +146,7 @@ class AppHeader extends Component {
                           <i className="fa fa-navicon" aria-hidden="true" />
                         </button>
                         <Link to={"/"} className="logo">
-                          <img alt="logo" src={IMAGE + staticinfo.logopath} />
+                          <img alt="logo" src={IMAGE + staticInfo.logopath} />
                         </Link>
                         <div className="search">
                           <form className={seartchClass}>

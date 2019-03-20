@@ -16,7 +16,7 @@ const options = {
 
 const fetch = async (props, onData) => {
   try {
-    const packageProducts = await api.packageProduct.findAll();
+    const packageProducts = await api.packageInfo.findAll();
     const mainbanner = await api.banner.findAll({ type: "L1" });
     const secondaryBanners = await api.banner.findAll({ type: "L2" });
     const menu = await api.menu.findAll();

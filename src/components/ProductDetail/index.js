@@ -7,7 +7,7 @@ import RelationalProduct from "./RelationalProduct"
 import Information from "./Information"
 import Collection from "./CollectionProduct"
 import Comment from "./Comment"
-import Rate from "../Rate"
+import Rate from "../Rate/Rate"
 import config from "config";
 
 class ProductDetail extends React.Component{
