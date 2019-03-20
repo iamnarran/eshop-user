@@ -1,17 +1,20 @@
 import React from "react";
 import config from "config";
-import api from "../api";
-import storage from "../utils/storage";
+import { connect } from "react-redux";
+import api from "../../api";
+import storage from "../../utils/storage";
 import { Link } from "react-router-dom";
+import { updateCart } from "../../actions/Cart";
+import { toast } from "react-toastify";
+import { getFeedbacks } from "../../actions/mainlogic";
 import {
   Magnify,
-  Rate,
   RelationalProduct,
   Information,
   CardSlider,
   Comment
-} from "../components";
-import { Spin } from "antd";
+} from "../../components";
+import { Spin, Rate } from "antd";
 import {
   FacebookShareButton,
   TwitterShareButton,
@@ -49,6 +52,7 @@ class Component extends React.Component {
     isLoading: false
   };
 
+  notify = message => toast(message, { autoClose: 5000 });
   componentWillMount() {
     this.setState({
       skucd: this.props.match.params.id,
@@ -157,12 +161,54 @@ class Component extends React.Component {
       );
   };
 
+  check = (res, item, found, cart) => {
+    let tmp = getFeedbacks(res, item, found, cart);
+    if (tmp == false) {
+      this.notify(res.message);
+    } else {
+      this.props.updateCart({
+        products: tmp.products,
+        totalQty: tmp.totalQty,
+        totalPrice: tmp.totalPrice
+      });
+    }
+  };
+
   generateSaleMinQty = saleminqty => {
     if (saleminqty === 0) {
       return 1;
     } else {
       return saleminqty;
     }
+  };
+
+  handleAddClick = e => {
+    e.preventDefault();
+    const item = this.state.product;
+    let cart = storage.get("cart")
+      ? storage.get("cart")
+      : { products: [], totalQty: 0, totalPrice: 0 };
+
+    const found = cart.products.find(product => product.cd === item.cd);
+
+    let itemQty = 0;
+    if (found) {
+      itemQty = found.qty;
+    }
+
+    api.product
+      .isAvailable({
+        skucd: item.id ? item.id : item.cd ? item.cd : null,
+        qty: itemQty + 1
+      })
+      .then(res => {
+        this.check(res, item, found, cart);
+      });
+  };
+
+  handleSaveClick = e => {
+    e.preventDefault();
+    console.log(e.target);
   };
 
   getCategory = product => {
@@ -305,7 +351,7 @@ class Component extends React.Component {
     const { attribute, collectionProduct, skucd, product } = this.state;
     return (
       <div className="col-md-12 col-lg-12 col-sm-12 col-xl-12">
-        <Information attribute={attribute} />
+        {attribute.length !== 0 ? <Information attribute={attribute} /> : ""}
         {collectionProduct.length === 0 ? (
           ""
         ) : (
@@ -326,18 +372,24 @@ class Component extends React.Component {
         )}
 
         {/**ТАНИЛЦУУЛАГА */}
-        <h1 className="title">
-          <span className="text-uppercase">Танилцуулга</span>
-        </h1>
-        <div className="product-bottom-images">
-          {this.state.product &&
-            this.state.product.images &&
-            this.state.product.images.map((index, key) => {
-              return (
-                <img alt={index.id} src={IMAGE + index.imglrg} key={key} />
-              );
-            })}
-        </div>
+        {this.state.product.images.length !== 0 ? (
+          <div>
+            <h1 className="title">
+              <span className="text-uppercase">Танилцуулга</span>
+            </h1>
+            <div className="product-bottom-images">
+              {this.state.product &&
+                this.state.product.images &&
+                this.state.product.images.map((index, key) => {
+                  return (
+                    <img alt={index.id} src={IMAGE + index.imglrg} key={key} />
+                  );
+                })}
+            </div>
+          </div>
+        ) : (
+          ""
+        )}
 
         <Comment
           skucd={skucd}
@@ -357,7 +409,11 @@ class Component extends React.Component {
         product.rate.map(i => (sum += i.rate));
       }
     }
-    return (sum / product.rate.length).toFixed(2);
+    let tmp = (sum / product.rate.length).toFixed(2);
+    if (isNaN(tmp) || tmp == undefined) {
+      tmp = 0;
+    }
+    return tmp;
   };
 
   addProduct = () => {
@@ -433,6 +489,10 @@ class Component extends React.Component {
     });
   };
 
+  handleRate = e => {
+    console.log(e);
+  };
+
   renderProductDelivery = () => {
     const { relationalProduct } = this.state;
     return (
@@ -472,7 +532,11 @@ class Component extends React.Component {
             </strong>
           </p>
           <div className="main-rating">
-            <Rate rate={this.getRatesum()} numOfVotes={this.getRatesum()} />
+            <Rate
+              allowHalf
+              defaultValue={this.getRatesum()}
+              onChange={this.handleRate}
+            />
             <p className="text">
               ({product.rate.length} хүн үнэлгээ өгсөн байна)
             </p>
@@ -555,12 +619,16 @@ class Component extends React.Component {
               <strong>{money.format(sumPrice)}₮</strong>
             </div>
             <div className="btn-container text-right">
-              <button className="btn btn-gray text-uppercase">
+              <button
+                className="btn btn-gray text-uppercase"
+                onClick={this.handleSaveClick}
+              >
                 <span>Хадгалах</span>
               </button>
               <button
                 className="btn btn-main text-uppercase"
                 disabled={product.availableqty > 0 ? false : true}
+                onClick={this.handleAddClick}
               >
                 <i className="fa fa-shopping-cart" aria-hidden="true" />
                 <span>Сагсанд нэмэх</span>
@@ -592,4 +660,7 @@ const productParams = {
   }
 };
 
-export default Component;
+export default connect(
+  null,
+  { updateCart }
+)(Component);
