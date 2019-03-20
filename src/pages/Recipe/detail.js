@@ -163,18 +163,112 @@ class RecipeDetail extends React.Component {
                       />
                     </div>
                   </div>
-                  <p className="title">
-                    <strong>ЭНД ICON ууд нь харагдана.</strong>
-                  </p>
+                  <div className="row row10">
+                    <div className="col-md-4">
+                      <p>
+                        <span>
+                          <i className="fa fa-utensils" />
+                        </span>
+                        hiuh
+                      </p>
+                    </div>
+                    <div className="col-md-4">
+                      <p>
+                        <span>
+                          <i class="fa fa-hourglass-half" />
+                        </span>
+                        {recipe[0].recipe.time}
+                      </p>
+                    </div>
+                    <div className="col-md-4">
+                      <p>
+                        <span>
+                          <i className="fa fa-phone" aria-hidden="true" />
+                        </span>
+                        {recipe[0].recipe.humancnt} хүний порц
+                      </p>
+                    </div>
+                  </div>
                   <hr />
-                  <p className="text">
-                    <span>Энд нөгөө орц, амтлагч нар нь харагдана.</span>
-                  </p>
+                  <div className="row row10">
+                    <div className="col-md-6">
+                      <p className="title">ОРЦ</p>
+                      <div className="row row10">
+                        <div className="col-md-6">
+                          <p>
+                            <span style={{ color: "yellow" }}>#</span> Үхрийн
+                            мах
+                          </p>
+                        </div>
+                        <div className="col-md-6">
+                          <p>
+                            <span style={{ color: "yellow" }}>#</span> Үхрийн
+                            мах
+                          </p>
+                        </div>
+                        <div className="col-md-6">
+                          <p>
+                            <span style={{ color: "yellow" }}>#</span> Үхрийн
+                            мах
+                          </p>
+                        </div>
+                        <div className="col-md-6">
+                          <p>
+                            <span style={{ color: "yellow" }}>#</span> Үхрийн
+                            мах
+                          </p>
+                        </div>
+                        <div className="col-md-6">
+                          <p>
+                            <span style={{ color: "yellow" }}>#</span> Үхрийн
+                            мах
+                          </p>
+                        </div>
+                        <div className="col-md-6">
+                          <p>
+                            <span style={{ color: "yellow" }}>#</span> Үхрийн
+                            мах
+                          </p>
+                        </div>
+                        <div className="col-md-6">
+                          <p>
+                            <span style={{ color: "yellow" }}>#</span> Үхрийн
+                            мах
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <p className="title">АМТЛАГЧ</p>
+                      <div className="row row10">
+                        <div className="col-md-6">
+                          <p>
+                            <span style={{ color: "yellow" }}>#</span> Үхрийн
+                            мах
+                          </p>
+                        </div>
+                        <div className="col-md-6">
+                          <p>
+                            <span style={{ color: "yellow" }}>#</span> Үхрийн
+                            мах
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   <hr />
                 </div>
                 <div>
                   <h4 className="title" style={{ textTransform: "uppercase" }}>
-                    <span>Зөвлөгөө</span>
+                    <span>
+                      <a
+                        style={{
+                          backgroundColor: "yellow"
+                        }}
+                      >
+                        Зөвлөгөө
+                      </a>
+                    </span>
                   </h4>
                   <div
                     dangerouslySetInnerHTML={{
@@ -188,7 +282,15 @@ class RecipeDetail extends React.Component {
                     className="title"
                     style={{ textTransform: "uppercase", marginBottom: "20px" }}
                   >
-                    <span>Хоол хийх заавар</span>
+                    <span>
+                      <a
+                        style={{
+                          backgroundColor: "yellow"
+                        }}
+                      >
+                        Хоол хийх заавар
+                      </a>
+                    </span>
                   </h4>
                   {steps}
                 </div>
