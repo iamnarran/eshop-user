@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Link, Icon } from "react-router-dom";
 import PropTypes from "prop-types";
 import { toast } from "react-toastify";
-
+import { getFeedbacks } from "../actions/mainlogic";
 import api from "../api";
 import Rate from "./Rate";
 import Label from "./Label";
@@ -21,11 +21,13 @@ import "./Card.css";
 // );
 
 class Card extends React.Component {
+  state = {
+    checkProduct: []
+  };
   notify = message => toast(message, { autoClose: 5000 });
 
   handleAddToCart = item => e => {
     e.preventDefault();
-
     let cart = storage.get("cart")
       ? storage.get("cart")
       : { products: [], totalQty: 0, totalPrice: 0 };
@@ -37,9 +39,16 @@ class Card extends React.Component {
       itemQty = found.qty;
     }
 
-    console.log("itemQty", itemQty);
-
     api.product
+      .isAvailable({
+        skucd: item.id ? item.id : item.cd ? item.cd : null,
+        qty: itemQty + 1
+      })
+      .then(res => {
+        this.check(res, item, found, cart);
+      });
+
+    /*  api.product
       .isAvailable({
         skucd: item.id ? item.id : item.cd ? item.cd : null,
         qty: itemQty + 1
@@ -81,7 +90,20 @@ class Card extends React.Component {
         } else {
           this.notify(res.message);
         }
+      }); */
+  };
+
+  check = (res, item, found, cart) => {
+    let tmp = getFeedbacks(res, item, found, cart);
+    if (tmp == false) {
+      this.notify(res.message);
+    } else {
+      this.props.updateCart({
+        products: tmp.products,
+        totalQty: tmp.totalQty,
+        totalPrice: tmp.totalPrice
       });
+    }
   };
 
   trimByWord(text, maxChars = 20) {
@@ -128,10 +150,10 @@ class Card extends React.Component {
           <i className="fa fa-heart-o" aria-hidden="true" />
           <span />
         </Link>
-        <Link to="" onClick={this.handleAddToCart(item)}>
+        <a onClick={this.handleAddToCart(item)}>
           <i className="fa fa-cart-plus" aria-hidden="true" />
           <span />
-        </Link>
+        </a>
       </div>
     );
 
