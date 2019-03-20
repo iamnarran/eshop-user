@@ -1,19 +1,29 @@
 import React from "react";
-import { Collapse, Icon, Tabs, Radio } from "antd";
+import { Collapse, Icon, Tabs, Radio, Input, Form } from "antd";
 
 const Panel = Collapse.Panel;
 const TabPane = Tabs.TabPane;
-const text = `
-  A dog is a type of domesticated animal.
-  Known for its loyalty and faithfulness,
-  it can be found as a welcome guest in many households across the world.
-`;
+
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 5 }
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 12 }
+  }
+};
 
 class Checkout extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      menu: false
+      menu: false,
+      collapse: [],
+      collapseKey: [],
+      collapseType: null,
+      activeKey: ["1"]
     };
   }
 
@@ -71,27 +81,25 @@ class Checkout extends React.Component {
 
   customerTab = () => {
     return (
-      <div className="card-header" id="headingOne">
-        <div className="title-container flex-space">
-          <h5 className="title">
-            <span
-              className="collapsed flex-this"
-              role="button"
-              data-toggle="collapse"
-              data-target="#block1"
-              aria-expanded="false"
-              aria-controls="block1"
-            >
-              <i className="fa fa-user" aria-hidden="true" />
-              <span>Хэрэглэгчээр бүртгүүлэх</span>
-            </span>
-          </h5>
-          <div className="title-button text-right">
-            <p className="text">Бүртгэлтэй бол:</p>
-            <a className="btn btn-gray solid">
-              <span className="text-uppercase">Нэвтрэх</span>
-            </a>
-          </div>
+      <div className="title-container flex-space">
+        <h5 className="title">
+          <a
+            className="collapsed flex-this"
+            role="button"
+            data-toggle="collapse"
+            data-target="#block1"
+            aria-expanded="false"
+            aria-controls="block1"
+          >
+            <i className="fa fa-user" aria-hidden="true" />
+            <span>Хэрэглэгчээр бүртгүүлэх</span>
+          </a>
+        </h5>
+        <div className="title-button text-right">
+          <p className="text">Бүртгэлтэй бол:</p>
+          <a className="btn btn-gray solid">
+            <span className="text-uppercase">Нэвтрэх</span>
+          </a>
         </div>
       </div>
     );
@@ -118,8 +126,41 @@ class Checkout extends React.Component {
     );
   };
 
+  callback = key => {
+    this.setState({
+      activeKey: key
+    });
+  };
+
+  handleClick = e => {
+    e.preventDefault();
+    let tmp = [];
+    if (e.target.name === "delivery") {
+      tmp.push("3");
+    } else if (e.target.name === "payment") {
+      tmp.push("4");
+    }
+    console.log(tmp);
+    this.setState({
+      collapseType: e.target.name,
+      activeKey: tmp
+    });
+  };
+
+  onSubmit = e => {
+    e.preventDefault();
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        console.log("Received values of form: ", values);
+      } else {
+        console.log("error");
+      }
+    });
+  };
+
   render() {
     console.log(this.props);
+    //const { getFieldDecorator } = this.props.form;
     return (
       <div className="section section-gray">
         <div className="container pad10">
@@ -135,7 +176,11 @@ class Checkout extends React.Component {
                 <div className="accordion" id="accordionExample">
                   <div className="card">
                     <div className="card-header" id="headingOne">
-                      <Collapse>
+                      <Collapse
+                        accordion
+                        activeKey={this.state.activeKey}
+                        onChange={this.callback}
+                      >
                         <Panel
                           showArrow={false}
                           header={this.customerTab()}
@@ -306,25 +351,12 @@ class Checkout extends React.Component {
                                         төгрөгнөөс дээш бараа авсан тохиолдолд
                                         үнэгүй
                                       </p>
-                                      <form>
+                                      <Form
+                                        {...formItemLayout}
+                                        onSubmit={this.onSubmit}
+                                      >
                                         <div className="row row10">
-                                          <div className="col-xl-6 pad10">
-                                            <div className="form-group">
-                                              <label
-                                                htmlFor="exampleInputEmail1"
-                                                className="sr-only"
-                                              >
-                                                Email address
-                                              </label>
-                                              <input
-                                                type="text"
-                                                className="form-control"
-                                                id="exampleInputEmail1"
-                                                aria-describedby="emailHelp"
-                                                placeholder="Овог*"
-                                              />
-                                            </div>
-                                          </div>
+                                          <div className="col-xl-6 pad10" />
                                           <div className="col-xl-6 pad10">
                                             <div className="form-group">
                                               <label
@@ -362,16 +394,15 @@ class Checkout extends React.Component {
                                         </div>
                                         <hr />
                                         <div className="text-right">
-                                          <a
-                                            href="$"
-                                            className="btn btn-gray solid"
+                                          <button
+                                            className="btn btn-main"
+                                            name="delivery"
+                                            htmlType="submit"
                                           >
-                                            <span className="text-uppercase">
-                                              Дараах
-                                            </span>
-                                          </a>
+                                            Дараах
+                                          </button>
                                         </div>
-                                      </form>
+                                      </Form>
                                     </div>
                                   </TabPane>
                                 );
@@ -383,6 +414,11 @@ class Checkout extends React.Component {
                           header={this.paymentType()}
                           showArrow={false}
                           key="3"
+                          disabled={
+                            this.state.collapseType === "delivery"
+                              ? false
+                              : true
+                          }
                         >
                           <div className="content-container">
                             <label
@@ -464,15 +500,22 @@ class Checkout extends React.Component {
                           </div>
                           <hr />
                           <div className="text-right">
-                            <a href="$" className="btn btn-main">
-                              <span className="text-uppercase">Дараах</span>
-                            </a>
+                            <button
+                              className="btn btn-main"
+                              name="payment"
+                              onClick={this.handleClick}
+                            >
+                              Дараах
+                            </button>
                           </div>
                         </Panel>
                         <Panel
                           header={this.optionType()}
                           showArrow={false}
                           key="4"
+                          disabled={
+                            this.state.collapseType === "payment" ? false : true
+                          }
                         >
                           <div
                             id="block4"
@@ -556,12 +599,6 @@ class Checkout extends React.Component {
                                     <div className="row row10">
                                       <div className="col-xl-6 pad10">
                                         <div className="form-group">
-                                          <label
-                                            htmlFor="exampleInputEmail1"
-                                            className="sr-only"
-                                          >
-                                            Email address
-                                          </label>
                                           <input
                                             type="text"
                                             className="form-control"
@@ -572,10 +609,7 @@ class Checkout extends React.Component {
                                         </div>
                                       </div>
                                     </div>
-                                    <button
-                                      type="submit"
-                                      className="btn btn-gray solid"
-                                    >
+                                    <button className="btn btn-gray solid">
                                       <span className="text-uppercase">
                                         Холбох
                                       </span>
@@ -588,12 +622,6 @@ class Checkout extends React.Component {
                                     <div className="row row10">
                                       <div className="col-xl-6 pad10">
                                         <div className="form-group">
-                                          <label
-                                            htmlFor="exampleInputEmail1"
-                                            className="sr-only"
-                                          >
-                                            Email address
-                                          </label>
                                           <input
                                             type="text"
                                             className="form-control"
@@ -604,10 +632,7 @@ class Checkout extends React.Component {
                                         </div>
                                       </div>
                                     </div>
-                                    <button
-                                      type="submit"
-                                      className="btn btn-gray solid"
-                                    >
+                                    <button className="btn btn-gray solid">
                                       <span className="text-uppercase">
                                         Ашиглах
                                       </span>
@@ -624,12 +649,6 @@ class Checkout extends React.Component {
                                     <div className="row row10">
                                       <div className="col-xl-6 pad10">
                                         <div className="form-group">
-                                          <label
-                                            htmlFor="exampleInputEmail1"
-                                            className="sr-only"
-                                          >
-                                            Email address
-                                          </label>
                                           <input
                                             type="text"
                                             className="form-control"
@@ -640,23 +659,17 @@ class Checkout extends React.Component {
                                         </div>
                                       </div>
                                     </div>
-                                    <button
-                                      type="submit"
-                                      className="btn btn-gray solid"
-                                    >
+                                    <button className="btn btn-gray solid">
                                       <span className="text-uppercase">
                                         Ашиглах
                                       </span>
                                     </button>
-                                    <button
-                                      type="submit"
-                                      className="btn btn-main solid"
-                                    >
+                                    <button className="btn btn-main solid">
                                       <span className="text-uppercase">
                                         Холбох
                                       </span>
                                     </button>
-                                    <button type="submit" className="btn ">
+                                    <button className="btn ">
                                       <span className="text-uppercase">
                                         Засах
                                       </span>
@@ -669,12 +682,6 @@ class Checkout extends React.Component {
                                     <div className="row row10">
                                       <div className="col-xl-6 pad10">
                                         <div className="form-group">
-                                          <label
-                                            htmlFor="exampleInputEmail1"
-                                            className="sr-only"
-                                          >
-                                            Email address
-                                          </label>
                                           <input
                                             type="text"
                                             className="form-control"
@@ -773,4 +780,4 @@ class Checkout extends React.Component {
   }
 }
 
-export default Checkout;
+export default Form.create({ name: "checkout" })(Checkout);

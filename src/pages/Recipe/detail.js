@@ -1,15 +1,58 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
 import Slider from "../../components/Slider";
 import { IMAGE } from "../../utils/consts";
+import api from "../../api";
+import { connect } from "react-redux";
+import storage from "../../utils/storage";
+import { updateCart } from "../../actions/cart";
+import { toast } from "react-toastify";
+import { getFeedbacks } from "../../actions/mainlogic";
 
 class RecipeDetail extends React.Component {
+  notify = message => toast(message, { autoClose: 5000 });
+  handleAddCart = e => {
+    e.preventDefault();
+    const item = this.props.container.productsData.products[1];
+    let cart = storage.get("cart")
+      ? storage.get("cart")
+      : { products: [], totalQty: 0, totalPrice: 0 };
+
+    const found = cart.products.find(product => product.cd === item.skucd);
+
+    let itemQty = 0;
+    if (found) {
+      itemQty = found.qty;
+    }
+    console.log("recipeDetail item", item);
+    console.log("found", found);
+    console.log("cart", cart);
+
+    /* api.product
+      .isAvailable({
+        skucd: item.id ? item.id : item.cd ? item.cd : null,
+        qty: itemQty + 1
+      })
+      .then(res => {
+        this.check(res, item, found, cart);
+      }); */
+  };
+
+  check = (res, item, found, cart) => {
+    let tmp = getFeedbacks(res, item, found, cart);
+    if (tmp == false) {
+      this.notify(res.message);
+    } else {
+      this.props.updateCart({
+        products: tmp.products,
+        totalQty: tmp.totalQty,
+        totalPrice: tmp.totalPrice
+      });
+    }
+  };
   render() {
     const { recipe, productsData } = this.props.container;
-
-    console.log(recipe.description);
-
+    const step = this.props.container.recipe[0].steps;
     const sliderParams = {
       spaceBetween: 0,
       autoplay: {
@@ -26,11 +69,50 @@ class RecipeDetail extends React.Component {
         clickable: true
       }
     };
-
-    const date = recipe.insymd.split("T")[0].split("-");
+    console.log(step);
+    const date = recipe[0].recipe.insymd.split("T")[0].split("-");
     const formatter = new Intl.NumberFormat("en-US");
-
     let products = null;
+    let steps = null;
+
+    steps = step.map((item, index) => {
+      console.log(item);
+      return (
+        <div className="row row10" key={index}>
+          <div className="col-md-4">
+            <div
+              style={{
+                backgroundImage: `url(${IMAGE + item.imgnm})`,
+                backgroundSize: "cover",
+                width: "100%",
+                height: "200px",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center center",
+                borderRadius: "10px",
+                marginBottom: "20px"
+              }}
+            />
+          </div>
+
+          <div className="col-md-8">
+            <p
+              className="title"
+              style={{
+                textDecoration: "uppercase",
+                fontSize: "20px",
+                marginBottom: "0px"
+              }}
+            >
+              <span>&#8226;</span>
+              {item.stepnm}
+            </p>
+            {item.description}
+            <p />
+          </div>
+        </div>
+      );
+    });
+
     if (productsData.products) {
       products = (
         <div className="block product-suggest">
@@ -75,7 +157,7 @@ class RecipeDetail extends React.Component {
                 <span>Дүн:</span>
                 <strong>{formatter.format(productsData.total)}₮</strong>
               </p>
-              <a href="#" className="btn btn-main">
+              <a className="btn btn-main" onClick={this.handleAddCart}>
                 <i className="fa fa-cart-plus" aria-hidden="true" />
                 <span className="text-uppercase">Сагсанд нэмэх</span>
               </a>
@@ -101,32 +183,160 @@ class RecipeDetail extends React.Component {
                 </Link>
               </li>
               <li>
-                <span>{recipe.recipenm}</span>
+                <span>{recipe[0].recipe.recipenm}</span>
               </li>
             </ul>
+            <h4 className="title">
+              <span>{recipe[0].recipe.recipenm}</span>
+            </h4>
+            <p className="date">
+              <span>{`${date[0]} оны ${date[1]} сарын ${date[2]}`}</span>
+            </p>
           </div>
           <div className="product-detail-page">
             <div className="row row10">
               <div className="col-md-8 pad10">
+                <hr />
                 <div className="food-recipe-detail">
-                  <h4 className="title">
-                    <span>{recipe.recipenm}</span>
-                  </h4>
-                  <p className="date">
-                    <span>{`${date[0]} оны ${date[1]} сарын ${date[2]}`}</span>
-                  </p>
                   <div className="content">
                     <div className="main-slide">
                       <Slider
-                        data={recipe.images}
+                        data={recipe[0].recipe.images}
                         params={sliderParams}
                         elContainer={"images"}
                       />
                     </div>
-                    <div
-                      dangerouslySetInnerHTML={{ __html: recipe.description }}
-                    />
                   </div>
+                  <div className="row row10">
+                    <div className="col-md-4">
+                      <p>
+                        <span>
+                          <i className="fa fa-utensils" />
+                        </span>
+                        haha
+                      </p>
+                    </div>
+                    <div className="col-md-4">
+                      <p>
+                        <span>
+                          <i class="fa fa-hourglass-half" />
+                        </span>
+                        {recipe[0].recipe.time}
+                      </p>
+                    </div>
+                    <div className="col-md-4">
+                      <p>
+                        <span>
+                          <i className="fa fa-smile" />
+                        </span>
+                        {recipe[0].recipe.humancnt} хүний порц
+                      </p>
+                    </div>
+                  </div>
+                  <hr />
+                  <div className="row row10">
+                    <div className="col-md-6">
+                      <p className="title">ОРЦ</p>
+                      <div className="row row10">
+                        <div className="col-md-6">
+                          <p>
+                            <span style={{ color: "orange" }}>#</span> Үхрийн
+                            мах
+                          </p>
+                        </div>
+                        <div className="col-md-6">
+                          <p>
+                            <span style={{ color: "orange" }}>#</span> Үхрийн
+                            мах
+                          </p>
+                        </div>
+                        <div className="col-md-6">
+                          <p>
+                            <span style={{ color: "orange" }}>#</span> Үхрийн
+                            мах
+                          </p>
+                        </div>
+                        <div className="col-md-6">
+                          <p>
+                            <span style={{ color: "orange" }}>#</span> Үхрийн
+                            мах
+                          </p>
+                        </div>
+                        <div className="col-md-6">
+                          <p>
+                            <span style={{ color: "orange" }}>#</span> Үхрийн
+                            мах
+                          </p>
+                        </div>
+                        <div className="col-md-6">
+                          <p>
+                            <span style={{ color: "orange" }}>#</span> Үхрийн
+                            мах
+                          </p>
+                        </div>
+                        <div className="col-md-6">
+                          <p>
+                            <span style={{ color: "orange" }}>#</span> Үхрийн
+                            мах
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <p className="title">АМТЛАГЧ</p>
+                      <div className="row row10">
+                        <div className="col-md-6">
+                          <p>
+                            <span style={{ color: "orange" }}>#</span> Үхрийн
+                            мах
+                          </p>
+                        </div>
+                        <div className="col-md-6">
+                          <p>
+                            <span style={{ color: "orange" }}>#</span> Үхрийн
+                            мах
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <hr />
+                </div>
+                <div>
+                  <h4 className="title" style={{ textTransform: "uppercase" }}>
+                    <span>
+                      <a
+                        style={{
+                          backgroundColor: "orange"
+                        }}
+                      >
+                        Зөвлөгөө
+                      </a>
+                    </span>
+                  </h4>
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: recipe[0].recipe.description
+                    }}
+                  />
+                </div>
+                <br />
+                <div>
+                  <h4
+                    className="title"
+                    style={{ textTransform: "uppercase", marginBottom: "20px" }}
+                  >
+                    <span>
+                      <a
+                        style={{
+                          backgroundColor: "orange"
+                        }}
+                      >
+                        Хоол хийх заавар
+                      </a>
+                    </span>
+                  </h4>
+                  {steps}
                 </div>
               </div>
               <div className="col-md-4 pad10">
@@ -153,4 +363,35 @@ class RecipeDetail extends React.Component {
   }
 }
 
-export default RecipeDetail;
+export default connect(
+  null,
+  { updateCart }
+)(RecipeDetail);
+
+/* 
+<div className="single-product list-product">
+                      <div className="image-container">
+                        <a href=" ">
+                          <span
+                            className="image"
+                            style={{
+                              backgroundImage: `url(${IMAGE +
+                                recipe.images[0].imgnm})`
+                            }}
+                          />
+                        </a>
+                      </div>
+                      <div>
+                        Lorem Ipsum is simply dummy text of the printing and
+                        typesetting industry. Lorem Ipsum has been the
+                        industry's standard dummy text ever since the 1500s,
+                        when an unknown printer took a galley of type and
+                        scrambled it to make a type specimen book. It has
+                        survived not only five centuries, but also the leap into
+                        electronic typesetting, remaining essentially unchanged.
+                        It was popularised in the 1960s with the release of
+                        Letraset sheets containing Lorem Ipsum passages, and
+                        more recently with desktop publishing software like
+                        Aldus PageMaker including versions of Lorem Ipsum
+                      </div>
+                    </div> */
