@@ -169,7 +169,7 @@ class RecipeDetail extends React.Component {
                         <span>
                           <i className="fa fa-utensils" />
                         </span>
-                        hiuh
+                        haha
                       </p>
                     </div>
                     <div className="col-md-4">
