@@ -125,21 +125,22 @@ class Card extends React.Component {
 
   render() {
     const { type, item, isLastInRow, className } = this.props;
-
+    let prices;
     if (!item) {
       return null;
     }
     const formatter = new Intl.NumberFormat("en-US");
-
-    let prices = (
-      <span className="current">{formatter.format(item.price)}₮</span>
-    );
+    if (item.price) {
+      prices = <span className="current">{formatter.format(item.price)}₮</span>;
+    }
 
     if (item.sprice) {
+      let price = formatter.format(item.price);
+      let prices = formatter.format(item.sprice);
       prices = (
         <div>
-          <small className="sale">{formatter.format(item.price)}₮</small>
-          <span className="current">{formatter.format(item.sprice)}₮</span>
+          <small className="sale">{isNaN(price) ? 0 : price}₮</small>
+          <span className="current">{isNaN(prices) ? 0 : prices}₮</span>
         </div>
       );
     }

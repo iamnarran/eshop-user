@@ -3,18 +3,59 @@ import { Link } from "react-router-dom";
 
 import { CARD_LIST_TYPES, CARD_TYPES } from "../../utils/consts";
 import CardList from "../../components/CardList";
+import { Spin } from "antd";
 import PageHeader from "../../components/PageHeader";
-
+import api from "../../api";
+import { resolve } from "url";
 class Season extends React.Component {
-  render() {
-    const {
-      menu,
-      primaryBanners,
-      products,
-      attributes,
-      promoCats
-    } = this.props.container;
+  state = {
+    products: [],
+    loading: false,
+    promoCats: [],
+    filtered: false
+  };
+  componentWillMount() {
+    this.setState({
+      products: this.props.container.products,
+      promoCats: this.props.container.promoCats
+    });
+  }
 
+  handleSortClick = (e, item) => {
+    if (this.state.filtered === false) {
+      let tmp = [];
+      item.link = false;
+      tmp.push(item);
+      this.setState({
+        loading: true,
+        promoCats: tmp,
+        filtered: !this.state.filtered
+      });
+      api.product.seasonProductFilter({ id: item.promotid }).then(response => {
+        this.checkResponse(response);
+      });
+    }
+  };
+
+  handleRemoveFilter = () => {
+    this.setState({ filtered: !this.state.filtered, loading: true });
+    api.product.findAllSeasonProducts({ jumcd: "99" }).then(response => {
+      this.checkResponse(response);
+      this.setState({ promoCats: this.props.container.promoCats });
+    });
+  };
+
+  checkResponse = response => {
+    if (response.success) {
+      this.setState({ products: response.data, loading: false });
+    } else {
+      this.setState({ loading: false });
+    }
+  };
+
+  render() {
+    const { menu, primaryBanners, attributes } = this.props.container;
+    const { products, promoCats } = this.state;
     return (
       <div className="top-container">
         <PageHeader
@@ -51,9 +92,22 @@ class Season extends React.Component {
                           {promoCats &&
                             promoCats.map((promo, index) => (
                               <li key={index}>
-                                <Link to="#">{promo.promotnm}</Link>
+                                <a
+                                  onClick={e => this.handleSortClick(e, promo)}
+                                >
+                                  {promo.promotnm}
+                                </a>
                               </li>
                             ))}
+                          {this.state.filtered == true ? (
+                            <li>
+                              <a onClick={this.handleRemoveFilter}>
+                                <span className="filter-remove-btn">Буцах</span>
+                              </a>
+                            </li>
+                          ) : (
+                            ""
+                          )}
                         </ul>
                       </div>
                     </div>
@@ -105,12 +159,14 @@ class Season extends React.Component {
                 </div>
               </div>
               <div className="col-xl-9 pad10">
-                <CardList
-                  type={CARD_LIST_TYPES.horizontal}
-                  items={products}
-                  showAll
-                  cardType={CARD_TYPES.wide}
-                />
+                <Spin spinning={this.state.loading}>
+                  <CardList
+                    type={CARD_LIST_TYPES.horizontal}
+                    items={products}
+                    showAll
+                    cardType={CARD_TYPES.wide}
+                  />
+                </Spin>
               </div>
             </div>
           </div>

@@ -21,7 +21,6 @@ const fetch = async (props, onData) => {
     const products = await api.product.findAllSeasonProducts({ jumcd: "99" });
     const attributes = await api.product.findAllAttributes();
     const promoCats = await api.product.findAllPromoCats();
-
     onData(null, {
       container: {
         menu: menu.data,
