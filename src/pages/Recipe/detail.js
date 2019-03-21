@@ -259,13 +259,7 @@ class RecipeDetail extends React.Component {
                 <div>
                   <h4 className="title" style={{ textTransform: "uppercase" }}>
                     <span>
-                      <a
-                        style={{
-                          backgroundColor: "orange"
-                        }}
-                      >
-                        Зөвлөгөө
-                      </a>
+                      <a>Зөвлөгөө</a>
                     </span>
                   </h4>
                   <div
@@ -281,13 +275,7 @@ class RecipeDetail extends React.Component {
                     style={{ textTransform: "uppercase", marginBottom: "20px" }}
                   >
                     <span>
-                      <a
-                        style={{
-                          backgroundColor: "orange"
-                        }}
-                      >
-                        Хоол хийх заавар
-                      </a>
+                      <a>Хоол хийх заавар</a>
                     </span>
                   </h4>
                   {steps}
@@ -321,31 +309,3 @@ export default connect(
   null,
   { updateCart }
 )(RecipeDetail);
-
-/* 
-<div className="single-product list-product">
-                      <div className="image-container">
-                        <a href=" ">
-                          <span
-                            className="image"
-                            style={{
-                              backgroundImage: `url(${IMAGE +
-                                recipe.images[0].imgnm})`
-                            }}
-                          />
-                        </a>
-                      </div>
-                      <div>
-                        Lorem Ipsum is simply dummy text of the printing and
-                        typesetting industry. Lorem Ipsum has been the
-                        industry's standard dummy text ever since the 1500s,
-                        when an unknown printer took a galley of type and
-                        scrambled it to make a type specimen book. It has
-                        survived not only five centuries, but also the leap into
-                        electronic typesetting, remaining essentially unchanged.
-                        It was popularised in the 1960s with the release of
-                        Letraset sheets containing Lorem Ipsum passages, and
-                        more recently with desktop publishing software like
-                        Aldus PageMaker including versions of Lorem Ipsum
-                      </div>
-                    </div> */
