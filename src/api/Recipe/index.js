@@ -17,5 +17,11 @@ export default [
     METHOD: "GET",
     URL: `${API}/api/cookrecipe/:id/products`,
     REPLACE: "id"
+  },
+  {
+    NAME: "isAvailable",
+    METHOD: "GET",
+    URL: `${API}/product/prodavailablerecipe/:id`,
+    REPLACE: "id"
   }
 ];
