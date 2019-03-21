@@ -208,7 +208,11 @@ class PackageDetail extends React.Component {
                   </div>
                   <div className="product-plus">
                     <br />
-                    <p>{this.state.description}</p>
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: this.state.description
+                      }}
+                    />
                   </div>
                 </div>
                 <div className="pack-product-container">
