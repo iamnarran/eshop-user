@@ -1,5 +1,5 @@
 import api from "../api";
-import tag from "../api/Tag";
+import tag from "../api/tag";
 
 let actions = {};
 tag.forEach(a => {

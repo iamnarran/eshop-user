@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
 import storage from "../utils/storage";
-import { signOut } from "../actions/Login";
+import { signOut } from "../actions/login";
 
 class UserButton extends React.Component {
   showLoginModal = e => {

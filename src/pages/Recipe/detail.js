@@ -1,13 +1,56 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
 import Slider from "../../components/Slider";
 import { IMAGE } from "../../utils/consts";
-import { Divider } from "antd";
+import api from "../../api";
+import { connect } from "react-redux";
+import storage from "../../utils/storage";
+import { updateCart } from "../../actions/cart";
+import { toast } from "react-toastify";
+import { getFeedbacks } from "../../actions/mainlogic";
 
 class RecipeDetail extends React.Component {
+  notify = message => toast(message, { autoClose: 5000 });
+  handleAddCart = e => {
+    e.preventDefault();
+    const item = this.props.container.productsData.products[1];
+    let cart = storage.get("cart")
+      ? storage.get("cart")
+      : { products: [], totalQty: 0, totalPrice: 0 };
+
+    const found = cart.products.find(product => product.cd === item.skucd);
+
+    let itemQty = 0;
+    if (found) {
+      itemQty = found.qty;
+    }
+    console.log("recipeDetail item", item);
+    console.log("found", found);
+    console.log("cart", cart);
+
+    /* api.product
+      .isAvailable({
+        skucd: item.id ? item.id : item.cd ? item.cd : null,
+        qty: itemQty + 1
+      })
+      .then(res => {
+        this.check(res, item, found, cart);
+      }); */
+  };
+
+  check = (res, item, found, cart) => {
+    let tmp = getFeedbacks(res, item, found, cart);
+    if (tmp == false) {
+      this.notify(res.message);
+    } else {
+      this.props.updateCart({
+        products: tmp.products,
+        totalQty: tmp.totalQty,
+        totalPrice: tmp.totalPrice
+      });
+    }
+  };
   render() {
-    console.log("this.props", this.props);
     const { recipe, productsData } = this.props.container;
     const step = this.props.container.recipe[0].steps;
     const sliderParams = {
@@ -45,7 +88,8 @@ class RecipeDetail extends React.Component {
                 height: "200px",
                 backgroundRepeat: "no-repeat",
                 backgroundPosition: "center center",
-                borderRadius: "10px"
+                borderRadius: "10px",
+                marginBottom: "20px"
               }}
             />
           </div>
@@ -113,7 +157,7 @@ class RecipeDetail extends React.Component {
                 <span>Дүн:</span>
                 <strong>{formatter.format(productsData.total)}₮</strong>
               </p>
-              <a href="#" className="btn btn-main">
+              <a className="btn btn-main" onClick={this.handleAddCart}>
                 <i className="fa fa-cart-plus" aria-hidden="true" />
                 <span className="text-uppercase">Сагсанд нэмэх</span>
               </a>
@@ -169,7 +213,7 @@ class RecipeDetail extends React.Component {
                         <span>
                           <i className="fa fa-utensils" />
                         </span>
-                        hiuh
+                        haha
                       </p>
                     </div>
                     <div className="col-md-4">
@@ -183,7 +227,7 @@ class RecipeDetail extends React.Component {
                     <div className="col-md-4">
                       <p>
                         <span>
-                          <i className="fa fa-phone" aria-hidden="true" />
+                          <i className="fa fa-smile" />
                         </span>
                         {recipe[0].recipe.humancnt} хүний порц
                       </p>
@@ -196,43 +240,43 @@ class RecipeDetail extends React.Component {
                       <div className="row row10">
                         <div className="col-md-6">
                           <p>
-                            <span style={{ color: "yellow" }}>#</span> Үхрийн
+                            <span style={{ color: "orange" }}>#</span> Үхрийн
                             мах
                           </p>
                         </div>
                         <div className="col-md-6">
                           <p>
-                            <span style={{ color: "yellow" }}>#</span> Үхрийн
+                            <span style={{ color: "orange" }}>#</span> Үхрийн
                             мах
                           </p>
                         </div>
                         <div className="col-md-6">
                           <p>
-                            <span style={{ color: "yellow" }}>#</span> Үхрийн
+                            <span style={{ color: "orange" }}>#</span> Үхрийн
                             мах
                           </p>
                         </div>
                         <div className="col-md-6">
                           <p>
-                            <span style={{ color: "yellow" }}>#</span> Үхрийн
+                            <span style={{ color: "orange" }}>#</span> Үхрийн
                             мах
                           </p>
                         </div>
                         <div className="col-md-6">
                           <p>
-                            <span style={{ color: "yellow" }}>#</span> Үхрийн
+                            <span style={{ color: "orange" }}>#</span> Үхрийн
                             мах
                           </p>
                         </div>
                         <div className="col-md-6">
                           <p>
-                            <span style={{ color: "yellow" }}>#</span> Үхрийн
+                            <span style={{ color: "orange" }}>#</span> Үхрийн
                             мах
                           </p>
                         </div>
                         <div className="col-md-6">
                           <p>
-                            <span style={{ color: "yellow" }}>#</span> Үхрийн
+                            <span style={{ color: "orange" }}>#</span> Үхрийн
                             мах
                           </p>
                         </div>
@@ -243,13 +287,13 @@ class RecipeDetail extends React.Component {
                       <div className="row row10">
                         <div className="col-md-6">
                           <p>
-                            <span style={{ color: "yellow" }}>#</span> Үхрийн
+                            <span style={{ color: "orange" }}>#</span> Үхрийн
                             мах
                           </p>
                         </div>
                         <div className="col-md-6">
                           <p>
-                            <span style={{ color: "yellow" }}>#</span> Үхрийн
+                            <span style={{ color: "orange" }}>#</span> Үхрийн
                             мах
                           </p>
                         </div>
@@ -263,7 +307,7 @@ class RecipeDetail extends React.Component {
                     <span>
                       <a
                         style={{
-                          backgroundColor: "yellow"
+                          backgroundColor: "orange"
                         }}
                       >
                         Зөвлөгөө
@@ -285,7 +329,7 @@ class RecipeDetail extends React.Component {
                     <span>
                       <a
                         style={{
-                          backgroundColor: "yellow"
+                          backgroundColor: "orange"
                         }}
                       >
                         Хоол хийх заавар
@@ -319,7 +363,10 @@ class RecipeDetail extends React.Component {
   }
 }
 
-export default RecipeDetail;
+export default connect(
+  null,
+  { updateCart }
+)(RecipeDetail);
 
 /* 
 <div className="single-product list-product">

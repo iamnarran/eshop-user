@@ -1,23 +1,23 @@
-import client, { setAuthorizationHeader } from "./Client";
-import homepage from "./Homepage";
-import banner from "./Banner/HompageBanner";
-import brand from "./Brand";
-import staticinfo from "./Static";
-import menu from "./Menu";
-import category from "./Category";
-import widget from "./Widget";
-import product from "./Product";
-import recipe from "./Recipe";
-import packageProduct from "./Package";
-import pagebanner from "./Banner/PagesBanner";
-import tag from "./Tag";
-import location from "./Location";
+import client, { setAuthorizationHeader } from "./client";
+import homepage from "./homepage";
+import homepageBanner from "./Banner/homepageBanner";
+import banner from "./Banner/banner";
+import brand from "./brand";
+import staticInfo from "./staticInfo";
+import menu from "./menu";
+import category from "./category";
+import widget from "./widget";
+import product from "./product";
+import recipe from "./recipe";
+import packageInfo from "./packageInfo";
+import tag from "./tag";
+import location from "./location";
 import login from "./User/login";
 import register from "./User/register";
-import staticPages from "./StaticPages";
-import categoryInfo from "./CategoryInfo";
-import cart from "./Cart";
-import checkout from "./Checkout";
+import staticPage from "./staticPage";
+import categoryInfo from "./categoryInfo";
+import cart from "./cart";
+import checkout from "./checkout";
 
 let rest = {};
 
@@ -43,115 +43,96 @@ const generateAPI = (api, data) => {
   return client(config).then(res => res.data);
 };
 
-// HOMEPAGE
 rest["homepage"] = {};
 homepage.forEach(api => {
   rest.homepage[api.NAME] = data => generateAPI(api, data);
 });
 
-// BANNER
-rest["banner"] = {};
-banner.forEach(api => {
-  rest.banner[api.NAME] = data => generateAPI(api, data);
+rest["homepageBanner"] = {};
+homepageBanner.forEach(api => {
+  rest.homepageBanner[api.NAME] = data => generateAPI(api, data);
 });
 
-// BRAND
 rest["brand"] = {};
 brand.forEach(api => {
   rest.brand[api.NAME] = data => generateAPI(api, data);
 });
 
-// STATIC INFO
-rest["staticinfo"] = {};
-staticinfo.forEach(api => {
-  rest.staticinfo[api.NAME] = data => generateAPI(api, data);
+rest["staticInfo"] = {};
+staticInfo.forEach(api => {
+  rest.staticInfo[api.NAME] = data => generateAPI(api, data);
 });
 
-// MENU
 rest["menu"] = {};
 menu.forEach(api => {
   rest.menu[api.NAME] = data => generateAPI(api, data);
 });
 
-// CATEGORY
 rest["category"] = {};
 category.forEach(api => {
   rest.category[api.NAME] = data => generateAPI(api, data);
 });
 
-// WIDGET
 rest["widget"] = {};
 widget.forEach(api => {
   rest.widget[api.NAME] = data => generateAPI(api, data);
 });
 
-// PRODUCT
 rest["product"] = {};
 product.forEach(api => {
   rest.product[api.NAME] = data => generateAPI(api, data);
 });
 
-// RECIPE
 rest["recipe"] = {};
 recipe.forEach(api => {
   rest.recipe[api.NAME] = data => generateAPI(api, data);
 });
 
-// PACKAGE
-rest["packageProduct"] = {};
-packageProduct.forEach(api => {
-  rest.packageProduct[api.NAME] = data => generateAPI(api, data);
+rest["packageInfo"] = {};
+packageInfo.forEach(api => {
+  rest.packageInfo[api.NAME] = data => generateAPI(api, data);
 });
 
-//PAGE'S BANNER
-rest["pagebanner"] = {};
-pagebanner.forEach(api => {
-  rest.pagebanner[api.NAME] = data => generateAPI(api, data);
+rest["banner"] = {};
+banner.forEach(api => {
+  rest.banner[api.NAME] = data => generateAPI(api, data);
 });
 
-//TAG
 rest["tag"] = {};
 tag.forEach(api => {
   rest.tag[api.NAME] = data => generateAPI(api, data);
 });
 
-//SYSTEM lOCATION
 rest["location"] = {};
 location.forEach(api => {
   rest.location[api.NAME] = data => generateAPI(api, data);
 });
 
-//LOGIN
 rest["login"] = {};
 login.forEach(api => {
   rest.login[api.NAME] = data => generateAPI(api, data);
 });
 
-//REGISTER
 rest["register"] = {};
 register.forEach(api => {
   rest.register[api.NAME] = data => generateAPI(api, data);
 });
 
-//STATIC PAGE
-rest["staticPages"] = {};
-staticPages.forEach(api => {
-  rest.staticPages[api.NAME] = data => generateAPI(api, data);
+rest["staticPage"] = {};
+staticPage.forEach(api => {
+  rest.staticPage[api.NAME] = data => generateAPI(api, data);
 });
 
-//CATEGORY PRODUCT
 rest["categoryInfo"] = {};
 categoryInfo.forEach(api => {
   rest.categoryInfo[api.NAME] = data => generateAPI(api, data);
 });
 
-//CART
 rest["cart"] = {};
 cart.forEach(api => {
   rest.cart[api.NAME] = data => generateAPI(api, data);
 });
 
-//CHECKOUT
 rest["checkout"] = {};
 checkout.forEach(api => {
   rest.checkout[api.NAME] = data => generateAPI(api, data);
