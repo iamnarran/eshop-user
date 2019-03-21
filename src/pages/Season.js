@@ -1,15 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import { CARD_LIST_TYPES, CARD_TYPES } from "../../utils/consts";
-import CardList from "../../components/CardList";
-import { Spin } from "antd";
-import PageHeader from "../../components/PageHeader";
-import api from "../../api";
-import { resolve } from "url";
 import { CARD_LIST_TYPES, CARD_TYPES } from "../utils/consts";
 import CardList from "../components/CardList";
+import { Spin } from "antd";
 import PageHeader from "../components/PageHeader";
+import api from "../api";
 
 class Season extends React.Component {
   state = {
