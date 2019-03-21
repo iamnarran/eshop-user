@@ -7,11 +7,11 @@ import {
   Redirect
 } from "react-router-dom";
 import { Provider, connect } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
+import { PersistGate } from "redux-persist/integration/react";
 import { ToastContainer } from "react-toastify";
 import { addLocaleData, injectIntl } from "react-intl";
-import { updateIntl, IntlProvider } from "react-intl-redux";
+import { IntlProvider } from "react-intl-redux";
 import en from "react-intl/locale-data/en";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -20,10 +20,7 @@ import { far } from "@fortawesome/free-regular-svg-icons";
 import { fab } from "@fortawesome/free-brands-svg-icons";
 
 import store from "./store";
-import { storage } from "./utils";
 
-import messages from "./messages.json";
-import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "scss/app.scss";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -45,8 +42,7 @@ import {
   StaticPage,
   CategoryInfo,
   Cart,
-  Checkout,
-  Temp
+  Checkout
 } from "./containers";
 
 //library.add(fab, faCheckSquare, faCoffee);
@@ -169,11 +165,6 @@ class Localization extends Component {
       },
       {
         exact: true,
-        path: "/temp",
-        component: rest => <Temp {...rest} {...this.props} />
-      },
-      {
-        exact: true,
         path: "/checkout",
         component: rest => <Checkout {...rest} {...this.props} />
       }
@@ -223,21 +214,6 @@ class Localization extends Component {
 }
 
 class App extends Component {
-  componentWillMount() {
-    store.dispatch(
-      updateIntl({
-        locale: "en",
-        messages: messages["en"]
-      })
-    );
-
-    if (storage.has("user")) {
-      try {
-        console.log(storage.user);
-      } catch (e) {}
-    }
-  }
-
   render() {
     const persistor = persistStore(store);
 

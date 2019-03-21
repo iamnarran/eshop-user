@@ -3,14 +3,24 @@ import { Link } from "react-router-dom";
 import { Collapse } from "react-collapse";
 import { Checkbox, Spin, Slider } from "antd";
 import MatCheckbox from "@material-ui/core/Checkbox";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import { withStyles } from "@material-ui/core/styles";
+import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import { toast } from "react-toastify";
 
 import api from "../api";
 import { CARD_LIST_TYPES, CARD_TYPES } from "../utils/consts";
 import CardList from "../components/CardList";
 import PageHeader from "../components/PageHeader";
+
+// const styles = {
+//   root: {
+//     color: green[600],
+//     "&$checked": {
+//       color: green[500]
+//     }
+//   },
+//   checked: {}
+// };
 
 class CategoryInfo extends React.Component {
   state = {
@@ -21,6 +31,31 @@ class CategoryInfo extends React.Component {
 
   notify = message => toast(message, { autoClose: 5000 });
 
+  handleSliderAfterChange = value => {
+    this.setState({ loading: true });
+
+    const data = {
+      catid: this.props.container.id,
+      parameters: this.state.checkedList,
+      minprice: value[0],
+      maxprice: value[1],
+      orderCol: "price_asc"
+    };
+
+    api.categoryInfo.findAllFilteredInfo(data).then(res => {
+      if (res.success) {
+        console.log("res", res.data);
+        this.setState({
+          products: res.data
+        });
+        this.setState({ loading: false });
+      } else {
+        this.setState({ loading: false });
+        this.notify(res.message);
+      }
+    });
+  };
+
   handleCheckboxChange = e => {
     e.preventDefault();
 
@@ -29,14 +64,6 @@ class CategoryInfo extends React.Component {
     let checkedList = this.state.checkedList;
     const i = checkedList.indexOf(e.target.value);
 
-    console.log(e.target.value);
-
-    // if (e.target.checked === undefined) {
-    //   // Color
-    //   if (i === -1) {
-    //     checkedList.push(e.target.value);
-    //   }
-    // }
     if (e.target.checked) {
       checkedList.push(e.target.value);
     } else if (i !== -1) {
@@ -51,14 +78,8 @@ class CategoryInfo extends React.Component {
 
     this.setState({ checkedList });
 
-    // const data = JSON.stringify({
-    //   parameters: checkedList,
-    //   orderCol: "price_asc"
-    // });
-
     api.categoryInfo.findAllFilteredInfo(data).then(res => {
       if (res.success) {
-        console.log("response", res);
         this.setState({
           products: res.data
         });
@@ -83,98 +104,66 @@ class CategoryInfo extends React.Component {
       attributes.map((attr, index) => {
         switch (attr.type) {
           case "COLOR":
-            console.log(attr);
             return (
               <div key={attr.type}>
                 <a className="collapse-title">{attr.attributes[0].name}</a>
                 <Collapse isOpened={true}>
                   <div className="collapse show" id="collapseThree">
                     <div className="collapse-content">
-                      {/* <form> */}
                       <ul className="list-unstyled">
-                        {attr.attributes[0].values.map(val => (
-                          <li key={val.valueid}>
-                            <div className="custom-control custom-checkbox">
-                              {/* <input
-                              type="checkbox"
-                              className="custom-control-input"
-                              // id={val.valueid}
-                              value={val.valueid}
+                        {attr.attributes[0].values.map(val => {
+                          return (
+                            <MatCheckbox
+                              key={val.valueid}
                               onChange={this.handleCheckboxChange}
+                              value={val.valueid}
+                              style={{
+                                color: val.valuecd,
+                                width: 40,
+                                height: 40
+                              }}
+                              icon={
+                                <CheckBoxOutlineBlankIcon
+                                  style={{ fontSize: 40 }}
+                                />
+                              }
+                              checkedIcon={
+                                <CheckBoxIcon style={{ fontSize: 40 }} />
+                              }
                             />
-                            <label
-                              className="custom-control-label"
-                              htmlFor="customCheck1"
-                            >
-                              {val.valuename}
-                            </label> */}
-                              <FormControlLabel
-                                control={
-                                  <MatCheckbox
-                                    onChange={this.handleCheckboxChange}
-                                    value={val.valueid}
-                                    style={{ backgroundColor: val.valuecd }}
-                                  />
-                                }
-                                label={val.valuename}
-                              />
-                            </div>
-                          </li>
-                        ))}
+                          );
+                        })}
                       </ul>
-                      {/* </form> */}
                     </div>
                   </div>
                 </Collapse>
               </div>
             );
-          // const colors = attr.attributes[0].values.map(val => {
-          //   return (
-          //     <a
-          //       key={val.valueid}
-          //       value={val.valueid}
-          //       className="dot"
-          //       style={{
-          //         height: "25px",
-          //         width: "25px",
-          //         backgroundColor: val.valuecd,
-          //         borderRadius: "50%",
-          //         display: "inline-block",
-          //         marginTop: "10px",
-          //         marginLeft: "10px",
-          //         border: "1px solid #999"
-          //       }}
-          //       onClick={this.handleCheckboxChange}
-          //     />
-          //   );
-          // });
-
-          // return (
-          //   <div key={attr.type}>
-          //     <a className="collapse-title">Өнгө</a>
-          //     <Collapse isOpened={true}>{colors}</Collapse>
-          //   </div>
-          // );
           // case "BRAND":
-          // case "PRICE":
-          //   const min = parseInt(
-          //     attr.attributes[0].values.find(val => val.valuecd === "MIN")
-          //       .valuename
-          //   );
-          //   const max = parseInt(
-          //     attr.attributes[0].values.find(val => val.valuecd === "MAX")
-          //       .valuename
-          //   );
-          //   console.log("min", min);
-          //   console.log("max", max);
-          //   return (
-          //     <div key={attr.type}>
-          //       <a className="collapse-title">{attr.attributes[0].name}</a>
-          //       <Slider range defaultValue={[min, max]} />
-          //     </div>
-          //   );
+          case "PRICE":
+            const min = parseInt(
+              attr.attributes[0].values.find(val => val.valuecd === "MIN")
+                .valuename
+            );
+            const max = parseInt(
+              attr.attributes[0].values.find(val => val.valuecd === "MAX")
+                .valuename
+            );
+            const step = Math.ceil((max - min) / 100);
+            return (
+              <div key={attr.type}>
+                <a className="collapse-title">{attr.attributes[0].name}</a>
+                <Slider
+                  range
+                  defaultValue={[min, max]}
+                  min={min}
+                  max={max}
+                  step={step}
+                  onAfterChange={this.handleSliderAfterChange}
+                />
+              </div>
+            );
           default:
-            console.log("attr", attr);
             return (
               <div key={attr.type}>
                 <a className="collapse-title">{attr.attributes[0].name}</a>
@@ -374,4 +363,4 @@ class CategoryInfo extends React.Component {
   }
 }
 
-export default withStyles()(CategoryInfo);
+export default CategoryInfo;

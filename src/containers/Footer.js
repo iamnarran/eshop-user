@@ -1,12 +1,17 @@
 import React from "react";
+import { Spin } from "antd";
 
 import api from "../api";
 import { compose } from "react-komposer";
-import Loader from "../components/Loader";
 import { Footer } from "../layouts/index";
 
 const options = {
-  loadingHandler: () => <Loader />
+  loadingHandler: () => (
+    <div className="e-mart-loading">
+      <Spin />
+    </div>
+  ),
+  errorHandler: err => <p style={{ color: "red" }}>{err.message}</p>
 };
 
 const fetch = async (props, onData) => {

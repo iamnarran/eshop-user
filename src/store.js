@@ -1,9 +1,9 @@
-import { applyMiddleware, createStore, compose } from "redux";
-import { createLogger } from "redux-logger";
 import thunk from "redux-thunk";
 import promise from "redux-promise-middleware";
-import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
+import { createLogger } from "redux-logger";
+import { persistReducer } from "redux-persist";
+import { applyMiddleware, createStore, compose } from "redux";
 
 import reducers from "./reducers";
 
@@ -16,7 +16,6 @@ const persistConfig = {
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);
-
 const store = createStore(persistedReducer, composeEnhancers(middleware));
 
 export default store;
