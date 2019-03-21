@@ -1,8 +1,8 @@
 import api from "../api";
-import Banner from "../api/PagesBanner";
+import banner from "../api/Banner/banner";
 
 let actions = {};
-Banner.forEach(a => {
+banner.forEach(a => {
   if (a.METHOD !== "GET") {
     actions[a.NAME] = data => dispatch => api.banner[a.NAME](data);
   }

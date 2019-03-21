@@ -5,7 +5,7 @@ import { IMAGE } from "../../utils/consts";
 import api from "../../api";
 import { connect } from "react-redux";
 import storage from "../../utils/storage";
-import { updateCart } from "../../actions/Cart";
+import { updateCart } from "../../actions/cart";
 import { toast } from "react-toastify";
 import { getFeedbacks } from "../../actions/mainlogic";
 

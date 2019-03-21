@@ -7,26 +7,22 @@ import {
   Redirect
 } from "react-router-dom";
 import { Provider, connect } from "react-redux";
+import { persistStore } from "redux-persist";
+import { PersistGate } from "redux-persist/integration/react";
 import { ToastContainer } from "react-toastify";
 import { addLocaleData, injectIntl } from "react-intl";
-import { updateIntl, IntlProvider } from "react-intl-redux";
+import { IntlProvider } from "react-intl-redux";
 import en from "react-intl/locale-data/en";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { far } from "@fortawesome/free-regular-svg-icons";
 import { fab } from "@fortawesome/free-brands-svg-icons";
-// import { faCheckSquare, faCoffee } from '@fortawesome/free-solid-svg-icons';
 
 import store from "./store";
-import { storage } from "./utils";
-/* import Layouts from 'layouts/Default'; */
-import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+
 import "scss/app.scss";
-import messages from "./messages.json";
 import "react-toastify/dist/ReactToastify.css";
-// import Promotion from "./pages/Promotion/index";
-// import Season from "./pages/Season/index";
 import {
   Footer,
   Header,
@@ -46,9 +42,8 @@ import {
   StaticPage,
   CategoryInfo,
   Cart,
-  Checkout,
-  Temp
-} from "./containers/index";
+  Checkout
+} from "./containers";
 
 //library.add(fab, faCheckSquare, faCoffee);
 library.add(fas, far, fab);
@@ -170,11 +165,6 @@ class Localization extends Component {
       },
       {
         exact: true,
-        path: "/temp",
-        component: rest => <Temp {...rest} {...this.props} />
-      },
-      {
-        exact: true,
         path: "/checkout",
         component: rest => <Checkout {...rest} {...this.props} />
       }
@@ -224,27 +214,16 @@ class Localization extends Component {
 }
 
 class App extends Component {
-  componentWillMount() {
-    store.dispatch(
-      updateIntl({
-        locale: "en",
-        messages: messages["en"]
-      })
-    );
-
-    if (storage.has("user")) {
-      try {
-        console.log(storage.user);
-      } catch (e) {}
-    }
-  }
-
   render() {
+    const persistor = persistStore(store);
+
     return (
       <Provider store={store}>
-        <IntlProvider>
-          <Localization />
-        </IntlProvider>
+        <PersistGate persistor={persistor}>
+          <IntlProvider>
+            <Localization />
+          </IntlProvider>
+        </PersistGate>
       </Provider>
     );
   }

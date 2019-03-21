@@ -1,11 +1,6 @@
-import Footer from './Footer/index'
-import Default from './Defualt/index';
-import Header from './Header/index';
-import MobileMenu from './MobileMenu/index';
+import Default from "./Default";
+import Header from "./Header";
+import Footer from "./Footer";
+import MobileMenu from "./MobileMenu";
 
-export {
-  Footer,
-  Default,
-  Header,
-  MobileMenu,
-};
+export { Default, Header, Footer, MobileMenu };

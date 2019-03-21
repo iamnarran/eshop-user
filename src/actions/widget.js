@@ -1,10 +1,10 @@
 import api from "../api";
-import Widgets from "../api/Widget";
+import widget from "../api/widget";
 
 let actions = {};
-Widgets.forEach(widget => {
-  if (widget.METHOD !== "GET") {
-    actions[widget.NAME] = data => dispatch => api.widget[widget.NAME](data);
+widget.forEach(a => {
+  if (a.METHOD !== "GET") {
+    actions[a.NAME] = data => dispatch => api.widget[a.NAME](data);
   }
 });
 

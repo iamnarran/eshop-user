@@ -6,7 +6,7 @@ import { createForm } from "rc-form";
 import { Redirect } from "react-router-dom";
 
 import FacebookLogin from "./FacebookLogin";
-import actions from "../actions/Register";
+import actions from "../actions/register";
 
 @connect(
   null,

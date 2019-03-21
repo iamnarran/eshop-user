@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import { CARD_LIST_TYPES, CARD_TYPES, CARD_NUMS_IN_ROW } from "../utils/consts";
-import Card from "./Card";
+import Card from "./Card/Card";
 
 class CardList extends React.Component {
   getCardsAccordingToSeq = (cardTypes, items) => {
@@ -38,7 +38,6 @@ class CardList extends React.Component {
 
   renderCardList = () => {
     const { type, items, seq, cardsInCol, showAll, cardType } = this.props;
-
     if (!items.length) {
       return null;
     }
