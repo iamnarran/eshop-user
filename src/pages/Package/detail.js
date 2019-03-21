@@ -31,7 +31,6 @@ class PackageDetail extends React.Component {
   };
 
   render() {
-    console.log(this.props);
     const formatter = new Intl.NumberFormat("en-US");
     const sameproduct = this.props.container.Products[0].sameproducts;
     const product = this.props.container.Products[0].products;

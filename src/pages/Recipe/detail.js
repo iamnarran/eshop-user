@@ -114,22 +114,22 @@ class RecipeDetail extends React.Component {
                   <li>
                     <div className="single flex-this">
                       <div className="image-container">
-                        <a href="#">
+                        <Link to={product.route ? product.route : ""}>
                           <span
                             className="image"
                             style={{
                               backgroundImage: `url(${IMAGE + product.imgnm})`
                             }}
                           />
-                        </a>
+                        </Link>
                       </div>
                       <div className="info-container flex-space">
-                        <a href="#">
+                        <a>
                           <span>{product.titlenm}</span>
                           <strong>{formatter.format(product.price)}₮</strong>
                         </a>
                         <div className="action">
-                          <a href="#">
+                          <a>
                             <i className="fa fa-cart-plus" aria-hidden="true" />
                           </a>
                         </div>

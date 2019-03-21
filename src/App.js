@@ -13,7 +13,7 @@ import { ToastContainer } from "react-toastify";
 import { addLocaleData, injectIntl } from "react-intl";
 import { IntlProvider } from "react-intl-redux";
 import en from "react-intl/locale-data/en";
-
+import ScrollToTop from "react-router-scroll-top";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { far } from "@fortawesome/free-regular-svg-icons";
@@ -173,40 +173,45 @@ class Localization extends Component {
     return (
       auth && (
         <Router history={BrowserHistory}>
-          <div>
-            <Header isToggle={this.state.isToggle} onChange={this.toggleMenu} />
+          <ScrollToTop>
+            <div>
+              <Header
+                isToggle={this.state.isToggle}
+                onChange={this.toggleMenu}
+              />
 
-            <MobileMenu
-              popupClass={popupClass}
-              isToggle={this.state.isToggle}
-              onChange={this.toggleMenu}
-            />
+              <MobileMenu
+                popupClass={popupClass}
+                isToggle={this.state.isToggle}
+                onChange={this.toggleMenu}
+              />
 
-            <Switch>
-              {routes.map((route, index) => {
-                return route.isPrivate ? (
-                  <Private
-                    {...this.props}
-                    key={index}
-                    exact={route.exact}
-                    path={route.path}
-                    component={route.component}
-                  />
-                ) : (
-                  <Route
-                    {...this.props}
-                    key={index}
-                    exact={route.exact}
-                    path={route.path}
-                    component={route.component}
-                  />
-                );
-              })}
-            </Switch>
+              <Switch>
+                {routes.map((route, index) => {
+                  return route.isPrivate ? (
+                    <Private
+                      {...this.props}
+                      key={index}
+                      exact={route.exact}
+                      path={route.path}
+                      component={route.component}
+                    />
+                  ) : (
+                    <Route
+                      {...this.props}
+                      key={index}
+                      exact={route.exact}
+                      path={route.path}
+                      component={route.component}
+                    />
+                  );
+                })}
+              </Switch>
 
-            <Footer />
-            <ToastContainer />
-          </div>
+              <Footer />
+              <ToastContainer />
+            </div>
+          </ScrollToTop>
         </Router>
       )
     );
