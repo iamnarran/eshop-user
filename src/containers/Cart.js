@@ -16,7 +16,6 @@ const options = {
 
 const fetch = async (props, onData) => {
   try {
-    console.log("sfyga");
     // const products = await api.cart.findAllWishlistProds();
 
     onData(null, {

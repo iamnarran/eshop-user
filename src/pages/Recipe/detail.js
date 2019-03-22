@@ -11,35 +11,25 @@ import { getFeedbacks } from "../../actions/mainlogic";
 
 class RecipeDetail extends React.Component {
   notify = message => toast(message, { autoClose: 5000 });
-  handleAddCart = e => {
+
+  /* handleAddCart = e => {
     e.preventDefault();
-    const item = this.props.container.productsData.products[1];
+    const item = this.props.container.recipe[0].recipe;
     let cart = storage.get("cart")
       ? storage.get("cart")
       : { products: [], totalQty: 0, totalPrice: 0 };
-
-    const found = cart.products.find(product => product.cd === item.skucd);
-
-    let itemQty = 0;
-    if (found) {
-      itemQty = found.qty;
-    }
-    console.log("recipeDetail item", item);
-    console.log("found", found);
-    console.log("cart", cart);
-
-    /* api.product
+    console.log(item);
+    api.recipe
       .isAvailable({
-        skucd: item.id ? item.id : item.cd ? item.cd : null,
-        qty: itemQty + 1
+        id: item.id
       })
       .then(res => {
-        this.check(res, item, found, cart);
-      }); */
+        console.log(res);
+      });
   };
 
-  check = (res, item, found, cart) => {
-    let tmp = getFeedbacks(res, item, found, cart);
+  check = (res, item, cart) => {
+    let tmp = getFeedbacks(res, item, cart);
     if (tmp == false) {
       this.notify(res.message);
     } else {
@@ -49,7 +39,8 @@ class RecipeDetail extends React.Component {
         totalPrice: tmp.totalPrice
       });
     }
-  };
+  }; */
+
   render() {
     const { recipe, productsData } = this.props.container;
     const step = this.props.container.recipe[0].steps;
@@ -69,14 +60,12 @@ class RecipeDetail extends React.Component {
         clickable: true
       }
     };
-    console.log(step);
     const date = recipe[0].recipe.insymd.split("T")[0].split("-");
     const formatter = new Intl.NumberFormat("en-US");
     let products = null;
     let steps = null;
 
     steps = step.map((item, index) => {
-      console.log(item);
       return (
         <div className="row row10" key={index}>
           <div className="col-md-4">
@@ -126,22 +115,22 @@ class RecipeDetail extends React.Component {
                   <li>
                     <div className="single flex-this">
                       <div className="image-container">
-                        <a href="#">
+                        <Link to={product.route ? product.route : ""}>
                           <span
                             className="image"
                             style={{
                               backgroundImage: `url(${IMAGE + product.imgnm})`
                             }}
                           />
-                        </a>
+                        </Link>
                       </div>
                       <div className="info-container flex-space">
-                        <a href="#">
+                        <Link to={product.route ? product.route : ""}>
                           <span>{product.titlenm}</span>
                           <strong>{formatter.format(product.price)}₮</strong>
-                        </a>
+                        </Link>
                         <div className="action">
-                          <a href="#">
+                          <a>
                             <i className="fa fa-cart-plus" aria-hidden="true" />
                           </a>
                         </div>
@@ -211,15 +200,15 @@ class RecipeDetail extends React.Component {
                     <div className="col-md-4">
                       <p>
                         <span>
-                          <i className="fa fa-utensils" />
+                          <img src="chef.png" />
                         </span>
-                        haha
+                        {recipe[0].recipe.madeoflvlText}
                       </p>
                     </div>
                     <div className="col-md-4">
                       <p>
                         <span>
-                          <i class="fa fa-hourglass-half" />
+                          <img src="time.png" />
                         </span>
                         {recipe[0].recipe.time}
                       </p>
@@ -227,7 +216,7 @@ class RecipeDetail extends React.Component {
                     <div className="col-md-4">
                       <p>
                         <span>
-                          <i className="fa fa-smile" />
+                          <img src="smile.png" />
                         </span>
                         {recipe[0].recipe.humancnt} хүний порц
                       </p>
@@ -238,65 +227,31 @@ class RecipeDetail extends React.Component {
                     <div className="col-md-6">
                       <p className="title">ОРЦ</p>
                       <div className="row row10">
-                        <div className="col-md-6">
-                          <p>
-                            <span style={{ color: "orange" }}>#</span> Үхрийн
-                            мах
-                          </p>
-                        </div>
-                        <div className="col-md-6">
-                          <p>
-                            <span style={{ color: "orange" }}>#</span> Үхрийн
-                            мах
-                          </p>
-                        </div>
-                        <div className="col-md-6">
-                          <p>
-                            <span style={{ color: "orange" }}>#</span> Үхрийн
-                            мах
-                          </p>
-                        </div>
-                        <div className="col-md-6">
-                          <p>
-                            <span style={{ color: "orange" }}>#</span> Үхрийн
-                            мах
-                          </p>
-                        </div>
-                        <div className="col-md-6">
-                          <p>
-                            <span style={{ color: "orange" }}>#</span> Үхрийн
-                            мах
-                          </p>
-                        </div>
-                        <div className="col-md-6">
-                          <p>
-                            <span style={{ color: "orange" }}>#</span> Үхрийн
-                            мах
-                          </p>
-                        </div>
-                        <div className="col-md-6">
-                          <p>
-                            <span style={{ color: "orange" }}>#</span> Үхрийн
-                            мах
-                          </p>
-                        </div>
+                        {recipe[0].recipe.ingredients.map((item, index) => {
+                          return (
+                            <div className="col-md-6" key={index}>
+                              <p>
+                                <span style={{ color: "orange" }}>#</span>
+                                {" " + item}
+                              </p>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                     <div className="col-md-6">
                       <p className="title">АМТЛАГЧ</p>
                       <div className="row row10">
-                        <div className="col-md-6">
-                          <p>
-                            <span style={{ color: "orange" }}>#</span> Үхрийн
-                            мах
-                          </p>
-                        </div>
-                        <div className="col-md-6">
-                          <p>
-                            <span style={{ color: "orange" }}>#</span> Үхрийн
-                            мах
-                          </p>
-                        </div>
+                        {recipe[0].recipe.spices.map((item, index) => {
+                          return (
+                            <div className="col-md-6" key={index}>
+                              <p>
+                                <span style={{ color: "orange" }}>#</span>
+                                {" " + item}
+                              </p>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   </div>
@@ -305,13 +260,7 @@ class RecipeDetail extends React.Component {
                 <div>
                   <h4 className="title" style={{ textTransform: "uppercase" }}>
                     <span>
-                      <a
-                        style={{
-                          backgroundColor: "orange"
-                        }}
-                      >
-                        Зөвлөгөө
-                      </a>
+                      <a>Зөвлөгөө</a>
                     </span>
                   </h4>
                   <div
@@ -327,13 +276,7 @@ class RecipeDetail extends React.Component {
                     style={{ textTransform: "uppercase", marginBottom: "20px" }}
                   >
                     <span>
-                      <a
-                        style={{
-                          backgroundColor: "orange"
-                        }}
-                      >
-                        Хоол хийх заавар
-                      </a>
+                      <a>Хоол хийх заавар</a>
                     </span>
                   </h4>
                   {steps}
@@ -367,31 +310,3 @@ export default connect(
   null,
   { updateCart }
 )(RecipeDetail);
-
-/* 
-<div className="single-product list-product">
-                      <div className="image-container">
-                        <a href=" ">
-                          <span
-                            className="image"
-                            style={{
-                              backgroundImage: `url(${IMAGE +
-                                recipe.images[0].imgnm})`
-                            }}
-                          />
-                        </a>
-                      </div>
-                      <div>
-                        Lorem Ipsum is simply dummy text of the printing and
-                        typesetting industry. Lorem Ipsum has been the
-                        industry's standard dummy text ever since the 1500s,
-                        when an unknown printer took a galley of type and
-                        scrambled it to make a type specimen book. It has
-                        survived not only five centuries, but also the leap into
-                        electronic typesetting, remaining essentially unchanged.
-                        It was popularised in the 1960s with the release of
-                        Letraset sheets containing Lorem Ipsum passages, and
-                        more recently with desktop publishing software like
-                        Aldus PageMaker including versions of Lorem Ipsum
-                      </div>
-                    </div> */

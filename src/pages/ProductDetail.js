@@ -107,9 +107,9 @@ class Component extends React.Component {
                 <div className="col-sm-9 col-md-9 col-lg-9 row">
                   {this.renderProductImg()}
                   {this.renderProductDescription()}
-                  {this.renderFooter()}
                 </div>
                 {this.renderProductDelivery()}
+                {this.renderFooter()}
               </div>
             </div>
           </div>
@@ -335,6 +335,10 @@ class Component extends React.Component {
     );
   };
 
+  createMarkup = product => {
+    return { __html: product.description };
+  };
+
   onChangeMniImage = e => {
     const { images } = this.state.product;
     images.map(index => {
@@ -352,7 +356,7 @@ class Component extends React.Component {
     return (
       <div className="col-md-12 col-lg-12 col-sm-12 col-xl-12">
         {attribute.length !== 0 ? <Information attribute={attribute} /> : ""}
-        {collectionProduct.length === 0 ? (
+        {collectionProduct.length == 0 ? (
           ""
         ) : (
           <div>
@@ -372,23 +376,23 @@ class Component extends React.Component {
         )}
 
         {/**ТАНИЛЦУУЛАГА */}
-        {this.state.product.images.length !== 0 ? (
+        {product.description == null ? (
+          ""
+        ) : (
           <div>
             <h1 className="title">
               <span className="text-uppercase">Танилцуулга</span>
             </h1>
-            <div className="product-bottom-images">
-              {this.state.product &&
+
+            {/*   {this.state.product &&
                 this.state.product.images &&
                 this.state.product.images.map((index, key) => {
                   return (
                     <img alt={index.id} src={IMAGE + index.imglrg} key={key} />
                   );
-                })}
-            </div>
+                })} */}
+            <div dangerouslySetInnerHTML={this.createMarkup(product)} />
           </div>
-        ) : (
-          ""
         )}
 
         <Comment
@@ -514,6 +518,30 @@ class Component extends React.Component {
       </div>
     );
   };
+
+  dateHourFormatter = cell => {
+    if (cell) {
+      if (cell === null) {
+        return null;
+      } else {
+        cell = cell.slice(0, 10);
+        return cell;
+      }
+    }
+  };
+
+  generateDate = product => {
+    if (product.edate == null || product.sdate == null) {
+      return "";
+    } else {
+      var date1 = new Date(this.dateHourFormatter(product.sdate));
+      var date2 = new Date(this.dateHourFormatter(product.edate));
+      var timeDiff = Math.abs(date2.getTime() - date1.getTime());
+      var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+      return diffDays;
+    }
+  };
+
   renderProductDescription = () => {
     const { product, breadCrumb, saleNumber, sumPrice, issalekg } = this.state;
     return (
@@ -633,7 +661,14 @@ class Component extends React.Component {
                 <i className="fa fa-shopping-cart" aria-hidden="true" />
                 <span>Сагсанд нэмэх</span>
               </button>
-              {/* <p className="text text-right">Урамшуулал 2 хоногийн дараа дуусна</p> */}
+              <br />
+              {product.sprice == 0 ? (
+                ""
+              ) : (
+                <p className="text text-right">
+                  Урамшуулал {this.generateDate(product)} хоногийн дараа дуусна
+                </p>
+              )}
             </div>
           </form>
         </div>

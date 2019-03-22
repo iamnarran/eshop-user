@@ -10,7 +10,6 @@ class PackageDetail extends React.Component {
       products: [],
       price: this.props.container.Products[0].total,
       sameProducts: this.props.container.Products[0].sameproducts,
-      products: null,
       addProduct: null,
       remProduct: null,
       images: this.props.container.Package.images,
@@ -31,7 +30,6 @@ class PackageDetail extends React.Component {
   };
 
   render() {
-    console.log(this.props);
     const formatter = new Intl.NumberFormat("en-US");
     const sameproduct = this.props.container.Products[0].sameproducts;
     const product = this.props.container.Products[0].products;
@@ -70,14 +68,14 @@ class PackageDetail extends React.Component {
                 </Link>
               </div>
               <div className="info-container flex-space">
-                <Link to=" ">
+                <Link to={item.route ? item.route : " "}>
                   <span>{item.name}</span>
                   <strong>
                     {formatter.format(item.price1 ? item.price1 : item.price2)}₮
                   </strong>
                 </Link>
                 <div className="action">
-                  <Link to=" ">
+                  <Link to={item.route ? item.route : " "}>
                     <i className="fa fa-cart-plus" aria-hidden="true" />
                   </Link>
                 </div>
@@ -209,7 +207,11 @@ class PackageDetail extends React.Component {
                   </div>
                   <div className="product-plus">
                     <br />
-                    <p>{this.state.description}</p>
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: this.state.description
+                      }}
+                    />
                   </div>
                 </div>
                 <div className="pack-product-container">

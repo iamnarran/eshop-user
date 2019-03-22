@@ -150,7 +150,7 @@ class AppHeader extends Component {
                         </Link>
                         <div className="search">
                           <form className={seartchClass}>
-                            <ul className="list-unstyled list-float clr">
+                            <ul className="list-unstyled list-float clr mainsearch">
                               <li>
                                 <div
                                   className="dropdown"

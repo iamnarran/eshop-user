@@ -82,5 +82,11 @@ export default [
     METHOD: "GET",
     URL: `${API}/api/product/ProdAvailableSku/:skucd/:qty`,
     REPLACE: "skucd,qty"
+  },
+  {
+    NAME: "seasonProductFilter",
+    METHOD: "POST",
+    URL: `${API}/api/promotionfilter/:id`,
+    REPLACE: "id"
   }
 ];
