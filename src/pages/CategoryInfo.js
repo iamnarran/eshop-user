@@ -120,11 +120,8 @@ class CategoryInfo extends React.Component {
     this.fetchProductData(params);
   };
 
-  handleSortChange = e => {
-    this.setState({
-      sort: e.target.value
-    });
-
+  handleSortChange = value => {
+    console.log("sort", value);
     const { checkedList, minPrice, maxPrice, sort } = this.state;
 
     const params = {
@@ -136,6 +133,10 @@ class CategoryInfo extends React.Component {
     };
 
     this.fetchProductData(params);
+
+    this.setState({
+      sort: value
+    });
   };
 
   handleListViewClick = e => {
@@ -151,6 +152,7 @@ class CategoryInfo extends React.Component {
   render() {
     const { id, parentCats, subCats, attributes } = this.props.container;
     const { products } = this.state;
+    const Option = Select.Option;
 
     let cats = <div className="block">Ангилал байхгүй байна</div>;
 
@@ -277,8 +279,8 @@ class CategoryInfo extends React.Component {
               </div>
             );
           default:
-            return (
-              <div key={attr.type}>
+            const list = attr.attributes.map((attribute, index) => (
+              <div key={index}>
                 <a
                   className="collapse-title"
                   data-toggle="collapse"
@@ -286,12 +288,12 @@ class CategoryInfo extends React.Component {
                   aria-expanded="true"
                   aria-controls="collapseExample"
                 >
-                  {attr.attributes[0].name}
+                  {attribute.name}
                 </a>
                 <div className="collapse show" id="collapseThree">
                   <div className="collapse-content">
                     <ul className="list-unstyled">
-                      {attr.attributes[0].values.map((val, index) => (
+                      {attribute.values.map((val, index) => (
                         <li key={index}>
                           <div className="custom-control custom-checkbox">
                             <input
@@ -314,7 +316,8 @@ class CategoryInfo extends React.Component {
                   </div>
                 </div>
               </div>
-            );
+            ));
+            return <div key={attr.type}>{list}</div>;
         }
       });
 
@@ -403,11 +406,14 @@ class CategoryInfo extends React.Component {
                         <div className="form-group my-select flex-this">
                           <label
                             htmlFor="inputState"
-                            style={{ marginTop: "5px" }}
+                            style={{
+                              marginTop: "7px",
+                              marginRight: "5px"
+                            }}
                           >
                             Эрэмбэлэх:
                           </label>
-                          <select
+                          {/* <select
                             id="inputState"
                             className="form-control"
                             value={this.state.sort}
@@ -415,7 +421,16 @@ class CategoryInfo extends React.Component {
                           >
                             <option value="price_desc">Үнэ буурахаар</option>
                             <option value="price_asc">Үнэ өсөхөөр</option>
-                          </select>
+                          </select> */}
+                          <Select
+                            defaultValue={this.state.sort}
+                            onChange={this.handleSortChange}
+                            className="form-control"
+                            id="inputState"
+                          >
+                            <Option value="price_desc">Үнэ буурахаар</Option>
+                            <Option value="price_asc">Үнэ өсөхөөр</Option>
+                          </Select>
                         </div>
                         <div className="form-group flex-this">
                           <Link
