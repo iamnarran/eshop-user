@@ -27,9 +27,9 @@ class Component extends React.Component {
           <div>
             <div className="container pad10">
               <div className="user-section">
-                <div class="btn btn-gray">
+                <div className="btn btn-gray">
                   <Link to="/">
-                    <span class="text-uppercase">Нүүр хуудас</span>
+                    <span className="text-uppercase">Нүүр хуудас</span>
                   </Link>
                 </div>
                 <div className="user-section-container">

@@ -16,10 +16,10 @@ const options = {
 
 const fetch = async (props, onData) => {
   try {
-    const packageProduct = await api.packageProduct.findProducts({
+    const packageProduct = await api.packageInfo.findProducts({
       id: props.match.params.id
     });
-    const packageName = await api.packageProduct.findImf({
+    const packageName = await api.packageInfo.findImf({
       id: props.match.params.id
     });
     onData(null, {

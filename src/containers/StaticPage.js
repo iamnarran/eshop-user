@@ -11,7 +11,7 @@ const options = {
 
 const fetch = async (props, onData) => {
   try {
-    const staticPages = await api.staticPages.findPage({
+    const staticPages = await api.staticPage.findPage({
       id: props.match.params.id
     });
     onData(null, {

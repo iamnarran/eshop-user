@@ -38,7 +38,6 @@ class CardList extends React.Component {
 
   renderCardList = () => {
     const { type, items, seq, cardsInCol, showAll, cardType } = this.props;
-
     if (!items.length) {
       return null;
     }
