@@ -11,7 +11,7 @@ class StaticPage extends React.Component {
       <div className="section section-gray">
         <div className="container pad10">
           <div className="btn btn-gray" style={{ marginBottom: "10px" }}>
-            <a href="/" className="text-uppercase">
+            <a href="/" className="text-uppercase" style={{ color: "grey" }}>
               Нүүр хуудас
             </a>
           </div>

@@ -15,6 +15,12 @@ class PageHeader extends React.Component {
     this.setState({ ...this.props });
   }
 
+  changeLocation = () => {
+    if (this.state.mainbanner !== undefined) {
+      window.open(this.state.mainbanner.link, "_blank");
+    }
+  };
+
   render() {
     const { title, subtitle, banners, bgColor } = this.props;
 
@@ -28,12 +34,15 @@ class PageHeader extends React.Component {
         <div
           className="whole-page-title class container pad10"
           style={{
-            backgroundImage: `url(${selected === undefined ? '' : IMAGE + selected.imgnm})`,
+            backgroundImage: `url(${
+              selected === undefined ? "" : IMAGE + selected.imgnm
+            })`,
             backgroundRepeat: "no-repeat",
             backgroundPosition: "right",
             backgroundSize: "50% 115px",
             backgroundColor: `${bgColor}`
           }}
+          onClick={this.changeLocation}
         >
           <div className="container pad10">
             <div className="title-container flex-space">

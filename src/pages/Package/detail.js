@@ -10,7 +10,6 @@ class PackageDetail extends React.Component {
       products: [],
       price: this.props.container.Products[0].total,
       sameProducts: this.props.container.Products[0].sameproducts,
-      products: null,
       addProduct: null,
       remProduct: null,
       images: this.props.container.Package.images,
@@ -69,14 +68,14 @@ class PackageDetail extends React.Component {
                 </Link>
               </div>
               <div className="info-container flex-space">
-                <Link to=" ">
+                <Link to={item.route ? item.route : " "}>
                   <span>{item.name}</span>
                   <strong>
                     {formatter.format(item.price1 ? item.price1 : item.price2)}₮
                   </strong>
                 </Link>
                 <div className="action">
-                  <Link to=" ">
+                  <Link to={item.route ? item.route : " "}>
                     <i className="fa fa-cart-plus" aria-hidden="true" />
                   </Link>
                 </div>
