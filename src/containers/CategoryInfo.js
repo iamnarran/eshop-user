@@ -20,16 +20,14 @@ const fetch = async (props, onData) => {
       id: props.match.params.id,
       orderCol: "price_asc"
     });
-    // const menu = await api.menu.findOne({ slug: "season" });
-    // const primaryBanners = await api.pagebanner.findAll({ type: "H1" });
 
     onData(null, {
       container: {
         id: props.match.params.id,
         products: info.data[0].products,
+        parentCats: info.data[0].parents,
+        subCats: info.data[0].SubCategorys,
         attributes: info.data[0].attributes
-        // menu: menu.data,
-        // primaryBanners: primaryBanners.data
       }
     });
   } catch (e) {

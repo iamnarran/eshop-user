@@ -1,11 +1,11 @@
 import React from "react";
-import api from "../api";
 import { compose } from "react-komposer";
-import Loader from "../components/Loader";
+
+import api from "../api";
 import { Header } from "../layouts/index";
 
 const options = {
-  loadingHandler: () => <Loader />
+  errorHandler: err => <p style={{ color: "red" }}>{err.message}</p>
 };
 
 const fetch = async (props, onData) => {

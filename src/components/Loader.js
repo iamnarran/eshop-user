@@ -5,8 +5,8 @@ class CustomLoader extends Component {
   render() {
     const { absolute } = this.props;
     return (
-      <div className={`custom-loader ${absolute ? "abs" : ""}`}>
-        <Loader type="line-scale" active />
+      <div className={`custom-loader${absolute ? " abs" : ""}`}>
+        <Loader type="line-scale-pulse-out" />
       </div>
     );
   }
