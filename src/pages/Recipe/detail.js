@@ -12,8 +12,8 @@ import { getFeedbacks } from "../../actions/mainlogic";
 class RecipeDetail extends React.Component {
   notify = message => toast(message, { autoClose: 5000 });
 
-  /* handleAddCart = e => {
-    e.preventDefault();
+  handleAddCart = e => {
+    /* e.preventDefault();
     const item = this.props.container.recipe[0].recipe;
     let cart = storage.get("cart")
       ? storage.get("cart")
@@ -25,7 +25,7 @@ class RecipeDetail extends React.Component {
       })
       .then(res => {
         console.log(res);
-      });
+      }); */
   };
 
   check = (res, item, cart) => {
@@ -39,7 +39,7 @@ class RecipeDetail extends React.Component {
         totalPrice: tmp.totalPrice
       });
     }
-  }; */
+  };
 
   render() {
     const { recipe, productsData } = this.props.container;
