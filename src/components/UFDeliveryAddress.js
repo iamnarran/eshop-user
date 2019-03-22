@@ -1,8 +1,7 @@
 import React from "react";
-import { TextField, Select } from "../";
-import { Form, message } from "antd";
+import { Form, message, Input, Select } from "antd";
 import api from "../api";
-
+const Option = Select.Option;
 class Component extends React.Component {
   state = {
     cityOrProvince: [],
@@ -77,7 +76,7 @@ class Component extends React.Component {
             <span>Хүргэлтийн хаяг</span>
           </p>
           <div className="user-profile-contain">
-            <form>
+            <Form>
               <div className="row row10">
                 <div className="col-xl-6 pad10">
                   <div className="e-mart-input">
@@ -89,13 +88,7 @@ class Component extends React.Component {
                             message: "Нэрээ заавал оруулна уу!"
                           }
                         ]
-                      })(
-                        <TextField
-                          label="Нэр"
-                          onChange={this.handleName}
-                          value={name}
-                        />
-                      )}
+                      })(<Input placeholder="Нэр" />)}
                     </Form.Item>
                   </div>
                 </div>
@@ -109,13 +102,7 @@ class Component extends React.Component {
                             message: "Утасаа заавал оруулна уу!"
                           }
                         ]
-                      })(
-                        <TextField
-                          label="Утас"
-                          onChange={this.handlePhone}
-                          value={phone}
-                        />
-                      )}
+                      })(<Input placeholder="Утас" />)}
                     </Form.Item>
                   </div>
                 </div>
@@ -123,20 +110,18 @@ class Component extends React.Component {
               <div className="row row10">
                 <div className="col-xl-6 pad10">
                   <div className="form-group">
-                    <Select
-                      label="Хот/Аймаг"
-                      option={this.state.cityOrProvince}
-                      city
-                      onChange={this.onChangeCity}
-                    />
+                    <Select defaultValue="Zhejiang" placeholder="Хот/Аймаг">
+                      <Option value="Zhejiang">Zhejiang</Option>
+                      <Option value="Jiangsu">Jiangsu</Option>
+                    </Select>
                   </div>
                 </div>
                 <div className="col-xl-6 pad10">
                   <div className="form-group">
-                    <Select
-                      label="Сум/Дүүрэг"
-                      option={this.state.districtOrSum}
-                    />
+                    <Select defaultValue="Zhejiang" placeholder="Сум дүүрэг">
+                      <Option value="Zhejiang">Zhejiang</Option>
+                      <Option value="Jiangsu">Jiangsu</Option>
+                    </Select>
                   </div>
                 </div>
                 <div className="col-xl-12 pad10">
@@ -149,18 +134,12 @@ class Component extends React.Component {
                             message: "Гэрийн хаягаа заавал оруулна уу!"
                           }
                         ]
-                      })(
-                        <TextField
-                          label="Гэрийн хаяг"
-                          onChange={this.handleHomeAddress}
-                          value={homeaddress}
-                        />
-                      )}
+                      })(<Input placeholder="Гэрийн хаяг" />)}
                     </Form.Item>
                   </div>
                 </div>
               </div>
-            </form>
+            </Form>
             <div className="text-right">
               <button className="btn btn-dark">
                 <span className="text-uppercase" onClick={this.handleSubmit}>

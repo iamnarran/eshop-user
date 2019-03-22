@@ -8,24 +8,30 @@ class PageHeader extends React.Component {
     title: "",
     subtitle: "",
     banners: [],
-    bgColor: "#feb415"
+    bgColor: "#feb415",
+    selected: []
   };
 
   componentDidMount() {
     this.setState({ ...this.props });
+    this.setState({
+      selected: this.props.banners[
+        Math.floor(Math.random() * this.props.banners.length)
+      ]
+    });
   }
 
   changeLocation = () => {
-    if (this.state.mainbanner !== undefined) {
-      window.open(this.state.mainbanner.link, "_blank");
+    if (this.state.selected !== undefined) {
+      window.open(
+        this.state.selected.link ? this.state.selected.link : " ",
+        this.state.selected ? "_blank" : " "
+      );
     }
   };
 
   render() {
-    const { title, subtitle, banners, bgColor } = this.props;
-
-    const selected = banners[Math.floor(Math.random() * banners.length)];
-
+    const { title, subtitle, bgColor } = this.props;
     return (
       <div
         className="whole-page-title"
@@ -35,7 +41,9 @@ class PageHeader extends React.Component {
           className="whole-page-title class container pad10"
           style={{
             backgroundImage: `url(${
-              selected === undefined ? "" : IMAGE + selected.imgnm
+              this.state.selected === undefined
+                ? ""
+                : IMAGE + this.state.selected.imgnm
             })`,
             backgroundRepeat: "no-repeat",
             backgroundPosition: "right",
