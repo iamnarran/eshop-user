@@ -3,12 +3,8 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { Icon } from "antd";
 import Rate from "./Rate/Rate";
-import config from "config";
+import { IMAGE } from "../utils/consts";
 
-const IMAGE =
-  process.env.NODE_ENV === "development"
-    ? config.image.development
-    : config.image.production;
 class CardPage extends React.Component {
   render() {
     let nf = new Intl.NumberFormat();

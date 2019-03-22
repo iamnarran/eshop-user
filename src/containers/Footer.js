@@ -6,11 +6,6 @@ import { compose } from "react-komposer";
 import { Footer } from "../layouts/index";
 
 const options = {
-  loadingHandler: () => (
-    <div className="e-mart-loading">
-      <Spin />
-    </div>
-  ),
   errorHandler: err => <p style={{ color: "red" }}>{err.message}</p>
 };
 

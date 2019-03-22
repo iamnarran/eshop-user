@@ -1,8 +1,9 @@
 import React from "react";
-import { IMAGE } from "../utils/consts";
-import Rate from "./Rate/Rate";
-import Label from "./Label";
 import { Link } from "react-router-dom";
+
+import Label from "./Label";
+import Rate from "./Rate/Rate";
+import { IMAGE } from "../utils/consts";
 
 class SearchList extends React.Component {
   render() {

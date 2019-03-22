@@ -1,9 +1,4 @@
-import config from "config";
-
-const IMAGE =
-  process.env.NODE_ENV === "development"
-    ? config.image.development
-    : config.image.production;
+import { IMAGE } from "./consts";
 
 const get = tmpAssets => {
   let assets = JSON.parse(JSON.stringify(tmpAssets));

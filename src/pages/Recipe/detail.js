@@ -11,8 +11,9 @@ import { getFeedbacks } from "../../actions/mainlogic";
 
 class RecipeDetail extends React.Component {
   notify = message => toast(message, { autoClose: 5000 });
+
   handleAddCart = e => {
-    e.preventDefault();
+    /* e.preventDefault();
     const item = this.props.container.recipe[0].recipe;
     let cart = storage.get("cart")
       ? storage.get("cart")
@@ -24,7 +25,7 @@ class RecipeDetail extends React.Component {
       })
       .then(res => {
         console.log(res);
-      });
+      }); */
   };
 
   check = (res, item, cart) => {
@@ -39,10 +40,10 @@ class RecipeDetail extends React.Component {
       });
     }
   };
+
   render() {
     const { recipe, productsData } = this.props.container;
     const step = this.props.container.recipe[0].steps;
-    console.log(this.props);
     const sliderParams = {
       spaceBetween: 0,
       autoplay: {
@@ -124,10 +125,10 @@ class RecipeDetail extends React.Component {
                         </Link>
                       </div>
                       <div className="info-container flex-space">
-                        <a>
+                        <Link to={product.route ? product.route : ""}>
                           <span>{product.titlenm}</span>
                           <strong>{formatter.format(product.price)}₮</strong>
-                        </a>
+                        </Link>
                         <div className="action">
                           <a>
                             <i className="fa fa-cart-plus" aria-hidden="true" />

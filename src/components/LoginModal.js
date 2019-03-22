@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { EXPAND_LEFT } from "react-ladda";
 import { createForm } from "rc-form";
 
-import FacebookLogin from "./FacebookLogin";
+// import FacebookLogin from "./FacebookLogin";
 import actions, { setUser } from "../actions/login";
 import RegisterModal from "./RegisterModal";
 
@@ -176,7 +176,7 @@ class LoginModal extends React.Component {
 
             <span className="divide-maker">Эсвэл</span>
 
-            <FacebookLogin onLogin={this.handleLogInSave} />
+            {/* <FacebookLogin onLogin={this.handleLogInSave} /> */}
             {/* <GoogleLogin /> */}
 
             <button

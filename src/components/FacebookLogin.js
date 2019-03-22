@@ -3,7 +3,7 @@ import ReactFacebookLogin from "react-facebook-login";
 import ls from "local-storage";
 
 import { SOCIAL_IDS } from "../utils/consts";
-import { isLoggedIn } from "../utils/global";
+// import { isLoggedIn } from "../utils/global";
 
 class FacebookLogin extends React.Component {
   handleFacebookLoginClick = () => {
@@ -28,21 +28,21 @@ class FacebookLogin extends React.Component {
   };
 
   render() {
-    if (isLoggedIn) {
-      return null;
-    } else {
-      return (
-        <ReactFacebookLogin
-          appId={SOCIAL_IDS.facebook}
-          autoLoad={true}
-          fields="name,email,picture"
-          onClick={this.handleFacebookLoginClick}
-          callback={this.handleFacebookLoginResponse}
-          cssClass="btn btn-block btn-social btn-facebook"
-          textButton="Facebook-р нэвтрэх"
-        />
-      );
-    }
+    // if (isLoggedIn) {
+    //   return null;
+    // } else {
+    return (
+      <ReactFacebookLogin
+        appId={SOCIAL_IDS.facebook}
+        autoLoad={true}
+        fields="name,email,picture"
+        onClick={this.handleFacebookLoginClick}
+        callback={this.handleFacebookLoginResponse}
+        cssClass="btn btn-block btn-social btn-facebook"
+        textButton="Facebook-р нэвтрэх"
+      />
+    );
+    // }
   }
 }
 

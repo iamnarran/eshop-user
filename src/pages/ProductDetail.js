@@ -336,7 +336,6 @@ class Component extends React.Component {
   };
 
   createMarkup = product => {
-    console.log(product, "fjehfuirje");
     return { __html: product.description };
   };
 
@@ -357,7 +356,7 @@ class Component extends React.Component {
     return (
       <div className="col-md-12 col-lg-12 col-sm-12 col-xl-12">
         {attribute.length !== 0 ? <Information attribute={attribute} /> : ""}
-        {collectionProduct.length === 0 ? (
+        {collectionProduct.length == 0 ? (
           ""
         ) : (
           <div>
