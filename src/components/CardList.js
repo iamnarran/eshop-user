@@ -45,7 +45,13 @@ class CardList extends React.Component {
 
     let cardList = [];
 
-    if (type === CARD_LIST_TYPES.horizontal) {
+    if (type === CARD_LIST_TYPES.list) {
+      items.forEach((item, index) => {
+        cardList.push(<Card key={index} type={cardType} item={item} />);
+      });
+
+      return cardList;
+    } else if (type === CARD_LIST_TYPES.horizontal) {
       if (seq) {
         const cardTypes = seq.split(",");
 
@@ -83,7 +89,7 @@ class CardList extends React.Component {
         items.forEach((item, index) => {
           cardList.push(
             <Card
-              key={item.cd}
+              key={index}
               type={cardType}
               item={item}
               isLastInRow={(index + 1) % cardsInRow === 0}

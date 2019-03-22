@@ -24,6 +24,7 @@ class Card extends React.Component {
   state = {
     checkProduct: []
   };
+
   notify = message => toast(message, { autoClose: 5000 });
 
   handleAddToCart = item => e => {
@@ -293,6 +294,78 @@ class Card extends React.Component {
               </Link>
               <br />
               {/* <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} /> */}
+            </div>
+          </div>
+        );
+      case CARD_TYPES.list:
+        console.log("list", item);
+        return (
+          <div className="single-product list-product sale-product">
+            <div className="image-container">
+              <Link to={item.route ? item.route : ""}>
+                <span
+                  className="image"
+                  style={{
+                    backgroundImage: `url(${IMAGE + item.img})`
+                  }}
+                />
+              </Link>
+              {item.tags &&
+                item.tags.map((label, index) => (
+                  <Label key={index} seq={index} data={label} />
+                ))}
+              {hover}
+            </div>
+            <div className="info-container">
+              <Link to={item.route ? item.route : ""} className="name">
+                <span>{this.trimByWord(item.name)}</span>
+              </Link>
+              <Link to={item.route ? item.route : ""} className="cat">
+                <span>{this.trimByWord(item.featuretxt, 30)}</span>
+              </Link>
+              {item.rate ? (
+                <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} />
+              ) : null}
+              <br />
+              <Link to={item.route ? item.route : ""} className="price">
+                {prices}
+              </Link>
+              {/* <a href="#" className="rating">
+                <ul className="list-inline">
+                  <li className="list-inline-item active">
+                    <i className="fa fa-star" aria-hidden="true" />
+                    <i className="fa fa-star-half-o" aria-hidden="true" />
+                    <i className="fa fa-star-o" aria-hidden="true" />
+                  </li>
+                  <li className="list-inline-item active">
+                    <i className="fa fa-star" aria-hidden="true" />
+                    <i className="fa fa-star-half-o" aria-hidden="true" />
+                    <i className="fa fa-star-o" aria-hidden="true" />
+                  </li>
+                  <li className="list-inline-item half-active">
+                    <i className="fa fa-star" aria-hidden="true" />
+                    <i className="fa fa-star-half-o" aria-hidden="true" />
+                    <i className="fa fa-star-o" aria-hidden="true" />
+                  </li>
+                  <li className="list-inline-item">
+                    <i className="fa fa-star" aria-hidden="true" />
+                    <i className="fa fa-star-half-o" aria-hidden="true" />
+                    <i className="fa fa-star-o" aria-hidden="true" />
+                  </li>
+                  <li className="list-inline-item">
+                    <i className="fa fa-star" aria-hidden="true" />
+                    <i className="fa fa-star-half-o" aria-hidden="true" />
+                    <i className="fa fa-star-o" aria-hidden="true" />
+                  </li>
+                  <li className="list-inline-item">
+                    <span className="text">197</span>
+                  </li>
+                </ul>
+              </a>
+              <a href="#" className="price">
+                <small className="sale">6,900₮</small>
+                <span className="current">6,500₮</span>
+              </a> */}
             </div>
           </div>
         );
