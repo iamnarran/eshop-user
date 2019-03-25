@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Collapse } from "react-collapse";
-import { Checkbox, Spin, Slider, Select } from "antd";
-import MatCheckbox from "@material-ui/core/Checkbox";
+import { Spin, Slider, Select } from "antd";
+import Checkbox from "@material-ui/core/Checkbox";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import { toast } from "react-toastify";
@@ -11,6 +11,140 @@ import api from "../api";
 import { CARD_LIST_TYPES, CARD_TYPES } from "../utils/consts";
 import CardList from "../components/CardList";
 import SearchList from "../components/SearchList";
+
+class FilterSet extends React.Component {
+  state = { isOpened: true };
+
+  toggleCollapse = () => {
+    this.setState({ isOpened: !this.state.isOpened });
+  };
+
+  render() {
+    const attr = this.props.data;
+
+    switch (attr.type) {
+      case "COLOR":
+        return (
+          <div key={attr.type}>
+            <a className="collapse-title" onClick={this.toggleCollapse}>
+              {attr.attributes[0].name}
+            </a>
+            <Collapse isOpened={this.state.isOpened}>
+              <div className="collapse show" id="collapseThree">
+                <div className="collapse-content">
+                  <ul className="list-unstyled">
+                    {attr.attributes[0].values.map(val => {
+                      return (
+                        <Checkbox
+                          key={val.valueid}
+                          onChange={this.props.onAttributeChange}
+                          value={val.valueid}
+                          style={{
+                            color: val.valuecd,
+                            width: 25,
+                            height: 25
+                          }}
+                          icon={
+                            <CheckBoxOutlineBlankIcon
+                              style={{ fontSize: 20 }}
+                            />
+                          }
+                          checkedIcon={
+                            <CheckBoxIcon style={{ fontSize: 20 }} />
+                          }
+                        />
+                      );
+                    })}
+                  </ul>
+                </div>
+              </div>
+            </Collapse>
+          </div>
+        );
+      // case "BRAND":
+      case "PRICE":
+        const formatter = new Intl.NumberFormat("en-US");
+        const min = parseInt(
+          attr.attributes[0].values.find(val => val.valuecd === "MIN").valuename
+        );
+        const max = parseInt(
+          attr.attributes[0].values.find(val => val.valuecd === "MAX").valuename
+        );
+        const step = Math.ceil((max - min) / 100);
+        const marks = {
+          [min]: {
+            label: <strong>{formatter.format(min)}₮</strong>
+          },
+          [max]: {
+            label: <strong>{formatter.format(max)}₮</strong>
+          }
+        };
+        return (
+          <div key={attr.type}>
+            <a className="collapse-title" onClick={this.toggleCollapse}>
+              {attr.attributes[0].name}
+            </a>
+            <Collapse isOpened={this.state.isOpened}>
+              <Slider
+                range
+                defaultValue={[this.props.minPrice, this.props.maxPrice]}
+                min={min}
+                max={max}
+                step={step}
+                marks={marks}
+                onAfterChange={this.props.onPriceAfterChange}
+                style={{ width: "90%" }}
+              />
+            </Collapse>
+          </div>
+        );
+      default:
+        const list = attr.attributes.map((attribute, index) => (
+          <div key={index}>
+            <a
+              onClick={this.toggleCollapse}
+              className="collapse-title"
+              data-toggle="collapse"
+              role="button"
+              aria-expanded="true"
+              aria-controls="collapseExample"
+            >
+              {attribute.name}
+            </a>
+            <Collapse isOpened={this.state.isOpened}>
+              <div className="collapse show" id="collapseThree">
+                <div className="collapse-content">
+                  <ul className="list-unstyled">
+                    {attribute.values.map((val, index) => (
+                      <li key={index}>
+                        <div className="custom-control custom-checkbox">
+                          <input
+                            type="checkbox"
+                            className="custom-control-input"
+                            id={`checkbox${val.valueid}${index}`}
+                            onChange={this.props.onAttributeChange}
+                            value={val.valueid}
+                          />
+                          <label
+                            className="custom-control-label"
+                            htmlFor={`checkbox${val.valueid}${index}`}
+                          >
+                            {val.valuename}
+                          </label>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </Collapse>
+          </div>
+        ));
+
+        return <div key={attr.type}>{list}</div>;
+    }
+  }
+}
 
 class CategoryInfo extends React.Component {
   constructor(props) {
@@ -41,14 +175,8 @@ class CategoryInfo extends React.Component {
       maxPrice: max,
       sort: "price_asc",
       checkedList: [],
-      products: []
-    };
-  }
-
-  componentDidMount() {
-    this.setState({
       products: this.props.container.products
-    });
+    };
   }
 
   notify = message => toast(message, { autoClose: 5000 });
@@ -121,15 +249,14 @@ class CategoryInfo extends React.Component {
   };
 
   handleSortChange = value => {
-    console.log("sort", value);
-    const { checkedList, minPrice, maxPrice, sort } = this.state;
+    const { checkedList, minPrice, maxPrice } = this.state;
 
     const params = {
       catId: this.props.container.id,
       checkedList,
       minPrice,
       maxPrice,
-      sort
+      sort: value
     };
 
     this.fetchProductData(params);
@@ -162,16 +289,15 @@ class CategoryInfo extends React.Component {
           return (
             <div key={index} className="block">
               <div className="accordion">
-                <Link
-                  to=""
-                  className="collapse-title"
-                  data-toggle="collapse"
-                  data-target="#collapseOne"
-                  aria-expanded="true"
-                  aria-controls="collapseOne"
+                <h6
+                  style={{
+                    marginLeft: "20px",
+                    marginTop: "10px",
+                    marginBotton: "0"
+                  }}
                 >
                   {parent.catnm}
-                </Link>
+                </h6>
                 <div
                   id="collapseOne"
                   className="collapse show"
@@ -205,134 +331,24 @@ class CategoryInfo extends React.Component {
 
     let filters =
       attributes &&
-      attributes.map((attr, index) => {
-        switch (attr.type) {
-          case "COLOR":
-            return (
-              <div key={attr.type}>
-                <a className="collapse-title">{attr.attributes[0].name}</a>
-                <Collapse isOpened={true}>
-                  <div className="collapse show" id="collapseThree">
-                    <div className="collapse-content">
-                      <ul className="list-unstyled">
-                        {attr.attributes[0].values.map(val => {
-                          return (
-                            <MatCheckbox
-                              key={val.valueid}
-                              onChange={this.handleAttributeChange}
-                              value={val.valueid}
-                              style={{
-                                color: val.valuecd,
-                                width: 25,
-                                height: 25
-                              }}
-                              icon={
-                                <CheckBoxOutlineBlankIcon
-                                  style={{ fontSize: 20 }}
-                                />
-                              }
-                              checkedIcon={
-                                <CheckBoxIcon style={{ fontSize: 20 }} />
-                              }
-                            />
-                          );
-                        })}
-                      </ul>
-                    </div>
-                  </div>
-                </Collapse>
-              </div>
-            );
-          // case "BRAND":
-          case "PRICE":
-            const formatter = new Intl.NumberFormat("en-US");
-            const min = parseInt(
-              attr.attributes[0].values.find(val => val.valuecd === "MIN")
-                .valuename
-            );
-            const max = parseInt(
-              attr.attributes[0].values.find(val => val.valuecd === "MAX")
-                .valuename
-            );
-            const step = Math.ceil((max - min) / 100);
-            const marks = {
-              [min]: {
-                label: <strong>{formatter.format(min)}₮</strong>
-              },
-              [max]: {
-                label: <strong>{formatter.format(max)}₮</strong>
-              }
-            };
-            return (
-              <div key={attr.type}>
-                <a className="collapse-title">{attr.attributes[0].name}</a>
-                <Slider
-                  range
-                  defaultValue={[this.state.minPrice, this.state.maxPrice]}
-                  min={min}
-                  max={max}
-                  step={step}
-                  marks={marks}
-                  onAfterChange={this.handlePriceAfterChange}
-                  style={{ width: "90%" }}
-                />
-              </div>
-            );
-          default:
-            const list = attr.attributes.map((attribute, index) => (
-              <div key={index}>
-                <a
-                  className="collapse-title"
-                  data-toggle="collapse"
-                  role="button"
-                  aria-expanded="true"
-                  aria-controls="collapseExample"
-                >
-                  {attribute.name}
-                </a>
-                <div className="collapse show" id="collapseThree">
-                  <div className="collapse-content">
-                    <ul className="list-unstyled">
-                      {attribute.values.map((val, index) => (
-                        <li key={index}>
-                          <div className="custom-control custom-checkbox">
-                            <input
-                              type="checkbox"
-                              className="custom-control-input"
-                              id={`checkbox${val.valueid}${index}`}
-                              onChange={this.handleAttributeChange}
-                              value={val.valueid}
-                            />
-                            <label
-                              className="custom-control-label"
-                              htmlFor={`checkbox${val.valueid}${index}`}
-                            >
-                              {val.valuename}
-                            </label>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            ));
-            return <div key={attr.type}>{list}</div>;
-        }
-      });
+      attributes.map(attr => (
+        <FilterSet
+          onAttributeChange={this.handleAttributeChange}
+          onPriceAfterChange={this.handlePriceAfterChange}
+          minPrice={this.state.minPrice}
+          maxPrice={this.state.maxPrice}
+          data={attr}
+        />
+      ));
 
-    if (products.length) {
-      filters = (
-        <div>
-          <h5 className="title">
-            <strong>Шүүлтүүр</strong>
-          </h5>
-          <div className="left-filter">{filters}</div>
-        </div>
-      );
-    } else {
-      filters = null;
-    }
+    filters = (
+      <div>
+        <h5 className="title">
+          <strong>Шүүлтүүр</strong>
+        </h5>
+        <div className="left-filter">{filters}</div>
+      </div>
+    );
 
     let result = null;
     if (this.state.isListViewOn) {
@@ -413,15 +429,6 @@ class CategoryInfo extends React.Component {
                           >
                             Эрэмбэлэх:
                           </label>
-                          {/* <select
-                            id="inputState"
-                            className="form-control"
-                            value={this.state.sort}
-                            onChange={this.handleSortChange}
-                          >
-                            <option value="price_desc">Үнэ буурахаар</option>
-                            <option value="price_asc">Үнэ өсөхөөр</option>
-                          </select> */}
                           <Select
                             defaultValue={this.state.sort}
                             onChange={this.handleSortChange}
