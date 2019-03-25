@@ -1,7 +1,13 @@
 import React from "react";
 import proimg from "../scss/assets/images/demo/1.jpg";
 import { Route, Link, Switch, BrowserRouter } from "react-router-dom";
-import { UserProfile, History, WishList } from "../components";
+import {
+  UserProfile,
+  History,
+  WishList,
+  DeliveryAddress,
+  ChangePass
+} from "../components";
 import api from "../api";
 
 class Component extends React.Component {
@@ -13,7 +19,6 @@ class Component extends React.Component {
 
   componentDidMount() {
     this.setState({ ...this.props.container });
-
     api.wishList.findAlls({ custId: "14" }).then(res => {
       if (res.success) {
         this.setState({
@@ -25,7 +30,6 @@ class Component extends React.Component {
   }
 
   render() {
-    console.log(this.props);
     return (
       <div className="section section-gray">
         <BrowserRouter>
@@ -93,7 +97,7 @@ class Component extends React.Component {
                             </Link>
                           </li>
                           <li>
-                            <Link to={`/delivery`} className="flex-this">
+                            <Link to={`/deliveryAddress`} className="flex-this">
                               <i className="fa fa-compass" aria-hidden="true" />
                               <span>Хүргэлтийн хаяг</span>
                             </Link>
@@ -111,19 +115,23 @@ class Component extends React.Component {
                         <span className="text-uppercase">Гарах</span>
                       </a>
                     </div>
-
                     <Switch>
                       <Route
                         exact
-                        path={`userprofile`}
+                        path={`/userprofile`}
                         component={UserProfile}
                       />
                       <Route exact path={`/history`} component={History} />
+                      <Route exact path={`/wishlist`} component={WishList} />
                       <Route
                         exact
-                        path={`/wishlist`}
-                        component={WishList}
-                        data={this.state.WishList}
+                        path={`/deliveryAddress`}
+                        component={DeliveryAddress}
+                      />
+                      <Route
+                        exact
+                        path={`/ChangePass`}
+                        component={ChangePass}
                       />
                     </Switch>
                   </div>

@@ -57,17 +57,17 @@ class Component extends React.Component {
           <div className="action">
             <ul className="list-unstyled flex-this end">
               <li>
-                <a href={item.route ? item.route : " "}>
+                <a>
                   <i className="fa fa-heart" aria-hidden="true" />
                 </a>
               </li>
               <li>
-                <a href={item.route ? item.route : " "}>
+                <a>
                   <i className="fa fa-cart-plus" aria-hidden="true" />
                 </a>
               </li>
               <li>
-                <a href={item.route ? item.route : " "} onClick={this.delete}>
+                <a onClick={this.delete}>
                   <i className="fa fa-times" aria-hidden="true" />
                 </a>
               </li>

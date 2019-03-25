@@ -5,6 +5,7 @@ const Option = Select.Option;
 class Component extends React.Component {
   state = {
     cityOrProvince: [],
+    districtOrSums: [],
     districtOrSum: [],
     city: false,
     name: null,
@@ -24,12 +25,11 @@ class Component extends React.Component {
           }
           return "";
         });
-
         this.setState({
           cityOrProvince: cityOrProvince,
-          districtOrSum: res.data
+          districtOrSum: res.data,
+          districtOrSums: res.data
         });
-        this.onChangeCity("11"); //defualt UB
       }
     });
   }
@@ -44,10 +44,8 @@ class Component extends React.Component {
   };
 
   onChangeCity = e => {
-    const { districtOrSum } = this.state;
     let tmp = [];
-
-    districtOrSum.map(i => {
+    this.state.districtOrSums.map(i => {
       if (i.provinceid === e) {
         tmp.push(i);
       }
@@ -110,17 +108,27 @@ class Component extends React.Component {
               <div className="row row10">
                 <div className="col-xl-6 pad10">
                   <div className="form-group">
-                    <Select defaultValue="Zhejiang" placeholder="Хот/Аймаг">
-                      <Option value="Zhejiang">Zhejiang</Option>
-                      <Option value="Jiangsu">Jiangsu</Option>
+                    <Select
+                      defaultValue="Хот/Аймаг"
+                      onChange={this.onChangeCity}
+                      placeholder="Хот/Аймаг"
+                    >
+                      {this.state.cityOrProvince.map((item, index) => {
+                        return (
+                          <Option key={index} value={item.provinceid}>
+                            {item.provincenm}
+                          </Option>
+                        );
+                      })}
                     </Select>
                   </div>
                 </div>
                 <div className="col-xl-6 pad10">
                   <div className="form-group">
-                    <Select defaultValue="Zhejiang" placeholder="Сум дүүрэг">
-                      <Option value="Zhejiang">Zhejiang</Option>
-                      <Option value="Jiangsu">Jiangsu</Option>
+                    <Select defaultValue="Хот/Аймаг" placeholder="Хот/Аймаг">
+                      {this.state.districtOrSum.map((item, index) => {
+                        return <Option value={index}>{item.districtnm}</Option>;
+                      })}
                     </Select>
                   </div>
                 </div>

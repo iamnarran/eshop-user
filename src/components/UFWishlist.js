@@ -59,15 +59,12 @@ class Component extends React.Component {
           <div className="action">
             <ul className="list-unstyled flex-this end">
               <li>
-                <a href={item.route ? item.route : " "}>
+                <a>
                   <i className="fa fa-cart-plus" aria-hidden="true" />
                 </a>
               </li>
               <li>
-                <a
-                  href={item.route ? item.route : " "}
-                  onClick={this.changeNumber}
-                >
+                <a onClick={this.changeNumber}>
                   <i className="fa fa-times" aria-hidden="true" />
                 </a>
               </li>
@@ -92,74 +89,3 @@ class Component extends React.Component {
 
 const App = Form.create({ name: "delivery" })(Component);
 export default App;
-/* style={{ backgroundImage: 'url()'}} */
-{
-  /* <div className="product-list-history">
-            <div className="single flex-space">
-              <div className="product">
-                <div className="flex-this">
-                  <div className="image-container default">
-                    <Link to="">
-                      <span className="image" />
-                    </Link>
-                  </div>
-                  <div className="info">
-                    <Link to="">
-                      <p className="name">Шингэн кофе Американо</p>
-                      <p className="text">Шингэн кофе Американо No Brand</p>
-                    </Link>
-                    <Link to="" className="rating">
-                      <ul className="list-inline">
-                        <li className="list-inline-item active">
-                          <i className="fa fa-star" aria-hidden="true" />
-                          <i className="fa fa-star-half-o" aria-hidden="true" />
-                          <i className="fa fa-star-o" aria-hidden="true" />
-                        </li>
-                        <li className="list-inline-item active">
-                          <i className="fa fa-star" aria-hidden="true" />
-                          <i className="fa fa-star-half-o" aria-hidden="true" />
-                          <i className="fa fa-star-o" aria-hidden="true" />
-                        </li>
-                        <li className="list-inline-item half-active">
-                          <i className="fa fa-star" aria-hidden="true" />
-                          <i className="fa fa-star-half-o" aria-hidden="true" />
-                          <i className="fa fa-star-o" aria-hidden="true" />
-                        </li>
-                        <li className="list-inline-item">
-                          <i className="fa fa-star" aria-hidden="true" />
-                          <i className="fa fa-star-half-o" aria-hidden="true" />
-                          <i className="fa fa-star-o" aria-hidden="true" />
-                        </li>
-                        <li className="list-inline-item">
-                          <i className="fa fa-star" aria-hidden="true" />
-                          <i className="fa fa-star-half-o" aria-hidden="true" />
-                          <i className="fa fa-star-o" aria-hidden="true" />
-                        </li>
-                        <li className="list-inline-item">
-                          <span className="text">197</span>
-                        </li>
-                      </ul>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-              <div className="price">
-                <strong>24,000₮</strong>
-              </div>
-              <div className="action">
-                <ul className="list-unstyled flex-this end">
-                  <li>
-                    <Link to="">
-                      <i className="fa fa-cart-plus" aria-hidden="true" />
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="">
-                      <i className="fa fa-times" aria-hidden="true" />
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div> */
-}
