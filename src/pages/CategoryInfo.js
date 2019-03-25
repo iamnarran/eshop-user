@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Collapse } from "react-collapse";
-import { Checkbox, Spin, Slider, Select } from "antd";
-import MatCheckbox from "@material-ui/core/Checkbox";
+import { Spin, Slider, Select } from "antd";
+import Checkbox from "@material-ui/core/Checkbox";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import { toast } from "react-toastify";
@@ -35,9 +35,9 @@ class FilterSet extends React.Component {
                   <ul className="list-unstyled">
                     {attr.attributes[0].values.map(val => {
                       return (
-                        <MatCheckbox
+                        <Checkbox
                           key={val.valueid}
-                          onChange={this.handleAttributeChange}
+                          onChange={this.props.onAttributeChange}
                           value={val.valueid}
                           style={{
                             color: val.valuecd,
@@ -87,12 +87,12 @@ class FilterSet extends React.Component {
             <Collapse isOpened={this.state.isOpened}>
               <Slider
                 range
-                defaultValue={[this.state.minPrice, this.state.maxPrice]}
+                defaultValue={[this.props.minPrice, this.props.maxPrice]}
                 min={min}
                 max={max}
                 step={step}
                 marks={marks}
-                onAfterChange={this.handlePriceAfterChange}
+                onAfterChange={this.props.onPriceAfterChange}
                 style={{ width: "90%" }}
               />
             </Collapse>
@@ -122,7 +122,7 @@ class FilterSet extends React.Component {
                             type="checkbox"
                             className="custom-control-input"
                             id={`checkbox${val.valueid}${index}`}
-                            onChange={this.handleAttributeChange}
+                            onChange={this.props.onAttributeChange}
                             value={val.valueid}
                           />
                           <label
@@ -140,6 +140,7 @@ class FilterSet extends React.Component {
             </Collapse>
           </div>
         ));
+
         return <div key={attr.type}>{list}</div>;
     }
   }
@@ -330,22 +331,24 @@ class CategoryInfo extends React.Component {
 
     let filters =
       attributes &&
-      attributes.map(attr => {
-        return <FilterSet data={attr} />;
-      });
+      attributes.map(attr => (
+        <FilterSet
+          onAttributeChange={this.handleAttributeChange}
+          onPriceAfterChange={this.handlePriceAfterChange}
+          minPrice={this.state.minPrice}
+          maxPrice={this.state.maxPrice}
+          data={attr}
+        />
+      ));
 
-    if (products.length) {
-      filters = (
-        <div>
-          <h5 className="title">
-            <strong>Шүүлтүүр</strong>
-          </h5>
-          <div className="left-filter">{filters}</div>
-        </div>
-      );
-    } else {
-      filters = null;
-    }
+    filters = (
+      <div>
+        <h5 className="title">
+          <strong>Шүүлтүүр</strong>
+        </h5>
+        <div className="left-filter">{filters}</div>
+      </div>
+    );
 
     let result = null;
     if (this.state.isListViewOn) {
