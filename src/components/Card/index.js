@@ -132,7 +132,6 @@ class Card extends React.Component {
     if (!item) {
       return null;
     }
-
     const formatter = new Intl.NumberFormat("en-US");
     let price = formatter.format(item.price);
     let prices1 = formatter.format(item.sprice);
