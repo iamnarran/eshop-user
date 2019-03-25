@@ -150,7 +150,7 @@ class Localization extends Component {
       },
       {
         exact: true,
-        path: "/agreement/:id",
+        path: "/info/:id",
         component: rest => <StaticPage {...rest} {...this.props} />
       },
       {
