@@ -1,9 +1,10 @@
 import React from "react";
 import moment from "moment";
 import MessengerCustomerChat from "react-messenger-customer-chat";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import Slider from "../components/Slider";
-import Widget from "../components/Widget/Widget";
+import Widget from "../components/Widget";
 import Banner from "../components/Banner";
 import { WIDGET_SLUGS, SOCIAL_IDS } from "../utils/consts";
 
@@ -31,14 +32,19 @@ class Homepage extends React.Component {
             </span>
           );
           widget.readMore = "Бусад хямдралтай барааг үзэх";
+          widget.icon = (
+            <FontAwesomeIcon icon={["far", "calendar"]} color="red" />
+          );
           break;
         case WIDGET_SLUGS.package:
           widget.items = products.prodsPackage;
           widget.readMore = "Бусад багцыг үзэх";
+          widget.icon = <FontAwesomeIcon icon={["fas", "home"]} color="red" />;
           break;
         case WIDGET_SLUGS.recipe:
           widget.items = products.recipes;
           widget.readMore = "Бусад хоолны жорыг үзэх";
+          widget.icon = <FontAwesomeIcon icon={["fas", "home"]} color="red" />;
           break;
         case WIDGET_SLUGS.new:
           widget.items = products.prodsNew;

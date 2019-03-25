@@ -1,11 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Link, Icon } from "react-router-dom";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { toast } from "react-toastify";
+
 import { getFeedbacks } from "../../actions/mainlogic";
 import api from "../../api";
-import Rate from "../Rate/Rate";
+import Rate from "../Rate";
 import Label from "../Label";
 import storage from "../../utils/storage";
 import { updateCart } from "../../actions/cart";
@@ -306,7 +307,6 @@ class Card extends React.Component {
           </div>
         );
       case CARD_TYPES.list:
-        console.log("list", item);
         return (
           <div className="single-product list-product sale-product">
             <div className="image-container">
@@ -338,42 +338,6 @@ class Card extends React.Component {
               <Link to={item.route ? item.route : ""} className="price">
                 {prices}
               </Link>
-              {/* <a href="#" className="rating">
-                <ul className="list-inline">
-                  <li className="list-inline-item active">
-                    <i className="fa fa-star" aria-hidden="true" />
-                    <i className="fa fa-star-half-o" aria-hidden="true" />
-                    <i className="fa fa-star-o" aria-hidden="true" />
-                  </li>
-                  <li className="list-inline-item active">
-                    <i className="fa fa-star" aria-hidden="true" />
-                    <i className="fa fa-star-half-o" aria-hidden="true" />
-                    <i className="fa fa-star-o" aria-hidden="true" />
-                  </li>
-                  <li className="list-inline-item half-active">
-                    <i className="fa fa-star" aria-hidden="true" />
-                    <i className="fa fa-star-half-o" aria-hidden="true" />
-                    <i className="fa fa-star-o" aria-hidden="true" />
-                  </li>
-                  <li className="list-inline-item">
-                    <i className="fa fa-star" aria-hidden="true" />
-                    <i className="fa fa-star-half-o" aria-hidden="true" />
-                    <i className="fa fa-star-o" aria-hidden="true" />
-                  </li>
-                  <li className="list-inline-item">
-                    <i className="fa fa-star" aria-hidden="true" />
-                    <i className="fa fa-star-half-o" aria-hidden="true" />
-                    <i className="fa fa-star-o" aria-hidden="true" />
-                  </li>
-                  <li className="list-inline-item">
-                    <span className="text">197</span>
-                  </li>
-                </ul>
-              </a>
-              <a href="#" className="price">
-                <small className="sale">6,900₮</small>
-                <span className="current">6,500₮</span>
-              </a> */}
             </div>
           </div>
         );

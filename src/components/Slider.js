@@ -23,7 +23,6 @@ class Slider extends React.Component {
           style={{ backgroundImage: `url(${IMAGE + item.imgnm})` }}
           key={index}
         >
-          {/* {console.log(item.isshownm)} */}
           <div className="container pad10">
             <div className="slide-container">
               <div className="slide-content text-uppercase">
@@ -31,24 +30,17 @@ class Slider extends React.Component {
                   <div>
                     <h2 className="title">{item.bannernm}</h2>
                     <p className="text">{item.description}</p>
-                    {item && item.link && (
-                      <Link
-                        to={item.link}
-                        className="btn btn-main"
-                        target="_blank"
-                      >
-                        <i
-                          className="fa fa-long-arrow-right"
-                          aria-hidden="true"
-                        />
-                        <span className="text-uppercase">
-                          {item.btntext && item.btntext.trim()
-                            ? item.btntext
-                            : "Дэлгэрэнгүй"}
-                        </span>
-                      </Link>
-                    )}
                   </div>
+                )}
+                {item && item.link && (
+                  <Link to={item.link} className="btn btn-main" target="_blank">
+                    <i className="fa fa-long-arrow-right" aria-hidden="true" />
+                    <span className="text-uppercase">
+                      {item.btntext && item.btntext.trim()
+                        ? item.btntext
+                        : "Дэлгэрэнгүй"}
+                    </span>
+                  </Link>
                 )}
               </div>
             </div>
