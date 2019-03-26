@@ -44,13 +44,7 @@ class CardList extends React.Component {
 
     let cardList = [];
 
-    if (type === CARD_LIST_TYPES.list) {
-      items.forEach((item, index) => {
-        cardList.push(<Card key={index} type={cardType} item={item} />);
-      });
-
-      return cardList;
-    } else if (type === CARD_LIST_TYPES.horizontal) {
+    if (type === CARD_LIST_TYPES.horizontal) {
       if (seq) {
         const cardTypes = seq.split(",");
 
@@ -97,67 +91,71 @@ class CardList extends React.Component {
         });
       }
 
-      return cardList;
-    }
+      cardList = <div className="row row10">{cardList}</div>;
+    } else if (type === CARD_LIST_TYPES.vertical) {
+      let cardsInColCalculated = Math.ceil(items.length / 3);
 
-    // CARD_LIST_TYPES.vertical
-
-    let cardsInColCalculated = Math.ceil(items.length / 3);
-
-    if (cardsInCol) {
-      cardsInColCalculated =
-        cardsInColCalculated < cardsInCol ? cardsInColCalculated : cardsInCol;
-    }
-
-    const cardsCount =
-      items.length > cardsInColCalculated * 3
-        ? cardsInColCalculated * 3
-        : items.length;
-
-    let cardsTemp = [];
-
-    for (let i = 0; i < cardsCount; i++) {
-      let className = "short";
-
-      if (
-        (cardsInColCalculated % 2 !== 0 && i % 2 === 0) ||
-        (cardsInColCalculated % 2 === 0 &&
-          ((Math.floor(i / cardsInColCalculated) % 2 === 0 && i % 2 === 0) ||
-            (Math.floor(i / cardsInColCalculated) % 2 !== 0 && i % 2 !== 0)))
-      ) {
-        className = "long";
+      if (cardsInCol) {
+        cardsInColCalculated =
+          cardsInColCalculated < cardsInCol ? cardsInColCalculated : cardsInCol;
       }
 
-      const key = items[i].cd
-        ? items[i].cd
-        : items[i].recipeid
-        ? items[i].recipeid
-        : i;
+      const cardsCount =
+        items.length > cardsInColCalculated * 3
+          ? cardsInColCalculated * 3
+          : items.length;
 
-      cardsTemp.push(
-        <Card
-          key={key}
-          type={CARD_TYPES.tile}
-          item={items[i]}
-          className={className}
-        />
-      );
+      let cardsTemp = [];
 
-      if ((i + 1) % cardsInColCalculated === 0 || i === cardsCount - 1) {
-        cardList.push(
-          <div className="col-md-4 pad10" key={i}>
-            {cardsTemp}
-          </div>
+      for (let i = 0; i < cardsCount; i++) {
+        let className = "short";
+
+        if (
+          (cardsInColCalculated % 2 !== 0 && i % 2 === 0) ||
+          (cardsInColCalculated % 2 === 0 &&
+            ((Math.floor(i / cardsInColCalculated) % 2 === 0 && i % 2 === 0) ||
+              (Math.floor(i / cardsInColCalculated) % 2 !== 0 && i % 2 !== 0)))
+        ) {
+          className = "long";
+        }
+
+        const key = items[i].cd
+          ? items[i].cd
+          : items[i].recipeid
+          ? items[i].recipeid
+          : i;
+
+        cardsTemp.push(
+          <Card
+            key={key}
+            type={CARD_TYPES.tile}
+            item={items[i]}
+            className={className}
+          />
         );
-        cardsTemp = [];
+
+        if ((i + 1) % cardsInColCalculated === 0 || i === cardsCount - 1) {
+          cardList.push(
+            <div className="col-md-4 pad10" key={i}>
+              {cardsTemp}
+            </div>
+          );
+          cardsTemp = [];
+        }
       }
+
+      cardList = <div className="row row10">{cardList}</div>;
+    } else {
+      items.forEach((item, index) => {
+        cardList.push(<Card key={index} type={CARD_TYPES.list} item={item} />);
+      });
     }
 
-    return cardList;
+    return <div>{cardList}</div>;
   };
 
   render() {
-    return <div className="row row10">{this.renderCardList()}</div>;
+    return this.renderCardList();
   }
 }
 

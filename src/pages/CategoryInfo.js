@@ -10,7 +10,6 @@ import { toast } from "react-toastify";
 import api from "../api";
 import { CARD_LIST_TYPES, CARD_TYPES } from "../utils/consts";
 import CardList from "../components/CardList";
-import SearchList from "../components/SearchList";
 
 class FilterSet extends React.Component {
   state = { isOpened: true };
@@ -281,11 +280,13 @@ class CategoryInfo extends React.Component {
     const { products } = this.state;
     const Option = Select.Option;
 
+    let selectedCat = null;
     let cats = <div className="block">Ангилал байхгүй байна</div>;
 
     if (parentCats.length) {
       cats = parentCats.map((parent, index) => {
         if (parent.id === parseInt(id)) {
+          selectedCat = parent.catnm;
           return (
             <div key={index} className="block">
               <div className="accordion">
@@ -352,14 +353,13 @@ class CategoryInfo extends React.Component {
 
     let result = null;
     if (this.state.isListViewOn) {
-      result = <SearchList products={products} />;
-      // result = (
-      //   <CardList
-      //     type={CARD_LIST_TYPES.list}
-      //     items={products}
-      //     cardType={CARD_TYPES.list}
-      //   />
-      // );
+      result = (
+        <CardList
+          type={CARD_LIST_TYPES.list}
+          items={products}
+          cardType={CARD_TYPES.list}
+        />
+      );
     } else {
       result = (
         <CardList
@@ -410,14 +410,15 @@ class CategoryInfo extends React.Component {
               <div className="col-xl-9 col-lg-9 col-md-8 pad10">
                 <div className="list-filter">
                   <div className="row row10">
-                    <div className="col-lg-4 pad10">
+                    <div className="col-lg-6 pad10">
                       <div className="total-result">
                         <p className="text">
-                          <strong>{products.length}</strong> бараа олдлоо
+                          <strong>"{selectedCat}"</strong> {products.length}{" "}
+                          бараа олдлоо
                         </p>
                       </div>
                     </div>
-                    <div className="col-lg-8 pad10">
+                    <div className="col-lg-6 pad10">
                       <form className="flex-this end">
                         <div className="form-group my-select flex-this">
                           <label

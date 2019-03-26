@@ -29,6 +29,7 @@ class Card extends React.Component {
   notify = message => toast(message, { autoClose: 5000 });
 
   handleAddToCart = item => e => {
+    console.log("item", item);
     e.preventDefault();
     let cart = storage.get("cart")
       ? storage.get("cart")
@@ -41,16 +42,16 @@ class Card extends React.Component {
       itemQty = found.qty;
     }
 
-    api.product
-      .isAvailable({
-        skucd: item.id ? item.id : item.cd ? item.cd : null,
-        qty: itemQty + 1
-      })
-      .then(res => {
-        this.check(res, item, found, cart);
-      });
+    // api.product
+    //   .isAvailable({
+    //     skucd: item.id ? item.id : item.cd ? item.cd : null,
+    //     qty: itemQty + 1
+    //   })
+    //   .then(res => {
+    //     this.check(res, item, found, cart);
+    //   });
 
-    /*  api.product
+    api.product
       .isAvailable({
         skucd: item.id ? item.id : item.cd ? item.cd : null,
         qty: itemQty + 1
@@ -92,21 +93,21 @@ class Card extends React.Component {
         } else {
           this.notify(res.message);
         }
-      }); */
+      });
   };
 
-  check = (res, item, found, cart) => {
-    let tmp = getFeedbacks(res, item, found, cart);
-    if (tmp == false) {
-      this.notify(res.message);
-    } else {
-      this.props.updateCart({
-        products: tmp.products,
-        totalQty: tmp.totalQty,
-        totalPrice: tmp.totalPrice
-      });
-    }
-  };
+  // check = (res, item, found, cart) => {
+  //   let tmp = getFeedbacks(res, item, found, cart);
+  //   if (tmp == false) {
+  //     this.notify(res.message);
+  //   } else {
+  //     this.props.updateCart({
+  //       products: tmp.products,
+  //       totalQty: tmp.totalQty,
+  //       totalPrice: tmp.totalPrice
+  //     });
+  //   }
+  // };
 
   trimByWord(text, maxChars = 20) {
     const textWords = text.split(" ");
@@ -317,11 +318,6 @@ class Card extends React.Component {
                   }}
                 />
               </Link>
-              {item.tags &&
-                item.tags.map((label, index) => (
-                  <Label key={index} seq={index} data={label} />
-                ))}
-              {hover}
             </div>
             <div className="info-container">
               <Link to={item.route ? item.route : ""} className="name">
@@ -333,10 +329,23 @@ class Card extends React.Component {
               {item.rate ? (
                 <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} />
               ) : null}
-              <br />
               <Link to={item.route ? item.route : ""} className="price">
                 {prices}
               </Link>
+              <div className="tag-container">
+                {item.tags &&
+                  item.tags.map((label, index) => (
+                    <Label key={index} seq={index} data={label} />
+                  ))}
+              </div>
+              <div className="cart-container">
+                <Link to="" className="wishlist">
+                  <i className="fa fa-heart-o" aria-hidden="true" />
+                </Link>
+                <a className="cart" onClick={this.handleAddToCart(item)}>
+                  <i className="fa fa-cart-plus" aria-hidden="true" />
+                </a>
+              </div>
             </div>
           </div>
         );

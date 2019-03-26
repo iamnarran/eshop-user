@@ -2690,3 +2690,28 @@ MuiInputBase-input-49 MuiOutlinedInput-input-34 MuiInputBase-inputType-52 {
   border-left: none;
   width: 100px;
 }
+
+.list-product .info-container {
+  .cart-container,
+  .tag-container {
+    position: absolute;
+    display: block;
+  }
+
+  .cart-container {
+    top: 70px;
+    right: 13px;
+    left: auto;
+
+    a {
+      display: inline;
+      margin-right: 10px;
+    }
+  }
+
+  .tag-container {
+    top: 30px;
+    right: 270px;
+    left: auto;
+  }
+}
