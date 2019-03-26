@@ -34,7 +34,6 @@ class Checkout extends React.Component {
   changeRadio = e => {
     if (e.target.id == "exampleRadios13") {
     }
-    console.log(e.target.id);
   };
 
   paymentType = () => {
@@ -127,6 +126,7 @@ class Checkout extends React.Component {
   };
 
   callback = key => {
+    console.log(key);
     this.setState({
       activeKey: key
     });
@@ -140,7 +140,6 @@ class Checkout extends React.Component {
     } else if (e.target.name === "payment") {
       tmp.push("4");
     }
-    console.log(tmp);
     this.setState({
       collapseType: e.target.name,
       activeKey: tmp
@@ -149,6 +148,8 @@ class Checkout extends React.Component {
 
   onSubmit = e => {
     e.preventDefault();
+    console.log(e.target);
+    console.log(this.props);
     this.props.form.validateFields((err, values) => {
       if (!err) {
         console.log("Received values of form: ", values);
@@ -159,7 +160,6 @@ class Checkout extends React.Component {
   };
 
   render() {
-    console.log(this.props);
     //const { getFieldDecorator } = this.props.form;
     return (
       <div className="section section-gray">
@@ -323,7 +323,8 @@ class Checkout extends React.Component {
                         >
                           <Tabs>
                             {this.props.container.deliveryTypes.map(
-                              (i, key) => {
+                              (item, i) => {
+                                console.log(item);
                                 return (
                                   <TabPane
                                     tab={
@@ -333,12 +334,12 @@ class Checkout extends React.Component {
                                           src="images/demo/1.png"
                                         />
                                         <p className="text">
-                                          <strong>{i.typenm}</strong>
-                                          <span>{i.price + "₮"}</span>
+                                          <strong>{item.typenm}</strong>
+                                          <span>{item.price + "₮"}</span>
                                         </p>
                                       </div>
                                     }
-                                    key={key}
+                                    key={i}
                                   >
                                     <div
                                       className="tab-pane active"
@@ -398,6 +399,7 @@ class Checkout extends React.Component {
                                             className="btn btn-main"
                                             name="delivery"
                                             htmlType="submit"
+                                            onClick={this.handleClick}
                                           >
                                             Дараах
                                           </button>
