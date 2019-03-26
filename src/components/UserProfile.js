@@ -25,7 +25,6 @@ class Component extends React.Component {
           }
           return "";
         });
-        console.log(res.data);
         this.setState({
           cityOrProvince: cityOrProvince,
           districtOrSum: res.data

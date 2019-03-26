@@ -2,7 +2,7 @@ import React from "react";
 import { Form } from "antd";
 import api from "../api";
 import { IMAGE } from "../utils/consts";
-/* import Rate from "../components/Rate/Rate"; */
+import Rate from "./Rate";
 
 class Component extends React.Component {
   state = {
@@ -22,6 +22,7 @@ class Component extends React.Component {
     let tableList = null;
     const list = this.state.wishlist;
     const formatter = new Intl.NumberFormat("en-US");
+    console.log(list);
     tableList = list.map((item, index) => {
       return (
         <div className="single flex-space" key={index}>
@@ -42,14 +43,11 @@ class Component extends React.Component {
                   <p className="name">{item.skunm}</p>
                   <p className="text">{item.shortnm}</p>
                 </a>
-                {/* item.rate[0].rate[0] ? (
-                  <Rate
-                    rate={item.rate[0].rate[0].ravg}
-                    numOfVotes={item.rate[0].rate[0].cnt}
-                  />
+                {item.rate ? (
+                  <Rate rate={item.rate} numOfVotes={item.rateusercnt} />
                 ) : (
                   <Rate rate={0} numOfVotes={0} />
-                ) */}
+                )}
               </div>
             </div>
           </div>

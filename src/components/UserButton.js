@@ -90,49 +90,52 @@ class UserButton extends React.Component {
                     </Link>
                   </li>
                   <li>
-                    <Link to="" className="flex-this">
+                    <Link to="/userprofile" className="flex-this">
                       <i className="fa fa-check-square" aria-hidden="true" />
                       <span>Таны үзсэн барааны түүх</span>
                     </Link>
                   </li>
                   <li>
-                    <Link to="" className="flex-this">
+                    <Link to="/userprofile" className="flex-this">
                       <i className="fa fa-history" aria-hidden="true" />
                       <span>Худалдан авалтын түүх</span>
                     </Link>
                   </li>
                   <li>
-                    <Link to="" className="flex-this">
+                    <Link to="/userprofile" className="flex-this">
                       <i className="fa fa-heart" aria-hidden="true" />
                       <span>Хадгалсан бараа</span>
                     </Link>
                   </li>
                   <li>
-                    <Link to="" className="flex-this">
+                    <Link to="/userprofile" className="flex-this">
                       <i className="fa fa-bell" aria-hidden="true" />
                       <span>Мэдэгдэл</span>
                     </Link>
                   </li>
                   <li>
-                    <Link to="" className="flex-this">
+                    <Link to="/userprofile" className="flex-this">
                       <i className="fa fa-database" aria-hidden="true" />
                       <span>Купон</span>
                     </Link>
                   </li>
                   <li>
-                    <Link to="" className="flex-this">
+                    <Link to="/userprofile" className="flex-this">
                       <i className="fa fa-credit-card" aria-hidden="true" />
                       <span>ePoint карт</span>
                     </Link>
                   </li>
                   <li>
-                    <Link to="" className="flex-this">
+                    <Link
+                      to="/userprofile/deliveryAddress"
+                      className="flex-this"
+                    >
                       <i className="fa fa-compass" aria-hidden="true" />
                       <span>Хүргэлтийн хаяг</span>
                     </Link>
                   </li>
                   <li>
-                    <Link to="" className="flex-this">
+                    <Link to="/userprofile" className="flex-this">
                       <i className="fa fa-lock" aria-hidden="true" />
                       <span>Нууц үгээ солих</span>
                     </Link>
