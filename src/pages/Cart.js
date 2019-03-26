@@ -206,7 +206,9 @@ class Cart extends React.Component {
     });
   };
 
-  remove = item => {
+  remove = item => e => {
+    e.preventDefault();
+
     let cart = storage.get("cart")
       ? storage.get("cart")
       : { products: [], totalQty: 0, totalPrice: 0 };
@@ -369,7 +371,7 @@ class Cart extends React.Component {
                           </a>
                         </li>
                         <li>
-                          <Link to="" onClick={() => this.remove(product)}>
+                          <Link to="" onClick={this.remove(product)}>
                             <i className="fa fa-times" aria-hidden="true" />
                             <span>Устгах</span>
                           </Link>

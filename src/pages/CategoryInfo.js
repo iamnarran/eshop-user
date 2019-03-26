@@ -64,10 +64,10 @@ class FilterSet extends React.Component {
       case "PRICE":
         const formatter = new Intl.NumberFormat("en-US");
 
-        let tempMin = attr.attributes[0].values.find(
+        const tempMin = attr.attributes[0].values.find(
           val => val.valuecd === "MIN"
         ).valuename;
-        let tempMax = attr.attributes[0].values.find(
+        const tempMax = attr.attributes[0].values.find(
           val => val.valuecd === "MAX"
         ).valuename;
 
