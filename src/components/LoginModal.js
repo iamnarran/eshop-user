@@ -62,13 +62,12 @@ class LoginModal extends React.Component {
         try {
           res = await this.props.login(form);
 
-          if (!res.success) {
-            message.error("Таны нэвтрэх нэр эсвэл нууц үг буруу байна");
-            this.setState({ loading: false });
-          } else {
-            // successful
+          if (res.success) {
             this.props.setUser(res.data);
             window.location.reload();
+          } else {
+            message.error("Таны нэвтрэх нэр эсвэл нууц үг буруу байна");
+            this.setState({ loading: false });
           }
         } catch (err) {
           console.log(err);

@@ -7,7 +7,7 @@ export default [
     URL: `${API}/api/package`
   },
   {
-    NAME: "findProducts",
+    NAME: "findAllProducts",
     METHOD: "GET",
     URL: `${API}/api/package/:id`,
     REPLACE: "id"
