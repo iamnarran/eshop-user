@@ -2692,8 +2692,7 @@ MuiInputBase-input-49 MuiOutlinedInput-input-34 MuiInputBase-inputType-52 {
 }
 
 .list-product .info-container {
-  .cart-container,
-  .tag-container {
+  .cart-container {
     position: absolute;
     display: block;
   }
@@ -2707,11 +2706,5 @@ MuiInputBase-input-49 MuiOutlinedInput-input-34 MuiInputBase-inputType-52 {
       display: inline;
       margin-right: 10px;
     }
-  }
-
-  .tag-container {
-    top: 30px;
-    right: 270px;
-    left: auto;
   }
 }

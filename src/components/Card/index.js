@@ -10,7 +10,7 @@ import Rate from "../Rate";
 import Label from "../Label";
 import storage from "../../utils/storage";
 import { updateCart } from "../../actions/cart";
-import { IMAGE, CARD_TYPES } from "../../utils/consts";
+import { IMAGE, CARD_TYPES, LABEL_TYPES } from "../../utils/consts";
 
 import "./Card.css";
 
@@ -187,7 +187,12 @@ class Card extends React.Component {
                 </Link>
                 {item.tags &&
                   item.tags.map((label, index) => (
-                    <Label key={index} seq={index} data={label} />
+                    <Label
+                      key={index}
+                      type={LABEL_TYPES.vertical}
+                      data={label}
+                      seq={index}
+                    />
                   ))}
                 {hover}
               </div>
@@ -237,7 +242,12 @@ class Card extends React.Component {
                 </Link>
                 {item.tags &&
                   item.tags.map((label, index) => (
-                    <Label key={index} seq={index} data={label} />
+                    <Label
+                      key={index}
+                      type={LABEL_TYPES.vertical}
+                      data={label}
+                      seq={index}
+                    />
                   ))}
                 {hover}
               </div>
@@ -290,7 +300,12 @@ class Card extends React.Component {
               </Link>
               {item.tags &&
                 item.tags.map((label, index) => (
-                  <Label key={index} seq={index} data={label} />
+                  <Label
+                    key={index}
+                    type={LABEL_TYPES.vertical}
+                    data={label}
+                    seq={index}
+                  />
                 ))}
               {hover}
             </div>
@@ -329,15 +344,29 @@ class Card extends React.Component {
               {item.rate ? (
                 <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} />
               ) : null}
-              <Link to={item.route ? item.route : ""} className="price">
+              <Link
+                to={item.route ? item.route : ""}
+                className="price"
+                style={{
+                  padding: 0,
+                  top: "auto",
+                  bottom: "55px",
+                  right: "20px",
+                  left: "auto",
+                  fontSize: "1rem"
+                }}
+              >
                 {prices}
               </Link>
-              <div className="tag-container">
-                {item.tags &&
-                  item.tags.map((label, index) => (
-                    <Label key={index} seq={index} data={label} />
-                  ))}
-              </div>
+              {item.tags &&
+                item.tags.map((label, index) => (
+                  <Label
+                    key={index}
+                    type={LABEL_TYPES.horizontal}
+                    data={label}
+                    seq={index}
+                  />
+                ))}
               <div className="cart-container">
                 <Link to="" className="wishlist">
                   <i className="fa fa-heart-o" aria-hidden="true" />

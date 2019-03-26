@@ -63,13 +63,18 @@ class FilterSet extends React.Component {
       // case "BRAND":
       case "PRICE":
         const formatter = new Intl.NumberFormat("en-US");
-        const min = parseInt(
-          attr.attributes[0].values.find(val => val.valuecd === "MIN").valuename
-        );
-        const max = parseInt(
-          attr.attributes[0].values.find(val => val.valuecd === "MAX").valuename
-        );
+
+        let tempMin = attr.attributes[0].values.find(
+          val => val.valuecd === "MIN"
+        ).valuename;
+        let tempMax = attr.attributes[0].values.find(
+          val => val.valuecd === "MAX"
+        ).valuename;
+
+        const min = tempMin ? parseInt(tempMin) : 0;
+        const max = tempMax ? parseInt(tempMax) : 0;
         const step = Math.ceil((max - min) / 100);
+
         const marks = {
           [min]: {
             label: <strong>{formatter.format(min)}₮</strong>
@@ -78,6 +83,7 @@ class FilterSet extends React.Component {
             label: <strong>{formatter.format(max)}₮</strong>
           }
         };
+
         return (
           <div key={attr.type}>
             <a className="collapse-title" onClick={this.toggleCollapse}>
@@ -332,8 +338,9 @@ class CategoryInfo extends React.Component {
 
     let filters =
       attributes &&
-      attributes.map(attr => (
+      attributes.map((attr, index) => (
         <FilterSet
+          key={index}
           onAttributeChange={this.handleAttributeChange}
           onPriceAfterChange={this.handlePriceAfterChange}
           minPrice={this.state.minPrice}
