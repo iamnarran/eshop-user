@@ -1,33 +1,94 @@
-import React from "react"
-import { TextField, Select } from "../"
-import { Form, message } from "antd"
-
-class Component extends React.Component{
-  
-  handleSubmit = (e) => {
-    e.preventDefault();
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        message.success("Хүргэлтийн хаяг амжилттай бүртгэгдлээ")
+import React from "react";
+import { Form } from "antd";
+import api from "../api";
+import { IMAGE } from "../utils/consts";
+class Component extends React.Component {
+  state = {
+    wishlist: []
+  };
+  componentDidMount() {
+    api.wishList.findAlls({ custId: "14" }).then(res => {
+      if (res.success) {
+        this.setState({
+          wishlist: res.data
+        });
       }
+      this.setState({ loading: false });
     });
   }
-
   render() {
-    return (          
-      <div className="col-md-8 pad10">      
-        <div className="user-menu-content">        
+    let tableList = null;
+    const list = this.state.wishlist;
+    const formatter = new Intl.NumberFormat("en-US");
+    tableList = list.map((item, index) => {
+      return (
+        <div className="single flex-space" key={index}>
+          <div className="product">
+            <div className="flex-this">
+              <div className="image-container default">
+                <a href={item.route ? item.route : " "}>
+                  <span
+                    className="image"
+                    style={{
+                      backgroundImage: `url(${IMAGE + item.img})`
+                    }}
+                  />
+                </a>
+              </div>
+              <div className="info">
+                <a href={item.route ? item.route : " "}>
+                  <p className="name">{item.skunm}</p>
+                  <p className="text">{item.shortnm}</p>
+                </a>
+                {/* item.rate[0].rate[0] ? (
+                  <Rate
+                    rate={item.rate[0].rate[0].ravg}
+                    numOfVotes={item.rate[0].rate[0].cnt}
+                  />
+                ) : (
+                  <Rate rate={0} numOfVotes={0} />
+                ) */}
+              </div>
+            </div>
+          </div>
+          <div className="price">
+            <strong>{formatter.format(item.price)}₮</strong>
+          </div>
+          <div className="action">
+            <ul className="list-unstyled flex-this end">
+              <li>
+                <a>
+                  <i className="fa fa-heart" aria-hidden="true" />
+                </a>
+              </li>
+              <li>
+                <a>
+                  <i className="fa fa-cart-plus" aria-hidden="true" />
+                </a>
+              </li>
+              <li>
+                <a onClick={this.delete}>
+                  <i className="fa fa-times" aria-hidden="true" />
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      );
+    });
+
+    return (
+      <div className="col-md-8 pad10">
+        <div className="user-menu-content">
           <p className="title">
             <span>Үзсэн барааны түүх</span>
           </p>
-          <div className="user-profile-contain">                  
-            
-          </div>
+          <div className="product-list-history">{tableList}</div>
         </div>
       </div>
-    )
+    );
   }
 }
 
-const App = Form.create({ name: 'delivery' })(Component);
+const App = Form.create({ name: "delivery" })(Component);
 export default App;

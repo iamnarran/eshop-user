@@ -40,6 +40,12 @@ const WIDGET_SLUGS = {
 };
 Object.freeze(WIDGET_SLUGS);
 
+const LABEL_TYPES = {
+  horizontal: 1,
+  vertical: 2
+};
+Object.freeze(CARD_LIST_TYPES);
+
 const SOCIAL_IDS = {
   google:
     "385681945952-cuekq38feemk8gk2elbtctbpanregnnj.apps.googleusercontent.com",
@@ -54,5 +60,6 @@ export {
   CARD_NUMS_IN_ROW,
   CARD_LIST_TYPES,
   WIDGET_SLUGS,
+  LABEL_TYPES,
   SOCIAL_IDS
 };

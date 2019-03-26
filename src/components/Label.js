@@ -2,57 +2,55 @@ import React from "react";
 import Style from "style-it";
 import PropTypes from "prop-types";
 
+import { LABEL_TYPES } from "../utils/consts";
+
 class Label extends React.Component {
-  state = {
-    data: null,
-    seq: 0,
-    content: 0
-  };
-
-  componentDidMount() {
-    this.setState({ ...this.props });
-  }
-
   render() {
-    if (!this.state.data) {
+    const { type, data, seq } = this.props;
+
+    if (!data) {
       return null;
     }
 
     let content = null;
-    if (this.state.data) {
-      if (this.state.data.isPackage) {
-        content = (
-          <small>
-            <span style={{ fontSize: "0.9rem" }}>
-              {this.state.data.content ? this.state.data.content : ""}
-            </span>
-            <span>{this.state.data.text ? this.state.data.text : ""}</span>
-          </small>
-        );
-      } else {
-        content = (
-          <div>
-            <strong>
-              {this.state.data.content ? this.state.data.content : ""}
-            </strong>
-            <small>{this.state.data.text ? this.state.data.text : ""}</small>
-          </div>
-        );
-      }
+    if (data.isPackage) {
+      content = (
+        <small>
+          <span style={{ fontSize: "0.9rem" }}>
+            {data.content ? data.content : ""}
+          </span>
+          <span>{data.text ? data.text : ""}</span>
+        </small>
+      );
     } else {
       content = (
         <div>
-          <span className="text" style={{ fontSize: "0.9rem" }}>
-            <strong>{this.state.data.text ? this.state.data.text : ""}</strong>
-          </span>
+          <strong>{data.content ? data.content : ""}</strong>
+          <small>{data.text ? data.text : ""}</small>
         </div>
       );
     }
 
-    let topSpacing = 15 + this.state.seq * 55;
-    let color = this.state.data.color ? this.state.data.color : "#f00";
-    console.log(this.state.data.content == 0);
-    if (this.state.data.content == 0) {
+    let spacing = "";
+    let topSpacing = 15;
+    let rightSpacing = 200;
+    if (type === LABEL_TYPES.vertical) {
+      topSpacing += seq * 55;
+      spacing = `
+        left: 5px;
+        top: ${topSpacing}px;
+      `;
+    } else {
+      rightSpacing -= seq * 50;
+      spacing = `
+        top: 45px;
+        left: auto;
+        right: ${rightSpacing}px;
+      `;
+    }
+
+    let color = data.color ? data.color : "#f00";
+    if (data.content == 0) {
       return <div />;
     } else {
       return (
@@ -61,8 +59,7 @@ class Label extends React.Component {
             .label {
               display: block;
               position: absolute;
-              top: ${topSpacing}px;
-              left: 5px;
+              ${spacing}
             }
           `}
           <div className="label medium-image-magnify" style={{ zIndex: 100 }}>
@@ -127,6 +124,7 @@ class Label extends React.Component {
 }
 
 Label.propTypes = {
+  type: PropTypes.string.isRequired,
   data: PropTypes.object.isRequired,
   seq: PropTypes.number
 };

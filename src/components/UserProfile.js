@@ -78,7 +78,7 @@ class Component extends React.Component {
             <span>Профайл хуудас</span>
           </p>
           <div className="user-profile-contain">
-            <form>
+            {/* <form>
               <div className="row row10">
                 <div className="col-xl-6 pad10">
                   <div className="form-group">
@@ -271,7 +271,7 @@ class Component extends React.Component {
                   </div>
                 </div>
               </div>
-            </form>
+            </form> */}
             <div className="text-right">
               <button className="btn btn-dark">
                 <span className="text-uppercase" onClick={this.handleSubmit}>

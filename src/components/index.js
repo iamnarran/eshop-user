@@ -1,6 +1,6 @@
 import ProductDetail from "./ProductDetail";
 import Magnify from "./Magnify";
-import Rate from "./Rate/Rate";
+import Rate from "./Rate";
 import RelationalProduct from "./ProductDetail/RelationalProduct";
 import Information from "./ProductDetail/Information";
 import Collection from "./ProductDetail/CollectionProduct";
@@ -13,7 +13,6 @@ import UserProfile from "./UserProfile";
 import ChangePass from "./UFChangePass";
 import History from "./UFHistory";
 import WishList from "./UFWishlist";
-import SearchList from "./SearchList";
 
 export {
   ProductDetail,
@@ -30,6 +29,5 @@ export {
   UserProfile,
   ChangePass,
   History,
-  WishList,
-  SearchList
+  WishList
 };

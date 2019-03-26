@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Icon } from "antd";
 import PropTypes from "prop-types";
 
 import { CARD_LIST_TYPES, WIDGET_SLUGS } from "../../utils/consts";
@@ -20,7 +19,7 @@ class Widget extends React.Component {
     if (data.subtitle) {
       subtitle = (
         <p className="text">
-          <Icon type="clock-circle" /> {data.subtitle}
+          {data.icon ? data.icon : null} {data.subtitle}
         </p>
       );
     }

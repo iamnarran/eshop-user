@@ -2,7 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { Icon } from "antd";
-import Rate from "./Rate/Rate";
+
+import Rate from "./Rate";
 import { IMAGE } from "../utils/consts";
 
 class CardPage extends React.Component {

@@ -2,7 +2,7 @@ import React from "react";
 import Swiper from "react-id-swiper";
 import PropTypes from "prop-types";
 
-import Card from "./Card/Card";
+import Card from "./Card";
 
 class Slider extends React.Component {
   state = {

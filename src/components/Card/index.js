@@ -1,15 +1,16 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Link, Icon } from "react-router-dom";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { toast } from "react-toastify";
+
 import { getFeedbacks } from "../../actions/mainlogic";
 import api from "../../api";
-import Rate from "../Rate/Rate";
+import Rate from "../Rate";
 import Label from "../Label";
 import storage from "../../utils/storage";
 import { updateCart } from "../../actions/cart";
-import { IMAGE, CARD_TYPES } from "../../utils/consts";
+import { IMAGE, CARD_TYPES, LABEL_TYPES } from "../../utils/consts";
 
 import "./Card.css";
 
@@ -28,6 +29,7 @@ class Card extends React.Component {
   notify = message => toast(message, { autoClose: 5000 });
 
   handleAddToCart = item => e => {
+    console.log("item", item);
     e.preventDefault();
     let cart = storage.get("cart")
       ? storage.get("cart")
@@ -40,16 +42,16 @@ class Card extends React.Component {
       itemQty = found.qty;
     }
 
-    api.product
-      .isAvailable({
-        skucd: item.id ? item.id : item.cd ? item.cd : null,
-        qty: itemQty + 1
-      })
-      .then(res => {
-        this.check(res, item, found, cart);
-      });
+    // api.product
+    //   .isAvailable({
+    //     skucd: item.id ? item.id : item.cd ? item.cd : null,
+    //     qty: itemQty + 1
+    //   })
+    //   .then(res => {
+    //     this.check(res, item, found, cart);
+    //   });
 
-    /*  api.product
+    api.product
       .isAvailable({
         skucd: item.id ? item.id : item.cd ? item.cd : null,
         qty: itemQty + 1
@@ -91,21 +93,21 @@ class Card extends React.Component {
         } else {
           this.notify(res.message);
         }
-      }); */
+      });
   };
 
-  check = (res, item, found, cart) => {
-    let tmp = getFeedbacks(res, item, found, cart);
-    if (tmp == false) {
-      this.notify(res.message);
-    } else {
-      this.props.updateCart({
-        products: tmp.products,
-        totalQty: tmp.totalQty,
-        totalPrice: tmp.totalPrice
-      });
-    }
-  };
+  // check = (res, item, found, cart) => {
+  //   let tmp = getFeedbacks(res, item, found, cart);
+  //   if (tmp == false) {
+  //     this.notify(res.message);
+  //   } else {
+  //     this.props.updateCart({
+  //       products: tmp.products,
+  //       totalQty: tmp.totalQty,
+  //       totalPrice: tmp.totalPrice
+  //     });
+  //   }
+  // };
 
   trimByWord(text, maxChars = 20) {
     const textWords = text.split(" ");
@@ -127,12 +129,14 @@ class Card extends React.Component {
   render() {
     const { type, item, isLastInRow, className } = this.props;
     let prices;
+
     if (!item) {
       return null;
     }
     const formatter = new Intl.NumberFormat("en-US");
     let price = formatter.format(item.price);
     let prices1 = formatter.format(item.sprice);
+
     if (item.sprice || item.price) {
       if (item.sprice) {
         prices = (
@@ -183,7 +187,12 @@ class Card extends React.Component {
                 </Link>
                 {item.tags &&
                   item.tags.map((label, index) => (
-                    <Label key={index} seq={index} data={label} />
+                    <Label
+                      key={index}
+                      type={LABEL_TYPES.vertical}
+                      data={label}
+                      seq={index}
+                    />
                   ))}
                 {hover}
               </div>
@@ -233,7 +242,12 @@ class Card extends React.Component {
                 </Link>
                 {item.tags &&
                   item.tags.map((label, index) => (
-                    <Label key={index} seq={index} data={label} />
+                    <Label
+                      key={index}
+                      type={LABEL_TYPES.vertical}
+                      data={label}
+                      seq={index}
+                    />
                   ))}
                 {hover}
               </div>
@@ -286,7 +300,12 @@ class Card extends React.Component {
               </Link>
               {item.tags &&
                 item.tags.map((label, index) => (
-                  <Label key={index} seq={index} data={label} />
+                  <Label
+                    key={index}
+                    type={LABEL_TYPES.vertical}
+                    data={label}
+                    seq={index}
+                  />
                 ))}
               {hover}
             </div>
@@ -303,7 +322,6 @@ class Card extends React.Component {
           </div>
         );
       case CARD_TYPES.list:
-        console.log("list", item);
         return (
           <div className="single-product list-product sale-product">
             <div className="image-container">
@@ -315,11 +333,6 @@ class Card extends React.Component {
                   }}
                 />
               </Link>
-              {item.tags &&
-                item.tags.map((label, index) => (
-                  <Label key={index} seq={index} data={label} />
-                ))}
-              {hover}
             </div>
             <div className="info-container">
               <Link to={item.route ? item.route : ""} className="name">
@@ -331,46 +344,37 @@ class Card extends React.Component {
               {item.rate ? (
                 <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} />
               ) : null}
-              <br />
-              <Link to={item.route ? item.route : ""} className="price">
+              <Link
+                to={item.route ? item.route : ""}
+                className="price"
+                style={{
+                  padding: 0,
+                  top: "auto",
+                  bottom: "55px",
+                  right: "20px",
+                  left: "auto",
+                  fontSize: "1rem"
+                }}
+              >
                 {prices}
               </Link>
-              {/* <a href="#" className="rating">
-                <ul className="list-inline">
-                  <li className="list-inline-item active">
-                    <i className="fa fa-star" aria-hidden="true" />
-                    <i className="fa fa-star-half-o" aria-hidden="true" />
-                    <i className="fa fa-star-o" aria-hidden="true" />
-                  </li>
-                  <li className="list-inline-item active">
-                    <i className="fa fa-star" aria-hidden="true" />
-                    <i className="fa fa-star-half-o" aria-hidden="true" />
-                    <i className="fa fa-star-o" aria-hidden="true" />
-                  </li>
-                  <li className="list-inline-item half-active">
-                    <i className="fa fa-star" aria-hidden="true" />
-                    <i className="fa fa-star-half-o" aria-hidden="true" />
-                    <i className="fa fa-star-o" aria-hidden="true" />
-                  </li>
-                  <li className="list-inline-item">
-                    <i className="fa fa-star" aria-hidden="true" />
-                    <i className="fa fa-star-half-o" aria-hidden="true" />
-                    <i className="fa fa-star-o" aria-hidden="true" />
-                  </li>
-                  <li className="list-inline-item">
-                    <i className="fa fa-star" aria-hidden="true" />
-                    <i className="fa fa-star-half-o" aria-hidden="true" />
-                    <i className="fa fa-star-o" aria-hidden="true" />
-                  </li>
-                  <li className="list-inline-item">
-                    <span className="text">197</span>
-                  </li>
-                </ul>
-              </a>
-              <a href="#" className="price">
-                <small className="sale">6,900₮</small>
-                <span className="current">6,500₮</span>
-              </a> */}
+              {item.tags &&
+                item.tags.map((label, index) => (
+                  <Label
+                    key={index}
+                    type={LABEL_TYPES.horizontal}
+                    data={label}
+                    seq={index}
+                  />
+                ))}
+              <div className="cart-container">
+                <Link to="" className="wishlist">
+                  <i className="fa fa-heart-o" aria-hidden="true" />
+                </Link>
+                <a className="cart" onClick={this.handleAddToCart(item)}>
+                  <i className="fa fa-cart-plus" aria-hidden="true" />
+                </a>
+              </div>
             </div>
           </div>
         );

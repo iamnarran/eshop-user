@@ -14,6 +14,7 @@ import { addLocaleData, injectIntl } from "react-intl";
 import { IntlProvider } from "react-intl-redux";
 import en from "react-intl/locale-data/en";
 import ScrollToTop from "react-router-scroll-top";
+
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { far } from "@fortawesome/free-regular-svg-icons";
@@ -150,7 +151,7 @@ class Localization extends Component {
       },
       {
         exact: true,
-        path: "/agreement/:id",
+        path: "/info/:id",
         component: rest => <StaticPage {...rest} {...this.props} />
       },
       {
