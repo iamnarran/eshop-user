@@ -213,21 +213,22 @@ class Component extends React.Component {
 
   getCategory = product => {
     const { breadCrumb, category } = this.state;
+    let tmp = [];
     if (product !== undefined) {
       if (product.length !== 0) {
         let parent = product.catid;
         category.reverse().map(i => {
           if (parent === i.id) {
-            breadCrumb.push(i);
+            tmp.push(i);
             parent = i.parentid;
           }
           return null;
         });
-        breadCrumb.reverse();
+        tmp.reverse();
 
         this.setState({
           product: product,
-          breadCrumb: breadCrumb,
+          breadCrumb: tmp,
           addminqty: product.addminqty,
           saleNumber: this.generateSaleMinQty(product.saleminqty),
           sumPrice:
@@ -249,6 +250,7 @@ class Component extends React.Component {
   };
 
   renderBreadCrumb = e => {
+    console.log(e);
     return (
       <div className="e-breadcrumb">
         <ul className="list-unstyled">
@@ -353,6 +355,10 @@ class Component extends React.Component {
 
   renderFooter = () => {
     const { attribute, collectionProduct, skucd, product } = this.state;
+    if (collectionProduct.length <= 4) {
+      productParams.loop = false;
+    }
+    productParams.slidesPerView = collectionProduct.length;
     return (
       <div className="col-md-12 col-lg-12 col-sm-12 col-xl-12">
         {attribute.length !== 0 ? <Information attribute={attribute} /> : ""}
@@ -666,7 +672,7 @@ class Component extends React.Component {
                 ""
               ) : (
                 <p className="text text-right">
-                  Урамшуулал {this.generateDate(product)} хоногийн дараа дуусна
+                  Хямдрал {this.generateDate(product)} хоногийн дараа дуусна
                 </p>
               )}
             </div>
