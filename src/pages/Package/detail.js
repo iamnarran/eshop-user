@@ -14,7 +14,7 @@ class PackageDetail extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      products: [],
+      products: this.props.container.Products[0].products,
       price: this.props.container.Products[0].total,
       sameProducts: this.props.container.Products[0].sameproducts,
       addProduct: null,
@@ -79,7 +79,13 @@ class PackageDetail extends React.Component {
               totalQty: cart.totalQty,
               totalPrice: cart.totalPrice
             });
-            this.notify(item.skunm + " бараа сагсанд нэмэгдлээ.");
+            this.notify(
+              "Таны сагсанд" +
+                item.skunm +
+                " бараа нэмэгдлээ." +
+                "Үнийн дүн: " +
+                item.sprice
+            );
             resolve();
           } else {
             this.notify(res.message);
@@ -121,17 +127,36 @@ class PackageDetail extends React.Component {
     }
   };
 
-  plusProduct = e => {
-    /* console.log("this is plus", e); */
+  plusProduct = (e, plus) => {
+    e.preventDefault();
+    console.log(plus);
+    let tmp = [];
+    this.state.products.map((item, index) => {
+      if (item.cd === plus.cd) {
+        item.unit = parseInt(item.unit) + 1;
+      }
+      tmp.push(item);
+    });
+    this.setState({ products: tmp });
   };
-  minusProduct = e => {
-    /* console.log("this is minus", e); */
+
+  minusProduct = (e, minus) => {
+    e.preventDefault();
+    console.log(minus);
+    let tmp = [];
+    this.state.products.map((item, index) => {
+      if (item.cd === minus.cd) {
+        item.unit = parseInt(item.unit) - 1;
+      }
+      tmp.push(item);
+    });
+    this.setState({ products: tmp });
   };
 
   render() {
+    console.log(this.state);
     const formatter = new Intl.NumberFormat("en-US");
     const sameproduct = this.props.container.Products[0].sameproducts;
-    const product = this.props.container.Products[0].products;
     let products = null;
     let sameProducts = null;
     const sliderParams = {
@@ -152,7 +177,7 @@ class PackageDetail extends React.Component {
     };
     // Багцад орсон барааны ижил бараанууд
     sameProducts = sameproduct.map((item, index) => {
-      if (product) {
+      if (sameproduct) {
         return (
           <li key={index}>
             <div className="single flex-this">
@@ -174,9 +199,9 @@ class PackageDetail extends React.Component {
                   </strong>
                 </Link>
                 <div className="action">
-                  <Link to=" " onClick={this.handleAddToCart(item)}>
+                  <a onClick={this.handleAddToCart(item)}>
                     <i className="fa fa-cart-plus" aria-hidden="true" />
-                  </Link>
+                  </a>
                 </div>
               </div>
             </div>
@@ -188,8 +213,7 @@ class PackageDetail extends React.Component {
     });
 
     // Багцад орсон бараанууд
-    products = product.map((item, index) => {
-      console.log(item);
+    products = this.state.products.map((item, index) => {
       return (
         <li className="flex-this" key={index}>
           <div className="image-container default">
@@ -206,7 +230,7 @@ class PackageDetail extends React.Component {
             <div className="flex-space">
               <p className="text col-md-5 col-sm-5">
                 <span>{item.skunm}</span>
-                <strong>{formatter.format(item.price)}₮</strong>
+                <strong>{formatter.format(item.tprice)}₮</strong>
               </p>
               <form style={{ width: "100px" }}>
                 <div className="input-group e-input-group">
@@ -222,7 +246,7 @@ class PackageDetail extends React.Component {
                         borderBottomLeftRadius: "20px",
                         marginRight: "5px"
                       }}
-                      onClick={this.minusProduct(item.id)}
+                      onClick={e => this.minusProduct(e, item)}
                     >
                       <i className="fa fa-minus" aria-hidden="true" />
                     </button>
@@ -231,7 +255,7 @@ class PackageDetail extends React.Component {
                     type="text"
                     className="form-control"
                     placeholder=""
-                    defaultValue={this.state.countNumber}
+                    value={item.unit}
                     aria-label=""
                     aria-describedby="button-addon4"
                     style={{ width: "40px" }}
@@ -248,7 +272,7 @@ class PackageDetail extends React.Component {
                         borderBottomRightRadius: "20px",
                         marginLeft: "5px"
                       }}
-                      onClick={this.plusProduct(item.id)}
+                      onClick={e => this.plusProduct(e, item)}
                     >
                       <i className="fa fa-plus" aria-hidden="true" />
                     </button>
