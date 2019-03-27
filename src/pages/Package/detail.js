@@ -2,6 +2,13 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { IMAGE } from "../../utils/consts";
 import Slider from "../../components/Slider";
+import config from "config";
+import { connect } from "react-redux";
+
+import { toast } from "react-toastify";
+import storage from "../../utils/storage";
+import api from "../../api";
+import { updateCart } from "../../actions/cart";
 
 class PackageDetail extends React.Component {
   constructor(props) {
@@ -18,9 +25,101 @@ class PackageDetail extends React.Component {
       date: this.props.container.Package.products[0].insymd
         .split("T")[0]
         .split("-"),
-      countNumber: 1
+      countNumber: 1,
+      id: this.props.container.Package.products[0]
     };
   }
+
+  notify = message => toast(message, { autoClose: 5000 });
+
+  add = item => {
+    let cart = storage.get("cart")
+      ? storage.get("cart")
+      : { products: [], totalQty: 0, totalPrice: 0 };
+
+    const found = cart.products.find(product => product.cd === item.cd);
+
+    let itemQty = 0;
+    if (found) {
+      itemQty = found.qty;
+    }
+
+    return new Promise((resolve, reject) => {
+      api.product
+        .isAvailable({
+          skucd: item.cd,
+          qty: itemQty + 1
+        })
+        .then(res => {
+          if (res.success) {
+            if (found) {
+              found.qty++;
+              const i = cart.products
+                .map(product => product.cd)
+                .indexOf(found.cd);
+              cart.products.splice(i, 1, found);
+            } else {
+              item.qty = 1;
+              cart.products.push(item);
+            }
+            const qties = cart.products.map(product => product.qty);
+            cart.totalQty = qties.reduce((acc, curr) => acc + curr);
+            const prices = cart.products.map(product => {
+              const price = product.sprice
+                ? product.sprice
+                : product.price
+                ? product.price
+                : 0;
+              return product.qty * price;
+            });
+            cart.totalPrice = prices.reduce((acc, curr) => acc + curr);
+            storage.set("cart", cart);
+            this.props.updateCart({
+              products: cart.products,
+              totalQty: cart.totalQty,
+              totalPrice: cart.totalPrice
+            });
+            this.notify(item.skunm + " бараа сагсанд нэмэгдлээ.");
+            resolve();
+          } else {
+            this.notify(res.message);
+            reject();
+          }
+        });
+    });
+  };
+
+  handleAddToCart = item => e => {
+    e.preventDefault();
+    let products = [];
+    if (item.recipeid) {
+      api.recipe.findAllProducts({ id: item.recipeid }).then(res => {
+        if (res.success) {
+          products = res.data[0].products;
+          if (products.length) {
+            products.reduce((acc, next) => {
+              return acc.then(() => {
+                return this.add(next);
+              });
+            }, Promise.resolve());
+          }
+        } else {
+          this.notify(res.message);
+        }
+      });
+    } else if (item.packageid) {
+      api.packageInfo.findAllProducts({ id: item.packageid }).then(res => {
+        if (res.success) {
+          products = res.data[0].products;
+          products.map(item => {
+            this.add(item);
+          });
+        }
+      });
+    } else {
+      this.add(item);
+    }
+  };
 
   plusProduct = e => {
     /* console.log("this is plus", e); */
@@ -68,14 +167,14 @@ class PackageDetail extends React.Component {
                 </Link>
               </div>
               <div className="info-container flex-space">
-                <Link to={item.route ? item.route : " "}>
-                  <span>{item.name}</span>
+                <Link to="">
+                  <span>{item.skunm}</span>
                   <strong>
                     {formatter.format(item.price1 ? item.price1 : item.price2)}₮
                   </strong>
                 </Link>
                 <div className="action">
-                  <Link to={item.route ? item.route : " "}>
+                  <Link to=" " onClick={this.handleAddToCart(item)}>
                     <i className="fa fa-cart-plus" aria-hidden="true" />
                   </Link>
                 </div>
@@ -90,6 +189,7 @@ class PackageDetail extends React.Component {
 
     // Багцад орсон бараанууд
     products = product.map((item, index) => {
+      console.log(item);
       return (
         <li className="flex-this" key={index}>
           <div className="image-container default">
@@ -97,7 +197,7 @@ class PackageDetail extends React.Component {
               <span
                 className="image"
                 style={{
-                  backgroundImage: `url(${IMAGE + item.imgnm})`
+                  backgroundImage: `url(${IMAGE + item.img})`
                 }}
               />
             </Link>
@@ -156,7 +256,7 @@ class PackageDetail extends React.Component {
                 </div>
               </form>
               <div className="action">
-                <Link to=" ">
+                <Link to=" " onClick={this.handleAddToCart(item)}>
                   <i className="fa fa-cart-plus" aria-hidden="true" />
                 </Link>
               </div>
@@ -228,7 +328,11 @@ class PackageDetail extends React.Component {
                               {formatter.format(this.state.price)}₮
                             </strong>
                           </p>
-                          <a href=" " className="btn btn-main">
+                          <a
+                            href=" "
+                            className="btn btn-main"
+                            onClick={this.handleAddToCart(this.state.id)}
+                          >
                             <i className="fa fa-cart-plus" aria-hidden="true" />
                             <span className="text-uppercase">
                               {" "}
@@ -278,4 +382,7 @@ class PackageDetail extends React.Component {
   }
 }
 
-export default PackageDetail;
+export default connect(
+  null,
+  { updateCart }
+)(PackageDetail);
