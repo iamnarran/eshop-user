@@ -6,6 +6,7 @@ import api from "../api";
 import instant from "../scss/assets/images/demo/1.png";
 import simple from "../scss/assets/images/demo/1.png";
 import visit from "../scss/assets/images/demo/1.png";
+import LoginModal from "../components/LoginModal";
 const Option = Select.Option;
 const Panel = Collapse.Panel;
 const TabPane = Tabs.TabPane;
@@ -30,21 +31,15 @@ class Checkout extends React.Component {
       chosenPayment: [],
       chosenBankInfo: [],
       cardno: null,
-      chosenPlusRadio: 1
+      chosenPlusRadio: 1,
+      isLoginModalVisible: false
     };
   }
 
   componentWillMount() {
     const { deliveryTypes, paymentTypes } = this.props.container;
-    //console.log(this.props.isLoggedIn);
-    if (storage.get("user")) {
-      let user = storage.get("user");
-      if (user.customerInfo) {
-        user = user.customerInfo;
-      }
-      if (user) {
-        this.getUserInfo(user);
-      }
+    if (this.props.isLoggedIn == true) {
+      this.getUserInfo(this.props.user);
     }
 
     let cart = storage.get("cart")
@@ -56,6 +51,16 @@ class Checkout extends React.Component {
       chosenPayment: paymentTypes[0]
     });
   }
+
+  toggleLoginModal = e => {
+    e.preventDefault();
+    this.setState({ isLoginModalVisible: !this.state.isLoginModalVisible });
+  };
+
+  showLoginModal = e => {
+    e.preventDefault();
+    this.setState({ isLoginModalVisible: true });
+  };
 
   getUserInfo = async user => {
     await api.checkout.findUserData({ id: user.id }).then(res => {
@@ -136,8 +141,8 @@ class Checkout extends React.Component {
           </a>
         </h5>
         <div className="title-button text-right">
-          <p className="text">Бүртгэлтэй бол:</p>
-          <a className="btn btn-gray solid">
+          {/* <p className="text">Бүртгэлтэй бол:</p> */}
+          <a onClick={this.showLoginModal} className="btn btn-gray solid">
             <span className="text-uppercase">Нэвтрэх</span>
           </a>
         </div>
@@ -703,6 +708,10 @@ class Checkout extends React.Component {
             </div>
           </div>
         </div>
+        <LoginModal
+          onVisibleChange={this.toggleLoginModal}
+          visible={this.state.isLoginModalVisible}
+        />
       </div>
     );
   }

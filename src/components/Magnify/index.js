@@ -79,9 +79,7 @@ class Component extends React.Component {
         <div className="image-container medium-magnify">
           {tags &&
             tags.map((label, index) => (
-              <Label key={index} seq={index} data={label}>
-                54
-              </Label>
+              <Label key={index} seq={index} data={label} />
             ))}
         </div>
         <Lightbox
