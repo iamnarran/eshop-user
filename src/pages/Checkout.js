@@ -1,20 +1,19 @@
 import React from "react";
-import { Collapse, Icon, Tabs, Radio, Input, Form } from "antd";
-
+import { connect } from "react-redux";
+import { Collapse, Icon, Tabs, Radio, Input, Form, Select } from "antd";
+import storage from "../utils/storage";
+import api from "../api";
+import instant from "../scss/assets/images/demo/1.png";
+import simple from "../scss/assets/images/demo/1.png";
+import visit from "../scss/assets/images/demo/1.png";
+import LoginModal from "../components/LoginModal";
+const Option = Select.Option;
 const Panel = Collapse.Panel;
 const TabPane = Tabs.TabPane;
+const RadioButton = Radio.Button;
+const RadioGroup = Radio.Group;
 
-const formItemLayout = {
-  labelCol: {
-    xs: { span: 24 },
-    sm: { span: 5 }
-  },
-  wrapperCol: {
-    xs: { span: 24 },
-    sm: { span: 12 }
-  }
-};
-
+@connect(mapStateToProps)
 class Checkout extends React.Component {
   constructor(props) {
     super(props);
@@ -23,16 +22,71 @@ class Checkout extends React.Component {
       collapse: [],
       collapseKey: [],
       collapseType: null,
-      activeKey: ["1"]
+      activeKey: ["1"],
+      userInfo: [],
+      userAddress: [],
+      delivery: [],
+      defaultAddress: "",
+      chosenDelivery: [],
+      chosenPayment: [],
+      chosenBankInfo: [],
+      cardno: null,
+      chosenPlusRadio: 1,
+      isLoginModalVisible: false
     };
   }
 
-  onClick = () => {
-    console.log("aa");
+  componentWillMount() {
+    const { deliveryTypes, paymentTypes } = this.props.container;
+    if (this.props.isLoggedIn == true) {
+      this.getUserInfo(this.props.user);
+    }
+
+    let cart = storage.get("cart")
+      ? storage.get("cart")
+      : { products: [], totalQty: 0, totalPrice: 0 };
+    this.setState({
+      products: cart,
+      delivery: deliveryTypes[0],
+      chosenPayment: paymentTypes[0]
+    });
+  }
+
+  toggleLoginModal = e => {
+    e.preventDefault();
+    this.setState({ isLoginModalVisible: !this.state.isLoginModalVisible });
+  };
+
+  showLoginModal = e => {
+    e.preventDefault();
+    this.setState({ isLoginModalVisible: true });
+  };
+
+  getUserInfo = async user => {
+    await api.checkout.findUserData({ id: user.id }).then(res => {
+      if (res.success == true) {
+        res.data.addrs.map((item, i) => {
+          if (item.ismain == 1) {
+            this.setState({ defaultAddress: item });
+          }
+        });
+        this.setState({
+          userInfo: res.data.info,
+          userAddress: res.data.addrs,
+          cardno: res.data.cardno
+        });
+      }
+    });
   };
 
   changeRadio = e => {
-    if (e.target.id == "exampleRadios13") {
+    const { paymentTypes } = this.props.container;
+    if (paymentTypes !== 0) {
+      paymentTypes.map((item, i) => {
+        if (item.id == e.target.id) {
+          this.setState({ chosenPayment: item });
+        }
+      });
     }
   };
 
@@ -40,15 +94,7 @@ class Checkout extends React.Component {
     return (
       <div className="title-container flex-space">
         <h5 className="title">
-          <a
-            href="#"
-            className="collapsed  flex-this"
-            role="button"
-            data-toggle="collapse"
-            data-target="#block3"
-            aria-expanded="false"
-            aria-controls="block3"
-          >
+          <a className="flex-this">
             <i className="fa fa-credit-card" aria-hidden="true" />
             <span>Төлбөрийн төрөл</span>
           </a>
@@ -61,15 +107,7 @@ class Checkout extends React.Component {
     return (
       <div className="title-container flex-space">
         <h5 className="title">
-          <a
-            href="#"
-            className="collapsed flex-this"
-            role="button"
-            data-toggle="collapse"
-            data-target="#block4"
-            aria-expanded="false"
-            aria-controls="block4"
-          >
+          <a className="flex-this">
             <i className="fa fa-plus-square" aria-hidden="true" />
             <span>Нэмэлт сонголт</span>
           </a>
@@ -78,25 +116,33 @@ class Checkout extends React.Component {
     );
   };
 
+  renderAddrsOption = () => {
+    const { userAddress } = this.state;
+    let tmp;
+    if (userAddress.length !== 0) {
+      tmp = userAddress.map((item, i) => {
+        return (
+          <Option key={i} value={item.id}>
+            {item.address}
+          </Option>
+        );
+      });
+    }
+    return tmp;
+  };
+
   customerTab = () => {
     return (
       <div className="title-container flex-space">
         <h5 className="title">
-          <a
-            className="collapsed flex-this"
-            role="button"
-            data-toggle="collapse"
-            data-target="#block1"
-            aria-expanded="false"
-            aria-controls="block1"
-          >
+          <a className="flex-this">
             <i className="fa fa-user" aria-hidden="true" />
             <span>Хэрэглэгчээр бүртгүүлэх</span>
           </a>
         </h5>
         <div className="title-button text-right">
-          <p className="text">Бүртгэлтэй бол:</p>
-          <a className="btn btn-gray solid">
+          {/* <p className="text">Бүртгэлтэй бол:</p> */}
+          <a onClick={this.showLoginModal} className="btn btn-gray solid">
             <span className="text-uppercase">Нэвтрэх</span>
           </a>
         </div>
@@ -108,15 +154,7 @@ class Checkout extends React.Component {
     return (
       <div className="title-container flex-space">
         <h5 className="title">
-          <a
-            href="#"
-            className="collapsed  flex-this"
-            role="button"
-            data-toggle="collapse"
-            data-target="#block3"
-            aria-expanded="false"
-            aria-controls="block3"
-          >
+          <a className="flex-this">
             <i className="fa fa-credit-card" aria-hidden="true" />
             <span>Хүргэлтийн төрөл</span>
           </a>
@@ -126,41 +164,126 @@ class Checkout extends React.Component {
   };
 
   callback = key => {
-    console.log(key);
     this.setState({
       activeKey: key
     });
   };
 
-  handleClick = e => {
-    e.preventDefault();
-    let tmp = [];
-    if (e.target.name === "delivery") {
-      tmp.push("3");
-    } else if (e.target.name === "payment") {
-      tmp.push("4");
-    }
-    this.setState({
-      collapseType: e.target.name,
-      activeKey: tmp
-    });
+  plusRadioChanged = e => {
+    this.setState({ chosenPlusRadio: e.target.id });
   };
 
   onSubmit = e => {
     e.preventDefault();
-    console.log(e.target);
-    console.log(this.props);
+    const { defaultAddress } = this.state;
+    let tmp = [];
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log("Received values of form: ", values);
+        if (e.target.name == "delivery") {
+          tmp.push("3");
+          if (values.address == defaultAddress.address) {
+            values.address = defaultAddress.id;
+          }
+          this.setState({ chosenDelivery: values });
+        } else if (e.target.name == "payment") {
+          tmp.push("4");
+        }
+
+        this.setState({
+          collapseType: e.target.name,
+          activeKey: tmp
+        });
       } else {
         console.log("error");
       }
     });
   };
 
+  changeTab = e => {
+    const { deliveryTypes } = this.props.container;
+    deliveryTypes.map((item, i) => {
+      if (item.id == e) {
+        this.setState({ delivery: item });
+      }
+    });
+  };
+
+  renderPaymentTypes = () => {
+    const { paymentTypes } = this.props.container;
+    let tmp;
+    if (paymentTypes.length !== 0) {
+      tmp = paymentTypes.map((item, i) => {
+        return (
+          <label className="card radio-card" key={i}>
+            <div className="radio-button-container">
+              <input
+                className="form-check-input radio-button"
+                type="radio"
+                name="paymentRadios"
+                defaultChecked={item.id == 1 ? true : false}
+                id={item.id}
+                onChange={this.changeRadio}
+              />
+            </div>
+            <h5 className="title radio-button-title">
+              <i className={item.imgnm} aria-hidden="true" />
+              <p>
+                <strong>{item.name}</strong>
+                <span>{item.description}</span>
+              </p>
+            </h5>
+          </label>
+        );
+      });
+    }
+
+    return tmp;
+  };
+
+  renderBankInfo = () => {
+    const { bankInfo } = this.props.container;
+    let tmp;
+    if (bankInfo !== 0) {
+      tmp = bankInfo.map((item, i) => {
+        return (
+          <RadioButton value={item.bankid} key={i}>
+            {item.banknm}
+          </RadioButton>
+        );
+      });
+    }
+    return tmp;
+  };
+
+  bankRadioChange = e => {
+    const { bankInfo } = this.props.container;
+    if (bankInfo.length !== 0) {
+      bankInfo.map((item, i) => {
+        if (item.bankid == e.target.value) {
+          this.setState({ chosenBankInfo: item });
+        }
+      });
+    }
+  };
+
+  generateNoat = (total, deliver) => {
+    let noat = ((total + deliver) / 110) * 10;
+    return noat.toFixed(2);
+  };
+
   render() {
-    //const { getFieldDecorator } = this.props.form;
+    const {
+      userInfo,
+      delivery,
+      userAddress,
+      defaultAddress,
+      chosenPayment,
+      products,
+      cardno,
+      chosenPlusRadio
+    } = this.state;
+    const deliver1 = delivery == [] ? 0 : delivery.price;
+    const { getFieldDecorator } = this.props.form;
     return (
       <div className="section section-gray">
         <div className="container pad10">
@@ -181,18 +304,13 @@ class Checkout extends React.Component {
                         activeKey={this.state.activeKey}
                         onChange={this.callback}
                       >
-                        <Panel
-                          showArrow={false}
-                          header={this.customerTab()}
-                          key="1"
-                        >
-                          <div>
-                            <div
-                              id="block1"
-                              className="collapse show"
-                              aria-labelledby="headingOne"
-                              data-parent="#accordionExample"
-                            >
+                        {userInfo.length == 0 ? (
+                          <Panel
+                            showArrow={false}
+                            header={this.customerTab()}
+                            key="1"
+                          >
+                            <div>
                               <div className="content-container">
                                 <div className="socials flex-this flex-wrap">
                                   <button
@@ -216,93 +334,6 @@ class Checkout extends React.Component {
                                 </div>
                                 <span className="divide-maker">Эсвэл</span>
                                 <form>
-                                  <div className="row row10">
-                                    <div className="col-xl-6 pad10">
-                                      <div className="form-group">
-                                        <label
-                                          htmlFor="exampleInputEmail1"
-                                          className="sr-only"
-                                        >
-                                          Email address
-                                        </label>
-                                        <input
-                                          type="text"
-                                          className="form-control"
-                                          id="exampleInputEmail1"
-                                          aria-describedby="emailHelp"
-                                          placeholder="Овог*"
-                                        />
-                                      </div>
-                                    </div>
-                                    <div className="col-xl-6 pad10">
-                                      <div className="form-group">
-                                        <label
-                                          htmlFor="exampleInputEmail1"
-                                          className="sr-only"
-                                        >
-                                          Email address
-                                        </label>
-                                        <input
-                                          type="text"
-                                          className="form-control"
-                                          id="exampleInputEmail1"
-                                          aria-describedby="emailHelp"
-                                          placeholder="Овог*"
-                                        />
-                                      </div>
-                                    </div>
-                                    <div className="col-xl-12 pad10">
-                                      <div className="form-group">
-                                        <label
-                                          htmlFor="exampleInputEmail1"
-                                          className="sr-only"
-                                        >
-                                          Email address
-                                        </label>
-                                        <input
-                                          type="text"
-                                          className="form-control"
-                                          id="exampleInputEmail1"
-                                          aria-describedby="emailHelp"
-                                          placeholder="Овог*"
-                                        />
-                                      </div>
-                                    </div>
-                                    <div className="col-xl-6 pad10">
-                                      <div className="form-group">
-                                        <label
-                                          htmlFor="exampleInputEmail1"
-                                          className="sr-only"
-                                        >
-                                          Email address
-                                        </label>
-                                        <input
-                                          type="text"
-                                          className="form-control"
-                                          id="exampleInputEmail1"
-                                          aria-describedby="emailHelp"
-                                          placeholder="Овог*"
-                                        />
-                                      </div>
-                                    </div>
-                                    <div className="col-xl-12 pad10">
-                                      <div className="form-group">
-                                        <label
-                                          htmlFor="exampleInputEmail1"
-                                          className="sr-only"
-                                        >
-                                          Email address
-                                        </label>
-                                        <input
-                                          type="text"
-                                          className="form-control"
-                                          id="exampleInputEmail1"
-                                          aria-describedby="emailHelp"
-                                          placeholder="Овог*"
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
                                   <button
                                     type="submit"
                                     className="btn btn-dark btn-bigger"
@@ -314,32 +345,31 @@ class Checkout extends React.Component {
                                 </form>
                               </div>
                             </div>
-                          </div>
-                        </Panel>
+                          </Panel>
+                        ) : (
+                          ""
+                        )}
+
                         <Panel
                           header={this.deliveryInfo()}
                           showArrow={false}
                           key="2"
                         >
-                          <Tabs>
+                          <Tabs onChange={this.changeTab}>
                             {this.props.container.deliveryTypes.map(
                               (item, i) => {
-                                console.log(item);
                                 return (
                                   <TabPane
                                     tab={
                                       <div className="flex-this center">
-                                        <img
-                                          alt="icon"
-                                          src="images/demo/1.png"
-                                        />
+                                        <img alt="icon" src={instant} />
                                         <p className="text">
                                           <strong>{item.typenm}</strong>
                                           <span>{item.price + "₮"}</span>
                                         </p>
                                       </div>
                                     }
-                                    key={i}
+                                    key={item.id}
                                   >
                                     <div
                                       className="tab-pane active"
@@ -353,43 +383,81 @@ class Checkout extends React.Component {
                                         үнэгүй
                                       </p>
                                       <Form
-                                        {...formItemLayout}
                                         onSubmit={this.onSubmit}
+                                        name="delivery"
                                       >
                                         <div className="row row10">
-                                          <div className="col-xl-6 pad10" />
+                                          {item.id != 3 ? (
+                                            <div className="col-xl-12 pad10">
+                                              <div className="form-group">
+                                                <Form.Item>
+                                                  {getFieldDecorator(
+                                                    "address",
+                                                    {
+                                                      initialValue:
+                                                        defaultAddress.address,
+                                                      rules: [
+                                                        {
+                                                          required: true,
+                                                          message:
+                                                            "Хаяг оруулна уу"
+                                                        }
+                                                      ]
+                                                    }
+                                                  )(
+                                                    <Select
+                                                      placeholder="Хаягаа сонгоно уу ?"
+                                                      size="large"
+                                                    >
+                                                      {this.renderAddrsOption()}
+                                                    </Select>
+                                                  )}
+                                                </Form.Item>
+                                              </div>
+                                            </div>
+                                          ) : (
+                                            ""
+                                          )}
+
                                           <div className="col-xl-6 pad10">
                                             <div className="form-group">
-                                              <label
-                                                htmlFor="exampleInputEmail1"
-                                                className="sr-only"
-                                              >
-                                                Email address
-                                              </label>
-                                              <input
-                                                type="text"
-                                                className="form-control"
-                                                id="exampleInputEmail1"
-                                                aria-describedby="emailHelp"
-                                                placeholder="Овог*"
-                                              />
+                                              <Form.Item>
+                                                {getFieldDecorator("lastName", {
+                                                  rules: [
+                                                    {
+                                                      required: true,
+                                                      message: "Овог оруулна уу"
+                                                    }
+                                                  ]
+                                                })(
+                                                  <Input
+                                                    className="form-control"
+                                                    type="text"
+                                                    placeholder="Овог*"
+                                                  />
+                                                )}
+                                              </Form.Item>
                                             </div>
                                           </div>
-                                          <div className="col-xl-12 pad10">
+
+                                          <div className="col-xl-6 pad10">
                                             <div className="form-group">
-                                              <label
-                                                htmlFor="exampleInputEmail1"
-                                                className="sr-only"
-                                              >
-                                                Email address
-                                              </label>
-                                              <input
-                                                type="text"
-                                                className="form-control"
-                                                id="exampleInputEmail1"
-                                                aria-describedby="emailHelp"
-                                                placeholder="Овог*"
-                                              />
+                                              <Form.Item>
+                                                {getFieldDecorator("phone", {
+                                                  rules: [
+                                                    {
+                                                      required: true,
+                                                      message: "Утас оруулна уу"
+                                                    }
+                                                  ]
+                                                })(
+                                                  <Input
+                                                    className="form-control"
+                                                    type="text"
+                                                    placeholder="Утас*"
+                                                  />
+                                                )}
+                                              </Form.Item>
                                             </div>
                                           </div>
                                         </div>
@@ -398,8 +466,7 @@ class Checkout extends React.Component {
                                           <button
                                             className="btn btn-main"
                                             name="delivery"
-                                            htmlType="submit"
-                                            onClick={this.handleClick}
+                                            type="submit"
                                           >
                                             Дараах
                                           </button>
@@ -417,99 +484,39 @@ class Checkout extends React.Component {
                           showArrow={false}
                           key="3"
                           disabled={
-                            this.state.collapseType === "delivery"
+                            this.state.collapseType === "delivery" ||
+                            this.state.collapseType === "payment"
                               ? false
                               : true
                           }
                         >
-                          <div className="content-container">
-                            <label
-                              className="card radio-card"
-                              htmlFor="exampleRadios13"
-                            >
-                              <div className="radio-button-container">
-                                <input
-                                  className="form-check-input radio-button"
-                                  type="radio"
-                                  name="exampleRadios"
-                                  id="exampleRadios13"
-                                  value="option1"
-                                  onChange={this.changeRadio}
-                                />
-                              </div>
-                              <h5 className="title radio-button-title">
-                                <i
-                                  className="fa fa-credit-card"
-                                  aria-hidden="true"
-                                />
-                                <p>
-                                  <strong>Төлбөрийн карт</strong>
-                                  <span>И-пин код оруулж төлөх</span>
-                                </p>
-                              </h5>
-                            </label>
-                            <label
-                              className="card radio-card"
-                              htmlFor="exampleRadios14"
-                            >
-                              <div className="radio-button-container">
-                                <input
-                                  className="form-check-input radio-button"
-                                  type="radio"
-                                  name="exampleRadios"
-                                  id="exampleRadios14"
-                                  value="option1"
-                                  onChange={this.changeRadio}
-                                />
-                              </div>
-                              <h5 className="title radio-button-title">
-                                <i
-                                  className="fa fa-envelope"
-                                  aria-hidden="true"
-                                />
-                                <p>
-                                  <strong>Мэссэж банк</strong>
-                                  <span>И-пин код оруулж төлөх</span>
-                                </p>
-                              </h5>
-                            </label>
-
-                            <label
-                              className="card radio-card"
-                              htmlFor="exampleRadios15"
-                            >
-                              <div className="radio-button-container">
-                                <input
-                                  className="form-check-input radio-button"
-                                  type="radio"
-                                  name="exampleRadios"
-                                  id="exampleRadios15"
-                                  value="option1"
-                                  onChange={this.changeRadio}
-                                />
-                              </div>
-                              <h5 className="title radio-button-title">
-                                <i
-                                  className="fa fa-qrcode"
-                                  aria-hidden="true"
-                                />
-                                <p>
-                                  <strong>Qpay</strong>
-                                  <span>И-пин код оруулж төлөх</span>
-                                </p>
-                              </h5>
-                            </label>
-                          </div>
-                          <hr />
-                          <div className="text-right">
-                            <button
-                              className="btn btn-main"
-                              name="payment"
-                              onClick={this.handleClick}
-                            >
-                              Дараах
-                            </button>
-                          </div>
+                          <Form onSubmit={this.onSubmit} name="payment">
+                            <div className="content-container">
+                              {this.renderPaymentTypes()}
+                              {chosenPayment.id == 1 ? (
+                                <RadioGroup
+                                  buttonStyle="solid"
+                                  defaultValue={1}
+                                  size="large"
+                                  onChange={this.bankRadioChange}
+                                >
+                                  {this.renderBankInfo()}
+                                </RadioGroup>
+                              ) : (
+                                ""
+                              )}
+                            </div>
+                            <hr />
+                            <div className="text-right">
+                              <button
+                                className="btn btn-main"
+                                name="payment"
+                                type="submit"
+                              >
+                                Дараах
+                              </button>
+                            </div>
+                          </Form>
                         </Panel>
                         <Panel
                           header={this.optionType()}
@@ -519,193 +526,106 @@ class Checkout extends React.Component {
                             this.state.collapseType === "payment" ? false : true
                           }
                         >
-                          <div
-                            id="block4"
-                            className="collapse show"
-                            aria-labelledby="headingOne"
-                            data-parent="#accordionExample"
-                          >
-                            <div className="content-container payment">
-                              <p className="title">
-                                <strong>НӨАТ</strong>
-                              </p>
-                              <div
-                                id="collapseFour"
-                                className="collapse show"
-                                aria-labelledby="headingFour2"
-                                data-parent="#accordionExample2"
-                              >
-                                <div className="hand-pay flex-this">
-                                  <div className="form-check">
-                                    <input
-                                      className="form-check-input"
-                                      type="radio"
-                                      name="exampleRadios1"
-                                      id="exampleRadios16"
-                                      value="option1"
-                                    />
-                                    <label
-                                      className="form-check-label"
-                                      htmlFor="exampleRadios16"
-                                    >
-                                      Хувь хүн
-                                    </label>
-                                  </div>
-                                  <div className="form-check">
-                                    <input
-                                      className="form-check-input"
-                                      type="radio"
-                                      name="exampleRadios1"
-                                      id="exampleRadios17"
-                                      value="option2"
-                                    />
-                                    <label
-                                      className="form-check-label"
-                                      htmlFor="exampleRadios17"
-                                    >
-                                      Байгууллага
-                                    </label>
-                                  </div>
-                                </div>
+                          <div className="content-container payment">
+                            <p className="title">
+                              <strong>НӨАТ</strong>
+                            </p>
+                            <div className="hand-pay flex-this">
+                              <div className="form-check">
+                                <input
+                                  className="form-check-input"
+                                  type="radio"
+                                  defaultChecked
+                                  name="plusRadios"
+                                  id="1"
+                                  onChange={this.plusRadioChanged}
+                                />
+                                <label className="form-check-label">
+                                  Хувь хүн
+                                </label>
                               </div>
-                              <div className="tab-content">
-                                <div
-                                  className="tab-pane"
-                                  id="home1"
-                                  role="tabpanel"
-                                  aria-labelledby="home-tab1"
-                                >
-                                  <p className="title">
-                                    <strong>Имарт картаа холбох</strong>
-                                  </p>
-                                  <form>
-                                    <div className="row row10">
-                                      <div className="col-xl-6 pad10">
-                                        <div className="form-group">
-                                          <label
-                                            htmlFor="exampleInputEmail1"
-                                            className="sr-only"
-                                          >
-                                            Email address
-                                          </label>
-                                          <input
-                                            type="text"
-                                            className="form-control"
-                                            id="exampleInputEmail1"
-                                            aria-describedby="emailHelp"
-                                            placeholder="Овог*"
-                                          />
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div className="row row10">
-                                      <div className="col-xl-6 pad10">
-                                        <div className="form-group">
-                                          <input
-                                            type="text"
-                                            className="form-control"
-                                            id="exampleInputEmail1"
-                                            aria-describedby="emailHelp"
-                                            placeholder="Овог*"
-                                          />
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <button className="btn btn-gray solid">
-                                      <span className="text-uppercase">
-                                        Холбох
-                                      </span>
-                                    </button>
-                                  </form>
-                                  <p className="title">
-                                    <strong>Купоны дугаар ашиглах</strong>
-                                  </p>
-                                  <form>
-                                    <div className="row row10">
-                                      <div className="col-xl-6 pad10">
-                                        <div className="form-group">
-                                          <input
-                                            type="text"
-                                            className="form-control"
-                                            id="exampleInputEmail1"
-                                            aria-describedby="emailHelp"
-                                            placeholder="Овог*"
-                                          />
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <button className="btn btn-gray solid">
-                                      <span className="text-uppercase">
-                                        Ашиглах
-                                      </span>
-                                    </button>
-                                  </form>
-                                </div>
-                                <div
-                                  className="tab-pane active"
-                                  id="profile1"
-                                  role="tabpanel"
-                                  aria-labelledby="profile-tab1"
-                                >
-                                  <form>
-                                    <div className="row row10">
-                                      <div className="col-xl-6 pad10">
-                                        <div className="form-group">
-                                          <input
-                                            type="text"
-                                            className="form-control"
-                                            id="exampleInputEmail1"
-                                            aria-describedby="emailHelp"
-                                            placeholder="Байгууллагын регистэр"
-                                          />
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <button className="btn btn-gray solid">
-                                      <span className="text-uppercase">
-                                        Ашиглах
-                                      </span>
-                                    </button>
-                                    <button className="btn btn-main solid">
-                                      <span className="text-uppercase">
-                                        Холбох
-                                      </span>
-                                    </button>
-                                    <button className="btn ">
-                                      <span className="text-uppercase">
-                                        Засах
-                                      </span>
-                                    </button>
-                                  </form>
-                                  <p className="title">
-                                    <strong>Купоны дугаар ашиглах</strong>
-                                  </p>
-                                  <form>
-                                    <div className="row row10">
-                                      <div className="col-xl-6 pad10">
-                                        <div className="form-group">
-                                          <input
-                                            type="text"
-                                            className="form-control"
-                                            id="exampleInputEmail1"
-                                            aria-describedby="emailHelp"
-                                            placeholder="Купоны дугаар"
-                                          />
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <button
-                                      type="submit"
-                                      className="btn btn-gray solid"
-                                    >
-                                      <span className="text-uppercase">
-                                        Ашиглах
-                                      </span>
-                                    </button>
-                                  </form>
-                                </div>
+                              <div className="form-check">
+                                <input
+                                  className="form-check-input"
+                                  type="radio"
+                                  name="plusRadios"
+                                  id="2"
+                                  onChange={this.plusRadioChanged}
+                                />
+                                <label className="form-check-label">
+                                  Байгууллага
+                                </label>
                               </div>
                             </div>
+                            {chosenPlusRadio == 2 ? (
+                              <form>
+                                <div className="row row10">
+                                  <div className="col-xl-6 pad10">
+                                    <div className="form-group">
+                                      <input
+                                        type="text"
+                                        className="form-control"
+                                        id="exampleInputEmail1"
+                                        aria-describedby="emailHelp"
+                                        placeholder="Байгууллагын регистэр"
+                                      />
+                                    </div>
+                                  </div>
+                                </div>
+                                <button className="btn btn-gray solid">
+                                  <span className="text-uppercase">
+                                    Ашиглах
+                                  </span>
+                                </button>
+                                <button className="btn btn-main solid">
+                                  <span className="text-uppercase">Холбох</span>
+                                </button>
+                                <button className="btn ">
+                                  <span className="text-uppercase">Засах</span>
+                                </button>
+                              </form>
+                            ) : (
+                              ""
+                            )}
+                            {cardno == null ? (
+                              <div>
+                                <p className="title">
+                                  <strong>Имарт картаа холбох</strong>
+                                </p>
+                                <form>
+                                  <div className="row row10">
+                                    <div className="col-xl-6 pad10">
+                                      <div className="form-group">
+                                        <input
+                                          type="text"
+                                          className="form-control"
+                                          id="exampleInputEmail1"
+                                          aria-describedby="emailHelp"
+                                          placeholder="Картын дугаар"
+                                        />
+                                        <input
+                                          type="password"
+                                          className="form-control"
+                                          id="exampleInputEmail1"
+                                          aria-describedby="emailHelp"
+                                          placeholder="Нууц үг"
+                                        />
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <button
+                                    type="submit"
+                                    className="btn btn-gray solid"
+                                  >
+                                    <span className="text-uppercase">
+                                      Холбох
+                                    </span>
+                                  </button>
+                                </form>
+                              </div>
+                            ) : (
+                              ""
+                            )}
                           </div>
                         </Panel>
                       </Collapse>
@@ -715,8 +635,13 @@ class Checkout extends React.Component {
               </div>
               <div className="col-lg-4 pad10">
                 <div className="block right-panel">
+                  {" "}
                   <p className="title">
-                    <strong>Болд ГАНЗОРИГ</strong>
+                    <strong>
+                      {userInfo.length == 0
+                        ? ""
+                        : userInfo.lastname + " " + userInfo.firstname}
+                    </strong>
                   </p>
                   <hr />
                   <div className="content">
@@ -725,15 +650,19 @@ class Checkout extends React.Component {
                     </p>
                     <p className="text flex-space">
                       <span>Хүргэлтийн төрөл</span>
-                      <strong>Энгийн</strong>
+                      <strong>{delivery == [] ? "" : delivery.typenm}</strong>
                     </p>
                     <p className="text flex-this">
                       <i className="fa fa-user" aria-hidden="true" />
-                      <span>Болд Ганзориг</span>
+                      <span>
+                        {userInfo.length == 0
+                          ? ""
+                          : userInfo.lastname + " " + userInfo.firstname}
+                      </span>
                     </p>
                     <p className="text flex-this">
                       <i className="fa fa-phone" aria-hidden="true" />
-                      <span>9911 9911</span>
+                      <span>{userInfo.length == 0 ? "" : userInfo.phone}</span>
                     </p>
                     <p className="text flex-this">
                       <i className="fa fa-map-marker" aria-hidden="true" />
@@ -749,21 +678,23 @@ class Checkout extends React.Component {
                       <strong>Төлөх дүн</strong>
                     </p>
                     <p className="text flex-space">
-                      <span>Бараа (2):</span>
-                      <strong>11,400₮</strong>
+                      <span>Бараа ({products.totalQty}):</span>
+                      <strong>{products.totalPrice}₮</strong>
                     </p>
                     <p className="text flex-space">
                       <span>Хүргэлтийн үнэ:</span>
-                      <strong>3,000₮</strong>
+                      <strong>{deliver1}₮</strong>
                     </p>
                     <hr />
                     <p className="text flex-space">
                       <span>Нийт дүн:</span>
-                      <strong>14,400₮</strong>
+                      <strong>{products.totalPrice + deliver1}₮</strong>
                     </p>
                     <p className="text flex-space">
                       <span>НӨАТ:</span>
-                      <strong>1,140₮</strong>
+                      <strong>
+                        {this.generateNoat(products.totalPrice, deliver1)}₮
+                      </strong>
                     </p>
                     <p className="text text-center">
                       <span>89,000₮-с дээш бол хүргэлт үнэгүй</span>
@@ -777,9 +708,20 @@ class Checkout extends React.Component {
             </div>
           </div>
         </div>
+        <LoginModal
+          onVisibleChange={this.toggleLoginModal}
+          visible={this.state.isLoginModalVisible}
+        />
       </div>
     );
   }
+}
+
+function mapStateToProps(state) {
+  return {
+    isLoggedIn: state.auth.isLoggedIn,
+    user: state.auth.user
+  };
 }
 
 export default Form.create({ name: "checkout" })(Checkout);

@@ -3,8 +3,7 @@ import {
   BrowserRouter as Router,
   BrowserHistory,
   Switch,
-  Route,
-  Redirect
+  Route
 } from "react-router-dom";
 import { Provider, connect } from "react-redux";
 import { persistStore } from "redux-persist";
@@ -46,29 +45,12 @@ import {
   Checkout
 } from "./containers";
 
+import Private from "./components/Private";
+
 //library.add(fab, faCheckSquare, faCoffee);
 library.add(fas, far, fab);
 
 addLocaleData([...en]);
-
-class Private extends Component {
-  render() {
-    const { component: Component, ...rest } = this.props;
-
-    return (
-      <Route
-        {...rest}
-        render={props =>
-          localStorage.getItem("user") ? (
-            <Component {...props} />
-          ) : (
-            <Redirect to="/login" />
-          )
-        }
-      />
-    );
-  }
-}
 
 @connect(stores => ({ ...stores }))
 @injectIntl
@@ -146,7 +128,7 @@ class Localization extends Component {
       {
         path: "/userprofile",
         exact: true,
-        // isPrivate: true,
+        isPrivate: true,
         component: rest => <UserProfile {...rest} {...this.props} />
       },
       {

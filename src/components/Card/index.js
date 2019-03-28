@@ -181,22 +181,26 @@ class Card extends React.Component {
     if (!item) {
       return null;
     }
-    const formatter = new Intl.NumberFormat("en-US");
-    let price = formatter.format(item.price);
-    let prices1 = formatter.format(item.sprice);
 
     if (item.sprice || item.price) {
+      const formatter = new Intl.NumberFormat("en-US");
       if (item.sprice) {
         prices = (
           <div>
-            <small className="sale">{isNaN(price) ? price : 0}₮</small>
-            <span className="current">{isNaN(prices1) ? prices1 : 0}₮</span>
+            <small className="sale">
+              {isNaN(item.price) ? 0 : formatter.format(item.price)}₮
+            </small>
+            <span className="current">
+              {isNaN(item.sprice) ? 0 : formatter.format(item.sprice)}₮
+            </span>
           </div>
         );
       } else {
         prices = (
           <div>
-            <span className="current">{isNaN(price) ? price : 0}₮</span>
+            <span className="current">
+              {isNaN(item.price) ? 0 : formatter.format(item.price)}₮
+            </span>
           </div>
         );
       }

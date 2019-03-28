@@ -8,8 +8,8 @@ import "./style.css";
 
 class Footer extends React.Component {
   render() {
-    const { staticInfo } = this.props.container;
-    const { staticPage } = this.props.container;
+    const { staticInfo, staticPage } = this.props.container;
+
     return (
       <div className="top-container">
         <div className="section section-footer">
@@ -79,9 +79,6 @@ class Footer extends React.Component {
               </div>
               <div className="col-sm-12 col-md-6 col-lg-3 pad10">
                 <ul className="list-unstyled">
-                  <li>
-                    <strong>Бидний тухай</strong>
-                  </li>
                   {staticPage.map((item, index) => {
                     if (item.pagetype == "1") {
                       return (
@@ -99,9 +96,6 @@ class Footer extends React.Component {
               </div>
               <div className="col-sm-12 col-md-6 col-lg-3 pad10">
                 <ul className="list-unstyled">
-                  <li>
-                    <strong>Үйлчилгээний нөхцөл</strong>
-                  </li>
                   {staticPage.map((item, index) => {
                     if (item.pagetype == "2") {
                       return (

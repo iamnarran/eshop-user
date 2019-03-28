@@ -1,11 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Modal, Button, message } from "antd";
-import { Link } from "react-router-dom";
-import { EXPAND_LEFT } from "react-ladda";
+import { Link, Redirect } from "react-router-dom";
 import { createForm } from "rc-form";
 
-// import FacebookLogin from "./FacebookLogin";
+import FacebookLogin from "./FacebookLogin";
+import GoogleLogin from "./GoogleLogin";
 import actions, { setUser } from "../actions/login";
 import RegisterModal from "./RegisterModal";
 
@@ -18,38 +18,45 @@ import RegisterModal from "./RegisterModal";
 )
 class LoginModal extends React.Component {
   state = {
-    loading: false,
+    shouldRedirect: false,
+    isLoading: false,
     isRegisterModalVisible: false
   };
 
-  componentDidUpdate(prevProps, prevState) {
-    if (this.props.visible !== prevProps.visible) {
-      this.setState({ visible: this.props.visible });
+  renderRedirect = () => {
+    if (this.state.shouldRedirect) {
+      return <Redirect to="/userprofile" />;
     }
-  }
-
-  handleOk = e => {
-    this.props.onVisibleChange(e);
   };
 
-  handleCancel = e => {
-    this.props.onVisibleChange(e);
+  setRedirect = () => {
+    this.setState({ shouldRedirect: true });
   };
 
-  toggleRegisterModal = e => {
-    e.preventDefault();
+  handleOk = () => {
+    this.props.onVisibilityChange();
+  };
+
+  handleCancel = () => {
+    this.props.onVisibilityChange();
+  };
+
+  handleSocialSuccess = () => {
+    this.handleOk();
+    this.setRedirect();
+  };
+
+  toggleRegisterModal = () => {
     this.setState({
       isRegisterModalVisible: !this.state.isRegisterModalVisible
     });
   };
 
-  showRegisterModal = e => {
-    e.preventDefault();
+  showRegisterModal = () => {
     this.setState({ isRegisterModalVisible: true });
   };
 
-  hideRegisterModal = e => {
-    e.preventDefault();
+  hideRegisterModal = () => {
     this.setState({ isRegisterModalVisible: false });
   };
 
@@ -57,22 +64,23 @@ class LoginModal extends React.Component {
     e.preventDefault();
     this.props.form.validateFields(async (error, form) => {
       if (!error) {
-        this.setState({ loading: true });
-        let res = null;
+        this.setState({ isLoading: true });
         try {
-          res = await this.props.login(form);
+          const res = await this.props.login(form);
 
           if (res.success) {
-            this.props.setUser(res.data);
-            window.location.reload();
+            this.props.setUser(res.data.customerInfo);
+            this.setState({ isLoading: false });
+            this.handleOk();
+            this.setRedirect();
           } else {
             message.error("Таны нэвтрэх нэр эсвэл нууц үг буруу байна");
-            this.setState({ loading: false });
+            this.setState({ isLoading: false });
           }
         } catch (err) {
           console.log(err);
           message.error(err.message);
-          this.setState({ loading: false });
+          this.setState({ isLoading: false });
         }
       }
     });
@@ -83,6 +91,7 @@ class LoginModal extends React.Component {
 
     return (
       <div>
+        {this.renderRedirect()}
         <Modal
           title="Нэвтрэх"
           visible={this.props.visible}
@@ -165,8 +174,6 @@ class LoginModal extends React.Component {
               <Button
                 type="primary"
                 className="btn btn-block btn-login text-uppercase"
-                loading={this.state.loading}
-                data-style={EXPAND_LEFT}
                 htmlType="submit"
               >
                 Нэвтрэх
@@ -175,15 +182,8 @@ class LoginModal extends React.Component {
 
             <span className="divide-maker">Эсвэл</span>
 
-            {/* <FacebookLogin onLogin={this.handleLogInSave} /> */}
-            {/* <GoogleLogin /> */}
-
-            <button
-              type="submit"
-              className="btn btn-block btn-social btn-emart"
-            >
-              Имарт картаар нэвтрэх
-            </button>
+            <FacebookLogin onFbSuccess={this.handleSocialSuccess} />
+            <GoogleLogin onGoogleSuccess={this.handleSocialSuccess} />
 
             <div className="text-center">
               <Link
@@ -197,7 +197,7 @@ class LoginModal extends React.Component {
           </div>
         </Modal>
         <RegisterModal
-          onVisibleChange={this.toggleRegisterModal}
+          onVisibilityChange={this.toggleRegisterModal}
           visible={this.state.isRegisterModalVisible}
         />
       </div>
