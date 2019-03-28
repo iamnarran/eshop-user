@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import storage from "../../utils/storage";
 import api from "../../api";
 import { updateCart } from "../../actions/cart";
+import { MapsRestaurantMenu } from "material-ui/svg-icons";
 
 class PackageDetail extends React.Component {
   constructor(props) {
@@ -37,56 +38,59 @@ class PackageDetail extends React.Component {
       : { products: [], totalQty: 0, totalPrice: 0 };
 
     const found = cart.products.find(product => product.cd === item.cd);
-
-    let itemQty = 0;
-    if (found) {
-      itemQty = parseInt(found.qty) + parseInt(item.unit);
+    if (parseInt(item.unit) === 0) {
+      return;
     } else {
-      itemQty = item.unit;
-    }
-    return new Promise((resolve, reject) => {
-      api.product
-        .isAvailable({
-          skucd: item.cd,
-          qty: itemQty
-        })
-        .then(res => {
-          if (res.success) {
-            if (found) {
-              found.qty++;
-              const i = cart.products
-                .map(product => product.cd)
-                .indexOf(found.cd);
-              cart.products.splice(i, 1, found);
+      let itemQty = 0;
+      if (found) {
+        itemQty = parseInt(found.qty) + parseInt(item.unit);
+      } else {
+        itemQty = item.unit;
+      }
+      return new Promise((resolve, reject) => {
+        api.product
+          .isAvailable({
+            skucd: item.cd,
+            qty: itemQty
+          })
+          .then(res => {
+            if (res.success) {
+              if (found) {
+                found.qty++;
+                const i = cart.products
+                  .map(product => product.cd)
+                  .indexOf(found.cd);
+                cart.products.splice(i, 1, found);
+              } else {
+                item.qty = itemQty;
+                cart.products.push(item);
+              }
+              const qties = cart.products.map(product => product.qty);
+              cart.totalQty = qties.reduce((acc, curr) => acc + curr);
+              const prices = cart.products.map(product => {
+                const price = product.sprice
+                  ? product.sprice
+                  : product.price
+                  ? product.price
+                  : 0;
+                return product.qty * price;
+              });
+              cart.totalPrice = prices.reduce((acc, curr) => acc + curr);
+              storage.set("cart", cart);
+              this.props.updateCart({
+                products: cart.products,
+                totalQty: cart.totalQty,
+                totalPrice: cart.totalPrice
+              });
+              this.notify("Таны сагсанд " + item.skunm + " бараа нэмэгдлээ.");
+              resolve();
             } else {
-              item.qty = itemQty;
-              cart.products.push(item);
+              this.notify(res.message);
+              reject();
             }
-            const qties = cart.products.map(product => product.qty);
-            cart.totalQty = qties.reduce((acc, curr) => acc + curr);
-            const prices = cart.products.map(product => {
-              const price = product.sprice
-                ? product.sprice
-                : product.price
-                ? product.price
-                : 0;
-              return product.qty * price;
-            });
-            cart.totalPrice = prices.reduce((acc, curr) => acc + curr);
-            storage.set("cart", cart);
-            this.props.updateCart({
-              products: cart.products,
-              totalQty: cart.totalQty,
-              totalPrice: cart.totalPrice
-            });
-            this.notify("Таны сагсанд " + item.skunm + " бараа нэмэгдлээ.");
-            resolve();
-          } else {
-            this.notify(res.message);
-            reject();
-          }
-        });
-    });
+          });
+      });
+    }
   };
 
   handleAddToCart = item => e => {
@@ -166,12 +170,10 @@ class PackageDetail extends React.Component {
   };
 
   render() {
-    console.log("this.state", this.state);
     const formatter = new Intl.NumberFormat("en-US");
     const sameproduct = this.props.container.Products[0].sameproducts;
     let products = null;
     let sameProducts = null;
-    console.log(sameproduct, this.state.products);
     const sliderParams = {
       spaceBetween: 0,
       autoplay: {
