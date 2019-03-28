@@ -16,6 +16,7 @@ import login from "./User/login";
 import register from "./User/register";
 import staticPage from "./staticPage";
 import categoryInfo from "./categoryInfo";
+import season from "./season";
 import cart from "./cart";
 import checkout from "./checkout";
 import wishList from "./wishlist";
@@ -128,6 +129,11 @@ staticPage.forEach(api => {
 rest["categoryInfo"] = {};
 categoryInfo.forEach(api => {
   rest.categoryInfo[api.NAME] = data => generateAPI(api, data);
+});
+
+rest["season"] = {};
+season.forEach(api => {
+  rest.season[api.NAME] = data => generateAPI(api, data);
 });
 
 rest["cart"] = {};

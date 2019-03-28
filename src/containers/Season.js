@@ -21,6 +21,7 @@ const fetch = async (props, onData) => {
     const info = await api.product.findAllSeasonProducts({ jumcd: "99" });
     onData(null, {
       container: {
+        id: props.match.params.id || null,
         // menu: menu.data,
         // primaryBanners: primaryBanners.data,
         products: info.data[0].products,

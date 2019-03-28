@@ -1,53 +1,42 @@
 import React from "react";
+import { connect } from "react-redux";
 import ReactGoogleLogin from "react-google-login";
+import { toast } from "react-toastify";
 
+import { setUser } from "../actions/login";
 import { SOCIAL_IDS } from "../utils/consts";
 
 class GoogleLogin extends React.Component {
-  state = {
-    isLoggedIn: false,
-    userId: "",
-    name: "",
-    email: "",
-    picture: ""
-  };
-
-  onGoogleLoginSuccess = res => {
+  handleGoogleLoginResponse = res => {
     console.log(res);
-    // this.setState({ isLoggedIn: true });
   };
 
-  onGoogleLoginFailure = err => {
+  handleGoogleLoginFailure = err => {
     console.log(err);
-    // console.log("failure");
   };
+
+  notify = message => toast(message, { autoClose: 5000 });
 
   render() {
-    let gContent;
-
-    if (this.state.isLoggedIn) {
-      gContent = null;
-    } else {
-      gContent = (
-        <ReactGoogleLogin
-          clientId={SOCIAL_IDS.google}
-          buttonText="Login"
-          onSuccess={this.onGoogleLoginSuccess}
-          onFailure={this.onGoogleLoginFailure}
-          render={renderProps => (
-            <button
-              className="btn btn-block btn-social btn-gmail"
-              onClick={renderProps.onClick}
-            >
-              Gmail-р нэвтрэх
-            </button>
-          )}
-        />
-      );
-    }
-
-    return <div>{gContent}</div>;
+    return (
+      <ReactGoogleLogin
+        clientId={SOCIAL_IDS.google}
+        onSuccess={this.handleGoogleLoginResponse}
+        onFailure={this.handleGoogleLoginFailure}
+        render={props => (
+          <button
+            className="btn btn-block btn-social btn-gmail"
+            onClick={props.onClick}
+          >
+            Gmail-р нэвтрэх
+          </button>
+        )}
+      />
+    );
   }
 }
 
-export default GoogleLogin;
+export default connect(
+  null,
+  { setUser }
+)(GoogleLogin);
