@@ -2,12 +2,19 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { IMAGE } from "../../utils/consts";
 import Slider from "../../components/Slider";
+import config from "config";
+import { connect } from "react-redux";
+
+import { toast } from "react-toastify";
+import storage from "../../utils/storage";
+import api from "../../api";
+import { updateCart } from "../../actions/cart";
 
 class PackageDetail extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      products: [],
+      products: this.props.container.Products[0].products,
       price: this.props.container.Products[0].total,
       sameProducts: this.props.container.Products[0].sameproducts,
       addProduct: null,
@@ -18,21 +25,138 @@ class PackageDetail extends React.Component {
       date: this.props.container.Package.products[0].insymd
         .split("T")[0]
         .split("-"),
-      countNumber: 1
+      countNumber: 1,
+      id: this.props.container.Package.products[0]
     };
   }
 
-  plusProduct = e => {
-    /* console.log("this is plus", e); */
+  notify = message => toast(message, { autoClose: 5000 });
+
+  add = item => {
+    let cart = storage.get("cart")
+      ? storage.get("cart")
+      : { products: [], totalQty: 0, totalPrice: 0 };
+
+    const found = cart.products.find(product => product.cd === item.cd);
+
+    let itemQty = 0;
+    if (found) {
+      itemQty = found.qty;
+    }
+
+    return new Promise((resolve, reject) => {
+      api.product
+        .isAvailable({
+          skucd: item.cd,
+          qty: itemQty + 1
+        })
+        .then(res => {
+          if (res.success) {
+            if (found) {
+              found.qty++;
+              const i = cart.products
+                .map(product => product.cd)
+                .indexOf(found.cd);
+              cart.products.splice(i, 1, found);
+            } else {
+              item.qty = 1;
+              cart.products.push(item);
+            }
+            const qties = cart.products.map(product => product.qty);
+            cart.totalQty = qties.reduce((acc, curr) => acc + curr);
+            const prices = cart.products.map(product => {
+              const price = product.sprice
+                ? product.sprice
+                : product.price
+                ? product.price
+                : 0;
+              return product.qty * price;
+            });
+            cart.totalPrice = prices.reduce((acc, curr) => acc + curr);
+            storage.set("cart", cart);
+            this.props.updateCart({
+              products: cart.products,
+              totalQty: cart.totalQty,
+              totalPrice: cart.totalPrice
+            });
+            this.notify(
+              "Таны сагсанд" +
+                item.skunm +
+                " бараа нэмэгдлээ." +
+                "Үнийн дүн: " +
+                item.sprice
+            );
+            resolve();
+          } else {
+            this.notify(res.message);
+            reject();
+          }
+        });
+    });
   };
-  minusProduct = e => {
-    /* console.log("this is minus", e); */
+
+  handleAddToCart = item => e => {
+    e.preventDefault();
+    let products = [];
+    if (item.recipeid) {
+      api.recipe.findAllProducts({ id: item.recipeid }).then(res => {
+        if (res.success) {
+          products = res.data[0].products;
+          if (products.length) {
+            products.reduce((acc, next) => {
+              return acc.then(() => {
+                return this.add(next);
+              });
+            }, Promise.resolve());
+          }
+        } else {
+          this.notify(res.message);
+        }
+      });
+    } else if (item.packageid) {
+      api.packageInfo.findAllProducts({ id: item.packageid }).then(res => {
+        if (res.success) {
+          products = res.data[0].products;
+          products.map(item => {
+            this.add(item);
+          });
+        }
+      });
+    } else {
+      this.add(item);
+    }
+  };
+
+  plusProduct = (e, plus) => {
+    e.preventDefault();
+    console.log(plus);
+    let tmp = [];
+    this.state.products.map((item, index) => {
+      if (item.cd === plus.cd) {
+        item.unit = parseInt(item.unit) + 1;
+      }
+      tmp.push(item);
+    });
+    this.setState({ products: tmp });
+  };
+
+  minusProduct = (e, minus) => {
+    e.preventDefault();
+    console.log(minus);
+    let tmp = [];
+    this.state.products.map((item, index) => {
+      if (item.cd === minus.cd) {
+        item.unit = parseInt(item.unit) - 1;
+      }
+      tmp.push(item);
+    });
+    this.setState({ products: tmp });
   };
 
   render() {
+    console.log(this.state);
     const formatter = new Intl.NumberFormat("en-US");
     const sameproduct = this.props.container.Products[0].sameproducts;
-    const product = this.props.container.Products[0].products;
     let products = null;
     let sameProducts = null;
     const sliderParams = {
@@ -53,7 +177,7 @@ class PackageDetail extends React.Component {
     };
     // Багцад орсон барааны ижил бараанууд
     sameProducts = sameproduct.map((item, index) => {
-      if (product) {
+      if (sameproduct) {
         return (
           <li key={index}>
             <div className="single flex-this">
@@ -68,16 +192,16 @@ class PackageDetail extends React.Component {
                 </Link>
               </div>
               <div className="info-container flex-space">
-                <Link to={item.route ? item.route : " "}>
-                  <span>{item.name}</span>
+                <Link to="">
+                  <span>{item.skunm}</span>
                   <strong>
                     {formatter.format(item.price1 ? item.price1 : item.price2)}₮
                   </strong>
                 </Link>
                 <div className="action">
-                  <Link to={item.route ? item.route : " "}>
+                  <a onClick={this.handleAddToCart(item)}>
                     <i className="fa fa-cart-plus" aria-hidden="true" />
-                  </Link>
+                  </a>
                 </div>
               </div>
             </div>
@@ -89,7 +213,7 @@ class PackageDetail extends React.Component {
     });
 
     // Багцад орсон бараанууд
-    products = product.map((item, index) => {
+    products = this.state.products.map((item, index) => {
       return (
         <li className="flex-this" key={index}>
           <div className="image-container default">
@@ -97,7 +221,7 @@ class PackageDetail extends React.Component {
               <span
                 className="image"
                 style={{
-                  backgroundImage: `url(${IMAGE + item.imgnm})`
+                  backgroundImage: `url(${IMAGE + item.img})`
                 }}
               />
             </Link>
@@ -106,7 +230,7 @@ class PackageDetail extends React.Component {
             <div className="flex-space">
               <p className="text col-md-5 col-sm-5">
                 <span>{item.skunm}</span>
-                <strong>{formatter.format(item.price)}₮</strong>
+                <strong>{formatter.format(item.tprice)}₮</strong>
               </p>
               <form style={{ width: "100px" }}>
                 <div className="input-group e-input-group">
@@ -122,7 +246,7 @@ class PackageDetail extends React.Component {
                         borderBottomLeftRadius: "20px",
                         marginRight: "5px"
                       }}
-                      onClick={this.minusProduct(item.id)}
+                      onClick={e => this.minusProduct(e, item)}
                     >
                       <i className="fa fa-minus" aria-hidden="true" />
                     </button>
@@ -131,7 +255,7 @@ class PackageDetail extends React.Component {
                     type="text"
                     className="form-control"
                     placeholder=""
-                    defaultValue={this.state.countNumber}
+                    value={item.unit}
                     aria-label=""
                     aria-describedby="button-addon4"
                     style={{ width: "40px" }}
@@ -148,7 +272,7 @@ class PackageDetail extends React.Component {
                         borderBottomRightRadius: "20px",
                         marginLeft: "5px"
                       }}
-                      onClick={this.plusProduct(item.id)}
+                      onClick={e => this.plusProduct(e, item)}
                     >
                       <i className="fa fa-plus" aria-hidden="true" />
                     </button>
@@ -156,7 +280,7 @@ class PackageDetail extends React.Component {
                 </div>
               </form>
               <div className="action">
-                <Link to=" ">
+                <Link to=" " onClick={this.handleAddToCart(item)}>
                   <i className="fa fa-cart-plus" aria-hidden="true" />
                 </Link>
               </div>
@@ -228,7 +352,11 @@ class PackageDetail extends React.Component {
                               {formatter.format(this.state.price)}₮
                             </strong>
                           </p>
-                          <a href=" " className="btn btn-main">
+                          <a
+                            href=" "
+                            className="btn btn-main"
+                            onClick={this.handleAddToCart(this.state.id)}
+                          >
                             <i className="fa fa-cart-plus" aria-hidden="true" />
                             <span className="text-uppercase">
                               {" "}
@@ -278,4 +406,7 @@ class PackageDetail extends React.Component {
   }
 }
 
-export default PackageDetail;
+export default connect(
+  null,
+  { updateCart }
+)(PackageDetail);
