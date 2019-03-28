@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Redirect } from "react-router-dom";
 import ReactFacebookLogin from "react-facebook-login";
 import { toast } from "react-toastify";
 
@@ -8,24 +7,6 @@ import { setUser } from "../actions/login";
 import { SOCIAL_IDS } from "../utils/consts";
 
 class FacebookLogin extends React.Component {
-  state = {
-    shouldRedirect: false
-  };
-
-  renderRedirect = () => {
-    if (this.state.shouldRedirect) {
-      return <Redirect to="/userprofile" />;
-    }
-  };
-
-  setRedirect = () => {
-    this.setState({ shouldRedirect: true });
-  };
-
-  handleFbClick = () => {
-    console.log("facebook login button clicked");
-  };
-
   handleFbLoginResponse = res => {
     if (res && res.userID) {
       const user = {
@@ -36,8 +17,7 @@ class FacebookLogin extends React.Component {
       };
 
       this.props.setUser(user);
-      this.props.onFbClick();
-      this.setRedirect();
+      this.props.onFbSuccess();
     } else {
       this.notify("Холбогдох үед алдаа гарлаа");
     }
@@ -47,30 +27,19 @@ class FacebookLogin extends React.Component {
 
   render() {
     return (
-      <div>
-        {this.renderRedirect()}
-        <ReactFacebookLogin
-          appId={SOCIAL_IDS.facebook}
-          autoLoad={true}
-          fields="name,email,picture"
-          onClick={this.handleFbClick}
-          callback={this.handleFbLoginResponse}
-          cssClass="btn btn-block btn-social btn-facebook"
-          textButton="Facebook-р нэвтрэх"
-        />
-      </div>
+      <ReactFacebookLogin
+        appId={SOCIAL_IDS.facebook}
+        autoLoad={true}
+        fields="name,email,picture"
+        callback={this.handleFbLoginResponse}
+        cssClass="btn btn-block btn-social btn-facebook"
+        textButton="Facebook-р нэвтрэх"
+      />
     );
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    isLoggedIn: state.auth.isLoggedIn,
-    user: state.auth.user
-  };
-};
-
 export default connect(
-  mapStateToProps,
+  null,
   { setUser }
 )(FacebookLogin);
