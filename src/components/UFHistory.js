@@ -2,12 +2,13 @@ import React from "react";
 import { Form } from "antd";
 import api from "../api";
 import { IMAGE } from "../utils/consts";
+import Rate from "./Rate";
 class Component extends React.Component {
   state = {
     wishlist: []
   };
   componentDidMount() {
-    api.wishList.findAlls({ custId: "14" }).then(res => {
+    api.viewList.findAlls({ custId: "14" }).then(res => {
       if (res.success) {
         this.setState({
           wishlist: res.data
@@ -40,14 +41,11 @@ class Component extends React.Component {
                   <p className="name">{item.skunm}</p>
                   <p className="text">{item.shortnm}</p>
                 </a>
-                {/* item.rate[0].rate[0] ? (
-                  <Rate
-                    rate={item.rate[0].rate[0].ravg}
-                    numOfVotes={item.rate[0].rate[0].cnt}
-                  />
+                {item.rate ? (
+                  <Rate rate={item.rate} numOfVotes={item.rateusercnt} />
                 ) : (
                   <Rate rate={0} numOfVotes={0} />
-                ) */}
+                )}
               </div>
             </div>
           </div>

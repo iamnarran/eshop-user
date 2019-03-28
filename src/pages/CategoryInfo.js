@@ -64,10 +64,10 @@ class FilterSet extends React.Component {
       case "PRICE":
         const formatter = new Intl.NumberFormat("en-US");
 
-        let tempMin = attr.attributes[0].values.find(
+        const tempMin = attr.attributes[0].values.find(
           val => val.valuecd === "MIN"
         ).valuename;
-        let tempMax = attr.attributes[0].values.find(
+        const tempMax = attr.attributes[0].values.find(
           val => val.valuecd === "MAX"
         ).valuename;
 
@@ -283,13 +283,13 @@ class CategoryInfo extends React.Component {
 
   render() {
     const { id, parentCats, subCats, attributes } = this.props.container;
-    const { products } = this.state;
+    const products = this.state.products || [];
     const Option = Select.Option;
 
     let selectedCat = null;
     let cats = <div className="block">Ангилал байхгүй байна</div>;
 
-    if (parentCats.length) {
+    if (parentCats && parentCats.length) {
       cats = parentCats.map((parent, index) => {
         if (parent.id === parseInt(id)) {
           selectedCat = parent.catnm;
@@ -384,15 +384,16 @@ class CategoryInfo extends React.Component {
           <div className="container pad10">
             <div className="e-breadcrumb">
               <ul className="list-unstyled">
-                {parentCats.map(category => {
-                  return (
-                    <li key={category.catnm}>
-                      <a href={category.route ? category.route : ""}>
-                        <span>{category.catnm}</span>
-                      </a>
-                    </li>
-                  );
-                })}
+                {parentCats &&
+                  parentCats.map(category => {
+                    return (
+                      <li key={category.catnm}>
+                        <a href={category.route ? category.route : ""}>
+                          <span>{category.catnm}</span>
+                        </a>
+                      </li>
+                    );
+                  })}
               </ul>
             </div>
             <div className="row row10">

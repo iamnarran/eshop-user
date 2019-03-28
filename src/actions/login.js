@@ -1,10 +1,8 @@
 import api, { setAuthorizationHeader } from "../api";
 import login from "../api/User/login";
-import { storage } from "../utils";
-import { SET_USER } from "./types";
+import { SET_USER, SIGN_OUT } from "./types";
 
 export const setUser = user => {
-  storage.set("user", user);
   setAuthorizationHeader(user.token);
 
   return {
@@ -14,12 +12,10 @@ export const setUser = user => {
 };
 
 export const signOut = () => {
-  storage.remove("user");
   setAuthorizationHeader();
 
   return {
-    type: SET_USER,
-    payload: null
+    type: SIGN_OUT
   };
 };
 

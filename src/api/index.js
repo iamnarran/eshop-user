@@ -19,6 +19,7 @@ import categoryInfo from "./categoryInfo";
 import cart from "./cart";
 import checkout from "./checkout";
 import wishList from "./wishlist";
+import viewList from "./viewlist";
 
 let rest = {};
 
@@ -142,6 +143,11 @@ checkout.forEach(api => {
 rest["wishList"] = {};
 wishList.forEach(api => {
   rest.wishList[api.NAME] = data => generateAPI(api, data);
+});
+
+rest["viewList"] = {};
+viewList.forEach(api => {
+  rest.viewList[api.NAME] = data => generateAPI(api, data);
 });
 
 export { rest as default, setAuthorizationHeader };

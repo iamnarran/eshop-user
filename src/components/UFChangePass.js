@@ -1,37 +1,43 @@
-import React from "react"
-import { TextField, Select } from "../"
-import { Form, message } from "antd"
+import React from "react";
+import { TextField, Select } from "../";
+import { Form, message } from "antd";
 
-class Component extends React.Component{
+class Component extends React.Component {
   state = {
     oldpass: null,
     newpass: null,
-    renewpass: null,
-  }
-  
-  handleSubmit = (e) => {
+    renewpass: null
+  };
+
+  handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        message.success("Хүргэлтийн хаяг амжилттай бүртгэгдлээ")
+        message.success("Нууц үг амжиллтаЙ солигдлоо");
       }
     });
-  }
+  };
 
-  handleOldPass = (e) => { this.setState({ oldpass: e.target.value }) }  
-  handleNewPass = (e) => { this.setState({ newpass: e.target.value }) }
-  handleReNewPass = (e) => { this.setState({ renewpass: e.target.value }) }
+  handleOldPass = e => {
+    this.setState({ oldpass: e.target.value });
+  };
+  handleNewPass = e => {
+    this.setState({ newpass: e.target.value });
+  };
+  handleReNewPass = e => {
+    this.setState({ renewpass: e.target.value });
+  };
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { oldpass, newpass, renewpass} = this.state
-    return (          
-      <div className="col-md-8 pad10">      
-        <div className="user-menu-content">        
+    /* const { oldpass, newpass, renewpass} = this.state */
+    return (
+      <div className="col-md-8 pad10">
+        <div className="user-menu-content">
           <p className="title">
             <span>Нууц үг солих</span>
           </p>
-          <div className="user-profile-contain">                  
+          {/* <div className="user-profile-contain">                  
             <form>
               <div className="row row10">
                 <div className="col-xl-12 pad10">
@@ -75,12 +81,12 @@ class Component extends React.Component{
                 <span className="text-uppercase" onClick={this.handleSubmit}>Хадгалах</span>
               </button>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
-    )
+    );
   }
 }
 
-const App = Form.create({ name: 'delivery' })(Component);
+const App = Form.create({ name: "delivery" })(Component);
 export default App;

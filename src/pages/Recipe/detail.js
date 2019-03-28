@@ -8,6 +8,7 @@ import storage from "../../utils/storage";
 import { updateCart } from "../../actions/cart";
 import { toast } from "react-toastify";
 import { getFeedbacks } from "../../actions/mainlogic";
+// import { url } from "inspector";
 
 class RecipeDetail extends React.Component {
   notify = message => toast(message, { autoClose: 5000 });
@@ -200,7 +201,7 @@ class RecipeDetail extends React.Component {
                     <div className="col-md-4">
                       <p>
                         <span>
-                          <img src="chef.png" />
+                          <img src="time.png" />
                         </span>
                         {recipe[0].recipe.madeoflvlText}
                       </p>

@@ -33,7 +33,8 @@ export default [
   {
     NAME: "findAllPromoCats",
     METHOD: "GET",
-    URL: `${API}/api/product/season/promocats`
+    URL: `${API}/api/promotionfilter/:promotid`,
+    REPLACE: "promotid"
   },
   {
     NAME: "productDetail",

@@ -1,6 +1,6 @@
 import typeToReducer from "type-to-reducer";
 
-import { SIGN_IN, SIGN_OUT } from "../actions/types";
+import { SET_USER, SIGN_OUT } from "../actions/types";
 
 const initialState = {
   isLoggedIn: false,
@@ -9,14 +9,15 @@ const initialState = {
 
 export default typeToReducer(
   {
-    [SIGN_IN]: (state, action) => ({
+    [SET_USER]: (state, action) => ({
       ...state,
       isLoggedIn: true,
       user: action.payload
     }),
     [SIGN_OUT]: state => ({
       ...state,
-      isLoggedIn: false
+      isLoggedIn: false,
+      user: null
     })
   },
   initialState

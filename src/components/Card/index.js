@@ -28,9 +28,7 @@ class Card extends React.Component {
 
   notify = message => toast(message, { autoClose: 5000 });
 
-  handleAddToCart = item => e => {
-    console.log("item", item);
-    e.preventDefault();
+  add = item => {
     let cart = storage.get("cart")
       ? storage.get("cart")
       : { products: [], totalQty: 0, totalPrice: 0 };
@@ -51,49 +49,99 @@ class Card extends React.Component {
     //     this.check(res, item, found, cart);
     //   });
 
-    api.product
-      .isAvailable({
-        skucd: item.id ? item.id : item.cd ? item.cd : null,
-        qty: itemQty + 1
-      })
-      .then(res => {
-        if (res.success) {
-          if (found) {
-            found.qty++;
-            const i = cart.products
-              .map(product => product.cd)
-              .indexOf(found.cd);
-            cart.products.splice(i, 1, found);
+    return new Promise((resolve, reject) => {
+      api.product
+        .isAvailable({
+          skucd: item.id ? item.id : item.cd ? item.cd : null,
+          qty: itemQty + 1
+        })
+        .then(res => {
+          if (res.success) {
+            if (found) {
+              found.qty++;
+              const i = cart.products
+                .map(product => product.cd)
+                .indexOf(found.cd);
+              cart.products.splice(i, 1, found);
+            } else {
+              item.qty = 1;
+              cart.products.push(item);
+            }
+
+            const qties = cart.products.map(product => product.qty);
+            cart.totalQty = qties.reduce((acc, curr) => acc + curr);
+
+            const prices = cart.products.map(product => {
+              const price = product.sprice
+                ? product.sprice
+                : product.price
+                ? product.price
+                : 0;
+              return product.qty * price;
+            });
+            cart.totalPrice = prices.reduce((acc, curr) => acc + curr);
+
+            storage.set("cart", cart);
+
+            // TODO: stop page refreshing
+            this.props.updateCart({
+              products: cart.products,
+              totalQty: cart.totalQty,
+              totalPrice: cart.totalPrice
+            });
+
+            this.notify("+1");
+
+            resolve();
           } else {
-            item.qty = 1;
-            cart.products.push(item);
+            this.notify(res.message);
+
+            reject();
           }
+        });
+    });
+  };
 
-          const qties = cart.products.map(product => product.qty);
-          cart.totalQty = qties.reduce((acc, curr) => acc + curr);
+  handleAddToCart = item => e => {
+    e.preventDefault();
 
-          const prices = cart.products.map(product => {
-            const price = product.sprice
-              ? product.sprice
-              : product.price
-              ? product.price
-              : 0;
-            return product.qty * price;
-          });
-          cart.totalPrice = prices.reduce((acc, curr) => acc + curr);
+    console.log("item", item);
 
-          storage.set("cart", cart);
-
-          // TODO: stop page refreshing
-          this.props.updateCart({
-            products: cart.products,
-            totalQty: cart.totalQty,
-            totalPrice: cart.totalPrice
-          });
+    let products = [];
+    if (item.recipeid) {
+      api.recipe.findAllProducts({ id: item.recipeid }).then(res => {
+        if (res.success) {
+          products = res.data[0].products;
+          if (products.length) {
+            products.reduce((acc, next) => {
+              return acc.then(() => {
+                return this.add(next);
+              });
+            }, Promise.resolve());
+          }
         } else {
           this.notify(res.message);
         }
       });
+    } else if (item.id) {
+      api.packageInfo.findAllProducts({ id: item.id }).then(res => {
+        if (res.success) {
+          console.log("prods", res.data[0].products);
+          products = res.data[0].products;
+          if (products.length) {
+            products.reduce((acc, next) => {
+              return acc.then(() => {
+                return this.add(next);
+              });
+            }, Promise.resolve());
+          }
+        } else {
+          this.notify(res.message);
+        }
+      });
+    } else {
+      this.add(item);
+    }
   };
 
   // check = (res, item, found, cart) => {
@@ -133,22 +181,26 @@ class Card extends React.Component {
     if (!item) {
       return null;
     }
-    const formatter = new Intl.NumberFormat("en-US");
-    let price = formatter.format(item.price);
-    let prices1 = formatter.format(item.sprice);
 
     if (item.sprice || item.price) {
+      const formatter = new Intl.NumberFormat("en-US");
       if (item.sprice) {
         prices = (
           <div>
-            <small className="sale">{isNaN(price) ? price : 0}₮</small>
-            <span className="current">{isNaN(prices1) ? prices1 : 0}₮</span>
+            <small className="sale">
+              {isNaN(item.price) ? 0 : formatter.format(item.price)}₮
+            </small>
+            <span className="current">
+              {isNaN(item.sprice) ? 0 : formatter.format(item.sprice)}₮
+            </span>
           </div>
         );
       } else {
         prices = (
           <div>
-            <span className="current">{isNaN(price) ? price : 0}₮</span>
+            <span className="current">
+              {isNaN(item.price) ? 0 : formatter.format(item.price)}₮
+            </span>
           </div>
         );
       }
@@ -160,10 +212,10 @@ class Card extends React.Component {
           <i className="fa fa-heart-o" aria-hidden="true" />
           <span />
         </Link>
-        <a onClick={this.handleAddToCart(item)}>
+        <Link to="" onClick={this.handleAddToCart(item)}>
           <i className="fa fa-cart-plus" aria-hidden="true" />
           <span />
-        </a>
+        </Link>
       </div>
     );
 
@@ -371,9 +423,13 @@ class Card extends React.Component {
                 <Link to="" className="wishlist">
                   <i className="fa fa-heart-o" aria-hidden="true" />
                 </Link>
-                <a className="cart" onClick={this.handleAddToCart(item)}>
+                <Link
+                  to=""
+                  className="cart"
+                  onClick={this.handleAddToCart(item)}
+                >
                   <i className="fa fa-cart-plus" aria-hidden="true" />
-                </a>
+                </Link>
               </div>
             </div>
           </div>

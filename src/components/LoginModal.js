@@ -1,11 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Modal, Button, message } from "antd";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { EXPAND_LEFT } from "react-ladda";
 import { createForm } from "rc-form";
 
-// import FacebookLogin from "./FacebookLogin";
+import FacebookLogin from "./FacebookLogin";
 import actions, { setUser } from "../actions/login";
 import RegisterModal from "./RegisterModal";
 
@@ -18,7 +18,8 @@ import RegisterModal from "./RegisterModal";
 )
 class LoginModal extends React.Component {
   state = {
-    loading: false,
+    shouldRedirect: false,
+    isLoading: false,
     isRegisterModalVisible: false
   };
 
@@ -27,6 +28,16 @@ class LoginModal extends React.Component {
       this.setState({ visible: this.props.visible });
     }
   }
+
+  renderRedirect = () => {
+    if (this.state.shouldRedirect) {
+      return <Redirect to="/userprofile" />;
+    }
+  };
+
+  setRedirect = () => {
+    this.setState({ shouldRedirect: true });
+  };
 
   handleOk = e => {
     this.props.onVisibleChange(e);
@@ -57,23 +68,23 @@ class LoginModal extends React.Component {
     e.preventDefault();
     this.props.form.validateFields(async (error, form) => {
       if (!error) {
-        this.setState({ loading: true });
-        let res = null;
+        this.setState({ isLoading: true });
         try {
-          res = await this.props.login(form);
+          const res = await this.props.login(form);
 
-          if (!res.success) {
-            message.error("Таны нэвтрэх нэр эсвэл нууц үг буруу байна");
-            this.setState({ loading: false });
+          if (res.success) {
+            this.props.setUser(res.data.customerInfo);
+            this.handleOk(e);
+            this.setRedirect();
           } else {
-            // successful
-            this.props.setUser(res.data);
-            window.location.reload();
+            message.error("Таны нэвтрэх нэр эсвэл нууц үг буруу байна");
           }
+
+          this.setState({ isLoading: false });
         } catch (err) {
           console.log(err);
           message.error(err.message);
-          this.setState({ loading: false });
+          this.setState({ isLoading: false });
         }
       }
     });
@@ -84,6 +95,7 @@ class LoginModal extends React.Component {
 
     return (
       <div>
+        {this.renderRedirect()}
         <Modal
           title="Нэвтрэх"
           visible={this.props.visible}
@@ -166,7 +178,7 @@ class LoginModal extends React.Component {
               <Button
                 type="primary"
                 className="btn btn-block btn-login text-uppercase"
-                loading={this.state.loading}
+                isLoading={this.state.isLoading}
                 data-style={EXPAND_LEFT}
                 htmlType="submit"
               >
@@ -176,7 +188,7 @@ class LoginModal extends React.Component {
 
             <span className="divide-maker">Эсвэл</span>
 
-            {/* <FacebookLogin onLogin={this.handleLogInSave} /> */}
+            <FacebookLogin onFbClick={e => this.handleOk(e)} />
             {/* <GoogleLogin /> */}
 
             <button

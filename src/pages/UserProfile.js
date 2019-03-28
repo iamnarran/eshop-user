@@ -30,6 +30,7 @@ class Component extends React.Component {
   }
 
   render() {
+    console.log(this.props);
     return (
       <div className="section section-gray">
         <BrowserRouter>
@@ -92,6 +93,12 @@ class Component extends React.Component {
                           </li>
                           <li>
                             <Link to={`/wishlist`} className="flex-this">
+                              <i className="fa fa-history" aria-hidden="true" />
+                              <span>Худалдан авалтын түүх</span>
+                            </Link>
+                          </li>
+                          <li>
+                            <Link to={`/wishlist`} className="flex-this">
                               <i className="fa fa-heart" aria-hidden="true" />
                               <span>Хадгалсан бараа</span>
                             </Link>
@@ -103,7 +110,7 @@ class Component extends React.Component {
                             </Link>
                           </li>
                           <li>
-                            <Link to={`/password`} className="flex-this">
+                            <Link to={`/changePass`} className="flex-this">
                               <i className="fa fa-lock" aria-hidden="true" />
                               <span>Нууц үгээ солих</span>
                             </Link>
@@ -130,7 +137,7 @@ class Component extends React.Component {
                       />
                       <Route
                         exact
-                        path={`/ChangePass`}
+                        path={`/changePass`}
                         component={ChangePass}
                       />
                     </Switch>
