@@ -3,13 +3,12 @@ import storage from "../utils/storage";
 
 export function getFeedbacks(res, item, found, cart) {
   if (res.success) {
-    console.log(found);
     if (found) {
       found.qty = found.qty + item.qty;
       const i = cart.products.map(product => product.cd).indexOf(found.cd);
       cart.products.splice(i, 1, found);
     } else {
-      item.qty = found.qty + item.qty;
+      item.qty = item.qty;
       cart.products.push(item);
     }
 
