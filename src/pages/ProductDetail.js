@@ -250,7 +250,6 @@ class Component extends React.Component {
   };
 
   renderBreadCrumb = e => {
-    console.log(e);
     return (
       <div className="e-breadcrumb">
         <ul className="list-unstyled">
