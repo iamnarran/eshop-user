@@ -2,7 +2,6 @@ import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
-import storage from "../utils/storage";
 import { signOut } from "../actions/login";
 
 class UserButton extends React.Component {
@@ -11,10 +10,8 @@ class UserButton extends React.Component {
     this.props.onUserButtonClick(e);
   };
 
-  handleLogout = e => {
-    e.preventDefault();
+  handleLogout = () => {
     this.props.signOut();
-    window.location.reload();
   };
 
   render() {
@@ -26,12 +23,8 @@ class UserButton extends React.Component {
       </li>
     );
 
-    if (storage.get("user")) {
-      let user = storage.get("user");
-
-      if (user.customerInfo) {
-        user = user.customerInfo;
-      }
+    if (this.props.isLoggedIn && this.props.user) {
+      let user = this.props.user;
 
       content = (
         <li className="list-inline-item user">
@@ -45,7 +38,7 @@ class UserButton extends React.Component {
               />
             </div>
             <span className="">
-              {user.name ? user.name : user.email ? user.email : ""}
+              {user.firstname ? user.firstname : user.email ? user.email : ""}
             </span>
           </Link>
           <div className="dropdown">
@@ -64,7 +57,11 @@ class UserButton extends React.Component {
                       />
                     </div>
                     <p className="name">
-                      {user.name ? user.name : user.email ? user.email : ""}
+                      {user.firstname
+                        ? user.firstname
+                        : user.email
+                        ? user.email
+                        : ""}
                     </p>
                   </div>
                   <div className="progress">
@@ -109,18 +106,6 @@ class UserButton extends React.Component {
                   </li>
                   <li>
                     <Link to="" className="flex-this">
-                      <i className="fa fa-bell" aria-hidden="true" />
-                      <span>Мэдэгдэл</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="" className="flex-this">
-                      <i className="fa fa-database" aria-hidden="true" />
-                      <span>Купон</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="" className="flex-this">
                       <i className="fa fa-credit-card" aria-hidden="true" />
                       <span>ePoint карт</span>
                     </Link>
@@ -138,15 +123,11 @@ class UserButton extends React.Component {
                     </Link>
                   </li>
                 </ul>
-                <div className="text-left">
-                  <Link
-                    onClick={this.handleLogout}
-                    to=""
-                    className="btn btn-gray"
-                  >
+                <div className="text-left" onClick={this.handleLogout}>
+                  <button className="btn btn-gray">
                     <i className="fa fa-chevron-left" aria-hidden="true" />
                     <span className="text-uppercase">Гарах</span>
-                  </Link>
+                  </button>
                 </div>
               </div>
             </div>
@@ -159,7 +140,14 @@ class UserButton extends React.Component {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    isLoggedIn: state.auth.isLoggedIn,
+    user: state.auth.user
+  };
+};
+
 export default connect(
-  null,
+  mapStateToProps,
   { signOut }
 )(UserButton);

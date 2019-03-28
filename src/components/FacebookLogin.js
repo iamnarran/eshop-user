@@ -1,49 +1,76 @@
 import React from "react";
+import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
 import ReactFacebookLogin from "react-facebook-login";
-import ls from "local-storage";
+import { toast } from "react-toastify";
 
+import { setUser } from "../actions/login";
 import { SOCIAL_IDS } from "../utils/consts";
-// import { isLoggedIn } from "../utils/global";
 
 class FacebookLogin extends React.Component {
-  handleFacebookLoginClick = () => {
-    console.log("facebook login button clicked");
+  state = {
+    shouldRedirect: false
   };
 
-  handleFacebookLoginResponse = res => {
-    if (res && res.userID) {
-      ls.set("user", {
-        userID: res.userID,
-        name: res.name,
-        email: res.email,
-        picture: res.picture.data.url,
-        expiresIn: new Date().getTime() + 1000 * 60 * 60 * 2
-      });
-      console.log(ls.get("user"));
-      this.props.onLogin();
-    } else {
-      ls.remove("user");
-      this.props.signOut();
+  renderRedirect = () => {
+    if (this.state.shouldRedirect) {
+      return <Redirect to="/userprofile" />;
     }
   };
 
+  setRedirect = () => {
+    this.setState({ shouldRedirect: true });
+  };
+
+  handleFbClick = () => {
+    console.log("facebook login button clicked");
+  };
+
+  handleFbLoginResponse = res => {
+    if (res && res.userID) {
+      const user = {
+        email: res.email,
+        firstname: res.name.split(" ")[0],
+        lastname: res.name.split(" ").length > 1 ? res.name.split(" ")[1] : "",
+        picture: res.picture
+      };
+
+      this.props.setUser(user);
+      this.props.onFbClick();
+      this.setRedirect();
+    } else {
+      this.notify("Холбогдох үед алдаа гарлаа");
+    }
+  };
+
+  notify = message => toast(message, { autoClose: 5000 });
+
   render() {
-    // if (isLoggedIn) {
-    //   return null;
-    // } else {
     return (
-      <ReactFacebookLogin
-        appId={SOCIAL_IDS.facebook}
-        autoLoad={true}
-        fields="name,email,picture"
-        onClick={this.handleFacebookLoginClick}
-        callback={this.handleFacebookLoginResponse}
-        cssClass="btn btn-block btn-social btn-facebook"
-        textButton="Facebook-р нэвтрэх"
-      />
+      <div>
+        {this.renderRedirect()}
+        <ReactFacebookLogin
+          appId={SOCIAL_IDS.facebook}
+          autoLoad={true}
+          fields="name,email,picture"
+          onClick={this.handleFbClick}
+          callback={this.handleFbLoginResponse}
+          cssClass="btn btn-block btn-social btn-facebook"
+          textButton="Facebook-р нэвтрэх"
+        />
+      </div>
     );
-    // }
   }
 }
 
-export default FacebookLogin;
+const mapStateToProps = state => {
+  return {
+    isLoggedIn: state.auth.isLoggedIn,
+    user: state.auth.user
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  { setUser }
+)(FacebookLogin);

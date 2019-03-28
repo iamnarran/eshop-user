@@ -8,8 +8,8 @@ import "./style.css";
 
 class Footer extends React.Component {
   render() {
-    const { staticInfo } = this.props.container;
-    const { staticPage } = this.props.container;
+    const { staticInfo, staticPage } = this.props.container;
+
     return (
       <div className="top-container">
         <div className="section section-footer">

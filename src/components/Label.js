@@ -25,7 +25,7 @@ class Label extends React.Component {
     } else {
       content = (
         <div>
-          <strong>{data.content ? data.content : ""}</strong>
+          {data.content ? <strong>{data.content}</strong> : ""}
           <small>{data.text ? data.text : ""}</small>
         </div>
       );
@@ -50,76 +50,72 @@ class Label extends React.Component {
     }
 
     let color = data.color ? data.color : "#f00";
-    if (data.content == 0) {
-      return <div />;
-    } else {
-      return (
-        <Style>
-          {`
-            .label {
-              display: block;
-              position: absolute;
-              ${spacing}
-            }
-          `}
-          <div className="label medium-image-magnify" style={{ zIndex: 100 }}>
-            <Style>
-              {`
-                .text {
-                  position: relative;
-                  display: block;
-                  width: 46px;
-                  height: 30px;
-                  background-color: ${color};
-                  text-align: center;
-                  font-size: 1.5rem;
-                  color: white;
-                  letter-spacing: -1px;
-                  vertical-align: top;
-                  border-radius: 5px;
-                  z-index: 1;
-                  line-height: 30px;
-                }
-                .text:before, .text:after {
-                  z-index: 0;
-                  position: absolute;
-                  content: '';
-                  background-color: ${color};
-                  width: 26px;
-                  height: 26px;
-                  top: -11px;
-                  -webkit-transform: rotate(-45deg) skew(15deg, 15deg);
-                  -moz-transform: rotate(-45deg) skew(15deg, 15deg);
-                  -ms-transform: rotate(-45deg) skew(15deg, 15deg);
-                  -o-transform: rotate(-45deg) skew(15deg, 15deg);
-                  transform: rotate(-45deg) skew(15deg, 15deg);
-                  border-radius: 3px;
-                  left: 10px;
-                }
-                .text:after {
-                  top: 15px;
-                }
-                .text strong {
-                  font-weight: 400;
-                  position: relative;
-                  z-index: 1;
-                }
-                .text small {
-                  position: relative;
-                  z-index: 1;
-                  font-size: 0.7rem;
-                  display: inline-block;
-                  margin-left: 2px;
-                  line-height: 1.2;
-                  letter-spacing: 1px;
-                }
-              `}
-              <span className="text">{content}</span>
-            </Style>
-          </div>
-        </Style>
-      );
-    }
+    return (
+      <Style>
+        {`
+          .label {
+            display: block;
+            position: absolute;
+            ${spacing}
+          }
+        `}
+        <div className="label medium-image-magnify" style={{ zIndex: 100 }}>
+          <Style>
+            {`
+              .text {
+                position: relative;
+                display: block;
+                width: 46px;
+                height: 30px;
+                background-color: ${color};
+                text-align: center;
+                font-size: ${data.content ? "1.5" : "1"}rem;
+                color: white;
+                letter-spacing: -1px;
+                vertical-align: top;
+                border-radius: 5px;
+                z-index: 1;
+                line-height: 30px;
+              }
+              .text:before, .text:after {
+                z-index: 0;
+                position: absolute;
+                content: '';
+                background-color: ${color};
+                width: 26px;
+                height: 26px;
+                top: -11px;
+                -webkit-transform: rotate(-45deg) skew(15deg, 15deg);
+                -moz-transform: rotate(-45deg) skew(15deg, 15deg);
+                -ms-transform: rotate(-45deg) skew(15deg, 15deg);
+                -o-transform: rotate(-45deg) skew(15deg, 15deg);
+                transform: rotate(-45deg) skew(15deg, 15deg);
+                border-radius: 3px;
+                left: 10px;
+              }
+              .text:after {
+                top: 15px;
+              }
+              .text strong {
+                font-weight: 400;
+                position: relative;
+                z-index: 1;
+              }
+              .text small {
+                position: relative;
+                z-index: 1;
+                font-size: ${data.text.length > 5 ? "0.6" : "0.7"}rem;
+                display: inline-block;
+                margin-left: 2px;
+                line-height: 1.2;
+                letter-spacing: 1px;
+              }
+            `}
+            <span className="text">{content}</span>
+          </Style>
+        </div>
+      </Style>
+    );
   }
 }
 

@@ -12,13 +12,13 @@ const fetch = async (props, onData) => {
   try {
     const staticInfo = await api.staticInfo.findAll();
     const menu = await api.menu.findAll();
-    const category = await api.category.findAll();
+    const categories = await api.category.findAll();
 
     onData(null, {
       container: {
         staticInfo: staticInfo.data[0],
-        menus: menu.data,
-        categories: category.data
+        menu: menu.data,
+        categories: categories.data
       }
     });
   } catch (e) {
