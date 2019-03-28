@@ -31,18 +31,15 @@ class AppHeader extends Component {
     this.setState({ isDropdownOpen: !this.state.isDropdownOpen });
   };
 
-  toggleLoginModal = e => {
-    e.preventDefault();
+  toggleLoginModal = () => {
     this.setState({ isLoginModalVisible: !this.state.isLoginModalVisible });
   };
 
-  showLoginModal = e => {
-    e.preventDefault();
+  showLoginModal = () => {
     this.setState({ isLoginModalVisible: true });
   };
 
-  hideLoginModal = e => {
-    e.preventDefault();
+  hideLoginModal = () => {
     this.setState({ isLoginModalVisible: false });
   };
 
@@ -298,7 +295,7 @@ class AppHeader extends Component {
           </div>
         </div>
         <LoginModal
-          onVisibleChange={this.toggleLoginModal}
+          onVisibilityChange={this.toggleLoginModal}
           visible={this.state.isLoginModalVisible}
         />
       </div>
