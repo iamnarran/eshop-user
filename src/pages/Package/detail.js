@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { IMAGE } from "../../utils/consts";
 import Slider from "../../components/Slider";
-import config from "config";
 import { connect } from "react-redux";
 
 import { toast } from "react-toastify";
@@ -15,7 +14,7 @@ class PackageDetail extends React.Component {
     super(props);
     this.state = {
       products: this.props.container.Products[0].products,
-      price: this.props.container.Products[0].total,
+      price: parseInt(this.props.container.Products[0].total),
       sameProducts: this.props.container.Products[0].sameproducts,
       addProduct: null,
       remProduct: null,
@@ -41,14 +40,15 @@ class PackageDetail extends React.Component {
 
     let itemQty = 0;
     if (found) {
-      itemQty = found.qty;
+      itemQty = parseInt(found.qty) + parseInt(item.unit);
+    } else {
+      itemQty = item.unit;
     }
-
     return new Promise((resolve, reject) => {
       api.product
         .isAvailable({
           skucd: item.cd,
-          qty: itemQty + 1
+          qty: itemQty
         })
         .then(res => {
           if (res.success) {
@@ -59,7 +59,7 @@ class PackageDetail extends React.Component {
                 .indexOf(found.cd);
               cart.products.splice(i, 1, found);
             } else {
-              item.qty = 1;
+              item.qty = itemQty;
               cart.products.push(item);
             }
             const qties = cart.products.map(product => product.qty);
@@ -79,13 +79,7 @@ class PackageDetail extends React.Component {
               totalQty: cart.totalQty,
               totalPrice: cart.totalPrice
             });
-            this.notify(
-              "Таны сагсанд" +
-                item.skunm +
-                " бараа нэмэгдлээ." +
-                "Үнийн дүн: " +
-                item.sprice
-            );
+            this.notify("Таны сагсанд " + item.skunm + " бараа нэмэгдлээ.");
             resolve();
           } else {
             this.notify(res.message);
@@ -127,38 +121,57 @@ class PackageDetail extends React.Component {
     }
   };
 
+  handleSingleAddToCart = item => e => {
+    this.add(item);
+  };
+
   plusProduct = (e, plus) => {
     e.preventDefault();
-    console.log(plus);
     let tmp = [];
-    this.state.products.map((item, index) => {
+    let total = 0;
+    let tot = 0;
+    this.state.products.map(item => {
       if (item.cd === plus.cd) {
-        item.unit = parseInt(item.unit) + 1;
+        if (item.availableqty > item.unit && item.salemaxqty > item.unit) {
+          item.unit = parseInt(item.unit) + 1;
+        } else {
+          this.notify(
+            "Уг барааг худалдаалах дээд хэмжээнд хүрсэн эсвэл нөөц дууссан байна."
+          );
+        }
       }
+      tot = parseInt(item.unit) * parseInt(item.tprice);
+      total = parseInt(total) + parseInt(tot);
       tmp.push(item);
     });
-    this.setState({ products: tmp });
+    this.setState({ products: tmp, price: total });
   };
 
   minusProduct = (e, minus) => {
     e.preventDefault();
-    console.log(minus);
     let tmp = [];
-    this.state.products.map((item, index) => {
-      if (item.cd === minus.cd) {
-        item.unit = parseInt(item.unit) - 1;
+    let total = 0;
+    let tot = 0;
+    this.state.products.map(item => {
+      if (parseInt(item.unit) > 0) {
+        if (item.cd === minus.cd) {
+          item.unit = parseInt(item.unit) - 1;
+        }
       }
+      tot = parseInt(item.unit) * parseInt(item.tprice);
+      total = parseInt(total) + parseInt(tot);
       tmp.push(item);
     });
-    this.setState({ products: tmp });
+    this.setState({ products: tmp, price: total });
   };
 
   render() {
-    console.log(this.state);
+    console.log("this.state", this.state);
     const formatter = new Intl.NumberFormat("en-US");
     const sameproduct = this.props.container.Products[0].sameproducts;
     let products = null;
     let sameProducts = null;
+    console.log(sameproduct, this.state.products);
     const sliderParams = {
       spaceBetween: 0,
       autoplay: {
@@ -199,7 +212,7 @@ class PackageDetail extends React.Component {
                   </strong>
                 </Link>
                 <div className="action">
-                  <a onClick={this.handleAddToCart(item)}>
+                  <a onClick={this.handleSingleAddToCart(item)}>
                     <i className="fa fa-cart-plus" aria-hidden="true" />
                   </a>
                 </div>
@@ -280,9 +293,9 @@ class PackageDetail extends React.Component {
                 </div>
               </form>
               <div className="action">
-                <Link to=" " onClick={this.handleAddToCart(item)}>
+                <a onClick={this.handleSingleAddToCart(item)}>
                   <i className="fa fa-cart-plus" aria-hidden="true" />
-                </Link>
+                </a>
               </div>
             </div>
           </div>

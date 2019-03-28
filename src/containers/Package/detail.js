@@ -23,8 +23,6 @@ const fetch = async (props, onData) => {
       id: props.match.params.id
     });
 
-    console.log("ooo", packageProduct, packageName);
-
     onData(null, {
       container: {
         Products: packageProduct.data,
