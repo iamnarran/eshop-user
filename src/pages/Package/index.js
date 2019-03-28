@@ -17,6 +17,7 @@ class Package extends React.Component {
   };
 
   render() {
+    console.log(this.state.packageProducts);
     return (
       <div className="top-container">
         <div
@@ -57,30 +58,26 @@ class Package extends React.Component {
         </div>
         <div className="section">
           <div className="container pad10">
-            <div className="row row10">
-              {
-                <CardList
-                  type={CARD_LIST_TYPES.horizontal}
-                  seq={this.state.widget[0].type}
-                  items={this.state.packageProducts.slice(0, 8)}
-                />
-              }
-            </div>
+            {
+              <CardList
+                type={CARD_LIST_TYPES.horizontal}
+                seq={this.state.widget[0].type}
+                items={this.state.packageProducts.slice(0, 8)}
+              />
+            }
           </div>
         </div>
         <Banner data={this.state.secondaryBanners} />
         <div className="section">
           <div className="container pad10">
-            <div className="row row10">
-              {
-                <CardList
-                  type={CARD_LIST_TYPES.horizontal}
-                  seq={this.state.widget[0].type}
-                  items={this.state.packageProducts.slice(8)}
-                  second={true}
-                />
-              }
-            </div>
+            {
+              <CardList
+                type={CARD_LIST_TYPES.horizontal}
+                seq={this.state.widget[0].type}
+                items={this.state.packageProducts.slice(8)}
+                second={true}
+              />
+            }
           </div>
         </div>
       </div>
