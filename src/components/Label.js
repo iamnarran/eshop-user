@@ -42,10 +42,11 @@ class Label extends React.Component {
       `;
     } else {
       rightSpacing -= seq * 50;
+      //45
+      //right: ${rightSpacing}px;
       spacing = `
-        top: 45px;
+        top: 0px;
         left: auto;
-        right: ${rightSpacing}px;
       `;
     }
 

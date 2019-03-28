@@ -188,20 +188,18 @@ class Component extends React.Component {
     let cart = storage.get("cart")
       ? storage.get("cart")
       : { products: [], totalQty: 0, totalPrice: 0 };
-
     const found = cart.products.find(product => product.cd === item.cd);
-
     let itemQty = 0;
     if (found) {
       itemQty = found.qty;
     }
-
     api.product
       .isAvailable({
         skucd: item.id ? item.id : item.cd ? item.cd : null,
         qty: itemQty + 1
       })
       .then(res => {
+        item.qty = this.state.saleNumber;
         this.check(res, item, found, cart);
       });
   };
@@ -250,7 +248,6 @@ class Component extends React.Component {
   };
 
   renderBreadCrumb = e => {
-    console.log(e);
     return (
       <div className="e-breadcrumb">
         <ul className="list-unstyled">
