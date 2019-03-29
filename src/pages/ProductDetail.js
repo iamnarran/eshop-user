@@ -107,6 +107,7 @@ class Component extends React.Component {
       this.setState({ skucd: this.props.match.params.id });
       this.refresh();
     }
+    console.log(this.state);
     if (isLoading) {
       return (
         <div className="section">
@@ -155,7 +156,7 @@ class Component extends React.Component {
     });
     await api.product.productDetail({ skucd: skucd }).then(res => {
       if (res.success == true) {
-        this.setState({ productDetail: res.data });
+        this.getCategory(res.data[0]);
       }
     });
     await api.product.productDetailImg({ skucd: skucd }).then(res => {
@@ -229,6 +230,7 @@ class Component extends React.Component {
 
   getCategory = product => {
     const { breadCrumb, category } = this.state;
+    console.log(product, "fjebj");
     let tmp = [];
     if (product !== undefined) {
       if (product.length !== 0) {
