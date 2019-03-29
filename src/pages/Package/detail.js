@@ -47,7 +47,6 @@ class PackageDetail extends React.Component {
       } else {
         itemQty = item.unit;
       }
-      console.log(itemQty);
       return new Promise((resolve, reject) => {
         api.product
           .isAvailable({
@@ -111,7 +110,6 @@ class PackageDetail extends React.Component {
 
   handleAddToCart = item => e => {
     e.preventDefault();
-    console.log("item", item);
     let products = [];
     if (item.recipeid) {
       api.recipe.findAllProducts({ id: item.recipeid }).then(res => {
@@ -129,9 +127,7 @@ class PackageDetail extends React.Component {
         }
       });
     } else if (item.packageid) {
-      console.log("packageAdd", this.state.products);
       this.state.products.map(item => {
-        console.log("item№", item);
         this.add(item);
       });
       /* api.packageInfo.findAllProducts({ id: item.packageid }).then(res => {
@@ -196,7 +192,6 @@ class PackageDetail extends React.Component {
   };
 
   render() {
-    console.log(this.props);
     const formatter = new Intl.NumberFormat("en-US");
     const sameproduct = this.props.container.Products[0].sameproducts;
     let products = null;
