@@ -26,6 +26,12 @@ class Component extends React.Component {
     }
     this.setState({ ratesum: sum / rate.length, rate: rate });
   };
+
+  handleSentComment = e => {
+    const { userInfo } = this.props;
+    console.log(this.refs.comment.value);
+  };
+
   render() {
     const { comment, rate, ratesum } = this.state;
     const { userInfo, loggedin } = this.props;
@@ -55,6 +61,8 @@ class Component extends React.Component {
                     className="form-control"
                     placeholder="Сэтгэгдэл үлдээх хэсэг"
                     rows="5"
+                    ref="comment"
+                    name="comment"
                   />
                   <small
                     id="emailHelp"
@@ -64,7 +72,12 @@ class Component extends React.Component {
                   </small>
                 </div>
                 <div className="btn btn-dark">
-                  <span className="text-uppercase">Сэтгэгдэл үлдээх</span>
+                  <span
+                    onClick={this.handleSentComment}
+                    className="text-uppercase"
+                  >
+                    Сэтгэгдэл үлдээх
+                  </span>
                 </div>
               </form>
             </div>

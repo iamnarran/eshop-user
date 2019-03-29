@@ -105,8 +105,6 @@ class Card extends React.Component {
   handleAddToCart = item => e => {
     e.preventDefault();
 
-    console.log("item", item);
-
     let products = [];
     if (item.recipeid) {
       api.recipe.findAllProducts({ id: item.recipeid }).then(res => {
@@ -126,7 +124,6 @@ class Card extends React.Component {
     } else if (item.id) {
       api.packageInfo.findAllProducts({ id: item.id }).then(res => {
         if (res.success) {
-          console.log("prods", res.data[0].products);
           products = res.data[0].products;
           if (products.length) {
             products.reduce((acc, next) => {
@@ -218,7 +215,6 @@ class Card extends React.Component {
         </Link>
       </div>
     );
-
     switch (type) {
       case CARD_TYPES.slim:
         return (

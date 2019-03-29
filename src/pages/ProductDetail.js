@@ -22,7 +22,7 @@ import {
   CardSlider,
   Comment
 } from "../components";
-
+import LoginModal from "../components/LoginModal";
 const money = new Intl.NumberFormat("en-US");
 
 class ProductDetail extends React.Component {
@@ -47,7 +47,9 @@ class ProductDetail extends React.Component {
     selectedLargeImg: null,
     smallImg: [],
     currentUrl: null,
-    isLoading: false
+    isLoading: false,
+    notFound: false,
+    isLoginModalVisible: false
   };
 
   notify = message => toast(message, { autoClose: 5000 });
@@ -90,6 +92,15 @@ class ProductDetail extends React.Component {
     //  }
   }
 
+  toggleLoginModal = e => {
+    //e.preventDefault();
+    this.setState({ isLoginModalVisible: !this.state.isLoginModalVisible });
+  };
+
+  showLoginModal = e => {
+    this.setState({ isLoginModalVisible: true });
+  };
+
   render() {
     const { breadCrumb, skucd, isLoading } = this.state;
 
@@ -97,31 +108,42 @@ class ProductDetail extends React.Component {
       this.setState({ skucd: this.props.match.params.id });
       this.refresh();
     }
-
-    if (isLoading) {
+    if (this.state.notFound) {
       return (
-        <div className="section">
-          <div className="container">
-            {this.renderBreadCrumb(breadCrumb)}
-            <div className="product-detail-page col-md-12 col-sm-12 col-lg-12">
-              <div className="row row10">
-                <div className="col-sm-9 col-md-9 col-lg-9 row">
-                  {this.renderProductImg()}
-                  {this.renderProductDescription()}
+        <center>
+          <div>Бараа олдсонгүй</div>
+        </center>
+      );
+    } else {
+      if (isLoading) {
+        return (
+          <div className="section">
+            <div className="container">
+              {this.renderBreadCrumb(breadCrumb)}
+              <div className="product-detail-page col-md-12 col-sm-12 col-lg-12">
+                <div className="row row10">
+                  <div className="col-sm-9 col-md-9 col-lg-9 row">
+                    {this.renderProductImg()}
+                    {this.renderProductDescription()}
+                  </div>
+                  {this.renderProductDelivery()}
+                  {this.renderFooter()}
                 </div>
-                {this.renderProductDelivery()}
-                {this.renderFooter()}
               </div>
             </div>
+            <LoginModal
+              onVisibilityChange={this.toggleLoginModal}
+              visible={this.state.isLoginModalVisible}
+            />
           </div>
+        );
+      }
+      return (
+        <div className="e-mart-loading">
+          <Spin />
         </div>
       );
     }
-    return (
-      <div className="e-mart-loading">
-        <Spin />
-      </div>
-    );
   }
 
   refresh = async () => {
@@ -147,13 +169,15 @@ class ProductDetail extends React.Component {
           ? this.setState({ relationalProduct: res.data })
           : console.log("relationalProduct", res)
       );
-    await api.product
-      .productDetail({ skucd: skucd })
-      .then(res =>
-        res.success
-          ? this.getCategory(res.data[0])
-          : console.log("productDetail", res)
-      );
+    await api.product.productDetail({ skucd: skucd }).then(res => {
+      if (res.success) {
+        if (res.data.length == 0) {
+          this.setState({ notFound: true });
+        } else {
+          this.getCategory(res.data[0]);
+        }
+      }
+    });
     await api.product
       .productDetailImg({ skucd: skucd })
       .then(res =>
@@ -206,9 +230,19 @@ class ProductDetail extends React.Component {
       });
   };
 
-  handleSaveClick = e => {
+  handleSaveClick = async e => {
     e.preventDefault();
-    console.log(e.target);
+    if (!this.state.loggedin) {
+      this.showLoginModal();
+    } else {
+      await api.product
+        .addViewList({ id: this.state.userInfo.id, skucd: this.state.skucd })
+        .then(res => {
+          if (res.success) {
+            this.notify(res.message);
+          }
+        });
+    }
   };
 
   getCategory = product => {
@@ -358,6 +392,7 @@ class ProductDetail extends React.Component {
     if (collectionProduct.length <= 4) {
       productParams.loop = false;
     }
+    console.log(product);
     productParams.slidesPerView = collectionProduct.length;
     return (
       <div className="col-md-12 col-lg-12 col-sm-12 col-xl-12">
@@ -395,9 +430,7 @@ class ProductDetail extends React.Component {
                     <img alt={index.id} src={IMAGE + index.imglrg} key={key} />
                   );
                 })} */}
-            <div
-              dangerouslySetInnerHTML={this.createMarkup(product.description)}
-            />
+            <div dangerouslySetInnerHTML={{ __html: product.description }} />
           </div>
         ) : (
           ""
@@ -717,7 +750,7 @@ class ProductDetail extends React.Component {
           <div className="main-rating">
             <Rate
               allowHalf
-              defaultValue={this.getRatesum()}
+              defaultValue={this.getRatesum() / 2}
               onChange={this.handleRate}
             />
             <p className="text">
