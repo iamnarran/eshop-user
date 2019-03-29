@@ -828,7 +828,12 @@ class ProductDetail extends React.Component {
               <span>Дүн:</span>
               <strong>
                 {money.format(
-                  saleNumber * (product.sprice ? product.sprice : product.price)
+                  saleNumber *
+                    (issalekg === 1
+                      ? product.kgproduct[0].salegramprice
+                      : product.sprice
+                      ? product.sprice
+                      : product.price)
                 )}
                 ₮
               </strong>
