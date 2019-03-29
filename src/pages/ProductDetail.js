@@ -22,7 +22,7 @@ import {
   CardSlider,
   Comment
 } from "../components";
-
+import LoginModal from "../components/LoginModal";
 const money = new Intl.NumberFormat("en-US");
 
 class ProductDetail extends React.Component {
@@ -48,7 +48,8 @@ class ProductDetail extends React.Component {
     smallImg: [],
     currentUrl: null,
     isLoading: false,
-    notFound: false
+    notFound: false,
+    isLoginModalVisible: false
   };
 
   notify = message => toast(message, { autoClose: 5000 });
@@ -91,6 +92,15 @@ class ProductDetail extends React.Component {
     //  }
   }
 
+  toggleLoginModal = e => {
+    //e.preventDefault();
+    this.setState({ isLoginModalVisible: !this.state.isLoginModalVisible });
+  };
+
+  showLoginModal = e => {
+    this.setState({ isLoginModalVisible: true });
+  };
+
   render() {
     const { breadCrumb, skucd, isLoading } = this.state;
 
@@ -121,6 +131,10 @@ class ProductDetail extends React.Component {
                 </div>
               </div>
             </div>
+            <LoginModal
+              onVisibilityChange={this.toggleLoginModal}
+              visible={this.state.isLoginModalVisible}
+            />
           </div>
         );
       }
@@ -218,13 +232,17 @@ class ProductDetail extends React.Component {
 
   handleSaveClick = async e => {
     e.preventDefault();
-    await api.product
-      .addViewList({ id: this.state.userInfo.id, skucd: this.state.skucd })
-      .then(res => {
-        if (res.success) {
-          this.notify(res.message);
-        }
-      });
+    if (!this.state.loggedin) {
+      this.showLoginModal();
+    } else {
+      await api.product
+        .addViewList({ id: this.state.userInfo.id, skucd: this.state.skucd })
+        .then(res => {
+          if (res.success) {
+            this.notify(res.message);
+          }
+        });
+    }
   };
 
   getCategory = product => {
@@ -374,6 +392,7 @@ class ProductDetail extends React.Component {
     if (collectionProduct.length <= 4) {
       productParams.loop = false;
     }
+    console.log(product);
     productParams.slidesPerView = collectionProduct.length;
     return (
       <div className="col-md-12 col-lg-12 col-sm-12 col-xl-12">
@@ -411,9 +430,7 @@ class ProductDetail extends React.Component {
                     <img alt={index.id} src={IMAGE + index.imglrg} key={key} />
                   );
                 })} */}
-            <div
-              dangerouslySetInnerHTML={this.createMarkup(product.description)}
-            />
+            <div dangerouslySetInnerHTML={{ __html: product.description }} />
           </div>
         ) : (
           ""
