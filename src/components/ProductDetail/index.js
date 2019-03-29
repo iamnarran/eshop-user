@@ -2,7 +2,7 @@ import React from "react";
 
 import p10 from "../../scss/assets/images/demo/19.jpg";
 import p11 from "../../scss/assets/images/demo/20.jpg";
-import Magnify from "../Magnify";
+import Magnifier from "../Magnifier";
 import api from "../../api";
 import RelationalProduct from "./RelationalProduct";
 import Information from "./Information";
@@ -50,7 +50,9 @@ class ProductDetail extends React.Component {
     let image = (
       <div className="col-xl-4 col-lg-4 col-md-5 pad10">
         <div className="product-gallery">
-          <Magnify img={mediumImg === null ? IMAGE + product.img : mediumImg} />
+          <Magnifier
+            img={mediumImg === null ? IMAGE + product.img : mediumImg}
+          />
           <div className="thumbs">
             <ul className="list-inline" onChange={this.onChangeImage}>
               <li className="list-inline-item">
