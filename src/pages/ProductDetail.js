@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { updateCart } from "../actions/cart";
 import { toast } from "react-toastify";
 import { getFeedbacks } from "../actions/mainlogic";
+import LoginModal from "../components/LoginModal";
 import {
   Magnify,
   RelationalProduct,
@@ -27,6 +28,8 @@ const IMAGE =
     ? config.image.development
     : config.image.production;
 const money = new Intl.NumberFormat("en-US");
+
+@connect(mapStateToProps)
 class Component extends React.Component {
   state = {
     skucd: null,
@@ -49,7 +52,9 @@ class Component extends React.Component {
     selectedLargeImg: null,
     smallImg: [],
     currentUrl: null,
-    isLoading: false
+    isLoading: false,
+    isLoginModalVisible: false,
+    notFount: false
   };
 
   notify = message => toast(message, { autoClose: 5000 });
@@ -58,12 +63,12 @@ class Component extends React.Component {
       skucd: this.props.match.params.id,
       category: this.props.container.category
     });
-    if (storage.get("user")) {
-      let user = storage.get("user");
-      if (user.customerInfo) {
-        user = user.customerInfo;
-      }
-      this.setState({ userInfo: user, loggedin: true });
+
+    if (this.props.isLoggedIn == true) {
+      this.setState({
+        userInfo: this.props.user,
+        loggedin: this.props.isLoggedIn
+      });
     }
   }
   componentDidMount() {
@@ -85,10 +90,16 @@ class Component extends React.Component {
         }
       );
     }
-    // if (prevProps.match.params.id !== this.props.match.params.id) {
-    //  this.refresh();
-    //  }
   }
+
+  toggleLoginModal = e => {
+    this.setState({ isLoginModalVisible: !this.state.isLoginModalVisible });
+  };
+
+  showLoginModal = e => {
+    e.preventDefault();
+    this.setState({ isLoginModalVisible: true });
+  };
 
   render() {
     const { breadCrumb, skucd, isLoading } = this.state;
@@ -96,7 +107,6 @@ class Component extends React.Component {
       this.setState({ skucd: this.props.match.params.id });
       this.refresh();
     }
-
     if (isLoading) {
       return (
         <div className="section">
@@ -113,6 +123,10 @@ class Component extends React.Component {
               </div>
             </div>
           </div>
+          <LoginModal
+            onVisibilityChange={this.toggleLoginModal}
+            visible={this.state.isLoginModalVisible}
+          />
         </div>
       );
     }
@@ -124,41 +138,31 @@ class Component extends React.Component {
   }
   refresh = async () => {
     const { skucd } = this.state;
-    await api.product
-      .productCollection({ skucd: skucd })
-      .then(res =>
-        res.success
-          ? this.setState({ collectionProduct: res.data, breadCrumb: [] })
-          : console.log("collectionProduct", res)
-      );
-    await api.product
-      .productAttribute({ skucd: skucd })
-      .then(res =>
-        res.success
-          ? this.setState({ attribute: res.data })
-          : console.log("attribute", res)
-      );
-    await api.product
-      .productRelational({ skucd: skucd })
-      .then(res =>
-        res.success
-          ? this.setState({ relationalProduct: res.data })
-          : console.log("relationalProduct", res)
-      );
-    await api.product
-      .productDetail({ skucd: skucd })
-      .then(res =>
-        res.success
-          ? this.getCategory(res.data[0])
-          : console.log("productDetail", res)
-      );
-    await api.product
-      .productDetailImg({ skucd: skucd })
-      .then(res =>
-        res.success
-          ? this.setState({ smallImg: res.data })
-          : console.log("productDetailImg", res)
-      );
+    await api.product.productCollection({ skucd: skucd }).then(res => {
+      if (res.success == true) {
+        this.setState({ collectionProduct: res.data });
+      }
+    });
+    await api.product.productAttribute({ skucd: skucd }).then(res => {
+      if (res.success == true) {
+        this.setState({ attribute: res.data });
+      }
+    });
+    await api.product.productRelational({ skucd: skucd }).then(res => {
+      if (res.success == true) {
+        this.setState({ relationalProduct: res.data });
+      }
+    });
+    await api.product.productDetail({ skucd: skucd }).then(res => {
+      if (res.success == true) {
+        this.setState({ productDetail: res.data });
+      }
+    });
+    await api.product.productDetailImg({ skucd: skucd }).then(res => {
+      if (res.success == true) {
+        this.setState({ smallImg: res.data });
+      }
+    });
   };
 
   check = (res, item, found, cart) => {
@@ -206,7 +210,21 @@ class Component extends React.Component {
 
   handleSaveClick = e => {
     e.preventDefault();
-    console.log(e.target);
+    if (this.state.loggedin) {
+      this.saveViewList();
+    } else {
+      this.showLoginModal(e);
+    }
+  };
+
+  saveViewList = async () => {
+    await api.product
+      .addViewList({ id: this.state.userInfo.id, skucd: this.state.product.cd })
+      .then(res => {
+        if (res.success == true) {
+          this.notify(res.message);
+        }
+      });
   };
 
   getCategory = product => {
@@ -510,10 +528,7 @@ class Component extends React.Component {
               <strong>Хүргэлтийн мэдээлэл</strong>
             </p>
             <p className="text">
-              <span>
-                Энгийн хүргэлт (48 цагийн дотор) - 89,000₮ дээш бараа авсан
-                тохиолдолд үнэгүй
-              </span>
+              <span>{this.state.product.deliverytxt}</span>
             </p>
           </div>
           <RelationalProduct product={relationalProduct} />
@@ -638,7 +653,7 @@ class Component extends React.Component {
                 </p>
                 {issalekg ? (
                   <p className="count-text text-right">
-                    {"кг үнэ: " + money.format(this.state.kgPrice) + "₮"}
+                    {"гр үнэ: " + money.format(this.state.kgPrice) + "₮"}
                   </p>
                 ) : (
                   ""
@@ -697,6 +712,13 @@ const productParams = {
     clickable: true
   }
 };
+
+function mapStateToProps(state) {
+  return {
+    isLoggedIn: state.auth.isLoggedIn,
+    user: state.auth.user
+  };
+}
 
 export default connect(
   null,

@@ -709,7 +709,7 @@ class Checkout extends React.Component {
           </div>
         </div>
         <LoginModal
-          onVisibleChange={this.toggleLoginModal}
+          onVisibilityChange={this.toggleLoginModal}
           visible={this.state.isLoginModalVisible}
         />
       </div>
