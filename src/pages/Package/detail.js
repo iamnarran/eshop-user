@@ -84,7 +84,9 @@ class PackageDetail extends React.Component {
                       : 0;
                     return product.qty * price;
                   });
-                  cart.totalPrice = prices.reduce((acc, curr) => acc + curr);
+                  cart.totalPrice = prices.reduce(
+                    (acc, curr) => parseInt(acc) + parseInt(curr)
+                  );
                   storage.set("cart", cart);
                   this.props.updateCart({
                     products: cart.products,
@@ -146,7 +148,9 @@ class PackageDetail extends React.Component {
                   cart.products.push(prod);
                 }
                 const qties = cart.products.map(product => product.qty);
-                cart.totalQty = qties.reduce((acc, curr) => acc + curr);
+                cart.totalQty = qties.reduce(
+                  (acc, curr) => parseInt(acc) + parseInt(curr)
+                );
                 const prices = cart.products.map(product => {
                   const price = product.sprice
                     ? product.sprice
@@ -155,7 +159,9 @@ class PackageDetail extends React.Component {
                     : 0;
                   return product.qty * price;
                 });
-                cart.totalPrice = prices.reduce((acc, curr) => acc + curr);
+                cart.totalPrice = prices.reduce(
+                  (acc, curr) => parseInt(acc) + parseInt(curr)
+                );
                 storage.set("cart", cart);
                 this.props.updateCart({
                   products: cart.products,
