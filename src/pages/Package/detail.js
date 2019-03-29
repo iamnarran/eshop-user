@@ -2,20 +2,20 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { IMAGE } from "../../utils/consts";
 import Slider from "../../components/Slider";
-import config from "config";
 import { connect } from "react-redux";
 
 import { toast } from "react-toastify";
 import storage from "../../utils/storage";
 import api from "../../api";
 import { updateCart } from "../../actions/cart";
+import { MapsRestaurantMenu } from "material-ui/svg-icons";
 
 class PackageDetail extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       products: this.props.container.Products[0].products,
-      price: this.props.container.Products[0].total,
+      price: parseInt(this.props.container.Products[0].total),
       sameProducts: this.props.container.Products[0].sameproducts,
       addProduct: null,
       remProduct: null,
@@ -38,61 +38,74 @@ class PackageDetail extends React.Component {
       : { products: [], totalQty: 0, totalPrice: 0 };
 
     const found = cart.products.find(product => product.cd === item.cd);
-
-    let itemQty = 0;
-    if (found) {
-      itemQty = found.qty;
-    }
-
-    return new Promise((resolve, reject) => {
-      api.product
-        .isAvailable({
-          skucd: item.cd,
-          qty: itemQty + 1
-        })
-        .then(res => {
-          if (res.success) {
-            if (found) {
-              found.qty++;
-              const i = cart.products
-                .map(product => product.cd)
-                .indexOf(found.cd);
-              cart.products.splice(i, 1, found);
+    if (parseInt(item.unit) === 0) {
+      return;
+    } else {
+      let itemQty = 0;
+      if (found) {
+        itemQty = parseInt(found.qty) + parseInt(item.unit);
+      } else {
+        itemQty = item.unit;
+      }
+      return new Promise((resolve, reject) => {
+        api.product
+          .isAvailable({
+            skucd: item.cd,
+            qty: itemQty
+          })
+          .then(res => {
+            if (res.success) {
+              if (found) {
+                found.qty = itemQty;
+                const i = cart.products
+                  .map(product => product.cd)
+                  .indexOf(found.cd);
+                cart.products.splice(i, 1, found);
+              } else {
+                item.qty = itemQty;
+                cart.products.push(item);
+              }
+              const qties = cart.products.map(product => product.qty);
+              cart.totalQty = qties.reduce((acc, curr) => acc + curr);
+              const prices = cart.products.map(product => {
+                const price = product.sprice
+                  ? product.sprice
+                  : product.price
+                  ? product.price
+                  : 0;
+                return product.qty * price;
+              });
+              cart.totalPrice = prices.reduce((acc, curr) => acc + curr);
+              storage.set("cart", cart);
+              this.props.updateCart({
+                products: cart.products,
+                totalQty: cart.totalQty,
+                totalPrice: cart.totalPrice
+              });
+              let tot = parseInt(item.unit) * parseInt(item.tprice);
+              this.notify(
+                "Таны сагсанд " +
+                  item.unit +
+                  "ш " +
+                  item.skunm +
+                  " бүтээгдэхүүн нэмэгдлээ." +
+                  "Үнийн дүн:" +
+                  parseInt(tot)
+              );
+              resolve();
             } else {
-              item.qty = 1;
-              cart.products.push(item);
+              this.notify(
+                "Таны сонгосон багцын " +
+                  item.unit +
+                  "-" +
+                  item.skunm +
+                  " бараа дууссан байгаа тул худалдан авалт хийх боломжгүй байна."
+              );
+              reject();
             }
-            const qties = cart.products.map(product => product.qty);
-            cart.totalQty = qties.reduce((acc, curr) => acc + curr);
-            const prices = cart.products.map(product => {
-              const price = product.sprice
-                ? product.sprice
-                : product.price
-                ? product.price
-                : 0;
-              return product.qty * price;
-            });
-            cart.totalPrice = prices.reduce((acc, curr) => acc + curr);
-            storage.set("cart", cart);
-            this.props.updateCart({
-              products: cart.products,
-              totalQty: cart.totalQty,
-              totalPrice: cart.totalPrice
-            });
-            this.notify(
-              "Таны сагсанд" +
-                item.skunm +
-                " бараа нэмэгдлээ." +
-                "Үнийн дүн: " +
-                item.sprice
-            );
-            resolve();
-          } else {
-            this.notify(res.message);
-            reject();
-          }
-        });
-    });
+          });
+      });
+    }
   };
 
   handleAddToCart = item => e => {
@@ -114,47 +127,71 @@ class PackageDetail extends React.Component {
         }
       });
     } else if (item.packageid) {
-      api.packageInfo.findAllProducts({ id: item.packageid }).then(res => {
+      this.state.products.map(item => {
+        this.add(item);
+      });
+      /* api.packageInfo.findAllProducts({ id: item.packageid }).then(res => {
         if (res.success) {
           products = res.data[0].products;
           products.map(item => {
             this.add(item);
           });
         }
-      });
+      }); */
     } else {
       this.add(item);
     }
   };
 
+  handleSingleAddToCart = item => e => {
+    this.add(item);
+  };
+
   plusProduct = (e, plus) => {
     e.preventDefault();
-    console.log(plus);
     let tmp = [];
-    this.state.products.map((item, index) => {
+    let total = 0;
+    let tot = 0;
+    this.state.products.map(item => {
       if (item.cd === plus.cd) {
-        item.unit = parseInt(item.unit) + 1;
+        if (item.availableqty > item.unit && item.salemaxqty > item.unit) {
+          item.unit = parseInt(item.unit) + 1;
+        } else {
+          if (item.salemaxqty === 0) {
+            item.unit = parseInt(item.unit) + 1;
+          } else {
+            this.notify(
+              "Уг барааг худалдаалах дээд хэмжээнд хүрсэн эсвэл нөөц дууссан байна."
+            );
+          }
+        }
       }
+      tot = parseInt(item.unit) * parseInt(item.tprice);
+      total = parseInt(total) + parseInt(tot);
       tmp.push(item);
     });
-    this.setState({ products: tmp });
+    this.setState({ products: tmp, price: total });
   };
 
   minusProduct = (e, minus) => {
     e.preventDefault();
-    console.log(minus);
     let tmp = [];
-    this.state.products.map((item, index) => {
-      if (item.cd === minus.cd) {
-        item.unit = parseInt(item.unit) - 1;
+    let total = 0;
+    let tot = 0;
+    this.state.products.map(item => {
+      if (parseInt(item.unit) > 0) {
+        if (item.cd === minus.cd) {
+          item.unit = parseInt(item.unit) - 1;
+        }
       }
+      tot = parseInt(item.unit) * parseInt(item.tprice);
+      total = parseInt(total) + parseInt(tot);
       tmp.push(item);
     });
-    this.setState({ products: tmp });
+    this.setState({ products: tmp, price: total });
   };
 
   render() {
-    console.log(this.state);
     const formatter = new Intl.NumberFormat("en-US");
     const sameproduct = this.props.container.Products[0].sameproducts;
     let products = null;
@@ -199,7 +236,7 @@ class PackageDetail extends React.Component {
                   </strong>
                 </Link>
                 <div className="action">
-                  <a onClick={this.handleAddToCart(item)}>
+                  <a onClick={this.handleSingleAddToCart(item)}>
                     <i className="fa fa-cart-plus" aria-hidden="true" />
                   </a>
                 </div>
@@ -280,9 +317,9 @@ class PackageDetail extends React.Component {
                 </div>
               </form>
               <div className="action">
-                <Link to=" " onClick={this.handleAddToCart(item)}>
+                <a onClick={this.handleSingleAddToCart(item)}>
                   <i className="fa fa-cart-plus" aria-hidden="true" />
-                </Link>
+                </a>
               </div>
             </div>
           </div>

@@ -89,5 +89,11 @@ export default [
     METHOD: "POST",
     URL: `${API}/api/promotionfilter/:id`,
     REPLACE: "id"
+  },
+  {
+    NAME: "addViewList",
+    METHOD: "POST",
+    URL: `${API}/api/customer/ViewList/?id/?skucd`,
+    REPLACE: "id, skucd"
   }
 ];
