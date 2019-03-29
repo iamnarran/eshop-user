@@ -93,7 +93,7 @@ export default [
   {
     NAME: "addViewList",
     METHOD: "POST",
-    URL: `${API}/api/customer/WishList/?id/?skucd`,
+    URL: `${API}/api/customer/WishList/:id/:skucd`,
     REPLACE: "id, skucd"
   }
 ];

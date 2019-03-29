@@ -99,7 +99,11 @@ class ProductDetail extends React.Component {
       this.refresh();
     }
     if (this.state.notFound) {
-      return <div>Өгөгдөл олдсонгүй</div>;
+      return (
+        <center>
+          <div>Бараа олдсонгүй</div>
+        </center>
+      );
     } else {
       if (isLoading) {
         return (
@@ -212,9 +216,15 @@ class ProductDetail extends React.Component {
       });
   };
 
-  handleSaveClick = e => {
+  handleSaveClick = async e => {
     e.preventDefault();
-    console.log(e.target);
+    await api.product
+      .addViewList({ id: this.state.userInfo.id, skucd: this.state.skucd })
+      .then(res => {
+        if (res.success) {
+          this.notify(res.message);
+        }
+      });
   };
 
   getCategory = product => {
@@ -723,7 +733,7 @@ class ProductDetail extends React.Component {
           <div className="main-rating">
             <Rate
               allowHalf
-              defaultValue={this.getRatesum()}
+              defaultValue={this.getRatesum() / 2}
               onChange={this.handleRate}
             />
             <p className="text">
