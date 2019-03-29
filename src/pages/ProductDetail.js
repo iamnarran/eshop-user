@@ -1,20 +1,7 @@
 import React from "react";
-import config from "config";
 import { connect } from "react-redux";
-import api from "../api";
-import storage from "../utils/storage";
 import { Link } from "react-router-dom";
-import { updateCart } from "../actions/cart";
 import { toast } from "react-toastify";
-import { getFeedbacks } from "../actions/mainlogic";
-import LoginModal from "../components/LoginModal";
-import {
-  Magnify,
-  RelationalProduct,
-  Information,
-  CardSlider,
-  Comment
-} from "../components";
 import { Spin, Rate } from "antd";
 import {
   FacebookShareButton,
@@ -23,17 +10,25 @@ import {
   TwitterIcon
 } from "react-share";
 
-const IMAGE =
-  process.env.NODE_ENV === "development"
-    ? config.image.development
-    : config.image.production;
+import api from "../api";
+import storage from "../utils/storage";
+import { updateCart } from "../actions/cart";
+import { getFeedbacks } from "../actions/mainlogic";
+import { IMAGE } from "../utils/consts";
+import {
+  Magnifier,
+  RelationalProduct,
+  Information,
+  CardSlider,
+  Comment
+} from "../components";
+
 const money = new Intl.NumberFormat("en-US");
 
-@connect(mapStateToProps)
-class Component extends React.Component {
+class ProductDetail extends React.Component {
   state = {
     skucd: null,
-    product: [],
+    product: null,
     relationalProduct: [],
     collectionProduct: [],
     loggedin: false,
@@ -53,24 +48,25 @@ class Component extends React.Component {
     smallImg: [],
     currentUrl: null,
     isLoading: false,
-    isLoginModalVisible: false,
-    notFount: false
+    notFound: false
   };
 
   notify = message => toast(message, { autoClose: 5000 });
+
   componentWillMount() {
     this.setState({
       skucd: this.props.match.params.id,
       category: this.props.container.category
     });
-
-    if (this.props.isLoggedIn == true) {
-      this.setState({
-        userInfo: this.props.user,
-        loggedin: this.props.isLoggedIn
-      });
+    if (this.props.isLoggedIn && this.props.user) {
+      let user = this.props.user;
+      if (user.customerInfo) {
+        user = user.customerInfo;
+      }
+      this.setState({ userInfo: user, loggedin: true });
     }
   }
+
   componentDidMount() {
     this.refresh();
   }
@@ -90,80 +86,87 @@ class Component extends React.Component {
         }
       );
     }
+    // if (prevProps.match.params.id !== this.props.match.params.id) {
+    //  this.refresh();
+    //  }
   }
-
-  toggleLoginModal = e => {
-    this.setState({ isLoginModalVisible: !this.state.isLoginModalVisible });
-  };
-
-  showLoginModal = e => {
-    e.preventDefault();
-    this.setState({ isLoginModalVisible: true });
-  };
 
   render() {
     const { breadCrumb, skucd, isLoading } = this.state;
+
     if (skucd !== this.props.match.params.id) {
       this.setState({ skucd: this.props.match.params.id });
       this.refresh();
     }
-    console.log(this.state);
-    if (isLoading) {
-      return (
-        <div className="section">
-          <div className="container">
-            {this.renderBreadCrumb(breadCrumb)}
-            <div className="product-detail-page col-md-12 col-sm-12 col-lg-12">
-              <div className="row row10">
-                <div className="col-sm-9 col-md-9 col-lg-9 row">
-                  {this.renderProductImg()}
-                  {this.renderProductDescription()}
+    if (this.state.notFound) {
+      return <div>Өгөгдөл олдсонгүй</div>;
+    } else {
+      if (isLoading) {
+        return (
+          <div className="section">
+            <div className="container">
+              {this.renderBreadCrumb(breadCrumb)}
+              <div className="product-detail-page col-md-12 col-sm-12 col-lg-12">
+                <div className="row row10">
+                  <div className="col-sm-9 col-md-9 col-lg-9 row">
+                    {this.renderProductImg()}
+                    {this.renderProductDescription()}
+                  </div>
+                  {this.renderProductDelivery()}
+                  {this.renderFooter()}
                 </div>
-                {this.renderProductDelivery()}
-                {this.renderFooter()}
               </div>
             </div>
           </div>
-          <LoginModal
-            onVisibilityChange={this.toggleLoginModal}
-            visible={this.state.isLoginModalVisible}
-          />
+        );
+      }
+      return (
+        <div className="e-mart-loading">
+          <Spin />
         </div>
       );
     }
-    return (
-      <div className="e-mart-loading">
-        <Spin />
-      </div>
-    );
   }
+
   refresh = async () => {
     const { skucd } = this.state;
-    await api.product.productCollection({ skucd: skucd }).then(res => {
-      if (res.success == true) {
-        this.setState({ collectionProduct: res.data });
-      }
-    });
-    await api.product.productAttribute({ skucd: skucd }).then(res => {
-      if (res.success == true) {
-        this.setState({ attribute: res.data });
-      }
-    });
-    await api.product.productRelational({ skucd: skucd }).then(res => {
-      if (res.success == true) {
-        this.setState({ relationalProduct: res.data });
-      }
-    });
+    await api.product
+      .productCollection({ skucd: skucd })
+      .then(res =>
+        res.success
+          ? this.setState({ collectionProduct: res.data, breadCrumb: [] })
+          : console.log("collectionProduct", res)
+      );
+    await api.product
+      .productAttribute({ skucd: skucd })
+      .then(res =>
+        res.success
+          ? this.setState({ attribute: res.data })
+          : console.log("attribute", res)
+      );
+    await api.product
+      .productRelational({ skucd: skucd })
+      .then(res =>
+        res.success
+          ? this.setState({ relationalProduct: res.data })
+          : console.log("relationalProduct", res)
+      );
     await api.product.productDetail({ skucd: skucd }).then(res => {
-      if (res.success == true) {
-        this.getCategory(res.data[0]);
+      if (res.success) {
+        if (res.data.length == 0) {
+          this.setState({ notFound: true });
+        } else {
+          this.getCategory(res.data[0]);
+        }
       }
     });
-    await api.product.productDetailImg({ skucd: skucd }).then(res => {
-      if (res.success == true) {
-        this.setState({ smallImg: res.data });
-      }
-    });
+    await api.product
+      .productDetailImg({ skucd: skucd })
+      .then(res =>
+        res.success
+          ? this.setState({ smallImg: res.data })
+          : console.log("productDetailImg", res)
+      );
   };
 
   check = (res, item, found, cart) => {
@@ -211,26 +214,11 @@ class Component extends React.Component {
 
   handleSaveClick = e => {
     e.preventDefault();
-    if (this.state.loggedin) {
-      this.saveViewList();
-    } else {
-      this.showLoginModal(e);
-    }
-  };
-
-  saveViewList = async () => {
-    await api.product
-      .addViewList({ id: this.state.userInfo.id, skucd: this.state.product.cd })
-      .then(res => {
-        if (res.success == true) {
-          this.notify(res.message);
-        }
-      });
+    console.log(e.target);
   };
 
   getCategory = product => {
     const { breadCrumb, category } = this.state;
-    console.log(product, "fjebj");
     let tmp = [];
     if (product !== undefined) {
       if (product.length !== 0) {
@@ -282,6 +270,7 @@ class Component extends React.Component {
       </div>
     );
   };
+
   renderProductImg = () => {
     const {
       product,
@@ -292,7 +281,7 @@ class Component extends React.Component {
     return (
       <div className="col-xl-5 col-lg-5 col-md-5">
         <div className="product-gallery">
-          <Magnify
+          <Magnifier
             img={
               selectedMediumImg === null
                 ? IMAGE + product.img
@@ -399,9 +388,7 @@ class Component extends React.Component {
         )}
 
         {/**ТАНИЛЦУУЛАГА */}
-        {product.description == null ? (
-          ""
-        ) : (
+        {product.description ? (
           <div>
             <h1 className="title">
               <span className="text-uppercase">Танилцуулга</span>
@@ -414,8 +401,12 @@ class Component extends React.Component {
                     <img alt={index.id} src={IMAGE + index.imglrg} key={key} />
                   );
                 })} */}
-            <div dangerouslySetInnerHTML={this.createMarkup(product)} />
+            <div
+              dangerouslySetInnerHTML={this.createMarkup(product.description)}
+            />
           </div>
+        ) : (
+          ""
         )}
 
         <Comment
@@ -442,6 +433,156 @@ class Component extends React.Component {
     }
     return tmp;
   };
+
+  // increment = item => {
+  //   let cart = storage.get("cart")
+  //     ? storage.get("cart")
+  //     : { products: [], totalQty: 0, totalPrice: 0 };
+
+  //   const found = cart.products.find(product => product.cd === item.cd);
+  //   let itemQty = 0;
+  //   if (found) {
+  //     itemQty = found.qty;
+  //   }
+
+  //   api.product
+  //     .isAvailable({
+  //       skucd: item.id ? item.id : item.cd ? item.cd : null,
+  //       qty: itemQty + 1
+  //     })
+  //     .then(res => {
+  //       if (res.success) {
+  //         if (found) {
+  //           found.qty++;
+  //           const i = cart.products
+  //             .map(product => product.cd)
+  //             .indexOf(found.cd);
+  //           cart.products.splice(i, 1, found);
+  //         } else {
+  //           item.qty = 1;
+  //           cart.products.push(item);
+  //         }
+
+  //         const qties = cart.products.map(product => product.qty);
+  //         cart.totalQty = qties.reduce((acc, curr) => acc + curr);
+
+  //         const prices = cart.products.map(product => {
+  //           const price = product.sprice
+  //             ? product.sprice
+  //             : product.price
+  //             ? product.price
+  //             : 0;
+  //           return product.qty * price;
+  //         });
+  //         cart.totalPrice = prices.reduce((acc, curr) => acc + curr);
+
+  //         storage.set("cart", cart);
+
+  //         // TODO: stop page refreshing
+  //         this.props.updateCart({
+  //           products: cart.products,
+  //           totalQty: cart.totalQty,
+  //           totalPrice: cart.totalPrice
+  //         });
+  //       } else {
+  //         this.notify(res.message);
+  //       }
+  //     });
+  // };
+
+  // decrement = item => {
+  //   let cart = storage.get("cart")
+  //     ? storage.get("cart")
+  //     : { products: [], totalQty: 0, totalPrice: 0 };
+
+  //   const found = cart.products.find(product => product.cd === item.cd);
+  //   if (!found) {
+  //     return;
+  //   }
+
+  //   const i = cart.products.map(product => product.cd).indexOf(found.cd);
+  //   if (found.qty > 1) {
+  //     found.qty--;
+  //     cart.products.splice(i, 1, found);
+  //   } else {
+  //     cart.products.splice(i, 1);
+  //   }
+
+  //   const qties = cart.products.map(product => product.qty);
+  //   cart.totalQty = qties.length ? qties.reduce((acc, curr) => acc + curr) : 0;
+
+  //   const prices = cart.products.map(product => {
+  //     const price = product.sprice
+  //       ? product.sprice
+  //       : product.price
+  //       ? product.price
+  //       : 0;
+  //     return product.qty * price;
+  //   });
+  //   cart.totalPrice = prices.length
+  //     ? prices.reduce((acc, curr) => acc + curr)
+  //     : 0;
+
+  //   storage.set("cart", cart);
+
+  //   this.props.updateCart({
+  //     products: cart.products,
+  //     totalQty: cart.totalQty,
+  //     totalPrice: cart.totalPrice
+  //   });
+  // };
+
+  // update = item => e => {
+  //   e.preventDefault();
+
+  //   const value = parseInt(e.target.value);
+
+  //   let cart = storage.get("cart")
+  //     ? storage.get("cart")
+  //     : { products: [], totalQty: 0, totalPrice: 0 };
+
+  //   const found = cart.products.find(product => product.cd === item.cd);
+  //   if (!found) {
+  //     return;
+  //   }
+
+  //   api.product
+  //     .isAvailable({
+  //       skucd: item.id ? item.id : item.cd ? item.cd : null,
+  //       qty: parseInt(e.target.value)
+  //     })
+  //     .then(res => {
+  //       if (res.success) {
+  //         found.qty = value;
+  //         const i = cart.products.map(product => product.cd).indexOf(found.cd);
+  //         cart.products.splice(i, 1, found);
+
+  //         const qties = cart.products.map(product => product.qty);
+  //         cart.totalQty = qties.reduce((acc, curr) => acc + curr);
+
+  //         const prices = cart.products.map(product => {
+  //           const price = product.sprice
+  //             ? product.sprice
+  //             : product.price
+  //             ? product.price
+  //             : 0;
+  //           return product.qty * price;
+  //         });
+  //         cart.totalPrice = prices.reduce((acc, curr) => acc + curr);
+
+  //         storage.set("cart", cart);
+
+  //         // TODO: stop page refreshing
+  //         this.props.updateCart({
+  //           products: cart.products,
+  //           totalQty: cart.totalQty,
+  //           totalPrice: cart.totalPrice
+  //         });
+  //       } else {
+  //         this.notify(res.message);
+  //       }
+  //     });
+  // };
 
   addProduct = () => {
     const { saleNumber, addminqty, product, issalekg, grPrice } = this.state;
@@ -521,7 +662,7 @@ class Component extends React.Component {
   };
 
   renderProductDelivery = () => {
-    const { relationalProduct } = this.state;
+    const { product, relationalProduct } = this.state;
     return (
       <div className="col-xl-3 col-lg-3 col-sm-3 col-md-3">
         <div className="product-plus">
@@ -530,7 +671,7 @@ class Component extends React.Component {
               <strong>Хүргэлтийн мэдээлэл</strong>
             </p>
             <p className="text">
-              <span>{this.state.product.deliverytxt}</span>
+              <span>{product.deliverytxt || ""}</span>
             </p>
           </div>
           <RelationalProduct product={relationalProduct} />
@@ -599,6 +740,33 @@ class Component extends React.Component {
                 <div className="input-group">
                   <div className="input-group-prepend" id="button-addon4">
                     <button
+                      onClick={this.remProduct}
+                      className="btn"
+                      type="button"
+                    >
+                      <i className="fa fa-minus" aria-hidden="true" />
+                    </button>
+                  </div>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder=""
+                    value={saleNumber}
+                    aria-label=""
+                    aria-describedby="button-addon4"
+                    name="productQty"
+                  />
+                  <div className="input-group-append" id="button-addon4">
+                    <button
+                      onClick={this.addProduct}
+                      className="btn"
+                      type="button"
+                    >
+                      <i className="fa fa-plus" aria-hidden="true" />
+                    </button>
+                  </div>
+                  {/* <div className="input-group-prepend" id="button-addon4">
+                    <button
                       className="btn product-detail-btn"
                       type="button"
                       onClick={this.remProduct}
@@ -618,18 +786,18 @@ class Component extends React.Component {
                     <button
                       className="btn product-detail-btn"
                       type="button"
-                      onClick={this.addProduct}
+                      onClick={this.increment(product)}
                     >
                       <i className="fa fa-plus" aria-hidden="true" />
                     </button>
-                  </div>
+                  </div> */}
                 </div>
               </div>
               <div className="col-xl-8">
                 <p className="count-text text-right">
-                  {issalekg === 1 ? product.saleweight : ""}
-                  {" " + product.measure + " -н "}
-                  үнэ: &emsp;
+                  {issalekg === 1
+                    ? `${product.saleweight} гр-н үнэ: `
+                    : "Үнэ: "}
                   {//kg-aar zaragdah baraa eseh
                   issalekg === 1 ? (
                     money.format(product.kgproduct[0].salegramprice)
@@ -655,7 +823,7 @@ class Component extends React.Component {
                 </p>
                 {issalekg ? (
                   <p className="count-text text-right">
-                    {"гр үнэ: " + money.format(this.state.kgPrice) + "₮"}
+                    {"Кг үнэ: " + money.format(this.state.kgPrice) + "₮"}
                   </p>
                 ) : (
                   ""
@@ -664,7 +832,12 @@ class Component extends React.Component {
             </div>
             <div className="total-price text-right">
               <span>Дүн:</span>
-              <strong>{money.format(sumPrice)}₮</strong>
+              <strong>
+                {money.format(
+                  saleNumber * (product.sprice ? product.sprice : product.price)
+                )}
+                ₮
+              </strong>
             </div>
             <div className="btn-container text-right">
               <button
@@ -715,14 +888,14 @@ const productParams = {
   }
 };
 
-function mapStateToProps(state) {
+const mapStateTopProps = (state, ownProps) => {
   return {
     isLoggedIn: state.auth.isLoggedIn,
     user: state.auth.user
   };
-}
+};
 
 export default connect(
-  null,
+  mapStateTopProps,
   { updateCart }
-)(Component);
+)(ProductDetail);

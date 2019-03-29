@@ -37,7 +37,7 @@ class Label extends React.Component {
     if (type === LABEL_TYPES.vertical) {
       topSpacing += seq * 55;
       spacing = `
-        left: 5px;
+        left: 8px;
         top: ${topSpacing}px;
       `;
     } else {

@@ -1,5 +1,5 @@
 import ProductDetail from "./ProductDetail";
-import Magnify from "./Magnify";
+import Magnifier from "./Magnifier";
 import Rate from "./Rate";
 import RelationalProduct from "./ProductDetail/RelationalProduct";
 import Information from "./ProductDetail/Information";
@@ -16,7 +16,7 @@ import WishList from "./UFWishlist";
 
 export {
   ProductDetail,
-  Magnify,
+  Magnifier,
   Rate,
   RelationalProduct,
   Information,

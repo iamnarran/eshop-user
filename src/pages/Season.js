@@ -60,7 +60,7 @@ class Season extends React.Component {
       console.log("res", res);
       if (res.success) {
         this.setState({
-          products: res.data
+          products: res.data[0].products
         });
       } else {
         this.notify(res.message);
@@ -99,6 +99,8 @@ class Season extends React.Component {
     } else if (i !== -1) {
       checkedList.splice(i, 1);
     }
+
+    console.log("checkedList", checkedList);
 
     this.setState({ checkedList });
 
@@ -152,18 +154,18 @@ class Season extends React.Component {
     if (promoCats && promoCats.length) {
       cats = (
         <div className="block">
-          <div class="accordion" id="accordionExample">
+          <div className="accordion" id="accordionExample">
             <div
               id="collapseOne"
-              class="collapse show"
+              className="collapse show"
               aria-labelledby="headingOne"
               data-parent="#accordionExample"
             >
-              <div class="collapse-content">
-                <ul class="list-unstyled">
-                  {promoCats.map(cat => {
+              <div className="collapse-content">
+                <ul className="list-unstyled">
+                  {promoCats.map((cat, index) => {
                     return (
-                      <li key={cat.promotid}>
+                      <li key={index}>
                         <a href="#">{cat.promotnm}</a>
                       </li>
                     );
