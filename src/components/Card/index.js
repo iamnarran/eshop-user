@@ -215,7 +215,6 @@ class Card extends React.Component {
         </Link>
       </div>
     );
-
     switch (type) {
       case CARD_TYPES.slim:
         return (

@@ -19,7 +19,8 @@ class AppHeader extends Component {
     this.state = {
       isPopupOpen: false,
       isDropdownOpen: false,
-      isLoginModalVisible: false
+      isLoginModalVisible: false,
+      menucategories: []
     };
   }
 
@@ -43,11 +44,43 @@ class AppHeader extends Component {
     this.setState({ isLoginModalVisible: false });
   };
 
+  componentWillMount() {
+    const { categories } = this.props.container;
+    let root = [];
+    categories.map((item, i) => {
+      if (item.parentid === 0) {
+        item.children = [];
+        root.push(item);
+      }
+    });
+
+    root.map((item, i) => {
+      categories.map((item1, i1) => {
+        if (item.id == item1.parentid) {
+          item.children.push(item1);
+        }
+      });
+    });
+
+    this.setState({ menucategories: root });
+  }
+
   render() {
     const { staticInfo, menu, categories } = this.props.container;
-
+    const { menucategories } = this.state;
     const root = [];
-    categories.forEach(c => {
+    /*    categories.map((item, i) => {
+      if (item.parrentid === 0) {
+        item.children = [];
+        root.push(item);
+      }
+      root.map((item1, i1) => {
+        if (item1.id === item.parrentid) {
+          item1.children.push(item);
+        }
+      });
+    }); */
+    /*   categories.forEach(c => {
       if (c.parentid === 0) {
         c.children = [];
         root.push(c);
@@ -57,7 +90,7 @@ class AppHeader extends Component {
           entry.children.push(c);
         }
       });
-    });
+    }); */
 
     const dropdownClass = `dropdown-menu${
       this.state.isDropdownOpen ? " show" : ""
@@ -99,7 +132,7 @@ class AppHeader extends Component {
             </ul>
           </div>
           <ToggleMenu dataSource={menu} />
-          <ToggleCategory dataSource={root} />
+          <ToggleCategory dataSource={menucategories} />
         </div>
 
         <div className="wrap">
@@ -178,7 +211,7 @@ class AppHeader extends Component {
                                   className={dropdownClass}
                                   aria-labelledby="dropdownMenuButton"
                                 >
-                                  {root.map((entry, index) => {
+                                  {menucategories.map((entry, index) => {
                                     return (
                                       <Link
                                         className="dropdown-item"
@@ -284,7 +317,7 @@ class AppHeader extends Component {
 
                     <div className="drop-container">
                       <div className="container pad10">
-                        <Category dataSource={root} />
+                        <Category dataSource={menucategories} />
                       </div>
                     </div>
                   </li>

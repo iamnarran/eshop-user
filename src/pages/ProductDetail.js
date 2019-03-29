@@ -47,7 +47,8 @@ class ProductDetail extends React.Component {
     selectedLargeImg: null,
     smallImg: [],
     currentUrl: null,
-    isLoading: false
+    isLoading: false,
+    notFound: false
   };
 
   notify = message => toast(message, { autoClose: 5000 });
@@ -97,31 +98,38 @@ class ProductDetail extends React.Component {
       this.setState({ skucd: this.props.match.params.id });
       this.refresh();
     }
-
-    if (isLoading) {
+    if (this.state.notFound) {
       return (
-        <div className="section">
-          <div className="container">
-            {this.renderBreadCrumb(breadCrumb)}
-            <div className="product-detail-page col-md-12 col-sm-12 col-lg-12">
-              <div className="row row10">
-                <div className="col-sm-9 col-md-9 col-lg-9 row">
-                  {this.renderProductImg()}
-                  {this.renderProductDescription()}
+        <center>
+          <div>Бараа олдсонгүй</div>
+        </center>
+      );
+    } else {
+      if (isLoading) {
+        return (
+          <div className="section">
+            <div className="container">
+              {this.renderBreadCrumb(breadCrumb)}
+              <div className="product-detail-page col-md-12 col-sm-12 col-lg-12">
+                <div className="row row10">
+                  <div className="col-sm-9 col-md-9 col-lg-9 row">
+                    {this.renderProductImg()}
+                    {this.renderProductDescription()}
+                  </div>
+                  {this.renderProductDelivery()}
+                  {this.renderFooter()}
                 </div>
-                {this.renderProductDelivery()}
-                {this.renderFooter()}
               </div>
             </div>
           </div>
+        );
+      }
+      return (
+        <div className="e-mart-loading">
+          <Spin />
         </div>
       );
     }
-    return (
-      <div className="e-mart-loading">
-        <Spin />
-      </div>
-    );
   }
 
   refresh = async () => {
@@ -147,13 +155,15 @@ class ProductDetail extends React.Component {
           ? this.setState({ relationalProduct: res.data })
           : console.log("relationalProduct", res)
       );
-    await api.product
-      .productDetail({ skucd: skucd })
-      .then(res =>
-        res.success
-          ? this.getCategory(res.data[0])
-          : console.log("productDetail", res)
-      );
+    await api.product.productDetail({ skucd: skucd }).then(res => {
+      if (res.success) {
+        if (res.data.length == 0) {
+          this.setState({ notFound: true });
+        } else {
+          this.getCategory(res.data[0]);
+        }
+      }
+    });
     await api.product
       .productDetailImg({ skucd: skucd })
       .then(res =>
@@ -206,9 +216,15 @@ class ProductDetail extends React.Component {
       });
   };
 
-  handleSaveClick = e => {
+  handleSaveClick = async e => {
     e.preventDefault();
-    console.log(e.target);
+    await api.product
+      .addViewList({ id: this.state.userInfo.id, skucd: this.state.skucd })
+      .then(res => {
+        if (res.success) {
+          this.notify(res.message);
+        }
+      });
   };
 
   getCategory = product => {
@@ -717,7 +733,7 @@ class ProductDetail extends React.Component {
           <div className="main-rating">
             <Rate
               allowHalf
-              defaultValue={this.getRatesum()}
+              defaultValue={this.getRatesum() / 2}
               onChange={this.handleRate}
             />
             <p className="text">
