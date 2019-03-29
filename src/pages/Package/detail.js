@@ -22,6 +22,7 @@ class PackageDetail extends React.Component {
       images: this.props.container.Package.images,
       description: this.props.container.Package.products[0].description,
       title: this.props.container.Package.products[0].packagenm,
+      deliveryText: this.props.container.Package.products[0].deliverytxt,
       date: this.props.container.Package.products[0].insymd
         .split("T")[0]
         .split("-"),
@@ -32,80 +33,82 @@ class PackageDetail extends React.Component {
 
   notify = message => toast(message, { autoClose: 5000 });
 
-  add = item => {
+  add = prod => {
     let cart = storage.get("cart")
       ? storage.get("cart")
       : { products: [], totalQty: 0, totalPrice: 0 };
-
-    const found = cart.products.find(product => product.cd === item.cd);
-    if (parseInt(item.unit) === 0) {
-      return;
-    } else {
-      let itemQty = 0;
-      if (found) {
-        itemQty = parseInt(found.qty) + parseInt(item.unit);
+    prod.map((item, index) => {
+      const found = cart.products.find(product => product.cd === item.cd);
+      if (parseInt(item.unit) === 0) {
+        return;
       } else {
-        itemQty = item.unit;
-      }
-      return new Promise((resolve, reject) => {
-        api.product
-          .isAvailable({
-            skucd: item.cd,
-            qty: itemQty
-          })
-          .then(res => {
-            if (res.success) {
-              if (found) {
-                found.qty = itemQty;
-                const i = cart.products
-                  .map(product => product.cd)
-                  .indexOf(found.cd);
-                cart.products.splice(i, 1, found);
+        let itemQty = 0;
+        if (found) {
+          itemQty = parseInt(found.qty) + parseInt(item.unit);
+        } else {
+          itemQty = item.unit;
+        }
+        return new Promise((resolve, reject) => {
+          api.product
+            .isAvailable({
+              skucd: item.cd,
+              qty: itemQty
+            })
+            .then(res => {
+              if (res.success) {
+                console.log(res);
+                if (found) {
+                  found.qty = itemQty;
+                  const i = cart.products
+                    .map(product => product.cd)
+                    .indexOf(found.cd);
+                  cart.products.splice(i, 1, found);
+                } else {
+                  item.qty = itemQty;
+                  cart.products.push(item);
+                }
+                const qties = cart.products.map(product => product.qty);
+                cart.totalQty = qties.reduce((acc, curr) => acc + curr);
+                const prices = cart.products.map(product => {
+                  const price = product.sprice
+                    ? product.sprice
+                    : product.price
+                    ? product.price
+                    : 0;
+                  return product.qty * price;
+                });
+                cart.totalPrice = prices.reduce((acc, curr) => acc + curr);
+                storage.set("cart", cart);
+                this.props.updateCart({
+                  products: cart.products,
+                  totalQty: cart.totalQty,
+                  totalPrice: cart.totalPrice
+                });
+                let tot = parseInt(item.unit) * parseInt(item.tprice);
+                this.notify(
+                  "Таны сагсанд " +
+                    item.unit +
+                    "ш " +
+                    item.skunm +
+                    " бүтээгдэхүүн нэмэгдлээ." +
+                    "Үнийн дүн:" +
+                    parseInt(tot)
+                );
+                resolve();
               } else {
-                item.qty = itemQty;
-                cart.products.push(item);
+                this.notify(
+                  "Таны сонгосон багцын " +
+                    item.unit +
+                    "-" +
+                    item.skunm +
+                    " бараа дууссан байгаа тул худалдан авалт хийх боломжгүй байна."
+                );
+                reject();
               }
-              const qties = cart.products.map(product => product.qty);
-              cart.totalQty = qties.reduce((acc, curr) => acc + curr);
-              const prices = cart.products.map(product => {
-                const price = product.sprice
-                  ? product.sprice
-                  : product.price
-                  ? product.price
-                  : 0;
-                return product.qty * price;
-              });
-              cart.totalPrice = prices.reduce((acc, curr) => acc + curr);
-              storage.set("cart", cart);
-              this.props.updateCart({
-                products: cart.products,
-                totalQty: cart.totalQty,
-                totalPrice: cart.totalPrice
-              });
-              let tot = parseInt(item.unit) * parseInt(item.tprice);
-              this.notify(
-                "Таны сагсанд " +
-                  item.unit +
-                  "ш " +
-                  item.skunm +
-                  " бүтээгдэхүүн нэмэгдлээ." +
-                  "Үнийн дүн:" +
-                  parseInt(tot)
-              );
-              resolve();
-            } else {
-              this.notify(
-                "Таны сонгосон багцын " +
-                  item.unit +
-                  "-" +
-                  item.skunm +
-                  " бараа дууссан байгаа тул худалдан авалт хийх боломжгүй байна."
-              );
-              reject();
-            }
-          });
-      });
-    }
+            });
+        });
+      }
+    });
   };
 
   handleAddToCart = item => e => {
@@ -127,9 +130,7 @@ class PackageDetail extends React.Component {
         }
       });
     } else if (item.packageid) {
-      this.state.products.map(item => {
-        this.add(item);
-      });
+      this.add(this.state.products);
       /* api.packageInfo.findAllProducts({ id: item.packageid }).then(res => {
         if (res.success) {
           products = res.data[0].products;
@@ -161,7 +162,7 @@ class PackageDetail extends React.Component {
             item.unit = parseInt(item.unit) + 1;
           } else {
             this.notify(
-              "Уг барааг худалдаалах дээд хэмжээнд хүрсэн эсвэл нөөц дууссан байна."
+              "Уучлаарай тухайн барааг худалдан авах дээд хязгаарт хүрсэн байна."
             );
           }
         }
@@ -192,6 +193,7 @@ class PackageDetail extends React.Component {
   };
 
   render() {
+    console.log(this.props);
     const formatter = new Intl.NumberFormat("en-US");
     const sameproduct = this.props.container.Products[0].sameproducts;
     let products = null;
@@ -421,10 +423,7 @@ class PackageDetail extends React.Component {
                       <strong>Хүргэлтийн мэдээлэл</strong>
                     </p>
                     <p className="text">
-                      <span>
-                        Энгийн хүргэлт (48 цагийн дотор) - 89,000₮ дээш бараа
-                        авсан тохиолдолд үнэгүй
-                      </span>
+                      <span>{this.state.deliveryText}</span>
                     </p>
                   </div>
                   <div className="block product-suggest">
