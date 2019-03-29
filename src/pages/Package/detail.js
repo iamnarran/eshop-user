@@ -47,6 +47,7 @@ class PackageDetail extends React.Component {
       } else {
         itemQty = item.unit;
       }
+      console.log(itemQty);
       return new Promise((resolve, reject) => {
         api.product
           .isAvailable({
@@ -56,7 +57,7 @@ class PackageDetail extends React.Component {
           .then(res => {
             if (res.success) {
               if (found) {
-                found.qty++;
+                found.qty = itemQty;
                 const i = cart.products
                   .map(product => product.cd)
                   .indexOf(found.cd);
@@ -82,12 +83,15 @@ class PackageDetail extends React.Component {
                 totalQty: cart.totalQty,
                 totalPrice: cart.totalPrice
               });
+              let tot = parseInt(item.unit) * parseInt(item.tprice);
               this.notify(
                 "Таны сагсанд " +
                   item.unit +
-                  " " +
+                  "ш " +
                   item.skunm +
-                  " бүтээгдэхүүн нэмэгдлээ."
+                  " бүтээгдэхүүн нэмэгдлээ." +
+                  "Үнийн дүн:" +
+                  parseInt(tot)
               );
               resolve();
             } else {
