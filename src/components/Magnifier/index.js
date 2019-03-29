@@ -3,11 +3,11 @@ import ReactImageMagnify from "react-image-magnify";
 import Lightbox from "react-images";
 
 import Label from "./../Label";
-import { IMAGE } from "../../utils/consts";
+import { IMAGE, LABEL_TYPES } from "../../utils/consts";
 
 import "./index.css";
 
-class Component extends React.Component {
+class Magnifier extends React.Component {
   state = {
     img: [],
     isLargeImg: false,
@@ -17,9 +17,11 @@ class Component extends React.Component {
   onClickImage = () => {
     this.setState({ isLargeImg: true, currentImage: null });
   };
+
   closeLightbox = () => {
     this.setState({ isLargeImg: false });
   };
+
   gotoPrevLightboxImage = () => {
     this.setState({
       currentImage:
@@ -28,6 +30,7 @@ class Component extends React.Component {
           : this.state.currentImage - 1
     });
   };
+
   gotoNextLightboxImage = () => {
     this.setState({
       currentImage:
@@ -36,9 +39,11 @@ class Component extends React.Component {
           : this.state.currentImage + 1
     });
   };
+
   onClickThumbnail = e => {
     this.setState({ currentImage: e });
   };
+
   renderImage = () => {
     const { images } = this.props;
     let tmp = [];
@@ -49,7 +54,7 @@ class Component extends React.Component {
   render() {
     const { img, tags } = this.props;
     const { currentImage } = this.state;
-    // console.log(this.props.images)
+
     return (
       <div className="perimeter">
         <div className="image" onClick={this.onClickImage}>
@@ -78,9 +83,16 @@ class Component extends React.Component {
         </div>
         <div className="image-container medium-magnify">
           {tags &&
-            tags.map((label, index) => (
-              <Label key={index} seq={index} data={label} />
-            ))}
+            tags.map((label, index) => {
+              return (
+                <Label
+                  key={index}
+                  type={LABEL_TYPES.vertical}
+                  seq={index}
+                  data={label}
+                />
+              );
+            })}
         </div>
         <Lightbox
           images={this.renderImage()}
@@ -101,4 +113,4 @@ class Component extends React.Component {
   }
 }
 
-export default Component;
+export default Magnifier;
