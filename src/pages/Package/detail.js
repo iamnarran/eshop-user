@@ -37,26 +37,104 @@ class PackageDetail extends React.Component {
     let cart = storage.get("cart")
       ? storage.get("cart")
       : { products: [], totalQty: 0, totalPrice: 0 };
-    prod.map((item, index) => {
-      const found = cart.products.find(product => product.cd === item.cd);
-      if (parseInt(item.unit) === 0) {
+    console.log(cart, "adya");
+    console.log("lenght", prod.length);
+    if (prod.length) {
+      prod.map((item, index) => {
+        const found = cart.products.find(product => product.cd === item.cd);
+        if (parseInt(item.unit) === 0) {
+          return;
+        } else {
+          let itemQty = 0;
+          if (found) {
+            itemQty = parseInt(found.qty) + parseInt(item.unit);
+          } else {
+            itemQty = item.unit;
+          }
+          return new Promise((resolve, reject) => {
+            api.product
+              .isAvailable({
+                skucd: item.cd,
+                qty: itemQty
+              })
+              .then(res => {
+                if (res.success) {
+                  console.log(res);
+                  if (found) {
+                    found.qty = itemQty;
+                    const i = cart.products
+                      .map(product => product.cd)
+                      .indexOf(found.cd);
+                    cart.products.splice(i, 1, found);
+                  } else {
+                    item.qty = itemQty;
+                    cart.products.push(item);
+                  }
+                  const qties = cart.products.map(product => product.qty);
+                  cart.totalQty = qties.reduce(
+                    (acc, curr) => parseInt(acc) + parseInt(curr)
+                  );
+                  console.log(qties, "golog");
+                  console.log(cart.totalQty);
+                  const prices = cart.products.map(product => {
+                    const price = product.sprice
+                      ? product.sprice
+                      : product.price
+                      ? product.price
+                      : 0;
+                    return product.qty * price;
+                  });
+                  cart.totalPrice = prices.reduce((acc, curr) => acc + curr);
+                  storage.set("cart", cart);
+                  this.props.updateCart({
+                    products: cart.products,
+                    totalQty: cart.totalQty,
+                    totalPrice: cart.totalPrice
+                  });
+                  let tot = parseInt(item.unit) * parseInt(item.tprice);
+                  this.notify(
+                    "Таны сагсанд " +
+                      item.unit +
+                      "ш " +
+                      item.skunm +
+                      " бүтээгдэхүүн нэмэгдлээ." +
+                      "Үнийн дүн:" +
+                      parseInt(tot)
+                  );
+                  resolve();
+                } else {
+                  this.notify(
+                    "Таны сонгосон багцын " +
+                      item.unit +
+                      "-" +
+                      item.skunm +
+                      " бараа дууссан байгаа тул худалдан авалт хийх боломжгүй байна."
+                  );
+                  reject();
+                }
+              });
+          });
+        }
+      });
+    } else {
+      const found = cart.products.find(product => product.cd === prod.cd);
+      if (parseInt(prod.unit) === 0) {
         return;
       } else {
         let itemQty = 0;
         if (found) {
-          itemQty = parseInt(found.qty) + parseInt(item.unit);
+          itemQty = parseInt(found.qty) + parseInt(prod.unit);
         } else {
-          itemQty = item.unit;
+          itemQty = parseInt(prod.unit);
         }
         return new Promise((resolve, reject) => {
           api.product
             .isAvailable({
-              skucd: item.cd,
+              skucd: prod.cd,
               qty: itemQty
             })
             .then(res => {
               if (res.success) {
-                console.log(res);
                 if (found) {
                   found.qty = itemQty;
                   const i = cart.products
@@ -64,8 +142,8 @@ class PackageDetail extends React.Component {
                     .indexOf(found.cd);
                   cart.products.splice(i, 1, found);
                 } else {
-                  item.qty = itemQty;
-                  cart.products.push(item);
+                  prod.qty = itemQty;
+                  cart.products.push(prod);
                 }
                 const qties = cart.products.map(product => product.qty);
                 cart.totalQty = qties.reduce((acc, curr) => acc + curr);
@@ -84,12 +162,12 @@ class PackageDetail extends React.Component {
                   totalQty: cart.totalQty,
                   totalPrice: cart.totalPrice
                 });
-                let tot = parseInt(item.unit) * parseInt(item.tprice);
+                let tot = parseInt(prod.unit) * parseInt(prod.tprice);
                 this.notify(
                   "Таны сагсанд " +
-                    item.unit +
+                    prod.unit +
                     "ш " +
-                    item.skunm +
+                    prod.skunm +
                     " бүтээгдэхүүн нэмэгдлээ." +
                     "Үнийн дүн:" +
                     parseInt(tot)
@@ -98,9 +176,9 @@ class PackageDetail extends React.Component {
               } else {
                 this.notify(
                   "Таны сонгосон багцын " +
-                    item.unit +
+                    prod.unit +
                     "-" +
-                    item.skunm +
+                    prod.skunm +
                     " бараа дууссан байгаа тул худалдан авалт хийх боломжгүй байна."
                 );
                 reject();
@@ -108,7 +186,7 @@ class PackageDetail extends React.Component {
             });
         });
       }
-    });
+    }
   };
 
   handleAddToCart = item => e => {
