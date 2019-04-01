@@ -42,15 +42,14 @@ class Label extends React.Component {
       `;
     } else {
       rightSpacing -= seq * 50;
-      //45
-      //right: ${rightSpacing}px;
       spacing = `
-        top: 0px;
+        top: 45px;
         left: auto;
+        right: ${rightSpacing}px;
       `;
     }
 
-    let color = data.color ? data.color : "#f00";
+    let color = data.color || "#f00";
     return (
       <Style>
         {`
