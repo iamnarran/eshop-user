@@ -13,36 +13,106 @@ import { getFeedbacks } from "../../actions/mainlogic";
 class RecipeDetail extends React.Component {
   notify = message => toast(message, { autoClose: 5000 });
 
-  handleAddCart = e => {
-    /* e.preventDefault();
-    const item = this.props.container.recipe[0].recipe;
+  add = item => {
     let cart = storage.get("cart")
       ? storage.get("cart")
       : { products: [], totalQty: 0, totalPrice: 0 };
+
+    const found = cart.products.find(product => product.cd === item.cd);
+
+    let itemQty = 0;
+    if (found) {
+      itemQty = found.qty;
+    }
     console.log(item);
-    api.recipe
-      .isAvailable({
-        id: item.id
-      })
-      .then(res => {
-        console.log(res);
-      }); */
+
+    return new Promise((resolve, reject) => {
+      api.product
+        .isAvailable({
+          skucd: item.id ? item.id : item.cd ? item.cd : null,
+          qty: itemQty + 1
+        })
+        .then(res => {
+          if (res.success) {
+            if (found) {
+              found.qty++;
+              const i = cart.products
+                .map(product => product.cd)
+                .indexOf(found.cd);
+              cart.products.splice(i, 1, found);
+            } else {
+              item.qty = 1;
+              cart.products.push(item);
+            }
+
+            const qties = cart.products.map(product => product.qty);
+            cart.totalQty = qties.reduce((acc, curr) => acc + curr);
+
+            const prices = cart.products.map(product => {
+              const price = product.sprice
+                ? product.sprice
+                : product.price
+                ? product.price
+                : 0;
+              return product.qty * price;
+            });
+            cart.totalPrice = prices.reduce((acc, curr) => acc + curr);
+
+            storage.set("cart", cart);
+
+            // TODO: stop page refreshing
+            this.props.updateCart({
+              products: cart.products,
+              totalQty: cart.totalQty,
+              totalPrice: cart.totalPrice
+            });
+
+            this.notify(
+              "Таны сагсанд " +
+                item.titlenm +
+                " бүтээгдэрхүүн нэмэгдлээ. Үнийн дүн: " +
+                item.price
+            );
+
+            resolve();
+          } else {
+            this.notify(
+              "Таны сонгосон хоолны жорын " +
+                item.titlenm +
+                " бараа дууссан байгаа тул худалдан авалт хийх боломжгүй байна."
+            );
+
+            reject();
+          }
+        });
+    });
   };
 
-  check = (res, item, cart) => {
-    let tmp = getFeedbacks(res, item, cart);
-    if (tmp == false) {
-      this.notify(res.message);
-    } else {
-      this.props.updateCart({
-        products: tmp.products,
-        totalQty: tmp.totalQty,
-        totalPrice: tmp.totalPrice
+  handleAddToCart = item => e => {
+    e.preventDefault();
+    let products = [];
+    if (item.id) {
+      api.recipe.findAllProducts({ id: item.id }).then(res => {
+        if (res.success) {
+          products = res.data[0].products;
+          if (products.length) {
+            products.reduce((acc, next) => {
+              return acc.then(() => {
+                return this.add(next);
+              });
+            }, Promise.resolve());
+          }
+        } else {
+          this.notify(res.message);
+        }
       });
+    } else {
+      this.add(item);
     }
   };
 
   render() {
+    console.log(this.props);
     const { recipe, productsData } = this.props.container;
     const step = this.props.container.recipe[0].steps;
     const sliderParams = {
@@ -112,6 +182,7 @@ class RecipeDetail extends React.Component {
           <ul className="list-unstyled">
             {productsData.products &&
               productsData.products.map(product => {
+                console.log(product);
                 return (
                   <li>
                     <div className="single flex-this">
@@ -131,7 +202,7 @@ class RecipeDetail extends React.Component {
                           <strong>{formatter.format(product.price)}₮</strong>
                         </Link>
                         <div className="action">
-                          <a>
+                          <a onClick={this.handleAddToCart(product)}>
                             <i className="fa fa-cart-plus" aria-hidden="true" />
                           </a>
                         </div>
@@ -147,7 +218,10 @@ class RecipeDetail extends React.Component {
                 <span>Дүн:</span>
                 <strong>{formatter.format(productsData.total)}₮</strong>
               </p>
-              <a className="btn btn-main" onClick={this.handleAddCart}>
+              <a
+                className="btn btn-main"
+                onClick={this.handleAddToCart(recipe[0].recipe)}
+              >
                 <i className="fa fa-cart-plus" aria-hidden="true" />
                 <span className="text-uppercase">Сагсанд нэмэх</span>
               </a>
