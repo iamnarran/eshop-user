@@ -11,6 +11,7 @@ class Component extends React.Component {
     rate: [],
     ratesum: 0
   };
+
   componentDidMount() {
     this.getRatesum();
     api.product
@@ -85,7 +86,7 @@ class Component extends React.Component {
             ""
           )}
 
-          {comment.length === 0 ? (
+          {!comment.length ? (
             ""
           ) : (
             <div>

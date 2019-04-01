@@ -6,25 +6,23 @@ import { Link } from "react-router-dom";
 import ls from "local-storage";
 import PropTypes from "prop-types";
 
-class Compenent extends React.Component {
+class RelationalProduct extends React.Component {
   state = {
-    more: false,
-    product: []
+    more: false
   };
-
-  componentDidMount() {
-    if (this.props.product.length !== 0) {
-      this.setState({ product: this.props.product.slice(0, 4) });
-    }
-  }
 
   onClickSeeMore = () => {
     this.setState({ more: true, product: this.props.product });
   };
 
   render() {
-    const { product } = this.state;
-    if (product.length !== 0) {
+    let { product } = this.props;
+    product = product.length
+      ? product.length > 4
+        ? product.slice(0, 4)
+        : product
+      : [];
+    if (product.length) {
       return (
         <div className="product-suggest">
           <p className="title">
@@ -77,8 +75,8 @@ class Compenent extends React.Component {
 }
 const money = new Intl.NumberFormat("en-US");
 
-Compenent.propTypes = {
+RelationalProduct.propTypes = {
   item: PropTypes.object.isRequired
 };
 
-export default Compenent;
+export default RelationalProduct;

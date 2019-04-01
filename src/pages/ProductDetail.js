@@ -392,7 +392,6 @@ class ProductDetail extends React.Component {
     if (collectionProduct.length <= 4) {
       productParams.loop = false;
     }
-    console.log(product);
     productParams.slidesPerView = collectionProduct.length;
     return (
       <div className="col-md-12 col-lg-12 col-sm-12 col-xl-12">
@@ -439,8 +438,8 @@ class ProductDetail extends React.Component {
         <Comment
           skucd={skucd}
           rate={product !== undefined ? product.rate : []}
-          userInfo={this.state.loggedin == true ? this.state.userInfo : null}
-          loggedin={this.state.loggedin == true ? this.state.loggedin : false}
+          userInfo={this.props.isLoggedIn && this.props.user}
+          loggedin={this.props.isLoggedIn}
         />
       </div>
     );
@@ -460,156 +459,6 @@ class ProductDetail extends React.Component {
     }
     return tmp;
   };
-
-  // increment = item => {
-  //   let cart = storage.get("cart")
-  //     ? storage.get("cart")
-  //     : { products: [], totalQty: 0, totalPrice: 0 };
-
-  //   const found = cart.products.find(product => product.cd === item.cd);
-  //   let itemQty = 0;
-  //   if (found) {
-  //     itemQty = found.qty;
-  //   }
-
-  //   api.product
-  //     .isAvailable({
-  //       skucd: item.id ? item.id : item.cd ? item.cd : null,
-  //       qty: itemQty + 1
-  //     })
-  //     .then(res => {
-  //       if (res.success) {
-  //         if (found) {
-  //           found.qty++;
-  //           const i = cart.products
-  //             .map(product => product.cd)
-  //             .indexOf(found.cd);
-  //           cart.products.splice(i, 1, found);
-  //         } else {
-  //           item.qty = 1;
-  //           cart.products.push(item);
-  //         }
-
-  //         const qties = cart.products.map(product => product.qty);
-  //         cart.totalQty = qties.reduce((acc, curr) => acc + curr);
-
-  //         const prices = cart.products.map(product => {
-  //           const price = product.sprice
-  //             ? product.sprice
-  //             : product.price
-  //             ? product.price
-  //             : 0;
-  //           return product.qty * price;
-  //         });
-  //         cart.totalPrice = prices.reduce((acc, curr) => acc + curr);
-
-  //         storage.set("cart", cart);
-
-  //         // TODO: stop page refreshing
-  //         this.props.updateCart({
-  //           products: cart.products,
-  //           totalQty: cart.totalQty,
-  //           totalPrice: cart.totalPrice
-  //         });
-  //       } else {
-  //         this.notify(res.message);
-  //       }
-  //     });
-  // };
-
-  // decrement = item => {
-  //   let cart = storage.get("cart")
-  //     ? storage.get("cart")
-  //     : { products: [], totalQty: 0, totalPrice: 0 };
-
-  //   const found = cart.products.find(product => product.cd === item.cd);
-  //   if (!found) {
-  //     return;
-  //   }
-
-  //   const i = cart.products.map(product => product.cd).indexOf(found.cd);
-  //   if (found.qty > 1) {
-  //     found.qty--;
-  //     cart.products.splice(i, 1, found);
-  //   } else {
-  //     cart.products.splice(i, 1);
-  //   }
-
-  //   const qties = cart.products.map(product => product.qty);
-  //   cart.totalQty = qties.length ? qties.reduce((acc, curr) => acc + curr) : 0;
-
-  //   const prices = cart.products.map(product => {
-  //     const price = product.sprice
-  //       ? product.sprice
-  //       : product.price
-  //       ? product.price
-  //       : 0;
-  //     return product.qty * price;
-  //   });
-  //   cart.totalPrice = prices.length
-  //     ? prices.reduce((acc, curr) => acc + curr)
-  //     : 0;
-
-  //   storage.set("cart", cart);
-
-  //   this.props.updateCart({
-  //     products: cart.products,
-  //     totalQty: cart.totalQty,
-  //     totalPrice: cart.totalPrice
-  //   });
-  // };
-
-  // update = item => e => {
-  //   e.preventDefault();
-
-  //   const value = parseInt(e.target.value);
-
-  //   let cart = storage.get("cart")
-  //     ? storage.get("cart")
-  //     : { products: [], totalQty: 0, totalPrice: 0 };
-
-  //   const found = cart.products.find(product => product.cd === item.cd);
-  //   if (!found) {
-  //     return;
-  //   }
-
-  //   api.product
-  //     .isAvailable({
-  //       skucd: item.id ? item.id : item.cd ? item.cd : null,
-  //       qty: parseInt(e.target.value)
-  //     })
-  //     .then(res => {
-  //       if (res.success) {
-  //         found.qty = value;
-  //         const i = cart.products.map(product => product.cd).indexOf(found.cd);
-  //         cart.products.splice(i, 1, found);
-
-  //         const qties = cart.products.map(product => product.qty);
-  //         cart.totalQty = qties.reduce((acc, curr) => acc + curr);
-
-  //         const prices = cart.products.map(product => {
-  //           const price = product.sprice
-  //             ? product.sprice
-  //             : product.price
-  //             ? product.price
-  //             : 0;
-  //           return product.qty * price;
-  //         });
-  //         cart.totalPrice = prices.reduce((acc, curr) => acc + curr);
-
-  //         storage.set("cart", cart);
-
-  //         // TODO: stop page refreshing
-  //         this.props.updateCart({
-  //           products: cart.products,
-  //           totalQty: cart.totalQty,
-  //           totalPrice: cart.totalPrice
-  //         });
-  //       } else {
-  //         this.notify(res.message);
-  //       }
-  //     });
-  // };
 
   addProduct = () => {
     const { saleNumber, addminqty, product, issalekg, grPrice } = this.state;
@@ -735,12 +584,16 @@ class ProductDetail extends React.Component {
     return (
       <div className="col-xl-7 col-lg-7 col-md-7">
         <div className="product-info">
-          <h5 className="title">{product.name}</h5>({product.backtxt})
+          <h5 className="title">{product.name}</h5>({product.backtxt || ""})
           <p className="big-text">
             <strong>
               {breadCrumb.map((i, e) => {
                 if (e === breadCrumb.length - 1) {
-                  return i.name;
+                  return (
+                    <Link to={i.route} style={{ color: "#999" }}>
+                      {i.name}
+                    </Link>
+                  );
                 } else {
                   return null;
                 }
@@ -792,41 +645,12 @@ class ProductDetail extends React.Component {
                       <i className="fa fa-plus" aria-hidden="true" />
                     </button>
                   </div>
-                  {/* <div className="input-group-prepend" id="button-addon4">
-                    <button
-                      className="btn product-detail-btn"
-                      type="button"
-                      onClick={this.remProduct}
-                    >
-                      <i className="fa fa-minus" aria-hidden="true" />
-                    </button>
-                  </div>
-                  <input
-                    alt="asfasd"
-                    className="form-control"
-                    placeholder=""
-                    value={saleNumber}
-                    aria-label=""
-                    aria-describedby="button-addon4"
-                  />
-                  <div className="input-group-append" id="button-addon4">
-                    <button
-                      className="btn product-detail-btn"
-                      type="button"
-                      onClick={this.increment(product)}
-                    >
-                      <i className="fa fa-plus" aria-hidden="true" />
-                    </button>
-                  </div> */}
                 </div>
               </div>
               <div className="col-xl-8">
                 <p className="count-text text-right">
-                  {issalekg === 1
-                    ? `${product.saleweight} гр-н үнэ: `
-                    : "Үнэ: "}
-                  {//kg-aar zaragdah baraa eseh
-                  issalekg === 1 ? (
+                  {issalekg ? `${product.saleweight} гр-н үнэ: ` : "Үнэ: "}
+                  {issalekg ? (
                     money.format(product.kgproduct[0].salegramprice)
                   ) : product.spercent === 100 ? (
                     money.format(product.price)

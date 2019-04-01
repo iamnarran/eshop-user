@@ -69,19 +69,23 @@ class Homepage extends React.Component {
     let blocksToRender = [];
 
     blocksToRender.push(this.getBlocks(widgets.slice(0, 2), items.products));
-    blocksToRender.push(
-      <Banner
-        key={items.blocks.banners[1][0].id}
-        data={items.blocks.banners[1]}
-      />
-    );
+    if (items.blocks.banners[1].length) {
+      blocksToRender.push(
+        <Banner
+          key={items.blocks.banners[1][0].id}
+          data={items.blocks.banners[1]}
+        />
+      );
+    }
     blocksToRender.push(this.getBlocks(widgets.slice(2, 4), items.products));
-    blocksToRender.push(
-      <Banner
-        key={items.blocks.banners[2][0].id}
-        data={items.blocks.banners[2]}
-      />
-    );
+    if (items.blocks.banners[2].length) {
+      blocksToRender.push(
+        <Banner
+          key={items.blocks.banners[2][0].id}
+          data={items.blocks.banners[2]}
+        />
+      );
+    }
 
     return blocksToRender;
   }
