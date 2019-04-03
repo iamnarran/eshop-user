@@ -232,8 +232,24 @@ class PackageDetail extends React.Component {
     this.add(item);
   };
 
+  onChange = (e, minus) => {
+    e.preventDefault();
+    let tmp = [];
+    console.log(e.target.value);
+    this.state.products.map(item => {
+      if (parseInt(item.unit) > 0) {
+        if (item.cd === minus.cd) {
+          item.unit = e.target.value;
+        }
+      }
+      tmp.push(item);
+    });
+    this.setState({ products: tmp });
+  };
+
   plusProduct = (e, plus) => {
     e.preventDefault();
+    console.log();
     let tmp = [];
     let total = 0;
     let tot = 0;
@@ -267,9 +283,10 @@ class PackageDetail extends React.Component {
       if (parseInt(item.unit) > 0) {
         if (item.cd === minus.cd) {
           item.unit = parseInt(item.unit) - 1;
+          console.log(item.unit);
         }
       }
-      tot = parseInt(item.unit) * parseInt(item.tprice);
+      tot = parseInt(item.unit) ? " " : 0 * parseInt(item.tprice);
       total = parseInt(total) + parseInt(tot);
       tmp.push(item);
     });
@@ -277,7 +294,6 @@ class PackageDetail extends React.Component {
   };
 
   render() {
-    console.log(this.props);
     const formatter = new Intl.NumberFormat("en-US");
     const sameproduct = this.props.container.Products[0].sameproducts;
     let products = null;
@@ -378,10 +394,11 @@ class PackageDetail extends React.Component {
                     type="text"
                     className="form-control"
                     placeholder=""
-                    value={item.unit}
+                    defaultValue={item.unit}
                     aria-label=""
                     aria-describedby="button-addon4"
                     style={{ width: "40px" }}
+                    /* onChange={e => this.onChange(e, item)} */
                   />
                   <div className="input-group-append" id="button-addon4">
                     <button
