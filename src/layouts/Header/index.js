@@ -25,7 +25,7 @@ class AppHeader extends Component {
   }
 
   togglePopup = () => {
-    this.setState({ isPopupOpen: !this.state.isPopupOpen });
+    this.props.onChange();
   };
 
   toggleDropdown = () => {
@@ -69,72 +69,15 @@ class AppHeader extends Component {
     const { staticInfo, menu, categories } = this.props.container;
     const { menucategories } = this.state;
     const root = [];
-    /*    categories.map((item, i) => {
-      if (item.parrentid === 0) {
-        item.children = [];
-        root.push(item);
-      }
-      root.map((item1, i1) => {
-        if (item1.id === item.parrentid) {
-          item1.children.push(item);
-        }
-      });
-    }); */
-    /*   categories.forEach(c => {
-      if (c.parentid === 0) {
-        c.children = [];
-        root.push(c);
-      }
-      root.forEach(entry => {
-        if (entry.id === c.parentid) {
-          entry.children.push(c);
-        }
-      });
-    }); */
-
     const dropdownClass = `dropdown-menu${
       this.state.isDropdownOpen ? " show" : ""
     }`;
     const searchClass = `search-mobile${
       this.state.isSearch ? " activated" : ""
     }`;
-    const popupClass = `${this.props.isPopupOpen ? "activated" : ""}`;
 
     return (
-      <div className={popupClass}>
-        <div className="fixed-mobile-menu">
-          <div className="single">
-            <ul className="list-unstyled flex-this flex-space top-1">
-              <li className="list-inline-item">
-                <Link to="" className="e-phone">
-                  <i className="fa fa-phone" aria-hidden="true" />
-                  <strong>{staticInfo.phone}</strong>
-                </Link>
-              </li>
-              <li className="list-inline-item">
-                <Link to="" className="e-help">
-                  <span>Тусламж</span>
-                </Link>
-              </li>
-            </ul>
-            <ul className="list-unstyled flex-this flex-space top-2">
-              <li className="list-inline-item notification">
-                <Link to="">
-                  <i className="fa fa-bell" aria-hidden="true" />
-                  <span>5</span>
-                </Link>
-              </li>
-              <li className="list-inline-item">
-                <Link to="" onClick={this.showLoginModal}>
-                  <span className="text-uppercase">Нэвтрэх</span>
-                </Link>
-              </li>
-            </ul>
-          </div>
-          <ToggleMenu dataSource={menu} />
-          <ToggleCategory dataSource={menucategories} />
-        </div>
-
+      <div>
         <div className="wrap">
           <div className="top-container">
             <div className="top-nav">

@@ -89,10 +89,9 @@ class MobileMenu extends React.Component {
         </SubMenu>
       );
     });
-
     return (
       <div>
-        <div className={popupClass} style={{ height: "100%" }}>
+        <div className={popupClass}>
           <div className="single">
             <ul className="list-unstyled flex-this flex-space top-1">
               <li className="list-inline-item" onClick={this.togglePopup}>
