@@ -286,7 +286,7 @@ class PackageDetail extends React.Component {
           console.log(item.unit);
         }
       }
-      tot = parseInt(item.unit) ? " " : 0 * parseInt(item.tprice);
+      tot = parseInt(item.unit) * parseInt(item.tprice);
       total = parseInt(total) + parseInt(tot);
       tmp.push(item);
     });
@@ -394,7 +394,7 @@ class PackageDetail extends React.Component {
                     type="text"
                     className="form-control"
                     placeholder=""
-                    defaultValue={item.unit}
+                    value={item.unit}
                     aria-label=""
                     aria-describedby="button-addon4"
                     style={{ width: "40px" }}
