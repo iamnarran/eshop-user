@@ -17,7 +17,7 @@ class CategoryInfo extends React.Component {
 
     const attributes = props.container.attributes;
     attributes &&
-      attributes.map(attr => {
+      attributes.forEach(attr => {
         if (attr.type === "PRICE") {
           min = parseInt(
             attr.attributes[0].values.find(val => val.valuecd === "MIN")
@@ -37,8 +37,32 @@ class CategoryInfo extends React.Component {
       maxPrice: max,
       sort: "price_asc",
       checkedList: [],
-      products: this.props.container.products
+      products: this.props.container.products || []
     };
+  }
+
+  componentDidUpdate(prevProps) {
+    const prevProducts = prevProps.container.products;
+    const thisProducts = this.props.container.products;
+    let areProductsEqual = true;
+
+    if (prevProducts.length === thisProducts.length) {
+      for (let i = 0; i < prevProducts.length; i++) {
+        if (prevProducts[i].cd !== thisProducts[i].cd) {
+          areProductsEqual = false;
+          break;
+        }
+      }
+      if (!areProductsEqual) {
+        this.setState({
+          products: thisProducts
+        });
+      }
+    } else {
+      this.setState({
+        products: thisProducts
+      });
+    }
   }
 
   notify = message => toast(message, { autoClose: 5000 });
@@ -140,7 +164,7 @@ class CategoryInfo extends React.Component {
 
   render() {
     const { id, parentCats, subCats, attributes } = this.props.container;
-    const products = this.state.products || [];
+    const { products } = this.state;
     const Option = Select.Option;
 
     let selectedCat = null;
@@ -155,7 +179,7 @@ class CategoryInfo extends React.Component {
               <div className="accordion">
                 <h6
                   style={{
-                    marginLeft: "20px",
+                    marginLeft: "10px",
                     marginTop: "10px",
                     marginBotton: "0"
                   }}
@@ -174,9 +198,9 @@ class CategoryInfo extends React.Component {
                         if (sub.parentid === parent.id) {
                           return (
                             <li key={index}>
-                              <a href={sub.route ? sub.route : ""}>
+                              <Link to={sub.route ? sub.route : ""}>
                                 {sub.catnm}
-                              </a>
+                              </Link>
                             </li>
                           );
                         }
@@ -245,9 +269,9 @@ class CategoryInfo extends React.Component {
                   parentCats.map(category => {
                     return (
                       <li key={category.catnm}>
-                        <a href={category.route ? category.route : ""}>
+                        <Link to={category.route ? category.route : ""}>
                           <span>{category.catnm}</span>
-                        </a>
+                        </Link>
                       </li>
                     );
                   })}

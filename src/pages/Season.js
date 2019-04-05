@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 
 import api from "../api";
 import { CARD_LIST_TYPES, CARD_TYPES } from "../utils/consts";
+import PageHeader from "../components/PageHeader";
 import CardList from "../components/CardList";
 import FilterSet from "../components/FilterSet";
 
@@ -17,7 +18,7 @@ class Season extends React.Component {
 
     const attributes = props.container.attributes;
     attributes &&
-      attributes.map(attr => {
+      attributes.forEach(attr => {
         if (attr.type === "PRICE") {
           min = parseInt(
             attr.attributes[0].values.find(val => val.valuecd === "MIN")
@@ -37,7 +38,7 @@ class Season extends React.Component {
       maxPrice: max,
       sort: "price_asc",
       checkedList: [],
-      products: this.props.container.products
+      products: this.props.container.products || []
     };
   }
 
@@ -54,10 +55,7 @@ class Season extends React.Component {
       ordercol: sort
     };
 
-    console.log("data", data);
-
     api.season.findAllFilteredInfo(data).then(res => {
-      console.log("res", res);
       if (res.success) {
         this.setState({
           products: res.data[0].products
@@ -99,8 +97,6 @@ class Season extends React.Component {
     } else if (i !== -1) {
       checkedList.splice(i, 1);
     }
-
-    console.log("checkedList", checkedList);
 
     this.setState({ checkedList });
 
@@ -144,11 +140,15 @@ class Season extends React.Component {
   };
 
   render() {
-    const { id, promoCats, attributes } = this.props.container;
-    const products = this.state.products || [];
+    const {
+      promoCats,
+      attributes,
+      menu,
+      primaryBanners
+    } = this.props.container;
+    const products = this.state.products;
     const Option = Select.Option;
 
-    let selectedCat = null;
     let cats = <div className="block">Ангилал байхгүй байна</div>;
 
     if (promoCats && promoCats.length) {
@@ -166,7 +166,7 @@ class Season extends React.Component {
                   {promoCats.map((cat, index) => {
                     return (
                       <li key={index}>
-                        <a href="#">{cat.promotnm}</a>
+                        <Link to="">{cat.promotnm}</Link>
                       </li>
                     );
                   })}
@@ -222,6 +222,13 @@ class Season extends React.Component {
 
     return (
       <div className="top-container">
+        <PageHeader
+          title={menu.menunm}
+          subtitle={menu.subtitle}
+          banners={primaryBanners}
+          bgColor="#4286f4"
+        />
+
         <div className="section">
           <div className="container pad10">
             <div className="e-breadcrumb">
@@ -263,8 +270,7 @@ class Season extends React.Component {
                     <div className="col-lg-6 pad10">
                       <div className="total-result">
                         <p className="text">
-                          <strong>"{selectedCat}"</strong> {products.length}{" "}
-                          бараа олдлоо
+                          <strong>{products.length}</strong> бараа олдлоо
                         </p>
                       </div>
                     </div>

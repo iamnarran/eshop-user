@@ -16,14 +16,16 @@ const options = {
 
 const fetch = async (props, onData) => {
   try {
-    // const menu = await api.menu.findOne({ slug: "season" });
-    // const primaryBanners = await api.banner.findAll({ type: "H1" });
+    const menu = await api.menu.findOne({ slug: "season" });
+    const primaryBanners = await api.banner.findAll({ type: "H1" });
+    // const secondaryBanners = await api.banner.findAll({ type: "H2" });
     const info = await api.product.findAllSeasonProducts({ jumcd: "99" });
     onData(null, {
       container: {
         id: props.match.params.id || null,
-        // menu: menu.data,
-        // primaryBanners: primaryBanners.data,
+        menu: menu.data,
+        primaryBanners: primaryBanners.data,
+        // secondaryBanners: primaryBanners.data,
         products: info.data[0].products,
         attributes: info.data[0].attributes,
         promoCats: info.data[0].promotions
