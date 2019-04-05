@@ -61,8 +61,9 @@ class Localization extends Component {
   }
 
   state = { isToggle: false };
-  toggleMenu = () => this.setState({ isToggle: !this.state.isToggle });
-
+  toggleMenu = () => {
+    this.setState({ isToggle: !this.state.isToggle });
+  };
   render() {
     const popupClass = `fixed-mobile-menu${
       this.state.isToggle ? " activated" : ""
