@@ -4,6 +4,7 @@ import api from "../../../api";
 import PropTypes from "prop-types";
 import Rate from "../../Rate";
 import moment from "moment";
+import { toast } from "react-toastify";
 
 class Component extends React.Component {
   state = {
@@ -11,13 +12,17 @@ class Component extends React.Component {
     rate: [],
     ratesum: 0
   };
-
+  notify = message => toast(message, { autoClose: 5000 });
   componentDidMount() {
     this.getRatesum();
+    this.getComments();
+  }
+
+  getComments = () => {
     api.product
       .productComment({ skucd: this.props.skucd })
       .then(comment => this.setState({ comment: comment.data }));
-  }
+  };
 
   getRatesum = () => {
     const { rate } = this.props;
@@ -28,9 +33,23 @@ class Component extends React.Component {
     this.setState({ ratesum: sum / rate.length, rate: rate });
   };
 
-  handleSentComment = e => {
+  handleSentComment = async e => {
     const { userInfo } = this.props;
-    console.log(this.refs.comment.value);
+    await api.product
+      .addCutomerComment({
+        custid: userInfo.id,
+        skucd: this.props.skucd,
+        comment: this.refs.comment.value
+      })
+      .then(response => {
+        if (response.success) {
+          this.notify(response.message);
+          this.refs.comment.value = "";
+          this.getComments();
+        } else {
+          this.notify("Алдаа");
+        }
+      });
   };
 
   render() {

@@ -23,8 +23,20 @@ import "./Card.css";
 
 class Card extends React.Component {
   state = {
-    checkProduct: []
+    checkProduct: [],
+    userInfo: [],
+    loggedin: false
   };
+
+  componentWillMount() {
+    if (this.props.isLoggedIn && this.props.user) {
+      let user = this.props.user;
+      if (user.customerInfo) {
+        user = user.customerInfo;
+      }
+      this.setState({ userInfo: user, loggedin: true });
+    }
+  }
 
   notify = message => toast(message, { autoClose: 5000 });
 
@@ -104,7 +116,6 @@ class Card extends React.Component {
 
   handleAddToCart = item => e => {
     e.preventDefault();
-
     let products = [];
     if (item.recipeid) {
       api.recipe.findAllProducts({ id: item.recipeid }).then(res => {
@@ -138,6 +149,21 @@ class Card extends React.Component {
       });
     } else {
       this.add(item);
+    }
+  };
+
+  handleSaveClick = item => async e => {
+    if (!this.state.loggedin) {
+      // this.showLoginModal();
+    } else {
+      console.log(item);
+      /*   await api.product
+        .addViewList({ id: this.state.userInfo.id, skucd: item.cd })
+        .then(res => {
+          if (res.success) {
+            this.notify(res.message);
+          }
+        }); */
     }
   };
 
@@ -205,14 +231,14 @@ class Card extends React.Component {
 
     const hover = (
       <div className="search-hover">
-        <Link to="">
+        <a onClick={this.handleSaveClick(item)}>
           <i className="fa fa-heart-o" aria-hidden="true" />
           <span />
-        </Link>
-        <Link to="" onClick={this.handleAddToCart(item)}>
+        </a>
+        <a onClick={this.handleAddToCart(item)}>
           <i className="fa fa-cart-plus" aria-hidden="true" />
           <span />
-        </Link>
+        </a>
       </div>
     );
     switch (type) {
@@ -416,16 +442,12 @@ class Card extends React.Component {
                   />
                 ))}
               <div className="cart-container">
-                <Link to="" className="wishlist">
+                <a className="wishlist" onClick={this.handleSaveClick(item)}>
                   <i className="fa fa-heart-o" aria-hidden="true" />
-                </Link>
-                <Link
-                  to=""
-                  className="cart"
-                  onClick={this.handleAddToCart(item)}
-                >
+                </a>
+                <a className="cart" onClick={this.handleAddToCart(item)}>
                   <i className="fa fa-cart-plus" aria-hidden="true" />
-                </Link>
+                </a>
               </div>
             </div>
           </div>
@@ -443,7 +465,14 @@ Card.propTypes = {
   className: PropTypes.string
 };
 
+const mapStateTopProps = (state, ownProps) => {
+  return {
+    isLoggedIn: state.auth.isLoggedIn,
+    user: state.auth.user
+  };
+};
+
 export default connect(
-  null,
+  mapStateTopProps,
   { updateCart }
 )(Card);
