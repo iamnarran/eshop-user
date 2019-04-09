@@ -2,7 +2,6 @@ import React from "react";
 import { compose } from "react-komposer";
 import { Spin } from "antd";
 
-import api from "../api";
 import { Cart } from "../pages";
 
 const options = {

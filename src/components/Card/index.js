@@ -1,121 +1,17 @@
 import React from "react";
-import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import { toast } from "react-toastify";
 
-import { getFeedbacks } from "../../actions/mainlogic";
 import api from "../../api";
 import Rate from "../Rate";
 import Label from "../Label";
-import storage from "../../utils/storage";
-import { updateCart } from "../../actions/cart";
+import withCart from "../HOC/withCart";
 import { IMAGE, CARD_TYPES, LABEL_TYPES } from "../../utils/consts";
 
 import "./Card.css";
 
-// const Msg = message => (
-//   <div className="warning">
-//     <Icon type="warning" />
-//     <p>{message}</p>
-//   </div>
-// );
-
 class Card extends React.Component {
-  state = {
-    checkProduct: [],
-    userInfo: [],
-    loggedin: false
-  };
-
-  componentWillMount() {
-    if (this.props.isLoggedIn && this.props.user) {
-      let user = this.props.user;
-      if (user.customerInfo) {
-        user = user.customerInfo;
-      }
-      this.setState({ userInfo: user, loggedin: true });
-    }
-  }
-
-  notify = message => toast(message, { autoClose: 5000 });
-
-  add = item => {
-    let cart = storage.get("cart")
-      ? storage.get("cart")
-      : { products: [], totalQty: 0, totalPrice: 0 };
-
-    const found = cart.products.find(product => product.cd === item.cd);
-
-    let itemQty = 0;
-    if (found) {
-      itemQty = found.qty;
-    }
-
-    // api.product
-    //   .isAvailable({
-    //     skucd: item.id ? item.id : item.cd ? item.cd : null,
-    //     qty: itemQty + 1
-    //   })
-    //   .then(res => {
-    //     this.check(res, item, found, cart);
-    //   });
-
-    return new Promise((resolve, reject) => {
-      api.product
-        .isAvailable({
-          skucd: item.id ? item.id : item.cd ? item.cd : null,
-          qty: itemQty + 1
-        })
-        .then(res => {
-          if (res.success) {
-            if (found) {
-              found.qty++;
-              const i = cart.products
-                .map(product => product.cd)
-                .indexOf(found.cd);
-              cart.products.splice(i, 1, found);
-            } else {
-              item.qty = 1;
-              cart.products.push(item);
-            }
-
-            const qties = cart.products.map(product => product.qty);
-            cart.totalQty = qties.reduce((acc, curr) => acc + curr);
-
-            const prices = cart.products.map(product => {
-              const price = product.sprice
-                ? product.sprice
-                : product.price
-                ? product.price
-                : 0;
-              return product.qty * price;
-            });
-            cart.totalPrice = prices.reduce((acc, curr) => acc + curr);
-
-            storage.set("cart", cart);
-
-            // TODO: stop page refreshing
-            this.props.updateCart({
-              products: cart.products,
-              totalQty: cart.totalQty,
-              totalPrice: cart.totalPrice
-            });
-
-            this.notify("+1");
-
-            resolve();
-          } else {
-            this.notify(res.message);
-
-            reject();
-          }
-        });
-    });
-  };
-
-  handleAddToCart = item => e => {
-    e.preventDefault();
+  handleAddToCart = item => {
     let products = [];
     if (item.recipeid) {
       api.recipe.findAllProducts({ id: item.recipeid }).then(res => {
@@ -124,12 +20,12 @@ class Card extends React.Component {
           if (products.length) {
             products.reduce((acc, next) => {
               return acc.then(() => {
-                return this.add(next);
+                return this.props.onIncrement(next);
               });
             }, Promise.resolve());
           }
         } else {
-          this.notify(res.message);
+          this.props.onNotify(res.message);
         }
       });
     } else if (item.id) {
@@ -139,46 +35,18 @@ class Card extends React.Component {
           if (products.length) {
             products.reduce((acc, next) => {
               return acc.then(() => {
-                return this.add(next);
+                return this.props.onIncrement(next);
               });
             }, Promise.resolve());
           }
         } else {
-          this.notify(res.message);
+          this.props.onNotify(res.message);
         }
       });
     } else {
-      this.add(item);
+      this.props.onIncrement(item);
     }
   };
-
-  handleSaveClick = item => async e => {
-    if (!this.state.loggedin) {
-      // this.showLoginModal();
-    } else {
-      console.log(item);
-      /*   await api.product
-        .addViewList({ id: this.state.userInfo.id, skucd: item.cd })
-        .then(res => {
-          if (res.success) {
-            this.notify(res.message);
-          }
-        }); */
-    }
-  };
-
-  // check = (res, item, found, cart) => {
-  //   let tmp = getFeedbacks(res, item, found, cart);
-  //   if (tmp == false) {
-  //     this.notify(res.message);
-  //   } else {
-  //     this.props.updateCart({
-  //       products: tmp.products,
-  //       totalQty: tmp.totalQty,
-  //       totalPrice: tmp.totalPrice
-  //     });
-  //   }
-  // };
 
   trimByWord(text, maxChars = 20) {
     const textWords = text.split(" ");
@@ -231,16 +99,22 @@ class Card extends React.Component {
 
     const hover = (
       <div className="search-hover">
-        <a onClick={this.handleSaveClick(item)}>
+        <Link to="">
           <i className="fa fa-heart-o" aria-hidden="true" />
           <span />
-        </a>
-        <a onClick={this.handleAddToCart(item)}>
+        </Link>
+        <button
+          onClick={() => this.handleAddToCart(item)}
+          type="button"
+          className="btn btn-link"
+          style={{ color: "#ff9b00", fontSize: "1.6em", marginBottom: "8px" }}
+        >
           <i className="fa fa-cart-plus" aria-hidden="true" />
           <span />
-        </a>
+        </button>
       </div>
     );
+
     switch (type) {
       case CARD_TYPES.slim:
         return (
@@ -391,7 +265,9 @@ class Card extends React.Component {
                 <span>{this.trimByWord(item.featuretxt, 30)}</span>
               </Link>
               <br />
-              {/* <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} /> */}
+              <Link to={item.route ? item.route : ""} className="price">
+                {prices}
+              </Link>
             </div>
           </div>
         );
@@ -442,12 +318,16 @@ class Card extends React.Component {
                   />
                 ))}
               <div className="cart-container">
-                <a className="wishlist" onClick={this.handleSaveClick(item)}>
+                <Link to="" className="wishlist">
                   <i className="fa fa-heart-o" aria-hidden="true" />
-                </a>
-                <a className="cart" onClick={this.handleAddToCart(item)}>
+                </Link>
+                <Link
+                  to=""
+                  className="cart"
+                  onClick={this.handleAddToCart(item)}
+                >
                   <i className="fa fa-cart-plus" aria-hidden="true" />
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -465,14 +345,4 @@ Card.propTypes = {
   className: PropTypes.string
 };
 
-const mapStateTopProps = (state, ownProps) => {
-  return {
-    isLoggedIn: state.auth.isLoggedIn,
-    user: state.auth.user
-  };
-};
-
-export default connect(
-  mapStateTopProps,
-  { updateCart }
-)(Card);
+export default withCart(Card);

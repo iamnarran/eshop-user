@@ -1,4 +1,3 @@
-import api from "../api";
 import storage from "../utils/storage";
 
 export function getFeedbacks(res, item, found, cart) {

@@ -7,9 +7,13 @@ import { connect } from "react-redux";
 import storage from "../../utils/storage";
 import { updateCart } from "../../actions/cart";
 import { toast } from "react-toastify";
+/* import Img from "react-image"; */
+import { Avatar } from "antd";
 import { getFeedbacks } from "../../actions/mainlogic";
 // import { url } from "inspector";
-
+import chef from "../../scss/assets/images/demo/chef.png";
+import time from "../../scss/assets/images/demo/time.png";
+import smile from "../../scss/assets/images/demo/smile.png";
 class RecipeDetail extends React.Component {
   notify = message => toast(message, { autoClose: 5000 });
 
@@ -24,7 +28,6 @@ class RecipeDetail extends React.Component {
     if (found) {
       itemQty = found.qty;
     }
-    console.log(item);
 
     return new Promise((resolve, reject) => {
       api.product
@@ -112,7 +115,6 @@ class RecipeDetail extends React.Component {
   };
 
   render() {
-    console.log(this.props);
     const { recipe, productsData } = this.props.container;
     const step = this.props.container.recipe[0].steps;
     const sliderParams = {
@@ -182,7 +184,6 @@ class RecipeDetail extends React.Component {
           <ul className="list-unstyled">
             {productsData.products &&
               productsData.products.map(product => {
-                console.log(product);
                 return (
                   <li>
                     <div className="single flex-this">
@@ -191,7 +192,7 @@ class RecipeDetail extends React.Component {
                           <span
                             className="image"
                             style={{
-                              backgroundImage: `url(${IMAGE + product.imgnm})`
+                              backgroundImage: `url(${IMAGE + product.img})`
                             }}
                           />
                         </Link>
@@ -250,17 +251,16 @@ class RecipeDetail extends React.Component {
                 <span>{recipe[0].recipe.recipenm}</span>
               </li>
             </ul>
-            <h4 className="title">
-              <span>{recipe[0].recipe.recipenm}</span>
-            </h4>
-            <p className="date">
-              <span>{`${date[0]} оны ${date[1]} сарын ${date[2]}`}</span>
-            </p>
           </div>
           <div className="product-detail-page">
             <div className="row row10">
               <div className="col-md-8 pad10">
-                <hr />
+                <h4 className="title">
+                  <span>{recipe[0].recipe.recipenm}</span>
+                </h4>
+                <p className="date">
+                  <span>{`${date[0]} оны ${date[1]} сарын ${date[2]}`}</span>
+                </p>
                 <div className="food-recipe-detail">
                   <div className="content">
                     <div className="main-slide">
@@ -274,25 +274,19 @@ class RecipeDetail extends React.Component {
                   <div className="row row10">
                     <div className="col-md-4">
                       <p>
-                        <span>
-                          <img src="time.png" />
-                        </span>
+                        <Avatar size="small" src={chef} />{" "}
                         {recipe[0].recipe.madeoflvlText}
                       </p>
                     </div>
                     <div className="col-md-4">
                       <p>
-                        <span>
-                          <img src="time.png" />
-                        </span>
+                        <Avatar size="small" src={time} />{" "}
                         {recipe[0].recipe.time}
                       </p>
                     </div>
                     <div className="col-md-4">
                       <p>
-                        <span>
-                          <img src="smile.png" />
-                        </span>
+                        <Avatar size="small" src={smile} />{" "}
                         {recipe[0].recipe.humancnt} хүний порц
                       </p>
                     </div>
