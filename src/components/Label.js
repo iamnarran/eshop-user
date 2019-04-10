@@ -120,7 +120,7 @@ class Label extends React.Component {
 }
 
 Label.propTypes = {
-  type: PropTypes.string.isRequired,
+  type: PropTypes.number.isRequired,
   data: PropTypes.object.isRequired,
   seq: PropTypes.number
 };

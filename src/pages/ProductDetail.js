@@ -103,7 +103,7 @@ class ProductDetail extends React.Component {
 
   render() {
     const { breadCrumb, skucd, isLoading } = this.state;
-
+    console.log(this.state.loggedin);
     if (skucd !== this.props.match.params.id) {
       this.setState({ skucd: this.props.match.params.id });
       this.refresh();
@@ -533,8 +533,18 @@ class ProductDetail extends React.Component {
     });
   };
 
-  handleRate = e => {
-    console.log(e);
+  handleRate = async e => {
+    await api.product
+      .addCustomerRate({
+        custid: this.state.userInfo.id,
+        skucd: this.props.match.params.id,
+        rate: e * 2
+      })
+      .then(response => {
+        if (response.success) {
+          this.notify(response.message);
+        }
+      });
   };
 
   renderProductDelivery = () => {
@@ -603,6 +613,7 @@ class ProductDetail extends React.Component {
           <div className="main-rating">
             <Rate
               allowHalf
+              disabled={this.state.loggedin == true ? false : true}
               defaultValue={this.getRatesum() / 2}
               onChange={this.handleRate}
             />

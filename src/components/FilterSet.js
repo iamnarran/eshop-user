@@ -1,5 +1,6 @@
 import React from "react";
 import { Collapse } from "react-collapse";
+import { Link } from "react-router-dom";
 import { Slider } from "antd";
 import Checkbox from "@material-ui/core/Checkbox";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
@@ -8,7 +9,8 @@ import CheckBoxIcon from "@material-ui/icons/CheckBox";
 class FilterSet extends React.Component {
   state = { isOpened: true };
 
-  toggleCollapse = () => {
+  toggleCollapse = e => {
+    e.preventDefault();
     this.setState({ isOpened: !this.state.isOpened });
   };
 
@@ -19,9 +21,13 @@ class FilterSet extends React.Component {
       case "COLOR":
         return (
           <div key={attr.type}>
-            <a className="collapse-title" onClick={this.toggleCollapse}>
+            <Link
+              to=""
+              className="collapse-title"
+              onClick={this.toggleCollapse}
+            >
               {attr.attributes[0].name}
-            </a>
+            </Link>
             <Collapse isOpened={this.state.isOpened}>
               <div className="collapse show" id="collapseThree">
                 <div className="collapse-content">
@@ -67,7 +73,6 @@ class FilterSet extends React.Component {
 
         const min = tempMin ? parseInt(tempMin) : 0;
         const max = tempMax ? parseInt(tempMax) : 0;
-        const step = Math.ceil((max - min) / 100);
 
         const marks = {
           [min]: {
@@ -80,16 +85,19 @@ class FilterSet extends React.Component {
 
         return (
           <div key={attr.type}>
-            <a className="collapse-title" onClick={this.toggleCollapse}>
+            <Link
+              to=""
+              className="collapse-title"
+              onClick={this.toggleCollapse}
+            >
               {attr.attributes[0].name}
-            </a>
+            </Link>
             <Collapse isOpened={this.state.isOpened}>
               <Slider
                 range
                 defaultValue={[this.props.minPrice, this.props.maxPrice]}
                 min={min}
                 max={max}
-                step={step}
                 marks={marks}
                 onAfterChange={this.props.onPriceAfterChange}
                 style={{ width: "90%" }}
@@ -100,7 +108,8 @@ class FilterSet extends React.Component {
       default:
         const list = attr.attributes.map((attribute, index) => (
           <div key={index}>
-            <a
+            <Link
+              to=""
               onClick={this.toggleCollapse}
               className="collapse-title"
               data-toggle="collapse"
@@ -109,7 +118,7 @@ class FilterSet extends React.Component {
               aria-controls="collapseExample"
             >
               {attribute.name}
-            </a>
+            </Link>
             <Collapse isOpened={this.state.isOpened}>
               <div className="collapse show" id="collapseThree">
                 <div className="collapse-content">

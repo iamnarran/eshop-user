@@ -1,254 +1,22 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
 import { createForm } from "rc-form";
 
-import api from "../api";
-import storage from "../utils/storage";
 import { IMAGE } from "../utils/consts";
-import { updateCart } from "../actions/cart";
+import withCart from "../components/HOC/withCart";
 
-const mapStateToProps = state => {
-  return {
-    products: state.cart.products || [],
-    totalPrice: state.cart.totalPriceInCart || 0
-  };
-};
-
-@connect(
-  mapStateToProps,
-  {
-    updateCart
-  }
-)
 class Cart extends React.Component {
-  // addProduct = () => {
-  //   const { saleNumber, addminqty, product, issalekg, grPrice } = this.state;
-
-  //   if (saleNumber < product.availableqty && product.availableqty !== 0) {
-  //     if (saleNumber < product.salemaxqty || product.salemaxqty === 0) {
-  //       if (product.salemaxqty !== 0) {
-  //         if (product.salemaxqty > saleNumber + addminqty) {
-  //           this.addProductLimit(saleNumber + addminqty);
-  //         } else {
-  //           this.addProductLimit(product.salemaxqty);
-  //         }
-  //       } else {
-  //         this.addProductLimit(saleNumber + addminqty);
-  //       }
-  //     }
-  //   }
-  // };
-
-  // addProductLimit = value => {
-  //   const { saleNumber, addminqty, product, issalekg, grPrice } = this.state;
-  //   this.setState({
-  //     saleNumber: value,
-  //     sumPrice:
-  //       issalekg === 1
-  //         ? grPrice * value
-  //         : product.spercent !== 100
-  //         ? product.sprice * value
-  //         : product.price * value
-  //   });
-  // };
-
-  notify = message => toast(message, { autoClose: 5000 });
-
-  update = item => e => {
-    e.preventDefault();
-
-    const value = parseInt(e.target.value);
-
-    let cart = storage.get("cart")
-      ? storage.get("cart")
-      : { products: [], totalQty: 0, totalPrice: 0 };
-
-    const found = cart.products.find(product => product.cd === item.cd);
-    if (!found) {
-      return;
-    }
-
-    api.product
-      .isAvailable({
-        skucd: item.id ? item.id : item.cd ? item.cd : null,
-        qty: parseInt(e.target.value)
-      })
-      .then(res => {
-        if (res.success) {
-          found.qty = value;
-          const i = cart.products.map(product => product.cd).indexOf(found.cd);
-          cart.products.splice(i, 1, found);
-
-          const qties = cart.products.map(product => product.qty);
-          cart.totalQty = qties.reduce((acc, curr) => acc + curr);
-
-          const prices = cart.products.map(product => {
-            const price = product.sprice
-              ? product.sprice
-              : product.price
-              ? product.price
-              : 0;
-            return product.qty * price;
-          });
-          cart.totalPrice = prices.reduce((acc, curr) => acc + curr);
-
-          storage.set("cart", cart);
-
-          // TODO: stop page refreshing
-          this.props.updateCart({
-            products: cart.products,
-            totalQty: cart.totalQty,
-            totalPrice: cart.totalPrice
-          });
-        } else {
-          this.notify(res.message);
-        }
-      });
-  };
-
-  increment = item => {
-    let cart = storage.get("cart")
-      ? storage.get("cart")
-      : { products: [], totalQty: 0, totalPrice: 0 };
-
-    const found = cart.products.find(product => product.cd === item.cd);
-    let itemQty = 0;
-    if (found) {
-      itemQty = found.qty;
-    }
-
-    api.product
-      .isAvailable({
-        skucd: item.id ? item.id : item.cd ? item.cd : null,
-        qty: itemQty + 1
-      })
-      .then(res => {
-        if (res.success) {
-          if (found) {
-            found.qty++;
-            const i = cart.products
-              .map(product => product.cd)
-              .indexOf(found.cd);
-            cart.products.splice(i, 1, found);
-          } else {
-            item.qty = 1;
-            cart.products.push(item);
-          }
-
-          const qties = cart.products.map(product => product.qty);
-          cart.totalQty = qties.reduce((acc, curr) => acc + curr);
-
-          const prices = cart.products.map(product => {
-            const price = product.sprice
-              ? product.sprice
-              : product.price
-              ? product.price
-              : 0;
-            return product.qty * price;
-          });
-          cart.totalPrice = prices.reduce((acc, curr) => acc + curr);
-
-          storage.set("cart", cart);
-
-          // TODO: stop page refreshing
-          this.props.updateCart({
-            products: cart.products,
-            totalQty: cart.totalQty,
-            totalPrice: cart.totalPrice
-          });
-        } else {
-          this.notify(res.message);
-        }
-      });
-  };
-
-  decrement = item => {
-    let cart = storage.get("cart")
-      ? storage.get("cart")
-      : { products: [], totalQty: 0, totalPrice: 0 };
-
-    const found = cart.products.find(product => product.cd === item.cd);
-    if (!found) {
-      return;
-    }
-
-    const i = cart.products.map(product => product.cd).indexOf(found.cd);
-    if (found.qty > 1) {
-      found.qty--;
-      cart.products.splice(i, 1, found);
-    } else {
-      cart.products.splice(i, 1);
-    }
-
-    const qties = cart.products.map(product => product.qty);
-    cart.totalQty = qties.length ? qties.reduce((acc, curr) => acc + curr) : 0;
-
-    const prices = cart.products.map(product => {
-      const price = product.sprice
-        ? product.sprice
-        : product.price
-        ? product.price
-        : 0;
-      return product.qty * price;
-    });
-    cart.totalPrice = prices.length
-      ? prices.reduce((acc, curr) => acc + curr)
-      : 0;
-
-    storage.set("cart", cart);
-
-    this.props.updateCart({
-      products: cart.products,
-      totalQty: cart.totalQty,
-      totalPrice: cart.totalPrice
-    });
-  };
-
-  remove = item => e => {
-    e.preventDefault();
-
-    let cart = storage.get("cart")
-      ? storage.get("cart")
-      : { products: [], totalQty: 0, totalPrice: 0 };
-
-    const found = cart.products.find(product => product.cd === item.cd);
-    if (!found) {
-      return;
-    }
-
-    const i = cart.products.map(product => product.cd).indexOf(found.cd);
-    cart.products.splice(i, 1);
-
-    const qties = cart.products.map(product => product.qty);
-    cart.totalQty = qties.length ? qties.reduce((acc, curr) => acc + curr) : 0;
-
-    const prices = cart.products.map(product => {
-      const price = product.sprice
-        ? product.sprice
-        : product.price
-        ? product.price
-        : 0;
-      return product.qty * price;
-    });
-    cart.totalPrice = prices.length
-      ? prices.reduce((acc, curr) => acc + curr)
-      : 0;
-
-    storage.set("cart", cart);
-
-    this.props.updateCart({
-      products: cart.products,
-      totalQty: cart.totalQty,
-      totalPrice: cart.totalPrice
-    });
-  };
-
   render() {
-    const { wishlistProducts } = this.props.container;
     const formatter = new Intl.NumberFormat("en-US");
-    const { products, totalPrice } = this.props;
+    const {
+      products,
+      totalPrice,
+      onIncrement,
+      onDecrement,
+      onRemove,
+      onUpdate
+    } = this.props;
 
     let content = (
       <div style={{ textAlign: "center" }}>
@@ -265,7 +33,9 @@ class Cart extends React.Component {
                 <span>Бүтээгдэхүүний нэр</span>
               </th>
               <th className="column-2">Нэгжийн үнэ</th>
-              <th className="column-3">Тоо ширхэг</th>
+              <th className="column-3" style={{ width: "24%" }}>
+                Тоо ширхэг
+              </th>
               <th className="column-4">
                 <p className="price total">
                   <strong>Барааны үнэ</strong>
@@ -319,7 +89,7 @@ class Cart extends React.Component {
                       <div className="input-group e-input-group">
                         <div className="input-group-prepend" id="button-addon4">
                           <button
-                            onClick={() => this.decrement(product)}
+                            onClick={() => onDecrement(product)}
                             className="btn"
                             type="button"
                           >
@@ -334,11 +104,11 @@ class Cart extends React.Component {
                           aria-label=""
                           aria-describedby="button-addon4"
                           name="productQty"
-                          onChange={this.update(product)}
+                          onChange={() => onUpdate(product)}
                         />
                         <div className="input-group-append" id="button-addon4">
                           <button
-                            onClick={() => this.increment(product)}
+                            onClick={() => onIncrement(product)}
                             className="btn"
                             type="button"
                           >
@@ -371,10 +141,14 @@ class Cart extends React.Component {
                           </a>
                         </li>
                         <li>
-                          <Link to="" onClick={this.remove(product)}>
+                          <button
+                            onClick={() => onRemove(product)}
+                            className="btn btn-link"
+                            type="button"
+                          >
                             <i className="fa fa-times" aria-hidden="true" />
                             <span>Устгах</span>
-                          </Link>
+                          </button>
                         </li>
                       </ul>
                     </div>
@@ -564,4 +338,11 @@ class Cart extends React.Component {
   }
 }
 
-export default createForm()(Cart);
+const mapStateToProps = state => {
+  return {
+    products: state.cart.products || [],
+    totalPrice: state.cart.totalPriceInCart || 0
+  };
+};
+
+export default withCart(connect(mapStateToProps)(createForm()(Cart)));

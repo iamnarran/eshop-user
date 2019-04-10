@@ -77,12 +77,12 @@ class Localization extends Component {
         component: rest => <Homepage {...rest} {...this.props} />
       },
       {
-        exact: false,
+        exact: true,
         path: "/discount",
         component: rest => <Discount {...rest} {...this.props} />
       },
       {
-        exact: false,
+        exact: true,
         path: "/new",
         component: rest => <NewProduct {...rest} {...this.props} />
       },
@@ -107,7 +107,7 @@ class Localization extends Component {
         component: rest => <PackageDetail {...rest} {...this.props} />
       },
       {
-        exact: false,
+        exact: true,
         path: "/season",
         component: rest => <Season {...rest} {...this.props} />
       },
@@ -123,12 +123,13 @@ class Localization extends Component {
         component: rest => <WishList {...rest} {...this.props} />
       },
       {
+        exact: true,
         path: "/delivery",
         component: () => <DeliveryAddress />
       },
       {
-        path: "/userprofile",
         exact: true,
+        path: "/userprofile",
         isPrivate: true,
         component: rest => <UserProfile {...rest} {...this.props} />
       },
