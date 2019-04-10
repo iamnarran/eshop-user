@@ -185,16 +185,19 @@ class AppHeader extends Component {
                               </div>
                             </li>
                             <li className="search-form">
-                              <div class="form-group">
-                                <label for="exampleInputEmail1" class="sr-only">
+                              <div className="form-group">
+                                <label
+                                  htmlFor="exampleInputEmail1"
+                                  className="sr-only"
+                                >
                                   Main-search
                                 </label>
                                 <input
                                   type="email"
-                                  class="form-control"
+                                  className="form-control"
                                   placeholder="Бүгдээс хайх"
                                 />
-                                <ul class="list-unstyled">
+                                <ul className="list-unstyled">
                                   <li>
                                     <a href="#">
                                       <span>Сүү</span>
