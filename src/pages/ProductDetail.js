@@ -226,61 +226,76 @@ class ProductDetail extends Component {
         : relatedProducts;
 
     return (
-      <div className="product-suggest">
-        <p className="title">
-          <strong>Хослох бараа</strong>
-        </p>
-        <ul className="list-unstyled">
-          {relatedProducts.map((prod, index) => {
-            return (
-              <li key={index}>
-                <div className="single flex-this">
-                  <div className="image-container">
-                    <Link to={prod.route ? prod.route : ""}>
-                      <span
-                        className="image"
-                        style={{
-                          backgroundImage: `url(${IMAGE}${prod.imgnm})`
-                        }}
-                      />
-                    </Link>
-                  </div>
+      !!relatedProducts.length && (
+        <div className="product-suggest">
+          <p className="title">
+            <strong>Хослох бараа</strong>
+          </p>
+          <ul className="list-unstyled">
+            {relatedProducts.map((prod, index) => {
+              return (
+                <li key={index}>
+                  <div className="single flex-this">
+                    <div className="image-container">
+                      <Link to={prod.route ? prod.route : ""}>
+                        <span
+                          className="image"
+                          style={{
+                            backgroundImage: `url(${IMAGE}${prod.imgnm})`
+                          }}
+                        />
+                      </Link>
+                    </div>
 
-                  <div className="info-container flex-space">
-                    <Link to={prod.route ? prod.route : ""}>
-                      <span>{prod.name}</span>
-                      <strong>{formatter.format(prod.price)}₮</strong>
-                    </Link>
-                    <div className="action">
-                      <a href="/">
-                        <i className="fa fa-cart-plus" aria-hidden="true" />
-                      </a>
+                    <div className="info-container flex-space">
+                      <Link to={prod.route ? prod.route : ""}>
+                        <span>{prod.name}</span>
+                        <strong>{formatter.format(prod.price)}₮</strong>
+                      </Link>
+                      <div className="action">
+                        <button
+                          type="button"
+                          className="btn btn-link"
+                          onClick={() => this.props.onIncrement(prod)}
+                        >
+                          <i
+                            className="fa fa-cart-plus"
+                            aria-hidden="true"
+                            style={{ fontSize: "1.2rem" }}
+                          />
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
-        <div className="more-link text-center">
-          <Button
-            className="btn btn-border"
-            onClick={this.handleMoreRelatedProductsClick}
-          >
-            <span className="text text-uppercase">Бүх хослох барааг үзэх</span>
-          </Button>
+                </li>
+              );
+            })}
+          </ul>
+          <div className="more-link text-center">
+            <Button
+              className="btn btn-border"
+              onClick={this.handleMoreRelatedProductsClick}
+            >
+              <span className="text text-uppercase">
+                Бүх хослох барааг үзэх
+              </span>
+            </Button>
+          </div>
         </div>
-      </div>
+      )
     );
   };
 
   renderMoreInfo = () => {
     let { product, attributes, similarProducts } = this.props.container;
 
+    const similarProductsLimit = 4;
+    const shouldLoop = similarProducts.length > similarProductsLimit;
+
     const params = {
       slidesPerView: 4,
       spaceBetween: 0,
-      loop: true,
+      loop: shouldLoop,
       autoplay: {
         delay: 3000,
         disableOnInteraction: false
@@ -298,7 +313,7 @@ class ProductDetail extends Component {
     return (
       <div className="col-md-12 col-lg-12 col-sm-12 col-xl-12">
         {!!attributes && !!attributes.length && (
-          <div>
+          <div style={{ marginTop: "80px", marginBottom: "0" }}>
             <h1 className="title">
               <span className="text-uppercase">Мэдээлэл</span>
             </h1>
@@ -316,24 +331,20 @@ class ProductDetail extends Component {
         )}
 
         {!!similarProducts && !!similarProducts.length && (
-          <div>
+          <div style={{ marginTop: "80px", marginBottom: "0" }}>
             <h1 className="title">
               <span className="text-uppercase">Ижил бараа</span>
             </h1>
-            <div className="section">
+            <div style={{ marginTop: "40px" }}>
               <div className="row row10">
-                <CardSlider
-                  data={similarProducts}
-                  params={params}
-                  elContainer={"collectionProduct"}
-                />
+                <CardSlider params={params} data={similarProducts} />
               </div>
             </div>
           </div>
         )}
 
         {product.description && (
-          <div>
+          <div style={{ marginTop: "80px", marginBottom: "0" }}>
             <h1 className="title">
               <span className="text-uppercase">Танилцуулга</span>
             </h1>

@@ -36,7 +36,7 @@ const withCart = WrappedComponent => {
             const found = cart.products.find(product => product.cd === item.cd);
 
             if (found) {
-              found.qty += qty;
+              found.qty = qty;
               const i = cart.products
                 .map(product => product.cd)
                 .indexOf(found.cd);
@@ -74,8 +74,6 @@ const withCart = WrappedComponent => {
     };
 
     handleIncrement = item => {
-      console.log("handleIncrement", item);
-
       let cart = storage.get("cart")
         ? storage.get("cart")
         : { products: [], totalQty: 0, totalPrice: 0 };

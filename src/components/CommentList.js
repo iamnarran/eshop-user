@@ -6,7 +6,7 @@ import { Rate } from "antd";
 import { toast } from "react-toastify";
 
 import api from "../api";
-import p9 from "../scss/assets/images/demo/1.jpg";
+import p1 from "../scss/assets/images/demo/1.jpg";
 
 class CommentList extends React.Component {
   state = {
@@ -41,7 +41,9 @@ class CommentList extends React.Component {
                 skucd: product.cd,
                 commnt: this.state.comment,
                 uname: user.firstname
-                  ? user.firstname
+                  ? user.lastname
+                    ? `${user.firstname} ${user.lastname}`
+                    : user.firstname
                   : user.email
                   ? user.email
                   : "",
@@ -81,7 +83,10 @@ class CommentList extends React.Component {
     const rates = product.rate;
 
     return (
-      <div className="comments-container" style={{ marginTop: "60px" }}>
+      <div
+        className="comments-container"
+        style={{ marginTop: "80px", width: "100%" }}
+      >
         {isLoggedIn && user && (
           <div className="write-comment">
             <div className="author">
@@ -90,9 +95,11 @@ class CommentList extends React.Component {
                   className="image8"
                   style={{
                     backgroundImage: `url(${
-                      user.picture && user.picture.data.url
-                        ? user.picture.data.url
-                        : p9
+                      user.picture
+                        ? user.picture.data
+                          ? user.picture.data.url
+                          : user.picture
+                        : p1
                     })`
                   }}
                 />
@@ -116,7 +123,7 @@ class CommentList extends React.Component {
                   className="form-control"
                   placeholder="Сэтгэгдэл үлдээх хэсэг"
                   name="comment"
-                  style={{ minWidth: "450px", minHeight: "150px" }}
+                  style={{ minHeight: "150px" }}
                   value={this.state.comment}
                   onChange={this.handleCommitChange}
                 />
@@ -139,7 +146,7 @@ class CommentList extends React.Component {
         )}
 
         {!!comments.length && (
-          <div>
+          <div style={{ marginTop: "80px" }}>
             <h1 className="title">
               <span className="text-uppercase">Сэтгэгдэл</span>
             </h1>

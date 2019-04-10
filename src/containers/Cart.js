@@ -1,8 +1,10 @@
 import React from "react";
+import { connect } from "react-redux";
 import { compose } from "react-komposer";
 import { Spin } from "antd";
 
 import { Cart } from "../pages";
+import api from "../api";
 
 const options = {
   loadingHandler: () => (
@@ -15,12 +17,19 @@ const options = {
 
 const fetch = async (props, onData) => {
   try {
-    // const products = await api.cart.findAllWishlistProds();
+    const { isLoggedIn, user } = props;
+
+    let wishlistProducts = [];
+    if (isLoggedIn && user) {
+      wishlistProducts = await api.wishlist.findAll(user.id);
+    }
+
+    const staticInfo = await api.staticInfo.findAll();
 
     onData(null, {
       container: {
-        // products: products.data
-        wishlistProducts: []
+        wishlistProducts: wishlistProducts.data,
+        deliveryInfo: staticInfo.data[0].deliverytxt
       }
     });
   } catch (e) {
@@ -33,7 +42,16 @@ const dataLoader = (props, onData) => {
   fetch(props, onData);
 };
 
-export default compose(
-  dataLoader,
-  options
-)(Cart);
+const mapStateToProps = state => {
+  return {
+    isLoggedIn: state.auth.isLoggedIn,
+    user: state.auth.user
+  };
+};
+
+export default connect(mapStateToProps)(
+  compose(
+    dataLoader,
+    options
+  )(Cart)
+);
