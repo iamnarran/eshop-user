@@ -1,11 +1,8 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Icon } from "antd";
-
 import Category from "../../components/Category";
 import MainMenu from "../../components/Menu";
-import ToggleMenu from "../../components/ToggleMenu";
-import ToggleCategory from "../../components/ToggleCategory";
 import LoginModal from "../../components/LoginModal";
 import UserButton from "../../components/UserButton";
 import CartButton from "../../components/CartButton";
@@ -19,10 +16,18 @@ class AppHeader extends Component {
     this.state = {
       isPopupOpen: false,
       isDropdownOpen: false,
+      isSearchDropdownOpen: false,
       isLoginModalVisible: false,
-      menucategories: []
+      menucategories: [],
+      item: "Бүх бараа"
     };
   }
+  onItem = (e, item) => {
+    this.setState({ item: item.name });
+  };
+  onItem1 = e => {
+    this.setState({ item: "Бүх бараа" });
+  };
 
   togglePopup = () => {
     this.props.onChange();
@@ -30,6 +35,10 @@ class AppHeader extends Component {
 
   toggleDropdown = () => {
     this.setState({ isDropdownOpen: !this.state.isDropdownOpen });
+  };
+
+  searchDropdown = () => {
+    this.setState({ isSearchDropdownOpen: !this.state.isSearchDropdownOpen });
   };
 
   toggleLoginModal = () => {
@@ -68,14 +77,12 @@ class AppHeader extends Component {
   render() {
     const { staticInfo, menu, categories } = this.props.container;
     const { menucategories } = this.state;
-    const root = [];
     const dropdownClass = `dropdown-menu${
       this.state.isDropdownOpen ? " show" : ""
     }`;
     const searchClass = `search-mobile${
       this.state.isSearch ? " activated" : ""
     }`;
-
     return (
       <div>
         <div className="wrap">
@@ -117,7 +124,6 @@ class AppHeader extends Component {
                 </div>
               </div>
             </div>
-
             <div className="top-main">
               <div className="container container-laptop pad10">
                 <div className="row row10">
@@ -148,57 +154,138 @@ class AppHeader extends Component {
                                   aria-haspopup="true"
                                   aria-expanded="false"
                                 >
-                                  Бүх бараа
+                                  {this.state.item}
                                 </button>
                                 <div
                                   className={dropdownClass}
                                   aria-labelledby="dropdownMenuButton"
                                 >
+                                  <a
+                                    className="dropdown-item"
+                                    onClick={e => this.onItem1(e)}
+                                  >
+                                    <span>Бүх бараа</span>
+                                  </a>
                                   {menucategories.map((entry, index) => {
                                     return (
-                                      <Link
+                                      <a
                                         className="dropdown-item"
-                                        to=""
                                         key={index}
+                                        onClick={e => this.onItem(e, entry)}
                                       >
                                         <img
                                           src={IMAGE + entry.icon}
                                           alt="category"
                                         />
                                         <span>{entry.name}</span>
-                                      </Link>
+                                      </a>
                                     );
                                   })}
                                 </div>
                               </div>
                             </li>
                             <li className="search-form">
-                              <div className="form-group">
-                                <label
-                                  htmlFor="exampleInputEmail"
-                                  className="sr-only"
-                                >
+                              <div class="form-group">
+                                <label for="exampleInputEmail1" class="sr-only">
                                   Main-search
                                 </label>
                                 <input
-                                  type="text"
-                                  className="form-control"
-                                  id="exampleInputEmail1"
-                                  aria-describedby="emailHelp"
+                                  type="email"
+                                  class="form-control"
                                   placeholder="Бүгдээс хайх"
                                 />
+                                <ul class="list-unstyled">
+                                  <li>
+                                    <a href="#">
+                                      <span>Сүү</span>
+                                    </a>
+                                  </li>
+                                  <li>
+                                    <a href="#">
+                                      <span>Талх</span>
+                                    </a>
+                                  </li>
+                                  <li>
+                                    <a href="#">
+                                      <span>Хонины мах</span>
+                                    </a>
+                                  </li>
+                                  <li>
+                                    <a href="#">
+                                      <span>Хүнсний ногоо</span>
+                                    </a>
+                                  </li>
+                                  <li>
+                                    <a href="#">
+                                      <span>Алим</span>
+                                    </a>
+                                  </li>
+                                  <li>
+                                    <a href="#">
+                                      <span>Сүү</span>
+                                    </a>
+                                  </li>
+                                  <li>
+                                    <a href="#">
+                                      <span>Талх</span>
+                                    </a>
+                                  </li>
+                                  <li>
+                                    <a href="#">
+                                      <span>Хонины мах</span>
+                                    </a>
+                                  </li>
+                                  <li>
+                                    <a href="#">
+                                      <span>Хүнсний ногоо</span>
+                                    </a>
+                                  </li>
+                                  <li>
+                                    <a href="#">
+                                      <span>Алим</span>
+                                    </a>
+                                  </li>
+                                  <li>
+                                    <a href="#">
+                                      <span>Сүү</span>
+                                    </a>
+                                  </li>
+                                  <li>
+                                    <a href="#">
+                                      <span>Талх</span>
+                                    </a>
+                                  </li>
+                                  <li>
+                                    <a href="#">
+                                      <span>Хонины мах</span>
+                                    </a>
+                                  </li>
+                                  <li>
+                                    <a href="#">
+                                      <span>Хүнсний ногоо</span>
+                                    </a>
+                                  </li>
+                                  <li>
+                                    <a href="#">
+                                      <span>Алим</span>
+                                    </a>
+                                  </li>
+                                </ul>
                               </div>
                             </li>
                             <li>
-                              <button type="submit" className="btn">
+                              <Link className="btn" to="/CategoryInfo">
                                 <i
                                   className="fa fa-search d-block d-sm-none"
                                   style={{ fontSize: "20px", margin: "5px" }}
                                 />
-                                <span className="text-uppercase d-none d-sm-block">
+                                <span
+                                  className="text-uppercase d-none d-sm-block"
+                                  style={{ color: "black" }}
+                                >
                                   Хайх
                                 </span>
-                              </button>
+                              </Link>
                             </li>
                           </ul>
                         </form>
@@ -239,7 +326,6 @@ class AppHeader extends Component {
                 </div>
               </div>
             </div>
-
             <div className="main-nav">
               <div className="container container-laptop pad10">
                 <ul className="list-inline">

@@ -18,11 +18,16 @@ class Component extends React.Component {
       this.setState({ loading: false });
     });
   }
+
+  togglePopup = () => {
+    this.props.onChange();
+  };
+
   render() {
+    console.log("wishList", this.props);
     let tableList = null;
     const list = this.state.wishlist;
     const formatter = new Intl.NumberFormat("en-US");
-    console.log(list);
     tableList = list.map((item, index) => {
       return (
         <div className="single flex-space" key={index}>
