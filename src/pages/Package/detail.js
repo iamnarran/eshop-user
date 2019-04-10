@@ -277,7 +277,6 @@ class PackageDetail extends React.Component {
   };
 
   render() {
-    console.log("props", this.props);
     const formatter = new Intl.NumberFormat("en-US");
     const sameproduct = this.props.container.Products[0].sameproducts;
     let products = null;
@@ -299,7 +298,6 @@ class PackageDetail extends React.Component {
       }
     };
     // Багцад орсон барааны ижил бараанууд
-    console.log("sameproduct", sameproduct.length);
     if (sameproduct.length > 0) {
       sameProducts = (
         <div className="block product-suggest">
