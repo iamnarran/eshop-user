@@ -104,7 +104,7 @@ class Cart extends React.Component {
                           aria-label=""
                           aria-describedby="button-addon4"
                           name="productQty"
-                          onChange={() => onUpdate(product)}
+                          onChange={() => onUpdate(product, product.qty)}
                         />
                         <div className="input-group-append" id="button-addon4">
                           <button

@@ -95,5 +95,11 @@ export default [
     METHOD: "POST",
     URL: `${API}/api/customer/WishList/:id/:skucd`,
     REPLACE: "id, skucd"
+  },
+  {
+    NAME: "addCutomerComment",
+    METHOD: "POST",
+    URL: `${API}/api/product/comment/:custId/:skucd/:comm`,
+    REPLACE: "custId, skucd, comm"
   }
 ];

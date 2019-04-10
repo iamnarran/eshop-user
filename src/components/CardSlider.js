@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 
 import Card from "./Card";
 
-class Slider extends React.Component {
+class CardSlider extends React.Component {
   state = {
     params: [],
     data: [],
@@ -43,10 +43,10 @@ class Slider extends React.Component {
   }
 }
 
-Slider.propTypes = {
-  params: PropTypes.object,
-  data: PropTypes.object,
-  elContainer: PropTypes.string.isRequired
+CardSlider.propTypes = {
+  elContainer: PropTypes.string.isRequired,
+  data: PropTypes.array.isRequired,
+  params: PropTypes.object
 };
 
-export default Slider;
+export default CardSlider;

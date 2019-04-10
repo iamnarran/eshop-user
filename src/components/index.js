@@ -2,9 +2,8 @@ import ProductDetail from "./ProductDetail";
 import Magnifier from "./Magnifier";
 import Rate from "./Rate";
 import RelationalProduct from "./ProductDetail/RelationalProduct";
-import Information from "./ProductDetail/Information";
 import Collection from "./ProductDetail/CollectionProduct";
-import Comment from "./ProductDetail/Comment";
+import CommentList from "./CommentList";
 import CardSlider from "./CardSlider";
 import DeliveryAddress from "./UFDeliveryAddress";
 import TextField from "./TextField";
@@ -13,15 +12,15 @@ import UserProfile from "./UserProfile";
 import ChangePass from "./UFChangePass";
 import History from "./UFHistory";
 import WishList from "./UFWishlist";
+import Breadcrumb from "./Breadcrumb";
 
 export {
   ProductDetail,
   Magnifier,
   Rate,
   RelationalProduct,
-  Information,
   Collection,
-  Comment,
+  CommentList,
   CardSlider,
   DeliveryAddress,
   TextField,
@@ -29,5 +28,6 @@ export {
   UserProfile,
   ChangePass,
   History,
-  WishList
+  WishList,
+  Breadcrumb
 };
