@@ -13,6 +13,7 @@ import ChangePass from "./UFChangePass";
 import History from "./UFHistory";
 import WishList from "./UFWishlist";
 import Breadcrumb from "./Breadcrumb";
+import DeliveryHistory from "./UFdeliveryhistory";
 
 export {
   ProductDetail,
@@ -29,5 +30,6 @@ export {
   ChangePass,
   History,
   WishList,
-  Breadcrumb
+  Breadcrumb,
+  DeliveryHistory
 };

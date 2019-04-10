@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
 import { Button, Rate } from "antd";
 import {
   FacebookShareButton,
@@ -10,21 +9,14 @@ import {
   TwitterIcon
 } from "react-share";
 
-import api from "../api";
-import storage from "../utils/storage";
 import { updateCart } from "../actions/cart";
 import { getFeedbacks } from "../actions/mainlogic";
 import { IMAGE } from "../utils/consts";
 import Gallery from "../components/Gallery";
-import {
-  Magnifier,
-  RelationalProduct,
-  CommentList,
-  CardSlider,
-  Breadcrumb
-} from "../components";
 import LoginModal from "../components/LoginModal";
+import { CommentList, CardSlider, Breadcrumb } from "../components";
 import withCart from "../components/HOC/withCart";
+
 const formatter = new Intl.NumberFormat("en-US");
 
 class ProductDetail extends Component {
@@ -460,117 +452,6 @@ class ProductDetail extends Component {
   showLoginModal = () => {
     this.setState({ isLoginModalVisible: true });
   };
-
-  // getCategory = product => {
-  //   const { breadCrumb, category } = this.state;
-  //   let tmp = [];
-  //   if (product !== undefined) {
-  //     if (product.length !== 0) {
-  //       let parent = product.catid;
-  //       category.reverse().map(i => {
-  //         if (parent === i.id) {
-  //           tmp.push(i);
-  //           parent = i.parentid;
-  //         }
-  //         return null;
-  //       });
-  //       tmp.reverse();
-
-  //       this.setState({
-  //         product: product,
-  //         breadCrumb: tmp,
-  //         addminqty: product.addminqty,
-  //         productQty: this.generateSaleMinQty(product.saleminqty),
-  //         sumPrice:
-  //           product.issalekg === 1
-  //             ? product.kgproduct[0].salegramprice *
-  //               this.generateSaleMinQty(product.saleminqty)
-  //             : product.spercent === 100
-  //             ? product.price * this.generateSaleMinQty(product.saleminqty)
-  //             : product.sprice * this.generateSaleMinQty(product.saleminqty),
-  //         issalekg: product.issalekg,
-  //         grPrice:
-  //           product.issalekg === 1 ? product.kgproduct[0].salegramprice : null,
-  //         kgPrice:
-  //           product.issalekg === 1 ? product.kgproduct[0].kilogramprice : null,
-  //         isLoading: true
-  //       });
-  //     }
-  //   }
-  // };
-
-  // createMarkup = product => {
-  //   return { __html: product.description };
-  // };
-
-  // onChangeMniImage = e => {
-  //   const { images } = this.state.product;
-  //   images.map(index => {
-  //     return Number(index.seq) === Number(e.target.alt)
-  //       ? this.setState({
-  //           selectedMediumImg: IMAGE + index.imgmdm,
-  //           selectedLargeImg: e.target.className
-  //         })
-  //       : "";
-  //   });
-  // };
-
-  // renderSimilarProducts = () => {};
-
-  // addProductLimit = value => {
-  //   const { productQty, addminqty, product, issalekg, grPrice } = this.state;
-  //   this.setState({
-  //     productQty: value,
-  //     sumPrice:
-  //       issalekg === 1
-  //         ? grPrice * value
-  //         : product.spercent !== 100
-  //         ? product.sprice * value
-  //         : product.price * value
-  //   });
-  // };
-
-  // // remProductLimit = value => {
-  // //   const {
-  // //     productQty,
-  // //     product,
-  // //     addminqty,
-  // //     issalekg,
-  // //     sumPrice,
-  // //     grPrice
-  // //   } = this.state;
-  // //   this.setState({
-  // //     productQty: value,
-  // //     sumPrice: issalekg
-  // //       ? grPrice * value
-  // //       : product.spercent !== 100
-  // //       ? product.sprice * value
-  // //       : product.price * value
-  // //   });
-  // // };
-
-  // dateHourFormatter = cell => {
-  //   if (cell) {
-  //     if (cell === null) {
-  //       return null;
-  //     } else {
-  //       cell = cell.slice(0, 10);
-  //       return cell;
-  //     }
-  //   }
-  // };
-
-  // generateDate = product => {
-  //   if (product.edate == null || product.sdate == null) {
-  //     return "";
-  //   } else {
-  //     var date1 = new Date(this.dateHourFormatter(product.sdate));
-  //     var date2 = new Date(this.dateHourFormatter(product.edate));
-  //     var timeDiff = Math.abs(date2.getTime() - date1.getTime());
-  //     var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-  //     return diffDays;
-  //   }
-  // };
 
   render() {
     const { categories, product } = this.props.container;

@@ -27,9 +27,9 @@ class CommentList extends React.Component {
 
     api.product
       .addCutomerComment({
-        custId: user.id,
+        custid: user.id,
         skucd: product.cd,
-        comm: this.state.comment
+        comment: this.state.comment
       })
       .then(res => {
         if (res.success) {

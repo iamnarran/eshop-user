@@ -97,9 +97,15 @@ export default [
     REPLACE: "id, skucd"
   },
   {
+    NAME: "addCustomerRate",
+    METHOD: "POST",
+    URL: `${API}/api/product/rate/:custid/:skucd/:rate`,
+    REPLACE: "custid, skucd, rate"
+  },
+  {
     NAME: "addCutomerComment",
     METHOD: "POST",
-    URL: `${API}/api/product/comment/:custId/:skucd/:comm`,
-    REPLACE: "custId, skucd, comm"
+    URL: `${API}/api/product/comment/:custid/:skucd/:comment`,
+    REPLACE: "custid, skucd, comment"
   }
 ];

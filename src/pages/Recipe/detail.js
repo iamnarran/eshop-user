@@ -117,6 +117,7 @@ class RecipeDetail extends React.Component {
   render() {
     const { recipe, productsData } = this.props.container;
     const step = this.props.container.recipe[0].steps;
+    const deliverytxt = this.props.container.recipe[0].recipe.deliverytxt;
     const sliderParams = {
       spaceBetween: 0,
       autoplay: {
@@ -137,7 +138,6 @@ class RecipeDetail extends React.Component {
     const formatter = new Intl.NumberFormat("en-US");
     let products = null;
     let steps = null;
-
     steps = step.map((item, index) => {
       return (
         <div className="row row10" key={index}>
@@ -358,10 +358,7 @@ class RecipeDetail extends React.Component {
                       <strong>Хүргэлтийн мэдээлэл</strong>
                     </p>
                     <p className="text">
-                      <span>
-                        Энгийн хүргэлт (48 цагийн дотор) - 89,000₮ дээш бараа
-                        авсан тохиолдолд үнэгүй
-                      </span>
+                      <span>{deliverytxt}</span>
                     </p>
                   </div>
                   {products}
