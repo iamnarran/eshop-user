@@ -4,11 +4,12 @@ import { IMAGE } from "../../utils/consts";
 import Slider from "../../components/Slider";
 import { connect } from "react-redux";
 
+import { Avatar } from "antd";
 import { toast } from "react-toastify";
 import storage from "../../utils/storage";
 import api from "../../api";
 import { updateCart } from "../../actions/cart";
-import { MapsRestaurantMenu } from "material-ui/svg-icons";
+import productPlus from "../../scss/assets/images/demo/productPlus.png";
 
 class PackageDetail extends React.Component {
   constructor(props) {
@@ -277,6 +278,7 @@ class PackageDetail extends React.Component {
   };
 
   render() {
+    console.log(this.props);
     const formatter = new Intl.NumberFormat("en-US");
     const sameproduct = this.props.container.Products[0].sameproducts;
     let products = null;
@@ -331,7 +333,7 @@ class PackageDetail extends React.Component {
                       </Link>
                       <div className="action">
                         <a onClick={this.handleSingleAddToCart(item)}>
-                          <i className="fa fa-cart-plus" aria-hidden="true" />
+                          <Avatar size="small" src={productPlus} />
                         </a>
                       </div>
                     </div>
@@ -413,7 +415,7 @@ class PackageDetail extends React.Component {
               </form>
               <div className="action">
                 <a onClick={this.handleSingleAddToCart(item)}>
-                  <i className="fa fa-cart-plus" aria-hidden="true" />
+                  <Avatar size="small" src={productPlus} />
                 </a>
               </div>
             </div>
