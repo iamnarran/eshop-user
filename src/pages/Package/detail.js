@@ -299,41 +299,52 @@ class PackageDetail extends React.Component {
       }
     };
     // Багцад орсон барааны ижил бараанууд
-    sameProducts = sameproduct.map((item, index) => {
-      if (sameproduct) {
-        return (
-          <li key={index}>
-            <div className="single flex-this">
-              <div className="image-container">
-                <Link to={item.route ? item.route : " "}>
-                  <span
-                    className="image"
-                    style={{
-                      backgroundImage: `url(${IMAGE + item.url})`
-                    }}
-                  />
-                </Link>
-              </div>
-              <div className="info-container flex-space">
-                <Link to="">
-                  <span>{item.skunm}</span>
-                  <strong>
-                    {formatter.format(item.price1 ? item.price1 : item.price2)}₮
-                  </strong>
-                </Link>
-                <div className="action">
-                  <a onClick={this.handleSingleAddToCart(item)}>
-                    <i className="fa fa-cart-plus" aria-hidden="true" />
-                  </a>
-                </div>
-              </div>
-            </div>
-          </li>
-        );
-      } else {
-        return null;
-      }
-    });
+    console.log("sameproduct", sameproduct.length);
+    if (sameproduct.length > 0) {
+      sameProducts = (
+        <div className="block product-suggest">
+          <p className="title">
+            <strong>Ижил бараа</strong>
+          </p>
+          <ul className="list-unstyled">
+            {sameproduct.map((item, index) => {
+              return (
+                <li key={index}>
+                  <div className="single flex-this">
+                    <div className="image-container">
+                      <Link to={item.route ? item.route : " "}>
+                        <span
+                          className="image"
+                          style={{
+                            backgroundImage: `url(${IMAGE + item.url})`
+                          }}
+                        />
+                      </Link>
+                    </div>
+                    <div className="info-container flex-space">
+                      <Link to="">
+                        <span>{item.skunm}</span>
+                        <strong>
+                          {formatter.format(
+                            item.price1 ? item.price1 : item.price2
+                          )}
+                          ₮
+                        </strong>
+                      </Link>
+                      <div className="action">
+                        <a onClick={this.handleSingleAddToCart(item)}>
+                          <i className="fa fa-cart-plus" aria-hidden="true" />
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      );
+    }
 
     // Багцад орсон бараанууд
     products = this.state.products.map((item, index) => {
@@ -510,12 +521,7 @@ class PackageDetail extends React.Component {
                       <span>{this.state.deliveryText}</span>
                     </p>
                   </div>
-                  <div className="block product-suggest">
-                    <p className="title">
-                      <strong>Ижил бараа</strong>
-                    </p>
-                    <ul className="list-unstyled">{sameProducts}</ul>
-                  </div>
+                  {sameProducts}
                 </div>
               </div>
             </div>
