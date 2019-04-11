@@ -4,13 +4,12 @@ import { IMAGE } from "../../utils/consts";
 import Slider from "../../components/Slider";
 import { connect } from "react-redux";
 
-import { Avatar } from "antd";
+import { Avatar, Input, Button } from "antd";
 import { toast } from "react-toastify";
 import storage from "../../utils/storage";
 import api from "../../api";
 import { updateCart } from "../../actions/cart";
 import productPlus from "../../scss/assets/images/demo/productPlus.png";
-
 class PackageDetail extends React.Component {
   constructor(props) {
     super(props);
@@ -385,15 +384,11 @@ class PackageDetail extends React.Component {
                       <i className="fa fa-minus" aria-hidden="true" />
                     </button>
                   </div>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder=""
+                  <Input
+                    style={{ width: "40%", border: "0px", textAlign: "center" }}
                     value={item.unit}
-                    aria-label=""
-                    aria-describedby="button-addon4"
-                    style={{ width: "40px" }}
                   />
+
                   <div className="input-group-append" id="button-addon4">
                     <button
                       className="btn"
@@ -491,7 +486,7 @@ class PackageDetail extends React.Component {
                             className="btn btn-main"
                             onClick={this.handleAddToCart(this.state.id)}
                           >
-                            <i className="fa fa-cart-plus" aria-hidden="true" />
+                            <Avatar size="small" src={productPlus} />
                             <span className="text-uppercase">
                               {" "}
                               Сагсанд нэмэх

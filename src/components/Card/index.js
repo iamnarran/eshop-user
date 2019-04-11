@@ -5,8 +5,10 @@ import PropTypes from "prop-types";
 import api from "../../api";
 import Rate from "../Rate";
 import Label from "../Label";
+import { Avatar } from "antd";
 import withCart from "../HOC/withCart";
 import { IMAGE, CARD_TYPES, LABEL_TYPES } from "../../utils/consts";
+import productPlus from "../../scss/assets/images/demo/productPlus.png";
 
 import "./Card.css";
 
@@ -19,6 +21,7 @@ class Card extends React.Component {
           products = res.data[0].products;
           if (products.length) {
             products.reduce((acc, next) => {
+              console.log("next", next);
               return acc.then(() => {
                 return this.props.onIncrement(next);
               });
@@ -33,11 +36,7 @@ class Card extends React.Component {
         if (res.success) {
           products = res.data[0].products;
           if (products.length) {
-            products.reduce((acc, next) => {
-              return acc.then(() => {
-                return this.props.onIncrement(next);
-              });
-            }, Promise.resolve());
+            return this.props.onIncrement(products);
           }
         } else {
           this.props.onNotify(res.message);
@@ -109,8 +108,11 @@ class Card extends React.Component {
           className="btn btn-link"
           style={{ color: "#ff9b00", fontSize: "1.6em", marginBottom: "8px" }}
         >
-          <i className="fa fa-cart-plus" aria-hidden="true" />
-          <span />
+          <Avatar
+            size="small"
+            src={productPlus}
+            style={{ verticalAlign: "middle" }}
+          />
         </button>
       </div>
     );
