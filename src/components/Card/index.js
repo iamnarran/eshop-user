@@ -49,6 +49,14 @@ class Card extends React.Component {
   };
 
   trimByWord(text, maxChars = 20) {
+    if (!text) {
+      return;
+    }
+
+    if (!text.length) {
+      return text;
+    }
+
     const textWords = text.split(" ");
     const textWordsCount = textWords.length;
 
@@ -324,7 +332,7 @@ class Card extends React.Component {
                 <Link
                   to=""
                   className="cart"
-                  onClick={this.handleAddToCart(item)}
+                  onClick={() => this.handleAddToCart(item)}
                 >
                   <i className="fa fa-cart-plus" aria-hidden="true" />
                 </Link>

@@ -1,6 +1,6 @@
 import api, { setAuthorizationHeader } from "../api";
 import login from "../api/User/login";
-import { SET_USER, SIGN_OUT } from "./types";
+import { SET_USER, SIGN_OUT, EMPTY_CART } from "./types";
 
 export const setUser = user => {
   setAuthorizationHeader(user.token);
