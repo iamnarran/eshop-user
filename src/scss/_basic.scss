@@ -2711,3 +2711,12 @@ MuiInputBase-input-49 MuiOutlinedInput-input-34 MuiInputBase-inputType-52 {
     }
   }
 }
+
+.ant-select-selection--single {
+  width: 100%;
+}
+
+.list-unstyled li:hover,
+.list-unstyled a:hover {
+  text-decoration: underline !important;
+}

@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-
+import storage from "../utils/storage";
 import { signOut } from "../actions/login";
 
 class UserButton extends React.Component {
@@ -11,6 +11,7 @@ class UserButton extends React.Component {
   };
 
   handleLogout = () => {
+    storage.remove("access_token");
     this.props.signOut();
   };
 
