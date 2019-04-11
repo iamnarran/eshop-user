@@ -329,13 +329,17 @@ class Card extends React.Component {
                 <Link to="" className="wishlist">
                   <i className="fa fa-heart-o" aria-hidden="true" />
                 </Link>
-                <Link
-                  to=""
-                  className="cart"
+                <button
                   onClick={() => this.handleAddToCart(item)}
+                  type="button"
+                  className="btn btn-link"
+                  style={{
+                    fontSize: "1.1rem"
+                  }}
                 >
                   <i className="fa fa-cart-plus" aria-hidden="true" />
-                </Link>
+                  <span />
+                </button>
               </div>
             </div>
           </div>

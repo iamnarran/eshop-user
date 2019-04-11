@@ -35,7 +35,6 @@ const generateURL = (method, url, replace, data) => {
 };
 
 const generateAPI = (api, data) => {
-  console.log(api, data);
   let config = {
     method: api.METHOD,
     url: generateURL(api.METHOD, api.URL, api.REPLACE, data),
@@ -44,7 +43,6 @@ const generateAPI = (api, data) => {
         api.TOKEN == true ? "Bearer " + storage.get("access_token") : null
     }
   };
-  console.log(config);
   config[api.METHOD === "GET" ? "params" : "data"] = data;
   return client(config).then(res => res.data);
 };
