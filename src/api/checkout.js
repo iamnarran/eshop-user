@@ -26,5 +26,11 @@ export default [
     NAME: "findBankInfo",
     METHOD: "GET",
     URL: `${API}/api/Checkout/bankinfo`
+  },
+  {
+    NAME: "saveUserAddress",
+    METHOD: "POST",
+    URL: `${API}/api/customer/address`,
+    TOKEN: true
   }
 ];

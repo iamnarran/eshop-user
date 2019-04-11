@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
 import withCart from "./HOC/withCart";
+import storage from "../utils/storage";
 import { signOut } from "../actions/login";
 import p1 from "../scss/assets/images/demo/1.jpg";
 
@@ -14,6 +15,7 @@ class UserButton extends React.Component {
 
   handleLogout = () => {
     this.props.onClear();
+    storage.remove("access_token");
     this.props.signOut();
   };
 

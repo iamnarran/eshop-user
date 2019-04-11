@@ -9,7 +9,7 @@ import FacebookLogin from "./FacebookLogin";
 import GoogleLogin from "./GoogleLogin";
 import actions, { setUser } from "../actions/login";
 import RegisterModal from "./RegisterModal";
-
+import storage from "../utils/storage";
 @connect(
   null,
   {
@@ -68,8 +68,8 @@ class LoginModal extends React.Component {
         this.setState({ isLoading: true });
         try {
           const res = await this.props.login(form);
-
           if (res.success) {
+            storage.set("access_token", res.data.access_token);
             this.props.setUser(res.data.customerInfo);
             this.setState({ isLoading: false });
             this.handleOk();

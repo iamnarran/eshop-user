@@ -21,7 +21,7 @@ import cart from "./cart";
 import checkout from "./checkout";
 import wishlist from "./wishlist";
 import viewList from "./viewlist";
-
+import storage from "../utils/storage";
 let rest = {};
 
 const generateURL = (method, url, replace, data) => {
@@ -35,13 +35,16 @@ const generateURL = (method, url, replace, data) => {
 };
 
 const generateAPI = (api, data) => {
+  console.log(api, data);
   let config = {
     method: api.METHOD,
     url: generateURL(api.METHOD, api.URL, api.REPLACE, data),
     headers: {
-      "Content-Type": api.CONTENT_TYPE ? api.CONTENT_TYPE : "application/json"
+      Authorization:
+        api.TOKEN == true ? "Bearer " + storage.get("access_token") : null
     }
   };
+  console.log(config);
   config[api.METHOD === "GET" ? "params" : "data"] = data;
   return client(config).then(res => res.data);
 };
