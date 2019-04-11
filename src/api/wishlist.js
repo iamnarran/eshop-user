@@ -2,9 +2,9 @@ import { API } from "../utils/consts";
 
 export default [
   {
-    NAME: "findAlls",
+    NAME: "findAll",
     METHOD: "GET",
-    URL: `${API}/api/customer/WishList/:custId`,
-    REPLACE: "custId"
+    URL: `${API}/api/customer/wishlist/:custid`,
+    REPLACE: "custid"
   }
 ];

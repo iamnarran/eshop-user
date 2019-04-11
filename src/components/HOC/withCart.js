@@ -19,32 +19,32 @@ const withCart = WrappedComponent => {
 
     handleNotify = message => toast(message, { autoClose: 5000 });
 
-    handleUpdate = item => e => {
-      e.preventDefault();
-
-      const value = parseInt(e.target.value);
-
-      let cart = storage.get("cart")
-        ? storage.get("cart")
-        : { products: [], totalQty: 0, totalPrice: 0 };
-
-      const found = cart.products.find(product => product.cd === item.cd);
-      if (!found) {
-        return;
-      }
+    handleUpdate = (item, qty) => {
+      console.log("handleUpdate", item, qty);
 
       api.product
         .isAvailable({
-          skucd: item.id ? item.id : item.cd ? item.cd : null,
-          qty: parseInt(e.target.value)
+          skucd: item.cd ? item.cd : null,
+          qty
         })
         .then(res => {
           if (res.success) {
-            found.qty = value;
-            const i = cart.products
-              .map(product => product.cd)
-              .indexOf(found.cd);
-            cart.products.splice(i, 1, found);
+            let cart = storage.get("cart")
+              ? storage.get("cart")
+              : { products: [], totalQty: 0, totalPrice: 0 };
+
+            const found = cart.products.find(product => product.cd === item.cd);
+
+            if (found) {
+              found.qty = qty;
+              const i = cart.products
+                .map(product => product.cd)
+                .indexOf(found.cd);
+              cart.products.splice(i, 1, found);
+            } else {
+              item.qty = qty;
+              cart.products.push(item);
+            }
 
             const qties = cart.products.map(product => product.qty);
             cart.totalQty = qties.reduce((acc, curr) => acc + curr);
@@ -79,120 +79,64 @@ const withCart = WrappedComponent => {
         : { products: [], totalQty: 0, totalPrice: 0 };
 
       const found = cart.products.find(product => product.cd === item.cd);
+
       let itemQty = 0;
       if (found) {
         itemQty = found.qty;
       }
 
-      api.product
-        .isAvailable({
-          skucd: item.id ? item.id : item.cd ? item.cd : null,
-          qty: itemQty + 1
-        })
-        .then(res => {
-          if (res.success) {
-            if (found) {
-              found.qty++;
-              const i = cart.products
-                .map(product => product.cd)
-                .indexOf(found.cd);
-              cart.products.splice(i, 1, found);
+      return new Promise((resolve, reject) => {
+        api.product
+          .isAvailable({
+            skucd: item.id ? item.id : item.cd ? item.cd : null,
+            qty: itemQty + 1
+          })
+          .then(res => {
+            if (res.success) {
+              if (found) {
+                found.qty++;
+                const i = cart.products
+                  .map(product => product.cd)
+                  .indexOf(found.cd);
+                cart.products.splice(i, 1, found);
+              } else {
+                item.qty = 1;
+                cart.products.push(item);
+              }
+
+              const qties = cart.products.map(product => product.qty);
+              cart.totalQty = qties.reduce((acc, curr) => acc + curr);
+
+              const prices = cart.products.map(product => {
+                const price = product.sprice
+                  ? product.sprice
+                  : product.price
+                  ? product.price
+                  : 0;
+                return product.qty * price;
+              });
+              cart.totalPrice = prices.reduce((acc, curr) => acc + curr);
+
+              storage.set("cart", cart);
+
+              // TODO: stop page refreshing
+              this.props.updateCart({
+                products: cart.products,
+                totalQty: cart.totalQty,
+                totalPrice: cart.totalPrice
+              });
+
+              this.handleNotify("+1");
+
+              resolve();
             } else {
-              item.qty = 1;
-              cart.products.push(item);
+              this.handleNotify(res.message);
+
+              reject();
             }
-
-            const qties = cart.products.map(product => product.qty);
-            cart.totalQty = qties.reduce((acc, curr) => acc + curr);
-
-            const prices = cart.products.map(product => {
-              const price = product.sprice
-                ? product.sprice
-                : product.price
-                ? product.price
-                : 0;
-              return product.qty * price;
-            });
-            cart.totalPrice = prices.reduce((acc, curr) => acc + curr);
-
-            storage.set("cart", cart);
-
-            // TODO: stop page refreshing
-            this.props.updateCart({
-              products: cart.products,
-              totalQty: cart.totalQty,
-              totalPrice: cart.totalPrice
-            });
-          } else {
-            this.handleNotify(res.message);
-          }
-        });
+          });
+      });
     };
-
-    // increment: item => {
-    //   let cart = storage.get("cart")
-    //     ? storage.get("cart")
-    //     : { products: [], totalQty: 0, totalPrice: 0 };
-
-    //   const found = cart.products.find(product => product.cd === item.cd);
-
-    //   let itemQty = 0;
-    //   if (found) {
-    //     itemQty = found.qty;
-    //   }
-
-    //   return new Promise((resolve, reject) => {
-    //     api.product
-    //       .isAvailable({
-    //         skucd: item.id ? item.id : item.cd ? item.cd : null,
-    //         qty: itemQty + 1
-    //       })
-    //       .then(res => {
-    //         if (res.success) {
-    //           if (found) {
-    //             found.qty++;
-    //             const i = cart.products
-    //               .map(product => product.cd)
-    //               .indexOf(found.cd);
-    //             cart.products.splice(i, 1, found);
-    //           } else {
-    //             item.qty = 1;
-    //             cart.products.push(item);
-    //           }
-
-    //           const qties = cart.products.map(product => product.qty);
-    //           cart.totalQty = qties.reduce((acc, curr) => acc + curr);
-
-    //           const prices = cart.products.map(product => {
-    //             const price = product.sprice
-    //               ? product.sprice
-    //               : product.price
-    //               ? product.price
-    //               : 0;
-    //             return product.qty * price;
-    //           });
-    //           cart.totalPrice = prices.reduce((acc, curr) => acc + curr);
-
-    //           storage.set("cart", cart);
-
-    //           // TODO: stop page refreshing
-    //           this.props.updateCart({
-    //             products: cart.products,
-    //             totalQty: cart.totalQty,
-    //             totalPrice: cart.totalPrice
-    //           });
-
-    //           this.handleNotify("+1");
-
-    //           resolve();
-    //         } else {
-    //           this.handleNotify(res.message);
-
-    //           reject();
-    //         }
-    //       });
-    //   });
-    // },
 
     handleDecrement = item => {
       let cart = storage.get("cart")

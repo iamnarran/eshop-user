@@ -1,8 +1,7 @@
-import React from "react";
+import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
-import { Spin, Rate } from "antd";
+import { Button, Rate } from "antd";
 import {
   FacebookShareButton,
   TwitterShareButton,
@@ -10,759 +9,514 @@ import {
   TwitterIcon
 } from "react-share";
 
-import api from "../api";
-import storage from "../utils/storage";
 import { updateCart } from "../actions/cart";
 import { getFeedbacks } from "../actions/mainlogic";
 import { IMAGE } from "../utils/consts";
-import {
-  Magnifier,
-  RelationalProduct,
-  Information,
-  CardSlider,
-  Comment
-} from "../components";
+import Gallery from "../components/Gallery";
 import LoginModal from "../components/LoginModal";
-const money = new Intl.NumberFormat("en-US");
+import { CommentList, CardSlider, Breadcrumb } from "../components";
+import withCart from "../components/HOC/withCart";
 
-class ProductDetail extends React.Component {
+const formatter = new Intl.NumberFormat("en-US");
+
+class ProductDetail extends Component {
   state = {
-    skucd: null,
-    product: null,
-    relationalProduct: [],
-    collectionProduct: [],
-    loggedin: false,
-    parentCategory: [],
-    category: [],
-    breadCrumb: [],
-    userInfo: [],
-    saleNumber: null, //Hudaldaalagdah too shirheg hamgiin bagdaa
-    sumPrice: null, //Hudaldaalagdah niit dun vne (too shirhegees hamaarna)
-    kgPrice: null, //Kg -aar zaragdah vne
-    grPrice: null, //Gr -aar zaragdah vne
-    issalekg: false, //kr-aar zaragdah baraa mun eseh
-    addminqty: null,
-    attribute: [],
-    selectedMediumImg: null,
-    selectedLargeImg: null,
-    smallImg: [],
-    currentUrl: null,
-    isLoading: false,
-    notFound: false,
+    productQty: 1,
     isLoginModalVisible: false
   };
 
-  notify = message => toast(message, { autoClose: 5000 });
+  renderDetails = () => {
+    const { categories, product } = this.props.container;
 
-  componentWillMount() {
-    this.setState({
-      skucd: this.props.match.params.id,
-      category: this.props.container.category
-    });
-    if (this.props.isLoggedIn && this.props.user) {
-      let user = this.props.user;
-      if (user.customerInfo) {
-        user = user.customerInfo;
-      }
-      this.setState({ userInfo: user, loggedin: true });
+    const selectedCat =
+      product.catid && categories.find(cat => cat.id === product.catid);
+
+    return (
+      <div className="col-xl-7 col-lg-7 col-md-7">
+        <div className="product-info">
+          <h5 className="title">{product.name}</h5>
+
+          {product.backtxt && `(${product.backtxt})`}
+
+          {selectedCat && (
+            <p className="big-text">
+              <strong>
+                <Link to={selectedCat.route} style={{ color: "#6c757d" }}>
+                  {selectedCat.name}
+                </Link>
+              </strong>
+            </p>
+          )}
+
+          <div className="main-rating">
+            <Rate
+              allowHalf
+              defaultValue={this.getRateValue()}
+              onChange={this.handleRateChange}
+            />
+
+            <p className="text">
+              (
+              {product.rate.length
+                ? `${product.rate.length} хүн үнэлгээ өгсөн байна`
+                : "Одоогоор үнэлгээ өгөөгүй байна"}
+              )
+            </p>
+          </div>
+
+          <div className="gift">
+            <div className="image-container" />
+            <div className="info-container" />
+          </div>
+
+          {this.renderCartInfo()}
+        </div>
+      </div>
+    );
+  };
+
+  renderCartInfo = () => {
+    const { product } = this.props.container;
+
+    let priceTitle = "Үнэ: ";
+    let price = product.price;
+
+    if (product.issalekg && product.kgproduct[0]) {
+      priceTitle = `${product.kgproduct[0].salegram} гр-н үнэ: `;
+      price = product.kgproduct[0].salegramprice;
     }
-  }
 
-  componentDidMount() {
-    this.refresh();
-  }
-
-  componentWillUpdate(prevProps) {
-    if (
-      prevProps.container.category !== this.props.container.category ||
-      this.state.skucd !== this.props.match.params.id
-    ) {
-      this.setState(
-        {
-          skucd: this.props.match.params.id,
-          category: this.props.container.category
-        },
-        () => {
-          this.refresh();
-        }
+    if (product.spercent && product.spercent !== 100) {
+      // Хямдарсан үед
+      price = (
+        <div className="price product-detail">
+          {!product.issalekg && (
+            <small
+              className="sale"
+              style={{ textDecoration: "line-through", marginLeft: "5px" }}
+            >
+              {formatter.format(price)}₮
+            </small>
+          )}
+          <span className="current" style={{ marginLeft: "5px" }}>
+            {formatter.format(product.issalekg ? price : product.sprice)}₮
+          </span>
+        </div>
+      );
+    } else {
+      // Хямдраагүй үед
+      price = (
+        <span className="current" style={{ marginLeft: "5px" }}>
+          {formatter.format(price)}₮
+        </span>
       );
     }
-    // if (prevProps.match.params.id !== this.props.match.params.id) {
-    //  this.refresh();
-    //  }
-  }
 
-  toggleLoginModal = e => {
-    //e.preventDefault();
+    return (
+      <form>
+        <div className="row row10">
+          <div className="col-xl-4 col-6">
+            <div className="input-group">
+              <div className="input-group-prepend" id="button-addon4">
+                <button
+                  onClick={this.handleDecrementClick}
+                  className="btn"
+                  type="button"
+                >
+                  <i className="fa fa-minus" aria-hidden="true" />
+                </button>
+              </div>
+
+              <input
+                type="text"
+                className="form-control"
+                value={this.state.productQty}
+                name="productQty"
+                onChange={this.handleQtyChange}
+              />
+
+              <div className="input-group-append" id="button-addon4">
+                <button
+                  onClick={this.handleIncrementClick}
+                  className="btn"
+                  type="button"
+                >
+                  <i className="fa fa-plus" aria-hidden="true" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="col-xl-8">
+            <div className="count-text text-right">
+              {priceTitle}
+              {price}
+            </div>
+
+            {!!product.issalekg && !!product.kgproduct[0] && (
+              <p className="count-text text-right">
+                {`Кг үнэ: ${formatter.format(
+                  product.kgproduct[0].kilogramprice
+                )}₮`}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div className="total-price text-right">
+          <span>Дүн:</span>
+          <strong>{formatter.format(this.getTotalPrice())}₮</strong>
+        </div>
+
+        <div className="btn-container text-right">
+          <button
+            type="button"
+            className="btn btn-gray text-uppercase"
+            style={{ marginRight: "10px" }}
+            onClick={this.handleSaveClick}
+          >
+            <span>Хадгалах</span>
+          </button>
+
+          <button
+            type="button"
+            className="btn btn-main text-uppercase"
+            disabled={product.availableqty < 1}
+            onClick={() => this.props.onUpdate(product, this.state.productQty)}
+          >
+            <i className="fa fa-shopping-cart" aria-hidden="true" />{" "}
+            <span>Сагсанд нэмэх</span>
+          </button>
+
+          {product.sprice === 100 && (
+            <p className="text text-right">
+              Хямдрал {this.generateDate(product)} хоногийн дараа дуусна
+            </p>
+          )}
+        </div>
+      </form>
+    );
+  };
+
+  renderDeliveryInfo = () => {
+    const { product } = this.props.container;
+
+    if (!product.deliverytxt) {
+      return;
+    }
+
+    return (
+      <div className="block product-delivery">
+        <p className="title">
+          <strong>Хүргэлтийн мэдээлэл</strong>
+        </p>
+        <p className="text">
+          <span>{product.deliverytxt}</span>
+        </p>
+      </div>
+    );
+  };
+
+  renderRelatedProducts = (limit = 4) => {
+    let { relatedProducts } = this.props.container;
+
+    relatedProducts =
+      relatedProducts.length > limit
+        ? relatedProducts.slice(0, limit)
+        : relatedProducts;
+
+    return (
+      !!relatedProducts.length && (
+        <div className="product-suggest">
+          <p className="title">
+            <strong>Хослох бараа</strong>
+          </p>
+          <ul className="list-unstyled">
+            {relatedProducts.map((prod, index) => {
+              return (
+                <li key={index}>
+                  <div className="single flex-this">
+                    <div className="image-container">
+                      <Link to={prod.route ? prod.route : ""}>
+                        <span
+                          className="image"
+                          style={{
+                            backgroundImage: `url(${IMAGE}${prod.imgnm})`
+                          }}
+                        />
+                      </Link>
+                    </div>
+
+                    <div className="info-container flex-space">
+                      <Link to={prod.route ? prod.route : ""}>
+                        <span>{prod.name}</span>
+                        <strong>{formatter.format(prod.price)}₮</strong>
+                      </Link>
+                      <div className="action">
+                        <button
+                          type="button"
+                          className="btn btn-link"
+                          onClick={() => this.props.onIncrement(prod)}
+                        >
+                          <i
+                            className="fa fa-cart-plus"
+                            aria-hidden="true"
+                            style={{ fontSize: "1.2rem" }}
+                          />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+          <div className="more-link text-center">
+            <Button
+              className="btn btn-border"
+              onClick={this.handleMoreRelatedProductsClick}
+            >
+              <span className="text text-uppercase">
+                Бүх хослох барааг үзэх
+              </span>
+            </Button>
+          </div>
+        </div>
+      )
+    );
+  };
+
+  renderMoreInfo = () => {
+    let { product, attributes, similarProducts } = this.props.container;
+
+    const similarProductsLimit = 4;
+    const shouldLoop = similarProducts.length > similarProductsLimit;
+
+    const params = {
+      slidesPerView: 4,
+      spaceBetween: 0,
+      loop: shouldLoop,
+      autoplay: {
+        delay: 3000,
+        disableOnInteraction: false
+      },
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev"
+      },
+      pagination: {
+        type: "bullets",
+        clickable: true
+      }
+    };
+
+    return (
+      <div className="col-md-12 col-lg-12 col-sm-12 col-xl-12">
+        {!!attributes && !!attributes.length && (
+          <div style={{ marginTop: "80px", marginBottom: "0" }}>
+            <h1 className="title">
+              <span className="text-uppercase">Мэдээлэл</span>
+            </h1>
+            <div className="product-bottom-info">
+              {attributes.map((attr, index) => {
+                return (
+                  <div key={index} className="row row10">
+                    <dt className="col-sm-3">{attr.value}</dt>
+                    <dd className="col-sm-6">{attr.name}</dd>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {!!similarProducts && !!similarProducts.length && (
+          <div style={{ marginTop: "80px", marginBottom: "0" }}>
+            <h1 className="title">
+              <span className="text-uppercase">Ижил бараа</span>
+            </h1>
+            <div style={{ marginTop: "40px" }}>
+              <div className="row row10">
+                <CardSlider params={params} data={similarProducts} />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {product.description && (
+          <div style={{ marginTop: "80px", marginBottom: "0" }}>
+            <h1 className="title">
+              <span className="text-uppercase">Танилцуулга</span>
+            </h1>
+
+            <div dangerouslySetInnerHTML={{ __html: product.description }} />
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  renderCommentList = () => {
+    const { product, comments } = this.props.container;
+
+    return <CommentList comments={comments} product={product} />;
+  };
+
+  round = (value, step) => {
+    step || (step = 1.0);
+    const inv = 1.0 / step;
+    return Math.round(value * inv) / inv;
+  };
+
+  getRateValue = () => {
+    const { product } = this.props.container;
+
+    let average = 0;
+    if (product && product.rate && product.rate.length) {
+      let total = product.rate.reduce((a, b) => a + b.rate, 0);
+      if (total > 0) {
+        average = this.round(total / product.rate.length, 0.5);
+      }
+    }
+    return average;
+  };
+
+  handleRateChange = e => {
+    console.log(e);
+  };
+
+  handleQtyChange = e => {
+    this.setState({ productQty: e.target.value });
+  };
+
+  handleIncrementClick = () => {
+    const {
+      addminqty,
+      availableqty,
+      salemaxqty
+    } = this.props.container.product;
+    const { productQty } = this.state;
+
+    if (availableqty > 0 && availableqty > productQty) {
+      if (salemaxqty > productQty || salemaxqty === 0) {
+        this.setState({
+          productQty:
+            productQty < addminqty ? addminqty : productQty + addminqty
+        });
+      }
+    }
+  };
+
+  handleDecrementClick = () => {
+    const { addminqty, saleminqty } = this.props.container.product;
+    const { productQty } = this.state;
+
+    if (saleminqty > 0 && saleminqty < productQty - addminqty) {
+      this.setState({
+        productQty:
+          productQty < saleminqty ? saleminqty : productQty - addminqty
+      });
+    }
+  };
+
+  getPrice = () => {
+    const { product } = this.props.container;
+
+    let price = product.price;
+
+    if (product.issalekg && product.kgproduct[0]) {
+      price = product.kgproduct[0].salegramprice;
+    }
+
+    if (product.spercent && product.spercent !== 100 && !product.issalekg) {
+      price = product.sprice;
+    }
+
+    return price;
+  };
+
+  getTotalPrice = () => {
+    return this.state.productQty * this.getPrice();
+  };
+
+  handleSaveClick = e => {
+    e.preventDefault();
+
+    if (this.props.isLoggedIn && this.props.user) {
+      console.log("ready to save");
+      // await api.product
+      //   .addViewList({ id: this.state.userInfo.id, skucd: this.state.skucd })
+      //   .then(res => {
+      //     if (res.success) {
+      //       this.notify(res.message);
+      //     }
+      //   });
+    } else {
+      this.showLoginModal();
+    }
+  };
+
+  toggleLoginModal = () => {
     this.setState({ isLoginModalVisible: !this.state.isLoginModalVisible });
   };
 
-  showLoginModal = e => {
+  showLoginModal = () => {
     this.setState({ isLoginModalVisible: true });
   };
 
   render() {
-    const { breadCrumb, skucd, isLoading } = this.state;
-    console.log(this.state.loggedin);
-    if (skucd !== this.props.match.params.id) {
-      this.setState({ skucd: this.props.match.params.id });
-      this.refresh();
-    }
-    if (this.state.notFound) {
+    const { categories, product } = this.props.container;
+
+    if (!product) {
       return (
         <center>
           <div>Бараа олдсонгүй</div>
         </center>
       );
-    } else {
-      if (isLoading) {
-        return (
-          <div className="section">
-            <div className="container">
-              {this.renderBreadCrumb(breadCrumb)}
-              <div className="product-detail-page col-md-12 col-sm-12 col-lg-12">
-                <div className="row row10">
-                  <div className="col-sm-9 col-md-9 col-lg-9 row">
-                    {this.renderProductImg()}
-                    {this.renderProductDescription()}
-                  </div>
-                  {this.renderProductDelivery()}
-                  {this.renderFooter()}
+    }
+
+    return (
+      <div className="section">
+        <div className="container">
+          <Breadcrumb product={product} categories={categories} />
+
+          <div className="product-detail-page col-md-12 col-sm-12 col-lg-12">
+            <div className="row row10">
+              <div className="col-sm-9 col-md-9 col-lg-9 row">
+                <Gallery images={product.images} />
+                {this.renderDetails()}
+              </div>
+              <div className="col-xl-3 col-lg-3 col-sm-3 col-md-3">
+                <div className="product-plus">
+                  {this.renderDeliveryInfo()}
+                  {this.renderRelatedProducts()}
                 </div>
               </div>
-            </div>
-            <LoginModal
-              onVisibilityChange={this.toggleLoginModal}
-              visible={this.state.isLoginModalVisible}
-            />
-          </div>
-        );
-      }
-      return (
-        <div className="e-mart-loading">
-          <Spin />
-        </div>
-      );
-    }
-  }
-
-  refresh = async () => {
-    const { skucd } = this.state;
-    await api.product
-      .productCollection({ skucd: skucd })
-      .then(res =>
-        res.success
-          ? this.setState({ collectionProduct: res.data, breadCrumb: [] })
-          : console.log("collectionProduct", res)
-      );
-    await api.product
-      .productAttribute({ skucd: skucd })
-      .then(res =>
-        res.success
-          ? this.setState({ attribute: res.data })
-          : console.log("attribute", res)
-      );
-    await api.product
-      .productRelational({ skucd: skucd })
-      .then(res =>
-        res.success
-          ? this.setState({ relationalProduct: res.data })
-          : console.log("relationalProduct", res)
-      );
-    await api.product.productDetail({ skucd: skucd }).then(res => {
-      if (res.success) {
-        if (res.data.length == 0) {
-          this.setState({ notFound: true });
-        } else {
-          this.getCategory(res.data[0]);
-        }
-      }
-    });
-    await api.product
-      .productDetailImg({ skucd: skucd })
-      .then(res =>
-        res.success
-          ? this.setState({ smallImg: res.data })
-          : console.log("productDetailImg", res)
-      );
-  };
-
-  check = (res, item, found, cart) => {
-    let tmp = getFeedbacks(res, item, found, cart);
-    if (tmp == false) {
-      this.notify(res.message);
-    } else {
-      this.props.updateCart({
-        products: tmp.products,
-        totalQty: tmp.totalQty,
-        totalPrice: tmp.totalPrice
-      });
-    }
-  };
-
-  generateSaleMinQty = saleminqty => {
-    if (saleminqty === 0) {
-      return 1;
-    } else {
-      return saleminqty;
-    }
-  };
-
-  handleAddClick = e => {
-    e.preventDefault();
-    const item = this.state.product;
-    let cart = storage.get("cart")
-      ? storage.get("cart")
-      : { products: [], totalQty: 0, totalPrice: 0 };
-    const found = cart.products.find(product => product.cd === item.cd);
-    let itemQty = 0;
-    if (found) {
-      itemQty = found.qty;
-    }
-    api.product
-      .isAvailable({
-        skucd: item.id ? item.id : item.cd ? item.cd : null,
-        qty: itemQty + 1
-      })
-      .then(res => {
-        item.qty = this.state.saleNumber;
-        this.check(res, item, found, cart);
-      });
-  };
-
-  handleSaveClick = async e => {
-    e.preventDefault();
-    if (!this.state.loggedin) {
-      this.showLoginModal();
-    } else {
-      await api.product
-        .addViewList({ id: this.state.userInfo.id, skucd: this.state.skucd })
-        .then(res => {
-          if (res.success) {
-            this.notify(res.message);
-          }
-        });
-    }
-  };
-
-  getCategory = product => {
-    const { breadCrumb, category } = this.state;
-    let tmp = [];
-    if (product !== undefined) {
-      if (product.length !== 0) {
-        let parent = product.catid;
-        category.reverse().map(i => {
-          if (parent === i.id) {
-            tmp.push(i);
-            parent = i.parentid;
-          }
-          return null;
-        });
-        tmp.reverse();
-
-        this.setState({
-          product: product,
-          breadCrumb: tmp,
-          addminqty: product.addminqty,
-          saleNumber: this.generateSaleMinQty(product.saleminqty),
-          sumPrice:
-            product.issalekg === 1
-              ? product.kgproduct[0].salegramprice *
-                this.generateSaleMinQty(product.saleminqty)
-              : product.spercent === 100
-              ? product.price * this.generateSaleMinQty(product.saleminqty)
-              : product.sprice * this.generateSaleMinQty(product.saleminqty),
-          issalekg: product.issalekg,
-          grPrice:
-            product.issalekg === 1 ? product.kgproduct[0].salegramprice : null,
-          kgPrice:
-            product.issalekg === 1 ? product.kgproduct[0].kilogramprice : null,
-          isLoading: true
-        });
-      }
-    }
-  };
-
-  renderBreadCrumb = e => {
-    return (
-      <div className="e-breadcrumb">
-        <ul className="list-unstyled">
-          {e.map((i, key) => {
-            return (
-              <li key={key}>
-                <Link to={i.route ? i.route : ""}>{i.name}</Link>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-    );
-  };
-
-  renderProductImg = () => {
-    const {
-      product,
-      selectedMediumImg,
-      smallImg,
-      selectedLargeImg
-    } = this.state;
-    return (
-      <div className="col-xl-5 col-lg-5 col-md-5">
-        <div className="product-gallery">
-          <Magnifier
-            img={
-              selectedMediumImg === null
-                ? IMAGE + product.img
-                : selectedMediumImg
-            }
-            images={smallImg}
-            tags={product.tags}
-            slImg={selectedLargeImg}
-          />
-          <div className="thumbs">
-            <ul className="list-inline">
-              {product &&
-                product.images &&
-                product.images.map((i, key) => {
-                  return (
-                    <li className="list-inline-item" key={key}>
-                      <a
-                        className="image-container"
-                        onClick={this.onChangeMniImage}
-                      >
-                        <img
-                          alt={i.seq}
-                          className={key}
-                          src={IMAGE + i.imgmni}
-                        />
-                      </a>
-                    </li>
-                  );
-                })}
-            </ul>
-          </div>
-          <div className="share">
-            <ul className="list-inline">
-              <li className="list-inline-item">
-                <span>Хуваалцах:</span>
-              </li>
-              <li className="list-inline-item">
-                <FacebookShareButton
-                  url={window.location.href}
-                  quote={product.name}
-                  className="Demo__some-network__share-button"
-                >
-                  <FacebookIcon size={25} round />
-                </FacebookShareButton>
-              </li>
-              <li className="list-inline-item">
-                <TwitterShareButton
-                  url={window.location.href}
-                  quote={product.name}
-                  className="Demo__some-network__share-button"
-                >
-                  <TwitterIcon size={25} round />
-                </TwitterShareButton>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  createMarkup = product => {
-    return { __html: product.description };
-  };
-
-  onChangeMniImage = e => {
-    const { images } = this.state.product;
-    images.map(index => {
-      return Number(index.seq) === Number(e.target.alt)
-        ? this.setState({
-            selectedMediumImg: IMAGE + index.imgmdm,
-            selectedLargeImg: e.target.className
-          })
-        : "";
-    });
-  };
-
-  renderFooter = () => {
-    const { attribute, collectionProduct, skucd, product } = this.state;
-    if (collectionProduct.length <= 4) {
-      productParams.loop = false;
-    }
-    productParams.slidesPerView = collectionProduct.length;
-    return (
-      <div className="col-md-12 col-lg-12 col-sm-12 col-xl-12">
-        {attribute.length !== 0 ? <Information attribute={attribute} /> : ""}
-        {collectionProduct.length == 0 ? (
-          ""
-        ) : (
-          <div>
-            <h1 className="title">
-              <span className="text-uppercase">Ижил бараа</span>
-            </h1>
-            <div className="section">
-              <div className="row row10">
-                <CardSlider
-                  data={collectionProduct}
-                  params={productParams}
-                  elContainer={"collectionProduct"}
-                />
-              </div>
+              {this.renderMoreInfo()}
+              {this.renderCommentList()}
             </div>
           </div>
-        )}
+        </div>
 
-        {/**ТАНИЛЦУУЛАГА */}
-        {product.description ? (
-          <div>
-            <h1 className="title">
-              <span className="text-uppercase">Танилцуулга</span>
-            </h1>
-
-            {/*   {this.state.product &&
-                this.state.product.images &&
-                this.state.product.images.map((index, key) => {
-                  return (
-                    <img alt={index.id} src={IMAGE + index.imglrg} key={key} />
-                  );
-                })} */}
-            <div dangerouslySetInnerHTML={{ __html: product.description }} />
-          </div>
-        ) : (
-          ""
-        )}
-
-        <Comment
-          skucd={skucd}
-          rate={product !== undefined ? product.rate : []}
-          userInfo={this.props.isLoggedIn && this.props.user}
-          loggedin={this.props.isLoggedIn}
+        <LoginModal
+          onVisibilityChange={this.toggleLoginModal}
+          visible={this.state.isLoginModalVisible}
         />
       </div>
     );
-  };
-
-  getRatesum = () => {
-    const { product } = this.state;
-    let sum = 0;
-    if (product !== undefined) {
-      if (product.rate !== undefined && product.rate.length !== 0) {
-        product.rate.map(i => (sum += i.rate));
-      }
-    }
-    let tmp = (sum / product.rate.length).toFixed(2);
-    if (isNaN(tmp) || tmp == undefined) {
-      tmp = 0;
-    }
-    return tmp;
-  };
-
-  addProduct = () => {
-    const { saleNumber, addminqty, product, issalekg, grPrice } = this.state;
-
-    if (saleNumber < product.availableqty && product.availableqty !== 0) {
-      if (saleNumber < product.salemaxqty || product.salemaxqty === 0) {
-        if (product.salemaxqty !== 0) {
-          if (product.salemaxqty > saleNumber + addminqty) {
-            this.addProductLimit(saleNumber + addminqty);
-          } else {
-            this.addProductLimit(product.salemaxqty);
-          }
-        } else {
-          this.addProductLimit(saleNumber + addminqty);
-        }
-      }
-    }
-  };
-
-  addProductLimit = value => {
-    const { saleNumber, addminqty, product, issalekg, grPrice } = this.state;
-    this.setState({
-      saleNumber: value,
-      sumPrice:
-        issalekg === 1
-          ? grPrice * value
-          : product.spercent !== 100
-          ? product.sprice * value
-          : product.price * value
-    });
-  };
-
-  remProduct = () => {
-    const {
-      saleNumber,
-      product,
-      addminqty,
-      issalekg,
-      sumPrice,
-      grPrice
-    } = this.state;
-    if (saleNumber > product.saleminqty) {
-      //hamgiin  bagdaa zarag too shirhegiin hyzgaarlalt
-      if (product.saleminqty !== 0) {
-        if (product.saleminqty < saleNumber - addminqty) {
-          this.remProductLimit(saleNumber - addminqty);
-        } else {
-          this.remProductLimit(product.saleminqty);
-        }
-      } else {
-        this.remProductLimit(saleNumber - addminqty);
-      }
-    }
-  };
-
-  remProductLimit = value => {
-    const {
-      saleNumber,
-      product,
-      addminqty,
-      issalekg,
-      sumPrice,
-      grPrice
-    } = this.state;
-    this.setState({
-      saleNumber: value,
-      sumPrice: issalekg
-        ? grPrice * value
-        : product.spercent !== 100
-        ? product.sprice * value
-        : product.price * value
-    });
-  };
-
-  handleRate = async e => {
-    await api.product
-      .addCustomerRate({
-        custid: this.state.userInfo.id,
-        skucd: this.props.match.params.id,
-        rate: e * 2
-      })
-      .then(response => {
-        if (response.success) {
-          this.notify(response.message);
-        }
-      });
-  };
-
-  renderProductDelivery = () => {
-    const { product, relationalProduct } = this.state;
-    return (
-      <div className="col-xl-3 col-lg-3 col-sm-3 col-md-3">
-        <div className="product-plus">
-          <div className="block product-delivery">
-            <p className="title">
-              <strong>Хүргэлтийн мэдээлэл</strong>
-            </p>
-            <p className="text">
-              <span>{product.deliverytxt || ""}</span>
-            </p>
-          </div>
-          <RelationalProduct product={relationalProduct} />
-        </div>
-      </div>
-    );
-  };
-
-  dateHourFormatter = cell => {
-    if (cell) {
-      if (cell === null) {
-        return null;
-      } else {
-        cell = cell.slice(0, 10);
-        return cell;
-      }
-    }
-  };
-
-  generateDate = product => {
-    if (product.edate == null || product.sdate == null) {
-      return "";
-    } else {
-      var date1 = new Date(this.dateHourFormatter(product.sdate));
-      var date2 = new Date(this.dateHourFormatter(product.edate));
-      var timeDiff = Math.abs(date2.getTime() - date1.getTime());
-      var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-      return diffDays;
-    }
-  };
-
-  renderProductDescription = () => {
-    const { product, breadCrumb, saleNumber, sumPrice, issalekg } = this.state;
-    return (
-      <div className="col-xl-7 col-lg-7 col-md-7">
-        <div className="product-info">
-          <h5 className="title">{product.name}</h5>({product.backtxt || ""})
-          <p className="big-text">
-            <strong>
-              {breadCrumb.map((i, e) => {
-                if (e === breadCrumb.length - 1) {
-                  return (
-                    <Link to={i.route} style={{ color: "#999" }}>
-                      {i.name}
-                    </Link>
-                  );
-                } else {
-                  return null;
-                }
-              })}
-            </strong>
-          </p>
-          <div className="main-rating">
-            <Rate
-              allowHalf
-              disabled={this.state.loggedin == true ? false : true}
-              defaultValue={this.getRatesum() / 2}
-              onChange={this.handleRate}
-            />
-            <p className="text">
-              ({product.rate.length} хүн үнэлгээ өгсөн байна)
-            </p>
-          </div>
-          <div className="gift">
-            <div className="image-container" />
-            <div className="info-container" />
-          </div>
-          <form>
-            <div className="row row10">
-              <div className="col-xl-4 col-6">
-                <div className="input-group">
-                  <div className="input-group-prepend" id="button-addon4">
-                    <button
-                      onClick={this.remProduct}
-                      className="btn"
-                      type="button"
-                    >
-                      <i className="fa fa-minus" aria-hidden="true" />
-                    </button>
-                  </div>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder=""
-                    value={saleNumber}
-                    aria-label=""
-                    aria-describedby="button-addon4"
-                    name="productQty"
-                  />
-                  <div className="input-group-append" id="button-addon4">
-                    <button
-                      onClick={this.addProduct}
-                      className="btn"
-                      type="button"
-                    >
-                      <i className="fa fa-plus" aria-hidden="true" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div className="col-xl-8">
-                <p className="count-text text-right">
-                  {issalekg ? `${product.saleweight} гр-н үнэ: ` : "Үнэ: "}
-                  {issalekg ? (
-                    money.format(product.kgproduct[0].salegramprice)
-                  ) : product.spercent === 100 ? (
-                    money.format(product.price)
-                  ) : (
-                    <div className="price product-detail">
-                      <small
-                        className="sale"
-                        style={{ textDecoration: "line-through" }}
-                      >
-                        {" "}
-                        {money.format(product.price)}₮{" "}
-                      </small>
-                      &nbsp;&nbsp;
-                      <span className="current">
-                        {" "}
-                        {money.format(product.sprice)}
-                      </span>
-                    </div>
-                  )}
-                  ₮
-                </p>
-                {issalekg ? (
-                  <p className="count-text text-right">
-                    {"Кг үнэ: " + money.format(this.state.kgPrice) + "₮"}
-                  </p>
-                ) : (
-                  ""
-                )}
-              </div>
-            </div>
-            <div className="total-price text-right">
-              <span>Дүн:</span>
-              <strong>
-                {money.format(
-                  saleNumber *
-                    (issalekg === 1
-                      ? product.kgproduct[0].salegramprice
-                      : product.sprice
-                      ? product.sprice
-                      : product.price)
-                )}
-                ₮
-              </strong>
-            </div>
-            <div className="btn-container text-right">
-              <button
-                className="btn btn-gray text-uppercase"
-                onClick={this.handleSaveClick}
-              >
-                <span>Хадгалах</span>
-              </button>
-              <button
-                className="btn btn-main text-uppercase"
-                disabled={product.availableqty > 0 ? false : true}
-                onClick={this.handleAddClick}
-              >
-                <i className="fa fa-shopping-cart" aria-hidden="true" />
-                <span>Сагсанд нэмэх</span>
-              </button>
-              <br />
-              {product.sprice == 0 ? (
-                ""
-              ) : (
-                <p className="text text-right">
-                  Хямдрал {this.generateDate(product)} хоногийн дараа дуусна
-                </p>
-              )}
-            </div>
-          </form>
-        </div>
-      </div>
-    );
-  };
+  }
 }
 
-const productParams = {
-  slidesPerView: 4,
-  spaceBetween: 0,
-  loop: true,
-  autoplay: {
-    delay: 3000,
-    disableOnInteraction: false
-  },
-  navigation: {
-    nextEl: ".swiper-button-next",
-    prevEl: ".swiper-button-prev"
-  },
-  pagination: {
-    type: "bullets",
-    clickable: true
-  }
-};
-
-const mapStateTopProps = (state, ownProps) => {
+const mapStateToProps = state => {
   return {
     isLoggedIn: state.auth.isLoggedIn,
     user: state.auth.user
   };
 };
 
-export default connect(
-  mapStateTopProps,
-  { updateCart }
-)(ProductDetail);
+export default withCart(
+  connect(
+    mapStateToProps,
+    { updateCart }
+  )(ProductDetail)
+);

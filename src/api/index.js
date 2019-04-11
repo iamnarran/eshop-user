@@ -19,7 +19,7 @@ import categoryInfo from "./categoryInfo";
 import season from "./season";
 import cart from "./cart";
 import checkout from "./checkout";
-import wishList from "./wishlist";
+import wishlist from "./wishlist";
 import viewList from "./viewlist";
 import storage from "../utils/storage";
 let rest = {};
@@ -149,9 +149,9 @@ checkout.forEach(api => {
   rest.checkout[api.NAME] = data => generateAPI(api, data);
 });
 
-rest["wishList"] = {};
-wishList.forEach(api => {
-  rest.wishList[api.NAME] = data => generateAPI(api, data);
+rest["wishlist"] = {};
+wishlist.forEach(api => {
+  rest.wishlist[api.NAME] = data => generateAPI(api, data);
 });
 
 rest["viewList"] = {};

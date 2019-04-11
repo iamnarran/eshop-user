@@ -14,6 +14,7 @@ import { getFeedbacks } from "../../actions/mainlogic";
 import chef from "../../scss/assets/images/demo/chef.png";
 import time from "../../scss/assets/images/demo/time.png";
 import smile from "../../scss/assets/images/demo/smile.png";
+import productPlus from "../../scss/assets/images/demo/productPlus.png";
 class RecipeDetail extends React.Component {
   notify = message => toast(message, { autoClose: 5000 });
 
@@ -117,6 +118,7 @@ class RecipeDetail extends React.Component {
   render() {
     const { recipe, productsData } = this.props.container;
     const step = this.props.container.recipe[0].steps;
+    const deliverytxt = this.props.container.recipe[0].recipe.deliverytxt;
     const sliderParams = {
       spaceBetween: 0,
       autoplay: {
@@ -137,7 +139,6 @@ class RecipeDetail extends React.Component {
     const formatter = new Intl.NumberFormat("en-US");
     let products = null;
     let steps = null;
-
     steps = step.map((item, index) => {
       return (
         <div className="row row10" key={index}>
@@ -183,9 +184,9 @@ class RecipeDetail extends React.Component {
           </p>
           <ul className="list-unstyled">
             {productsData.products &&
-              productsData.products.map(product => {
+              productsData.products.map((product, index) => {
                 return (
-                  <li>
+                  <li key={index}>
                     <div className="single flex-this">
                       <div className="image-container">
                         <Link to={product.route ? product.route : ""}>
@@ -204,7 +205,7 @@ class RecipeDetail extends React.Component {
                         </Link>
                         <div className="action">
                           <a onClick={this.handleAddToCart(product)}>
-                            <i className="fa fa-cart-plus" aria-hidden="true" />
+                            <Avatar size="small" src={productPlus} />
                           </a>
                         </div>
                       </div>
@@ -223,7 +224,7 @@ class RecipeDetail extends React.Component {
                 className="btn btn-main"
                 onClick={this.handleAddToCart(recipe[0].recipe)}
               >
-                <i className="fa fa-cart-plus" aria-hidden="true" />
+                <Avatar size="small" src={productPlus} />{" "}
                 <span className="text-uppercase">Сагсанд нэмэх</span>
               </a>
             </div>
@@ -358,10 +359,7 @@ class RecipeDetail extends React.Component {
                       <strong>Хүргэлтийн мэдээлэл</strong>
                     </p>
                     <p className="text">
-                      <span>
-                        Энгийн хүргэлт (48 цагийн дотор) - 89,000₮ дээш бараа
-                        авсан тохиолдолд үнэгүй
-                      </span>
+                      <span>{deliverytxt}</span>
                     </p>
                   </div>
                   {products}

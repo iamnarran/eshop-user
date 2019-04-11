@@ -15,11 +15,24 @@ const options = {
 };
 
 const fetch = async (props, onData) => {
+  const skucd = props.match.params.id;
+
   try {
-    const category = await api.category.findAll();
+    const categories = await api.category.findAll();
+    const product = await api.product.productDetail({ skucd });
+    const attributes = await api.product.productAttribute({ skucd });
+    const similarProducts = await api.product.productCollection({ skucd });
+    const relatedProducts = await api.product.productRelational({ skucd });
+    const comments = await api.product.productComment({ skucd });
+
     onData(null, {
       container: {
-        category: category.data
+        categories: categories.data,
+        product: product.data[0],
+        attributes: attributes.data,
+        similarProducts: similarProducts.data,
+        relatedProducts: relatedProducts.data,
+        comments: comments.data
       }
     });
   } catch (e) {
