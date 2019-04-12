@@ -21,11 +21,13 @@ class AppHeader extends Component {
       menucategories: [],
       item: "Бүх бараа",
       suggestion: [],
-      hello: ""
+      hello: "",
+      k: []
     };
   }
 
   handleChange = e => {
+    console.log(this.state.k);
     console.log("odoo end huudas shiljine");
   };
 
@@ -51,11 +53,6 @@ class AppHeader extends Component {
         });
     }
   };
-
-  onClickSuggestion(e, item) {
-    console.log(e, item);
-    console.log("click");
-  }
 
   onItem = (e, item) => {
     this.setState({ item: item.name });
