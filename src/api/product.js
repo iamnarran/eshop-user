@@ -81,7 +81,7 @@ export default [
   {
     NAME: "isAvailable",
     METHOD: "GET",
-    URL: `${API}/api/product/ProdAvailableSku/:skucd/:qty`,
+    URL: `${API}/api/product/prodavailablesku/:skucd/:qty`,
     REPLACE: "skucd,qty"
   },
   {
@@ -93,7 +93,7 @@ export default [
   {
     NAME: "addViewList",
     METHOD: "POST",
-    URL: `${API}/api/customer/WishList/:id/:skucd`,
+    URL: `${API}/api/customer/wishlist/:id/:skucd`,
     REPLACE: "id, skucd"
   },
   {

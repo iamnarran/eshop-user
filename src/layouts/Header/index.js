@@ -90,8 +90,9 @@ class AppHeader extends Component {
 
   componentWillMount() {
     const { categories } = this.props.container;
+
     let root = [];
-    categories.map((item, i) => {
+    categories.map(item => {
       if (item.parentid === 0) {
         item.children = [];
         root.push(item);

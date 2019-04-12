@@ -7,16 +7,39 @@ import { IMAGE } from "../utils/consts";
 import withCart from "../components/HOC/withCart";
 
 class Cart extends React.Component {
+  handleQtyChange = product => e => {
+    const { products } = this.props.cart;
+
+    const found = products.find(prod => prod.cd === product.cd);
+    if (found) {
+      found.qty = parseInt(e.target.value || 1);
+      const i = products.map(prod => prod.cd).indexOf(found.cd);
+      this.setState({ products: products.splice(i, 1, found) });
+    }
+  };
+
+  handleQtyKeyDown = product => e => {
+    if (e.key === "Enter") {
+      this.props.onUpdate(product, parseInt(e.target.value));
+    }
+  };
+
+  handleQtyBlur = product => e => {
+    this.props.onUpdate(product, parseInt(e.target.value));
+  };
+
   render() {
     const formatter = new Intl.NumberFormat("en-US");
+    const { wishlistProducts, deliveryInfo } = this.props.container;
     const {
-      products,
-      totalPrice,
+      isLoggedIn,
+      user,
+      cart,
       onIncrement,
       onDecrement,
-      onRemove,
-      onUpdate
+      onRemove
     } = this.props;
+    const { products, totalPrice, totalQty } = cart;
 
     let content = (
       <div style={{ textAlign: "center" }}>
@@ -29,10 +52,12 @@ class Cart extends React.Component {
         <table className="table table-borderless">
           <thead className="thead-light">
             <tr>
-              <th className="column-1">
+              <th className="column-1" style={{ width: "36%" }}>
                 <span>Бүтээгдэхүүний нэр</span>
               </th>
-              <th className="column-2">Нэгжийн үнэ</th>
+              <th className="column-2" style={{ width: "18%" }}>
+                Нэгжийн үнэ
+              </th>
               <th className="column-3" style={{ width: "24%" }}>
                 Тоо ширхэг
               </th>
@@ -70,16 +95,29 @@ class Cart extends React.Component {
                   <td>
                     <div className="flex-this">
                       <div className="image-container default">
-                        <span
-                          className="image"
-                          style={{
-                            backgroundImage: `url(${IMAGE + product.img})`
-                          }}
-                        />
+                        <Link to={product.route ? product.route : ""}>
+                          <span
+                            className="image"
+                            style={{
+                              backgroundImage: `url(${IMAGE}${
+                                product.img
+                                  ? product.img
+                                  : product.imgnm
+                                  ? product.imgnm
+                                  : ""
+                              })`
+                            }}
+                          />
+                        </Link>
                       </div>
                       <div className="info-container">
-                        <strong>{product.name}</strong>
-                        <span>{product.shortnm}</span>
+                        <Link
+                          to={product.route ? product.route : ""}
+                          style={{ color: "#6c757d" }}
+                        >
+                          <strong>{product.name}</strong>
+                          <span>{product.shortnm}</span>
+                        </Link>
                       </div>
                     </div>
                   </td>
@@ -100,11 +138,15 @@ class Cart extends React.Component {
                           type="text"
                           className="form-control"
                           placeholder=""
+                          defaultValue="1"
                           value={product.qty}
                           aria-label=""
                           aria-describedby="button-addon4"
                           name="productQty"
-                          onChange={() => onUpdate(product)}
+                          maxLength={5}
+                          onChange={this.handleQtyChange(product)}
+                          onKeyDown={this.handleQtyKeyDown(product)}
+                          onBlur={this.handleQtyBlur(product)}
                         />
                         <div className="input-group-append" id="button-addon4">
                           <button
@@ -122,8 +164,7 @@ class Cart extends React.Component {
                     <p className="price total">
                       <strong>
                         {formatter.format(
-                          (product.sprice ? product.sprice : product.price) *
-                            product.qty
+                          (product.sprice || product.price) * product.qty
                         )}
                         ₮
                       </strong>
@@ -185,149 +226,81 @@ class Cart extends React.Component {
                   </h5>
                   <div className="block cart-info-container">
                     <p className="count">
-                      <span>Нийт бараа:</span>
-                      <span>1ш</span>
+                      <span>Нийт бараа: </span>
+                      <span>{totalQty}ш</span>
                     </p>
-                    <p className="delivery">
-                      <span>Хүргэлт:</span>
-                      <span>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        Integer id justo mi. Maecenas vel lectus id erat euismod
-                        porta sed in felis. In massa mi, ornare vel sem eu,
-                        cursus vehicula leo. Curabitur vestibulum nisi at lacus
-                        dictum, non eleifend eros ullamcorper.{" "}
-                      </span>
-                    </p>
+                    {deliveryInfo && (
+                      <p className="delivery">
+                        <span>Хүргэлт:</span>
+                        <span>{deliveryInfo}</span>
+                      </p>
+                    )}
                     <p className="total flex-space">
                       <span>Нийт дүн:</span>
                       <strong>{formatter.format(totalPrice)}₮</strong>
                     </p>
-                    <Link to="/checkout" className="btn btn-main btn-block">
-                      <span className="text-uppercase">Баталгаажуулах1</span>
+                    <Link
+                      to="/checkout"
+                      className={`btn btn-main btn-block${
+                        products && products.length ? "" : " disabled"
+                      }`}
+                    >
+                      <span className="text-uppercase">Баталгаажуулах</span>
                     </Link>
                   </div>
-                  <div className="block fav-products">
-                    <p className="title">
-                      <strong>Хадгалсан бараа</strong>
-                    </p>
-                    <ul className="list-unstyled">
-                      <li className="flex-this">
-                        <div className="image-container default">
-                          <a href="#">
-                            <span
-                              className="image"
-                              style={{ backgroundImage: `url(${IMAGE})` }}
-                            />
-                          </a>
-                        </div>
-                        <div className="info-container">
-                          <div className="flex-space">
-                            <a href="#">
-                              <div className="text">
-                                <span>Өндөг 10ш</span>
-                                <strong>3,200₮</strong>
-                              </div>
-                            </a>
-                            <a href="#">
-                              <div className="action">
-                                <i
-                                  className="fa fa-cart-plus"
-                                  aria-hidden="true"
+                  {isLoggedIn && user && wishlistProducts.length && (
+                    <div className="block fav-products">
+                      <p className="title">
+                        <strong>Хадгалсан бараа</strong>
+                      </p>
+                      <ul className="list-unstyled">
+                        {wishlistProducts.map(product => (
+                          <li className="flex-this">
+                            <div className="image-container default">
+                              <a href="#">
+                                <span
+                                  className="image"
+                                  style={{
+                                    backgroundImage: `url(${IMAGE}${
+                                      product.img
+                                    })`
+                                  }}
                                 />
+                              </a>
+                            </div>
+                            <div className="info-container">
+                              <div className="flex-space">
+                                <a href="#">
+                                  <div className="text">
+                                    <span>{product.skunm}</span>
+                                    <strong>
+                                      {product.sprice
+                                        ? product.sprice
+                                        : product.price
+                                        ? product.price
+                                        : 0}
+                                      ₮
+                                    </strong>
+                                  </div>
+                                </a>
+                                <a href="#">
+                                  <div className="action">
+                                    <i
+                                      className="fa fa-cart-plus"
+                                      aria-hidden="true"
+                                    />
+                                  </div>
+                                </a>
                               </div>
-                            </a>
-                          </div>
-                        </div>
-                      </li>
-                      <li className="flex-this">
-                        <div className="image-container default">
-                          <a href="#">
-                            <span
-                              className="image"
-                              style={{ backgroundImage: `url(${IMAGE})` }}
-                            />
-                          </a>
-                        </div>
-                        <div className="info-container">
-                          <div className="flex-space">
-                            <a href="#">
-                              <div className="text">
-                                <span>Өндөг 10ш</span>
-                                <strong>3,200₮</strong>
-                              </div>
-                            </a>
-                            <a href="#">
-                              <div className="action">
-                                <i
-                                  className="fa fa-cart-plus"
-                                  aria-hidden="true"
-                                />
-                              </div>
-                            </a>
-                          </div>
-                        </div>
-                      </li>
-                      <li className="flex-this">
-                        <div className="image-container default">
-                          <a href="#">
-                            <span
-                              className="image"
-                              style={{ backgroundImage: `url(${IMAGE})` }}
-                            />
-                          </a>
-                        </div>
-                        <div className="info-container">
-                          <div className="flex-space">
-                            <a href="#">
-                              <div className="text">
-                                <span>Өндөг 10ш</span>
-                                <strong>3,200₮</strong>
-                              </div>
-                            </a>
-                            <a href="#">
-                              <div className="action">
-                                <i
-                                  className="fa fa-cart-plus"
-                                  aria-hidden="true"
-                                />
-                              </div>
-                            </a>
-                          </div>
-                        </div>
-                      </li>
-                      <li className="flex-this">
-                        <div className="image-container default">
-                          <a href="#">
-                            <span
-                              className="image"
-                              style={{ backgroundImage: `url(${IMAGE})` }}
-                            />
-                          </a>
-                        </div>
-                        <div className="info-container">
-                          <div className="flex-space">
-                            <a href="#">
-                              <div className="text">
-                                <span>Өндөг 10ш</span>
-                                <strong>3,200₮</strong>
-                              </div>
-                            </a>
-                            <a href="#">
-                              <div className="action">
-                                <i
-                                  className="fa fa-cart-plus"
-                                  aria-hidden="true"
-                                />
-                              </div>
-                            </a>
-                          </div>
-                        </div>
-                      </li>
-                    </ul>
-                    <a href="#" className="btn btn-gray btn-block">
-                      <span className="text-uppercase">Бүх барааг үзэх</span>
-                    </a>
-                  </div>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                      <a href="#" className="btn btn-gray btn-block">
+                        <span className="text-uppercase">Бүх барааг үзэх</span>
+                      </a>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -340,8 +313,9 @@ class Cart extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    products: state.cart.products || [],
-    totalPrice: state.cart.totalPriceInCart || 0
+    isLoggedIn: state.auth.isLoggedIn,
+    user: state.auth.user,
+    cart: state.cart
   };
 };
 

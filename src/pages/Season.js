@@ -38,7 +38,11 @@ class Season extends React.Component {
       maxPrice: max,
       sort: "price_asc",
       checkedList: [],
-      products: this.props.container.products || []
+      products: this.props.container.products || [],
+      searchedProd: [],
+      promotId: null,
+      searchProdItem: [],
+      searched: false
     };
   }
 
@@ -46,9 +50,8 @@ class Season extends React.Component {
 
   fetchProductData = ({ promoId, checkedList, minPrice, maxPrice, sort }) => {
     this.setState({ loading: true });
-
     const data = {
-      promotid: promoId,
+      promotid: this.state.promotId,
       parameters: checkedList,
       minprice: minPrice,
       maxprice: maxPrice,
@@ -86,6 +89,11 @@ class Season extends React.Component {
     });
   };
 
+  componentDidMount() {
+    const { promoCats } = this.props.container;
+    this.setState({ searchedProd: promoCats });
+  }
+
   handleAttributeChange = e => {
     const { minPrice, maxPrice, sort } = this.state;
 
@@ -113,7 +121,6 @@ class Season extends React.Component {
 
   handleSortChange = value => {
     const { checkedList, minPrice, maxPrice } = this.state;
-
     const params = {
       catId: this.props.container.id,
       checkedList,
@@ -139,6 +146,63 @@ class Season extends React.Component {
     this.setState({ isListViewOn: false });
   };
 
+  handleSearch = (e, item) => {
+    const { checkedList, minPrice, maxPrice } = this.state;
+    let tmp = [];
+    tmp.push(item);
+    this.setState(
+      { promotId: item.promotid, searchedProd: tmp, searched: true },
+      () => {
+        const params = {
+          promoId: this.state.promotId,
+          catId: this.props.container.id,
+          checkedList,
+          minPrice,
+          maxPrice,
+          sort: this.state.sort
+        };
+        this.fetchProductData(params);
+      }
+    );
+  };
+
+  renderDeparts = () => {
+    const { searchedProd } = this.state;
+    let tmp;
+    if (searchedProd.length !== 0) {
+      tmp = searchedProd.map((item, i) => {
+        return (
+          <li key={i} style={{ marginBottom: "8px" }}>
+            <a onClick={e => this.handleSearch(e, item)}>{item.promotnm}</a>
+          </li>
+        );
+      });
+    }
+    return tmp;
+  };
+
+  handleReturn = () => {
+    this.setState(
+      {
+        searchedProd: this.props.container.promoCats,
+        searched: false,
+        promotId: null
+      },
+      () => {
+        const { checkedList, minPrice, maxPrice } = this.state;
+        const params = {
+          promoId: this.state.promotId,
+          catId: this.props.container.id,
+          checkedList,
+          minPrice,
+          maxPrice,
+          sort: this.state.sort
+        };
+        this.fetchProductData(params);
+      }
+    );
+  };
+
   render() {
     const {
       promoCats,
@@ -150,33 +214,6 @@ class Season extends React.Component {
     const Option = Select.Option;
 
     let cats = <div className="block">Ангилал байхгүй байна</div>;
-
-    if (promoCats && promoCats.length) {
-      cats = (
-        <div className="block">
-          <div className="accordion" id="accordionExample">
-            <div
-              id="collapseOne"
-              className="collapse show"
-              aria-labelledby="headingOne"
-              data-parent="#accordionExample"
-            >
-              <div className="collapse-content">
-                <ul className="list-unstyled">
-                  {promoCats.map((cat, index) => {
-                    return (
-                      <li key={index}>
-                        <Link to="">{cat.promotnm}</Link>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      );
-    }
 
     let filters =
       attributes &&
@@ -260,7 +297,35 @@ class Season extends React.Component {
                   <p className="title">
                     <span>Ангилал</span>
                   </p>
-                  {cats}
+                  <div className="accordion" id="accordionExample">
+                    <div
+                      id="collapseOne"
+                      className="collapse show"
+                      aria-labelledby="headingOne"
+                      data-parent="#accordionExample"
+                    >
+                      <div className="collapse-content">
+                        <ul className="list-unstyled">
+                          {this.renderDeparts()}
+
+                          {this.state.searched == true ? (
+                            <a
+                              style={{
+                                color: "grey",
+                                fontSize: "12px",
+                                float: "right"
+                              }}
+                              onClick={this.handleReturn}
+                            >
+                              х шүүлтүүр цэвэрлэх
+                            </a>
+                          ) : (
+                            ""
+                          )}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
                   {filters}
                 </div>
               </div>
@@ -276,7 +341,10 @@ class Season extends React.Component {
                     </div>
                     <div className="col-lg-6 pad10">
                       <form className="flex-this end">
-                        <div className="form-group my-select flex-this">
+                        <div
+                          className="form-group my-select flex-this"
+                          style={{ marginRight: "10px" }}
+                        >
                           <label
                             htmlFor="inputState"
                             style={{

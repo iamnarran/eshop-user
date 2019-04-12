@@ -3,50 +3,36 @@ import Swiper from "react-id-swiper";
 import PropTypes from "prop-types";
 
 import Card from "./Card";
+import { CARD_TYPES } from "../utils/consts";
 
-class Slider extends React.Component {
-  state = {
-    params: [],
-    data: [],
-    elContainer: ""
-  };
-
-  componentDidMount() {
-    this.setState({ ...this.props });
-  }
-
+class CardSlider extends React.Component {
   render() {
-    const { data, params, elContainer } = this.props;
-    let indents = data.map(function(i, key) {
+    const { params, data } = this.props;
+
+    let items = data.map((item, index) => {
       return (
         <div
-          key={key}
+          key={index}
           className="related-product col-four pad10 col-md-3 col-6"
         >
-          <Card key={key} item={i} type={1} />
+          <Card key={index} item={item} type={CARD_TYPES.slim} />
         </div>
       );
     });
 
     return (
-      data.length !== 0 && (
-        <Swiper
-          {...params}
-          shouldSwiperUpdate
-          rebuildOnUpdate
-          className={elContainer}
-        >
-          {indents}
+      items.length && (
+        <Swiper {...params} shouldSwiperUpdate rebuildOnUpdate>
+          {items}
         </Swiper>
       )
     );
   }
 }
 
-Slider.propTypes = {
+CardSlider.propTypes = {
   params: PropTypes.object,
-  data: PropTypes.object,
-  elContainer: PropTypes.string.isRequired
+  data: PropTypes.array.isRequired
 };
 
-export default Slider;
+export default CardSlider;

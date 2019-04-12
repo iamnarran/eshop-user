@@ -1,116 +1,42 @@
 import React from "react";
+import PropTypes from "prop-types";
 import ReactImageMagnify from "react-image-magnify";
-import Lightbox from "react-images";
 
-import Label from "./../Label";
-import { IMAGE, LABEL_TYPES } from "../../utils/consts";
+import { IMAGE } from "../../utils/consts";
 
 import "./index.css";
 
 class Magnifier extends React.Component {
-  state = {
-    img: [],
-    isLargeImg: false,
-    currentImage: null
-  };
-
-  onClickImage = () => {
-    this.setState({ isLargeImg: true, currentImage: null });
-  };
-
-  closeLightbox = () => {
-    this.setState({ isLargeImg: false });
-  };
-
-  gotoPrevLightboxImage = () => {
-    this.setState({
-      currentImage:
-        this.state.currentImage === null
-          ? Number(this.props.slImg) - 1
-          : this.state.currentImage - 1
-    });
-  };
-
-  gotoNextLightboxImage = () => {
-    this.setState({
-      currentImage:
-        this.state.currentImage === null
-          ? Number(this.props.slImg) + 1
-          : this.state.currentImage + 1
-    });
-  };
-
-  onClickThumbnail = e => {
-    this.setState({ currentImage: e });
-  };
-
-  renderImage = () => {
-    const { images } = this.props;
-    let tmp = [];
-    images.map(i => tmp.push({ src: IMAGE + i.lrgimg }));
-    return tmp;
-  };
-
   render() {
-    const { img, tags } = this.props;
-    const { currentImage } = this.state;
+    const { smallImage, largeImage } = this.props;
 
     return (
-      <div className="perimeter">
-        <div className="image" onClick={this.onClickImage}>
-          <ReactImageMagnify
-            {...{
-              smallImage: {
-                alt: "Wristwatch by Ted Baker London",
-                isFluidWidth: true,
-                src: `${img}`,
-                sizes:
-                  "(min-width: 780px) 100vw, (max-width: 1200px) 30vw, 360px"
-              },
-              largeImage: {
-                src: `${img}`,
-                width: 1200,
-                height: 1800
-              },
-              enlargedImageContainerDimensions: {
-                width: "210%",
-                height: "150%"
-              },
-              isHintEnabled: true
-            }}
-            style={{ zIndex: 15 }}
-          />
-        </div>
-        <div className="image-container medium-magnify">
-          {tags &&
-            tags.map((label, index) => {
-              return (
-                <Label
-                  key={index}
-                  type={LABEL_TYPES.vertical}
-                  seq={index}
-                  data={label}
-                />
-              );
-            })}
-        </div>
-        <Lightbox
-          images={this.renderImage()}
-          currentImage={
-            currentImage === null ? Number(this.props.slImg) : currentImage
+      <ReactImageMagnify
+        {...{
+          smallImage: {
+            isFluidWidth: true,
+            src: `${IMAGE}${smallImage}`,
+            sizes: "(min-width: 780px) 100vw, (max-width: 1200px) 30vw, 360px"
+          },
+          largeImage: {
+            src: `${IMAGE}${largeImage}`,
+            width: 1800,
+            height: 1800
+          },
+          enlargedImageContainerDimensions: {
+            width: "250%",
+            height: "200%"
           }
-          showThumbnails
-          backdropClosesModal
-          enableKeyboardInput
-          isOpen={this.state.isLargeImg}
-          onClickPrev={this.gotoPrevLightboxImage}
-          onClickNext={this.gotoNextLightboxImage}
-          onClose={this.closeLightbox}
-          onClickThumbnail={this.onClickThumbnail}
-        />
-      </div>
+        }}
+        style={{ zIndex: 15 }}
+      />
     );
   }
 }
+
+Magnifier.propTypes = {
+  smallImage: PropTypes.string.isRequired,
+  largeImage: PropTypes.string.isRequired
+};
 
 export default Magnifier;

@@ -10,6 +10,7 @@ class FacebookLogin extends React.Component {
   handleFbLoginResponse = res => {
     if (res && res.userID) {
       const user = {
+        id: res.userID,
         email: res.email,
         firstname: res.name.split(" ")[0],
         lastname: res.name.split(" ").length > 1 ? res.name.split(" ")[1] : "",

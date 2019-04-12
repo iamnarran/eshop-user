@@ -3,17 +3,19 @@ import { connect } from "react-redux";
 import { Collapse, Icon, Tabs, Radio, Input, Form, Select } from "antd";
 import storage from "../utils/storage";
 import api from "../api";
-import instant from "../scss/assets/images/demo/1.png";
-import simple from "../scss/assets/images/demo/1.png";
-import visit from "../scss/assets/images/demo/1.png";
 import LoginModal from "../components/LoginModal";
+import actions from "../actions/checkout";
+import { IMAGE } from "../utils/consts";
 const Option = Select.Option;
 const Panel = Collapse.Panel;
 const TabPane = Tabs.TabPane;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
-
-@connect(mapStateToProps)
+const formatter = new Intl.NumberFormat("en-US");
+@connect(
+  mapStateToProps,
+  { saveUserAddress: actions.saveUserAddress }
+)
 class Checkout extends React.Component {
   constructor(props) {
     super(props);
@@ -32,7 +34,9 @@ class Checkout extends React.Component {
       chosenBankInfo: [],
       cardno: null,
       chosenPlusRadio: 1,
-      isLoginModalVisible: false
+      isLoginModalVisible: false,
+      mainLocation: [],
+      subLocation: []
     };
   }
 
@@ -41,6 +45,8 @@ class Checkout extends React.Component {
     if (this.props.isLoggedIn == true) {
       this.getUserInfo(this.props.user);
     }
+
+    this.getMainLocation();
 
     let cart = storage.get("cart")
       ? storage.get("cart")
@@ -51,6 +57,14 @@ class Checkout extends React.Component {
       chosenPayment: paymentTypes[0]
     });
   }
+
+  getMainLocation = async () => {
+    await api.location.findAll({}).then(res => {
+      if (res.success == true) {
+        this.setState({ mainLocation: res.data });
+      }
+    });
+  };
 
   toggleLoginModal = e => {
     e.preventDefault();
@@ -169,13 +183,28 @@ class Checkout extends React.Component {
     });
   };
 
+  renderMainLocation = () => {
+    const { mainLocation } = this.state;
+    let tmp;
+    if (mainLocation.length != 0) {
+      tmp = mainLocation.map((item, i) => {
+        return (
+          <Option key={i} value={item.provinceid}>
+            {item.provincenm}
+          </Option>
+        );
+      });
+    }
+    return tmp;
+  };
+
   plusRadioChanged = e => {
     this.setState({ chosenPlusRadio: e.target.id });
   };
 
   onSubmit = e => {
     e.preventDefault();
-    const { defaultAddress } = this.state;
+    const { defaultAddress, userAddress } = this.state;
     let tmp = [];
     this.props.form.validateFields((err, values) => {
       if (!err) {
@@ -184,11 +213,32 @@ class Checkout extends React.Component {
           if (values.address == defaultAddress.address) {
             values.address = defaultAddress.id;
           }
-          this.setState({ chosenDelivery: values });
+          let adrs = {};
+          adrs.custid = this.state.userInfo.id;
+          adrs.locid = values.subLocation;
+          adrs.address = values.address;
+          adrs.ismain = 1;
+
+          try {
+            this.setUser(adrs);
+            // const res = await api.checkout.saveUserAddress(adrs); //await this.props.saveUserAddress(adrs);
+            // console.log(res);
+          } catch (err) {
+            console.log(err);
+          }
+          /*   try {
+            let adrs = {};
+            adrs.custid = this.state.userInfo.id;
+            adrs.locid = values.subLocation;
+            adrs.address = values.address;
+            adrs.ismain = 1;
+            const res = await this.props.saveUserAddress(adrs);
+            console.log(res);
+            this.setState({ chosenDelivery: values });
+          } catch (err) {} */
         } else if (e.target.name == "payment") {
           tmp.push("4");
         }
-
         this.setState({
           collapseType: e.target.name,
           activeKey: tmp
@@ -197,6 +247,11 @@ class Checkout extends React.Component {
         console.log("error");
       }
     });
+  };
+
+  setUser = async adrs => {
+    const res = await this.props.saveUserAddress(adrs);
+    console.log(res);
   };
 
   changeTab = e => {
@@ -269,6 +324,29 @@ class Checkout extends React.Component {
   generateNoat = (total, deliver) => {
     let noat = ((total + deliver) / 110) * 10;
     return noat.toFixed(2);
+  };
+
+  onChangeMainLoc = e => {
+    api.location.findLocationWidthId({ id: e }).then(res => {
+      if (res.success == true) {
+        this.setState({ subLocation: res.data });
+      }
+    });
+  };
+
+  renderSubLocation = e => {
+    const { subLocation } = this.state;
+    let tmp;
+    if (subLocation.length !== 0) {
+      tmp = subLocation.map((item, i) => {
+        return (
+          <Option key={i} value={item.id}>
+            {item.districtnm}
+          </Option>
+        );
+      });
+    }
+    return tmp;
   };
 
   render() {
@@ -362,7 +440,11 @@ class Checkout extends React.Component {
                                   <TabPane
                                     tab={
                                       <div className="flex-this center">
-                                        <img alt="icon" src={instant} />
+                                        <img
+                                          alt="icon"
+                                          src={require("../scss/assets/images/demo/" +
+                                            item.logo)}
+                                        />
                                         <p className="text">
                                           <strong>{item.typenm}</strong>
                                           <span>{item.price + "₮"}</span>
@@ -388,77 +470,115 @@ class Checkout extends React.Component {
                                       >
                                         <div className="row row10">
                                           {item.id != 3 ? (
-                                            <div className="col-xl-12 pad10">
-                                              <div className="form-group">
-                                                <Form.Item>
-                                                  {getFieldDecorator(
-                                                    "address",
+                                            <div className="col-xl-12 col-md-12">
+                                              <Form.Item>
+                                                {getFieldDecorator("address", {
+                                                  initialValue:
+                                                    defaultAddress.address,
+                                                  rules: [
                                                     {
-                                                      initialValue:
-                                                        defaultAddress.address,
-                                                      rules: [
-                                                        {
-                                                          required: true,
-                                                          message:
-                                                            "Хаяг оруулна уу"
-                                                        }
-                                                      ]
+                                                      required: true,
+                                                      message: "Хаяг оруулна уу"
                                                     }
-                                                  )(
-                                                    <Select
-                                                      placeholder="Хаягаа сонгоно уу ?"
-                                                      size="large"
-                                                    >
+                                                  ]
+                                                })(
+                                                  userAddress.length != 0 ? (
+                                                    <Input
+                                                      type="text"
+                                                      placeholder="Хаягаа сонгоно уу ?*"
+                                                    />
+                                                  ) : (
+                                                    <Select placeholder="Хаягаа сонгоно уу ?">
                                                       {this.renderAddrsOption()}
                                                     </Select>
-                                                  )}
-                                                </Form.Item>
-                                              </div>
+                                                  )
+                                                )}
+                                              </Form.Item>
                                             </div>
                                           ) : (
                                             ""
                                           )}
-
-                                          <div className="col-xl-6 pad10">
-                                            <div className="form-group">
-                                              <Form.Item>
-                                                {getFieldDecorator("lastName", {
+                                          <div className="col-xl-6 col-md-6">
+                                            <Form.Item>
+                                              {getFieldDecorator(
+                                                "mainLocation",
+                                                {
                                                   rules: [
                                                     {
                                                       required: true,
-                                                      message: "Овог оруулна уу"
+                                                      message:
+                                                        "Хот/Аймаг сонгоно уу?"
                                                     }
                                                   ]
-                                                })(
-                                                  <Input
-                                                    className="form-control"
-                                                    type="text"
-                                                    placeholder="Овог*"
-                                                  />
-                                                )}
-                                              </Form.Item>
-                                            </div>
+                                                }
+                                              )(
+                                                <Select
+                                                  placeholder="Хот/аймаг *"
+                                                  className="col-md-12"
+                                                  onChange={
+                                                    this.onChangeMainLoc
+                                                  }
+                                                >
+                                                  {this.renderMainLocation()}
+                                                </Select>
+                                              )}
+                                            </Form.Item>
                                           </div>
-
-                                          <div className="col-xl-6 pad10">
-                                            <div className="form-group">
-                                              <Form.Item>
-                                                {getFieldDecorator("phone", {
+                                          <div className="col-xl-6 col-md-6">
+                                            <Form.Item>
+                                              {getFieldDecorator(
+                                                "subLocation",
+                                                {
                                                   rules: [
                                                     {
                                                       required: true,
-                                                      message: "Утас оруулна уу"
+                                                      message:
+                                                        "Дүүрэг/Сум сонгоно уу?"
                                                     }
                                                   ]
-                                                })(
-                                                  <Input
-                                                    className="form-control"
-                                                    type="text"
-                                                    placeholder="Утас*"
-                                                  />
-                                                )}
-                                              </Form.Item>
-                                            </div>
+                                                }
+                                              )(
+                                                <Select placeholder="Дүүрэг/Сум*">
+                                                  {this.renderSubLocation()}
+                                                </Select>
+                                              )}
+                                            </Form.Item>
+                                          </div>
+                                          <div className="col-xl-6 col-md-6">
+                                            <Form.Item>
+                                              {getFieldDecorator("lastName", {
+                                                rules: [
+                                                  {
+                                                    required: true,
+                                                    message: "Нэр оруулна уу?"
+                                                  }
+                                                ]
+                                              })(
+                                                <Input
+                                                  type="text"
+                                                  placeholder="Нэр*"
+                                                  className="col-md-12"
+                                                />
+                                              )}
+                                            </Form.Item>
+                                          </div>
+                                          <div className="col-xl-6 col-md-6">
+                                            <Form.Item>
+                                              {getFieldDecorator("phone", {
+                                                rules: [
+                                                  {
+                                                    required: true,
+                                                    message: "Утас оруулна уу"
+                                                  }
+                                                ]
+                                              })(
+                                                <Input
+                                                  type="text"
+                                                  placeholder="Утас*"
+                                                  className="col-md-12"
+                                                />
+                                              )}
+                                            </Form.Item>
                                           </div>
                                         </div>
                                         <hr />
@@ -678,22 +798,29 @@ class Checkout extends React.Component {
                       <strong>Төлөх дүн</strong>
                     </p>
                     <p className="text flex-space">
-                      <span>Бараа ({products.totalQty}):</span>
-                      <strong>{products.totalPrice}₮</strong>
+                      <span>
+                        Бараа ({formatter.format(products.totalQty)}):
+                      </span>
+                      <strong>{formatter.format(products.totalPrice)}₮</strong>
                     </p>
                     <p className="text flex-space">
                       <span>Хүргэлтийн үнэ:</span>
-                      <strong>{deliver1}₮</strong>
+                      <strong>{formatter.format(deliver1)}₮</strong>
                     </p>
                     <hr />
                     <p className="text flex-space">
                       <span>Нийт дүн:</span>
-                      <strong>{products.totalPrice + deliver1}₮</strong>
+                      <strong>
+                        {formatter.format(products.totalPrice + deliver1)}₮
+                      </strong>
                     </p>
                     <p className="text flex-space">
                       <span>НӨАТ:</span>
                       <strong>
-                        {this.generateNoat(products.totalPrice, deliver1)}₮
+                        {formatter.format(
+                          this.generateNoat(products.totalPrice, deliver1)
+                        )}
+                        ₮
                       </strong>
                     </p>
                     <p className="text text-center">

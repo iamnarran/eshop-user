@@ -3,102 +3,36 @@ import { connect } from "react-redux";
 import { toast } from "react-toastify";
 
 import api from "../../api";
-import storage from "../../utils/storage";
 import { updateCart } from "../../actions/cart";
 
 const withCart = WrappedComponent => {
   class CartHOC extends Component {
-    constructor(props) {
-      super(props);
-      this.handleNotify = this.handleNotify.bind(this);
-      this.handleIncrement = this.handleIncrement.bind(this);
-      this.handleDecrement = this.handleDecrement.bind(this);
-      this.handleUpdate = this.handleUpdate.bind(this);
-      this.handleRemove = this.handleRemove.bind(this);
-    }
-
     handleNotify = message => toast(message, { autoClose: 5000 });
 
-    handleUpdate = item => e => {
-      e.preventDefault();
-
-      const value = parseInt(e.target.value);
-
-      let cart = storage.get("cart")
-        ? storage.get("cart")
-        : { products: [], totalQty: 0, totalPrice: 0 };
-
-      const found = cart.products.find(product => product.cd === item.cd);
-      if (!found) {
-        return;
-      }
-
+    handleUpdate = (item, qty) => {
       api.product
         .isAvailable({
-          skucd: item.id ? item.id : item.cd ? item.cd : null,
-          qty: parseInt(e.target.value)
+          skucd: item.cd ? item.cd : null,
+          qty
         })
         .then(res => {
           if (res.success) {
-            found.qty = value;
-            const i = cart.products
-              .map(product => product.cd)
-              .indexOf(found.cd);
-            cart.products.splice(i, 1, found);
+            let { cart } = this.props;
 
-            const qties = cart.products.map(product => product.qty);
-            cart.totalQty = qties.reduce((acc, curr) => acc + curr);
+            if (!cart) {
+              cart = { products: [], totalQty: 0, totalPrice: 0 };
+            }
 
-            const prices = cart.products.map(product => {
-              const price = product.sprice
-                ? product.sprice
-                : product.price
-                ? product.price
-                : 0;
-              return product.qty * price;
-            });
-            cart.totalPrice = prices.reduce((acc, curr) => acc + curr);
+            const found = cart.products.find(product => product.cd === item.cd);
 
-            storage.set("cart", cart);
-
-            // TODO: stop page refreshing
-            this.props.updateCart({
-              products: cart.products,
-              totalQty: cart.totalQty,
-              totalPrice: cart.totalPrice
-            });
-          } else {
-            this.handleNotify(res.message);
-          }
-        });
-    };
-
-    handleIncrement = item => {
-      let cart = storage.get("cart")
-        ? storage.get("cart")
-        : { products: [], totalQty: 0, totalPrice: 0 };
-
-      const found = cart.products.find(product => product.cd === item.cd);
-      let itemQty = 0;
-      if (found) {
-        itemQty = found.qty;
-      }
-
-      api.product
-        .isAvailable({
-          skucd: item.id ? item.id : item.cd ? item.cd : null,
-          qty: itemQty + 1
-        })
-        .then(res => {
-          if (res.success) {
             if (found) {
-              found.qty++;
+              found.qty = qty;
               const i = cart.products
                 .map(product => product.cd)
                 .indexOf(found.cd);
               cart.products.splice(i, 1, found);
             } else {
-              item.qty = 1;
+              item.qty = qty;
               cart.products.push(item);
             }
 
@@ -115,8 +49,6 @@ const withCart = WrappedComponent => {
             });
             cart.totalPrice = prices.reduce((acc, curr) => acc + curr);
 
-            storage.set("cart", cart);
-
             // TODO: stop page refreshing
             this.props.updateCart({
               products: cart.products,
@@ -129,75 +61,77 @@ const withCart = WrappedComponent => {
         });
     };
 
-    // increment: item => {
-    //   let cart = storage.get("cart")
-    //     ? storage.get("cart")
-    //     : { products: [], totalQty: 0, totalPrice: 0 };
+    handleIncrement = item => {
+      let { cart } = this.props;
 
-    //   const found = cart.products.find(product => product.cd === item.cd);
+      if (!cart) {
+        cart = { products: [], totalQty: 0, totalPrice: 0 };
+      }
 
-    //   let itemQty = 0;
-    //   if (found) {
-    //     itemQty = found.qty;
-    //   }
+      const found = cart.products.find(product => product.cd === item.cd);
 
-    //   return new Promise((resolve, reject) => {
-    //     api.product
-    //       .isAvailable({
-    //         skucd: item.id ? item.id : item.cd ? item.cd : null,
-    //         qty: itemQty + 1
-    //       })
-    //       .then(res => {
-    //         if (res.success) {
-    //           if (found) {
-    //             found.qty++;
-    //             const i = cart.products
-    //               .map(product => product.cd)
-    //               .indexOf(found.cd);
-    //             cart.products.splice(i, 1, found);
-    //           } else {
-    //             item.qty = 1;
-    //             cart.products.push(item);
-    //           }
+      let itemQty = 0;
+      if (found) {
+        itemQty = found.qty;
+      }
 
-    //           const qties = cart.products.map(product => product.qty);
-    //           cart.totalQty = qties.reduce((acc, curr) => acc + curr);
+      return new Promise((resolve, reject) => {
+        api.product
+          .isAvailable({
+            skucd: item.id ? item.id : item.cd ? item.cd : null,
+            qty: itemQty + 1
+          })
+          .then(res => {
+            if (res.success) {
+              if (found) {
+                found.qty++;
+                const i = cart.products
+                  .map(product => product.cd)
+                  .indexOf(found.cd);
+                cart.products.splice(i, 1, found);
+              } else {
+                item.qty = 1;
+                cart.products.push(item);
+              }
 
-    //           const prices = cart.products.map(product => {
-    //             const price = product.sprice
-    //               ? product.sprice
-    //               : product.price
-    //               ? product.price
-    //               : 0;
-    //             return product.qty * price;
-    //           });
-    //           cart.totalPrice = prices.reduce((acc, curr) => acc + curr);
+              const qties = cart.products.map(product => product.qty);
+              cart.totalQty = qties.reduce((acc, curr) => acc + curr);
 
-    //           storage.set("cart", cart);
+              const prices = cart.products.map(product => {
+                const price = product.sprice
+                  ? product.sprice
+                  : product.price
+                  ? product.price
+                  : 0;
+                return product.qty * price;
+              });
+              cart.totalPrice = prices.reduce((acc, curr) => acc + curr);
 
-    //           // TODO: stop page refreshing
-    //           this.props.updateCart({
-    //             products: cart.products,
-    //             totalQty: cart.totalQty,
-    //             totalPrice: cart.totalPrice
-    //           });
+              // TODO: stop page refreshing
+              this.props.updateCart({
+                products: cart.products,
+                totalQty: cart.totalQty,
+                totalPrice: cart.totalPrice
+              });
 
-    //           this.handleNotify("+1");
+              this.handleNotify("+1");
 
-    //           resolve();
-    //         } else {
-    //           this.handleNotify(res.message);
+              resolve();
+            } else {
+              this.handleNotify(res.message);
 
-    //           reject();
-    //         }
-    //       });
-    //   });
-    // },
+              reject();
+            }
+          });
+      });
+    };
 
     handleDecrement = item => {
-      let cart = storage.get("cart")
-        ? storage.get("cart")
-        : { products: [], totalQty: 0, totalPrice: 0 };
+      let { cart } = this.props;
+
+      if (!cart) {
+        cart = { products: [], totalQty: 0, totalPrice: 0 };
+      }
 
       const found = cart.products.find(product => product.cd === item.cd);
       if (!found) {
@@ -229,8 +163,6 @@ const withCart = WrappedComponent => {
         ? prices.reduce((acc, curr) => acc + curr)
         : 0;
 
-      storage.set("cart", cart);
-
       this.props.updateCart({
         products: cart.products,
         totalQty: cart.totalQty,
@@ -239,9 +171,11 @@ const withCart = WrappedComponent => {
     };
 
     handleRemove = item => {
-      let cart = storage.get("cart")
-        ? storage.get("cart")
-        : { products: [], totalQty: 0, totalPrice: 0 };
+      let { cart } = this.props;
+
+      if (!cart) {
+        cart = { products: [], totalQty: 0, totalPrice: 0 };
+      }
 
       const found = cart.products.find(product => product.cd === item.cd);
       if (!found) {
@@ -268,13 +202,23 @@ const withCart = WrappedComponent => {
         ? prices.reduce((acc, curr) => acc + curr)
         : 0;
 
-      storage.set("cart", cart);
-
       this.props.updateCart({
         products: cart.products,
         totalQty: cart.totalQty,
         totalPrice: cart.totalPrice
       });
+    };
+
+    handleClear = () => {
+      let { cart } = this.props;
+
+      if (cart) {
+        this.props.updateCart({
+          products: [],
+          totalQty: 0,
+          totalPrice: 0
+        });
+      }
     };
 
     render() {
@@ -283,6 +227,7 @@ const withCart = WrappedComponent => {
         onDecrement,
         onUpdate,
         onRemove,
+        onClear,
         ...otherProps
       } = this.props;
 
@@ -292,14 +237,21 @@ const withCart = WrappedComponent => {
           onDecrement={this.handleDecrement}
           onUpdate={this.handleUpdate}
           onRemove={this.handleRemove}
+          onClear={this.handleClear}
           {...otherProps}
         />
       );
     }
   }
 
+  const mapStateToProps = state => {
+    return {
+      cart: state.cart
+    };
+  };
+
   return connect(
-    null,
+    mapStateToProps,
     { updateCart }
   )(CartHOC);
 };

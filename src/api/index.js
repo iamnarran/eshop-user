@@ -19,10 +19,10 @@ import categoryInfo from "./categoryInfo";
 import season from "./season";
 import cart from "./cart";
 import checkout from "./checkout";
-import wishList from "./wishlist";
+import wishlist from "./wishlist";
 import viewList from "./viewlist";
 import suggestion from "./search";
-
+import storage from "../utils/storage";
 let rest = {};
 
 const generateURL = (method, url, replace, data) => {
@@ -40,7 +40,8 @@ const generateAPI = (api, data) => {
     method: api.METHOD,
     url: generateURL(api.METHOD, api.URL, api.REPLACE, data),
     headers: {
-      "Content-Type": api.CONTENT_TYPE ? api.CONTENT_TYPE : "application/json"
+      Authorization:
+        api.TOKEN == true ? "Bearer " + storage.get("access_token") : null
     }
   };
   config[api.METHOD === "GET" ? "params" : "data"] = data;
@@ -147,9 +148,9 @@ checkout.forEach(api => {
   rest.checkout[api.NAME] = data => generateAPI(api, data);
 });
 
-rest["wishList"] = {};
-wishList.forEach(api => {
-  rest.wishList[api.NAME] = data => generateAPI(api, data);
+rest["wishlist"] = {};
+wishlist.forEach(api => {
+  rest.wishlist[api.NAME] = data => generateAPI(api, data);
 });
 
 rest["viewList"] = {};

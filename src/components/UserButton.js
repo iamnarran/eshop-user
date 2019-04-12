@@ -2,7 +2,10 @@ import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
+import withCart from "./HOC/withCart";
+import storage from "../utils/storage";
 import { signOut } from "../actions/login";
+import p1 from "../scss/assets/images/demo/1.jpg";
 
 class UserButton extends React.Component {
   showLoginModal = e => {
@@ -11,6 +14,8 @@ class UserButton extends React.Component {
   };
 
   handleLogout = () => {
+    this.props.onClear();
+    storage.remove("access_token");
     this.props.signOut();
   };
 
@@ -33,12 +38,24 @@ class UserButton extends React.Component {
               <span
                 className="image"
                 style={{
-                  backgroundImage: `url(${user.picture ? user.picture : ""})`
+                  backgroundImage: `url(${
+                    user.picture
+                      ? user.picture.data
+                        ? user.picture.data.url
+                        : user.picture
+                      : p1
+                  })`
                 }}
               />
             </div>
             <span className="">
-              {user.firstname ? user.firstname : user.email ? user.email : ""}
+              {user.firstname
+                ? user.lastname
+                  ? `${user.firstname} ${user.lastname}`
+                  : user.firstname
+                : user.email
+                ? user.email
+                : ""}
             </span>
           </Link>
           <div className="dropdown">
@@ -51,14 +68,20 @@ class UserButton extends React.Component {
                         className="image"
                         style={{
                           backgroundImage: `url(${
-                            user.picture ? user.picture : ""
+                            user.picture
+                              ? user.picture.data
+                                ? user.picture.data.url
+                                : user.picture
+                              : p1
                           })`
                         }}
                       />
                     </div>
                     <p className="name">
                       {user.firstname
-                        ? user.firstname
+                        ? user.lastname
+                          ? `${user.firstname} ${user.lastname}`
+                          : user.firstname
                         : user.email
                         ? user.email
                         : ""}
@@ -150,7 +173,9 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  { signOut }
-)(UserButton);
+export default withCart(
+  connect(
+    mapStateToProps,
+    { signOut }
+  )(UserButton)
+);
