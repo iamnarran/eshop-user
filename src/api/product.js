@@ -107,5 +107,10 @@ export default [
     METHOD: "POST",
     URL: `${API}/api/product/comment/:custid/:skucd/:comment`,
     REPLACE: "custid, skucd, comment"
+  },
+  {
+    NAME: "emartAtt",
+    METHOD: "POST",
+    URL: `${API}/api/search/att`
   }
 ];

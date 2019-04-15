@@ -10,6 +10,7 @@ import storage from "../../utils/storage";
 import api from "../../api";
 import { updateCart } from "../../actions/cart";
 import productPlus from "../../scss/assets/images/demo/productPlus.png";
+import "./detail.css";
 class PackageDetail extends React.Component {
   constructor(props) {
     super(props);
@@ -255,7 +256,11 @@ class PackageDetail extends React.Component {
       total = parseInt(total) + parseInt(tot);
       tmp.push(item);
     });
-    this.setState({ products: tmp, price: total });
+    this.setState({
+      products: tmp,
+      price: total,
+      images: this.props.container.Package.images
+    });
   };
 
   minusProduct = (e, minus) => {
@@ -277,7 +282,6 @@ class PackageDetail extends React.Component {
   };
 
   render() {
-    console.log(this.props);
     const formatter = new Intl.NumberFormat("en-US");
     const sameproduct = this.props.container.Products[0].sameproducts;
     let products = null;
@@ -461,6 +465,7 @@ class PackageDetail extends React.Component {
                   <div className="product-plus">
                     <br />
                     <div
+                      className="htmlcontainer"
                       dangerouslySetInnerHTML={{
                         __html: this.state.description
                       }}
