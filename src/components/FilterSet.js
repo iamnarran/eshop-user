@@ -37,7 +37,7 @@ class FilterSet extends React.Component {
                         <Checkbox
                           key={val.valueid}
                           onChange={this.props.onAttributeChange}
-                          value={val.valuecd}
+                          value={val.valueid}
                           style={{
                             color: val.valuecd,
                             width: 25,
@@ -67,11 +67,15 @@ class FilterSet extends React.Component {
         let tempMin = attr.attributes[0].values.find(
           val => val.valuecd === "MIN"
         );
-        tempMin = tempMin.valuename ? tempMin.valuename : tempMin.valueid;
+        tempMin = tempMin.valuename
+          ? tempMin.valuename
+          : tempMin.valueid.substring(3);
         let tempMax = attr.attributes[0].values.find(
           val => val.valuecd === "MAX"
         );
-        tempMax = tempMax.valuename ? tempMax.valuename : tempMax.valueid;
+        tempMax = tempMax.valuename
+          ? tempMax.valuename
+          : tempMax.valueid.substring(3);
 
         const min = tempMin ? parseInt(tempMin) : 0;
         const max = tempMax ? parseInt(tempMax) : 0;

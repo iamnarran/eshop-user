@@ -22,15 +22,15 @@ class Season extends React.Component {
         if (attr.type === "PRICE") {
           attr.attributes[0].values.forEach(val => {
             if (val.valuecd === "MIN") {
-              min = parseInt(val.valueid);
+              min = parseInt(val.valueid.substring(3));
             }
             if (val.valuecd === "MAX") {
-              max = parseInt(val.valueid);
+              max = parseInt(val.valueid.substring(3));
             }
           });
         }
       });
-    // max = min > max ? min : max;
+    max = min > max ? min : max;
 
     this.state = {
       loading: false,
@@ -49,13 +49,10 @@ class Season extends React.Component {
 
   notify = message => toast(message, { autoClose: 5000 });
 
-  fetchProductData = ({
-    promoCatId,
-    checkedList,
-    minPrice,
-    maxPrice,
-    sort
-  }) => {
+  fetchProductData = (
+    { promoCatId, checkedList, minPrice, maxPrice, sort },
+    shouldChangeFilterSet = false
+  ) => {
     this.setState({ loading: true });
     const data = {
       promotid: promoCatId,
@@ -67,11 +64,15 @@ class Season extends React.Component {
 
     api.season.findAllFilteredInfo(data).then(res => {
       if (res.success) {
-        console.log("res", res);
         this.setState({
-          products: res.data[0].products,
-          attributes: res.data[0].attributes
+          products: res.data[0].products
         });
+
+        if (shouldChangeFilterSet) {
+          this.setState({
+            attributes: res.data[0].attributes
+          });
+        }
       } else {
         this.notify(res.message);
       }
@@ -80,7 +81,6 @@ class Season extends React.Component {
   };
 
   handlePriceAfterChange = value => {
-    console.log("value", value);
     const { checkedList, sort } = this.state;
 
     const params = {
@@ -93,10 +93,10 @@ class Season extends React.Component {
 
     this.fetchProductData(params);
 
-    this.setState({
-      minPrice: value[0],
-      maxPrice: value[1]
-    });
+    // this.setState({
+    //   minPrice: value[0],
+    //   maxPrice: value[1]
+    // });
   };
 
   handleAttributeChange = e => {
@@ -151,41 +151,22 @@ class Season extends React.Component {
     this.setState({ isListViewOn: false });
   };
 
-  // handleReturn = () => {
-  //   this.setState(
-  //     {
-  //       promoCats: this.props.container.promoCats,
-  //       selectedPromoCatId: false,
-  //       promotId: null
-  //     },
-  //     () => {
-  //       const { checkedList, minPrice, maxPrice } = this.state;
-  //       const params = {
-  //         promoCatId: this.state.promotId,
-  //         catId: this.props.container.id,
-  //         checkedList,
-  //         minPrice,
-  //         maxPrice,
-  //         sort: this.state.sort
-  //       };
-  //       this.fetchProductData(params);
-  //     }
-  //   );
-  // };
-
   handlePromoCatClick = cat => e => {
     e.preventDefault();
 
     const { checkedList, minPrice, maxPrice, sort } = this.state;
 
     this.setState({ selectedPromoCatId: cat.promotid }, () => {
-      this.fetchProductData({
-        promoCatId: cat.promotid,
-        checkedList,
-        minPrice,
-        maxPrice,
-        sort
-      });
+      this.fetchProductData(
+        {
+          promoCatId: cat.promotid,
+          checkedList,
+          minPrice,
+          maxPrice,
+          sort
+        },
+        true
+      );
     });
   };
 
@@ -195,13 +176,16 @@ class Season extends React.Component {
     const { checkedList, minPrice, maxPrice, sort } = this.state;
 
     this.setState({ selectedPromoCatId: null }, () => {
-      this.fetchProductData({
-        promoCatId: null,
-        checkedList,
-        minPrice,
-        maxPrice,
-        sort
-      });
+      this.fetchProductData(
+        {
+          promoCatId: null,
+          checkedList,
+          minPrice,
+          maxPrice,
+          sort
+        },
+        true
+      );
     });
   };
 
