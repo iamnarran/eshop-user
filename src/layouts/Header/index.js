@@ -7,7 +7,7 @@ import LoginModal from "../../components/LoginModal";
 import UserButton from "../../components/UserButton";
 import CartButton from "../../components/CartButton";
 import { IMAGE } from "../../utils/consts";
-
+import api from "../../api";
 import "./style.css";
 
 class AppHeader extends Component {
@@ -19,12 +19,48 @@ class AppHeader extends Component {
       isSearchDropdownOpen: false,
       isLoginModalVisible: false,
       menucategories: [],
-      item: "Бүх бараа"
+      item: "Бүх бараа",
+      suggestion: [],
+      word: " ",
+      k: []
     };
   }
+
+  handleChange = e => {
+    api.suggestion
+      .findHistorySuggestion({ custid: "14", word: this.state.word })
+      .then(res => {
+        console.log(res.success);
+      });
+  };
+
+  onSuggestion = e => {
+    const { suggestion } = this.state;
+    suggestion.map((item, i) => {
+      if (e.target.value == item.keyword) {
+        this.setState({ k: item });
+      }
+    });
+    this.setState({
+      word: e.target.value
+    });
+    if (this.state.word.length >= 1) {
+      api.suggestion
+        .findSuggestion({ keyword: e.target.value, rownum: 10 })
+        .then(res => {
+          if (res.success) {
+            this.setState({
+              suggestion: res.data
+            });
+          }
+        });
+    }
+  };
+
   onItem = (e, item) => {
     this.setState({ item: item.name });
   };
+
   onItem1 = e => {
     this.setState({ item: "Бүх бараа" });
   };
@@ -55,8 +91,8 @@ class AppHeader extends Component {
 
   componentWillMount() {
     const { categories } = this.props.container;
-
     let root = [];
+
     categories.map(item => {
       if (item.parentid === 0) {
         item.children = [];
@@ -71,7 +107,6 @@ class AppHeader extends Component {
         }
       });
     });
-
     this.setState({ menucategories: root });
   }
 
@@ -188,97 +223,35 @@ class AppHeader extends Component {
                             <li className="search-form">
                               <div className="form-group">
                                 <label
-                                  htmlFor="exampleInputEmail1"
-                                  className="sr-only"
+                                  className="input"
+                                  style={{ margin: "0px", width: "100%" }}
                                 >
-                                  Main-search
+                                  <input
+                                    list="cat"
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="Бүгдээс хайх"
+                                    onChange={e => this.onSuggestion(e)}
+                                  />
+                                  <datalist id="cat" className="list-unstyled">
+                                    {this.state.suggestion.map(item => {
+                                      return (
+                                        <option
+                                          key={item.id}
+                                          value={item.keyword}
+                                        />
+                                      );
+                                    })}
+                                  </datalist>
                                 </label>
-                                <input
-                                  type="email"
-                                  className="form-control"
-                                  placeholder="Бүгдээс хайх"
-                                />
-                                <ul className="list-unstyled">
-                                  <li>
-                                    <a href="#">
-                                      <span>Сүү</span>
-                                    </a>
-                                  </li>
-                                  <li>
-                                    <a href="#">
-                                      <span>Талх</span>
-                                    </a>
-                                  </li>
-                                  <li>
-                                    <a href="#">
-                                      <span>Хонины мах</span>
-                                    </a>
-                                  </li>
-                                  <li>
-                                    <a href="#">
-                                      <span>Хүнсний ногоо</span>
-                                    </a>
-                                  </li>
-                                  <li>
-                                    <a href="#">
-                                      <span>Алим</span>
-                                    </a>
-                                  </li>
-                                  <li>
-                                    <a href="#">
-                                      <span>Сүү</span>
-                                    </a>
-                                  </li>
-                                  <li>
-                                    <a href="#">
-                                      <span>Талх</span>
-                                    </a>
-                                  </li>
-                                  <li>
-                                    <a href="#">
-                                      <span>Хонины мах</span>
-                                    </a>
-                                  </li>
-                                  <li>
-                                    <a href="#">
-                                      <span>Хүнсний ногоо</span>
-                                    </a>
-                                  </li>
-                                  <li>
-                                    <a href="#">
-                                      <span>Алим</span>
-                                    </a>
-                                  </li>
-                                  <li>
-                                    <a href="#">
-                                      <span>Сүү</span>
-                                    </a>
-                                  </li>
-                                  <li>
-                                    <a href="#">
-                                      <span>Талх</span>
-                                    </a>
-                                  </li>
-                                  <li>
-                                    <a href="#">
-                                      <span>Хонины мах</span>
-                                    </a>
-                                  </li>
-                                  <li>
-                                    <a href="#">
-                                      <span>Хүнсний ногоо</span>
-                                    </a>
-                                  </li>
-                                  <li>
-                                    <a href="#">
-                                      <span>Алим</span>
-                                    </a>
-                                  </li>
-                                </ul>
                               </div>
                             </li>
                             <li>
-                              <Link className="btn" to="/CategoryInfo">
+                              <Link
+                                className="btn"
+                                to=""
+                                onClick={this.handleChange}
+                              >
                                 <i
                                   className="fa fa-search d-block d-sm-none"
                                   style={{ fontSize: "20px", margin: "5px" }}

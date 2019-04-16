@@ -3,25 +3,13 @@ import { connect } from "react-redux";
 import { toast } from "react-toastify";
 
 import api from "../../api";
-import storage from "../../utils/storage";
 import { updateCart } from "../../actions/cart";
 
 const withCart = WrappedComponent => {
   class CartHOC extends Component {
-    constructor(props) {
-      super(props);
-      this.handleNotify = this.handleNotify.bind(this);
-      this.handleIncrement = this.handleIncrement.bind(this);
-      this.handleDecrement = this.handleDecrement.bind(this);
-      this.handleUpdate = this.handleUpdate.bind(this);
-      this.handleRemove = this.handleRemove.bind(this);
-    }
-
     handleNotify = message => toast(message, { autoClose: 5000 });
 
     handleUpdate = (item, qty) => {
-      console.log("handleUpdate", item, qty);
-
       api.product
         .isAvailable({
           skucd: item.cd ? item.cd : null,
@@ -29,9 +17,11 @@ const withCart = WrappedComponent => {
         })
         .then(res => {
           if (res.success) {
-            let cart = storage.get("cart")
-              ? storage.get("cart")
-              : { products: [], totalQty: 0, totalPrice: 0 };
+            let { cart } = this.props;
+
+            if (!cart) {
+              cart = { products: [], totalQty: 0, totalPrice: 0 };
+            }
 
             const found = cart.products.find(product => product.cd === item.cd);
 
@@ -59,8 +49,6 @@ const withCart = WrappedComponent => {
             });
             cart.totalPrice = prices.reduce((acc, curr) => acc + curr);
 
-            storage.set("cart", cart);
-
             // TODO: stop page refreshing
             this.props.updateCart({
               products: cart.products,
@@ -74,9 +62,11 @@ const withCart = WrappedComponent => {
     };
 
     handleIncrement = item => {
-      let cart = storage.get("cart")
-        ? storage.get("cart")
-        : { products: [], totalQty: 0, totalPrice: 0 };
+      let { cart } = this.props;
+
+      if (!cart) {
+        cart = { products: [], totalQty: 0, totalPrice: 0 };
+      }
 
       const found = cart.products.find(product => product.cd === item.cd);
 
@@ -117,8 +107,6 @@ const withCart = WrappedComponent => {
               });
               cart.totalPrice = prices.reduce((acc, curr) => acc + curr);
 
-              storage.set("cart", cart);
-
               // TODO: stop page refreshing
               this.props.updateCart({
                 products: cart.products,
@@ -139,9 +127,11 @@ const withCart = WrappedComponent => {
     };
 
     handleDecrement = item => {
-      let cart = storage.get("cart")
-        ? storage.get("cart")
-        : { products: [], totalQty: 0, totalPrice: 0 };
+      let { cart } = this.props;
+
+      if (!cart) {
+        cart = { products: [], totalQty: 0, totalPrice: 0 };
+      }
 
       const found = cart.products.find(product => product.cd === item.cd);
       if (!found) {
@@ -173,8 +163,6 @@ const withCart = WrappedComponent => {
         ? prices.reduce((acc, curr) => acc + curr)
         : 0;
 
-      storage.set("cart", cart);
-
       this.props.updateCart({
         products: cart.products,
         totalQty: cart.totalQty,
@@ -183,9 +171,11 @@ const withCart = WrappedComponent => {
     };
 
     handleRemove = item => {
-      let cart = storage.get("cart")
-        ? storage.get("cart")
-        : { products: [], totalQty: 0, totalPrice: 0 };
+      let { cart } = this.props;
+
+      if (!cart) {
+        cart = { products: [], totalQty: 0, totalPrice: 0 };
+      }
 
       const found = cart.products.find(product => product.cd === item.cd);
       if (!found) {
@@ -212,13 +202,23 @@ const withCart = WrappedComponent => {
         ? prices.reduce((acc, curr) => acc + curr)
         : 0;
 
-      storage.set("cart", cart);
-
       this.props.updateCart({
         products: cart.products,
         totalQty: cart.totalQty,
         totalPrice: cart.totalPrice
       });
+    };
+
+    handleClear = () => {
+      let { cart } = this.props;
+
+      if (cart) {
+        this.props.updateCart({
+          products: [],
+          totalQty: 0,
+          totalPrice: 0
+        });
+      }
     };
 
     render() {
@@ -227,6 +227,7 @@ const withCart = WrappedComponent => {
         onDecrement,
         onUpdate,
         onRemove,
+        onClear,
         ...otherProps
       } = this.props;
 
@@ -236,14 +237,21 @@ const withCart = WrappedComponent => {
           onDecrement={this.handleDecrement}
           onUpdate={this.handleUpdate}
           onRemove={this.handleRemove}
+          onClear={this.handleClear}
           {...otherProps}
         />
       );
     }
   }
 
+  const mapStateToProps = state => {
+    return {
+      cart: state.cart
+    };
+  };
+
   return connect(
-    null,
+    mapStateToProps,
     { updateCart }
   )(CartHOC);
 };

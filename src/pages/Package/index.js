@@ -17,7 +17,6 @@ class Package extends React.Component {
   };
 
   render() {
-    console.log("package", this.props);
     return (
       <div className="top-container">
         <div

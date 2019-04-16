@@ -341,7 +341,10 @@ class Season extends React.Component {
                     </div>
                     <div className="col-lg-6 pad10">
                       <form className="flex-this end">
-                        <div className="form-group my-select flex-this">
+                        <div
+                          className="form-group my-select flex-this"
+                          style={{ marginRight: "10px" }}
+                        >
                           <label
                             htmlFor="inputState"
                             style={{

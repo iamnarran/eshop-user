@@ -42,7 +42,8 @@ import {
   StaticPage,
   CategoryInfo,
   Cart,
-  Checkout
+  Checkout,
+  ProductList
 } from "./containers";
 
 import Private from "./components/Private";
@@ -152,6 +153,11 @@ class Localization extends Component {
         exact: true,
         path: "/checkout",
         component: rest => <Checkout {...rest} {...this.props} />
+      },
+      {
+        exact: true,
+        path: "/emart",
+        component: rest => <ProductList {...rest} {...this.props} />
       }
     ];
 

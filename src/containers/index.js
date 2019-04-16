@@ -16,6 +16,7 @@ import StaticPage from "./StaticPage";
 import CategoryInfo from "./CategoryInfo";
 import Cart from "./Cart";
 import Checkout from "./Checkout";
+import ProductList from "./ProductList";
 export {
   Footer,
   Header,
@@ -34,5 +35,6 @@ export {
   StaticPage,
   CategoryInfo,
   Cart,
-  Checkout
+  Checkout,
+  ProductList
 };

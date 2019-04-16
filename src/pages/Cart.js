@@ -5,30 +5,27 @@ import { createForm } from "rc-form";
 
 import { IMAGE } from "../utils/consts";
 import withCart from "../components/HOC/withCart";
-import wishlist from "../api/wishlist";
 
 class Cart extends React.Component {
-  state = {
-    products: this.props.products
-  };
+  handleQtyChange = product => e => {
+    const { products } = this.props.cart;
 
-  handleInputChange = product => e => {
-    const found = this.state.products.find(prod => prod.cd === product.cd);
-
+    const found = products.find(prod => prod.cd === product.cd);
     if (found) {
-      found.qty = parseInt(e.target.value);
-
-      const i = this.state.products.map(prod => prod.cd).indexOf(found.cd);
-      this.setState({ products: this.state.products.splice(i, 1, found) });
-
-      setTimeout(() => {
-        this.props.onUpdate(found, found.qty);
-      }, 1000);
+      found.qty = parseInt(e.target.value || 1);
+      const i = products.map(prod => prod.cd).indexOf(found.cd);
+      this.setState({ products: products.splice(i, 1, found) });
     }
   };
 
-  getProductsCount = () => {
-    return this.state.products.reduce((acc, curr) => acc + curr.qty, 0);
+  handleQtyKeyDown = product => e => {
+    if (e.key === "Enter") {
+      this.props.onUpdate(product, parseInt(e.target.value));
+    }
+  };
+
+  handleQtyBlur = product => e => {
+    this.props.onUpdate(product, parseInt(e.target.value));
   };
 
   render() {
@@ -37,14 +34,12 @@ class Cart extends React.Component {
     const {
       isLoggedIn,
       user,
-      totalPrice,
+      cart,
       onIncrement,
       onDecrement,
       onRemove
     } = this.props;
-    const { products } = this.state;
-
-    console.log("in cart", products);
+    const { products, totalPrice, totalQty } = cart;
 
     let content = (
       <div style={{ textAlign: "center" }}>
@@ -57,10 +52,12 @@ class Cart extends React.Component {
         <table className="table table-borderless">
           <thead className="thead-light">
             <tr>
-              <th className="column-1">
+              <th className="column-1" style={{ width: "36%" }}>
                 <span>Бүтээгдэхүүний нэр</span>
               </th>
-              <th className="column-2">Нэгжийн үнэ</th>
+              <th className="column-2" style={{ width: "18%" }}>
+                Нэгжийн үнэ
+              </th>
               <th className="column-3" style={{ width: "24%" }}>
                 Тоо ширхэг
               </th>
@@ -141,11 +138,15 @@ class Cart extends React.Component {
                           type="text"
                           className="form-control"
                           placeholder=""
+                          defaultValue="1"
                           value={product.qty}
                           aria-label=""
                           aria-describedby="button-addon4"
                           name="productQty"
-                          onChange={this.handleInputChange(product)}
+                          maxLength={5}
+                          onChange={this.handleQtyChange(product)}
+                          onKeyDown={this.handleQtyKeyDown(product)}
+                          onBlur={this.handleQtyBlur(product)}
                         />
                         <div className="input-group-append" id="button-addon4">
                           <button
@@ -163,8 +164,7 @@ class Cart extends React.Component {
                     <p className="price total">
                       <strong>
                         {formatter.format(
-                          (product.sprice ? product.sprice : product.price) *
-                            product.qty
+                          (product.sprice || product.price) * product.qty
                         )}
                         ₮
                       </strong>
@@ -202,8 +202,6 @@ class Cart extends React.Component {
       );
     }
 
-    console.log("wishlist prod", wishlistProducts);
-
     return (
       <div className="section">
         <div className="container pad10">
@@ -229,7 +227,7 @@ class Cart extends React.Component {
                   <div className="block cart-info-container">
                     <p className="count">
                       <span>Нийт бараа: </span>
-                      <span>{this.getProductsCount()}ш</span>
+                      <span>{totalQty}ш</span>
                     </p>
                     {deliveryInfo && (
                       <p className="delivery">
@@ -241,8 +239,13 @@ class Cart extends React.Component {
                       <span>Нийт дүн:</span>
                       <strong>{formatter.format(totalPrice)}₮</strong>
                     </p>
-                    <Link to="/checkout" className="btn btn-main btn-block">
-                      <span className="text-uppercase">Баталгаажуулах1</span>
+                    <Link
+                      to="/checkout"
+                      className={`btn btn-main btn-block${
+                        products && products.length ? "" : " disabled"
+                      }`}
+                    >
+                      <span className="text-uppercase">Баталгаажуулах</span>
                     </Link>
                   </div>
                   {isLoggedIn && user && wishlistProducts.length && (
@@ -312,8 +315,7 @@ const mapStateToProps = state => {
   return {
     isLoggedIn: state.auth.isLoggedIn,
     user: state.auth.user,
-    products: state.cart.products || [],
-    totalPrice: state.cart.totalPriceInCart || 0
+    cart: state.cart
   };
 };
 

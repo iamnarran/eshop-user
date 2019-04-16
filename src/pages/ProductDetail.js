@@ -22,7 +22,45 @@ const formatter = new Intl.NumberFormat("en-US");
 class ProductDetail extends Component {
   state = {
     productQty: 1,
-    isLoginModalVisible: false
+    isLoginModalVisible: false,
+    isShowMoreClicked: false
+  };
+
+  handleShowMoreClick = () => {
+    this.setState({ isShowMoreClicked: true });
+  };
+
+  renderSocialButtons = product => {
+    return (
+      <div className="social-buttons">
+        <ul
+          className="list-inline"
+          style={{ display: "inline-block", verticalAlign: "middle" }}
+        >
+          <li className="list-inline-item">
+            <span>Хуваалцах:</span>
+          </li>
+          <li className="list-inline-item" style={{ cursor: "pointer" }}>
+            <FacebookShareButton
+              url={window.location.href}
+              quote={product.name}
+              className="Demo__some-network__share-button"
+            >
+              <FacebookIcon size={25} round />
+            </FacebookShareButton>
+          </li>
+          <li className="list-inline-item" style={{ cursor: "pointer" }}>
+            <TwitterShareButton
+              url={window.location.href}
+              quote={product.name}
+              className="Demo__some-network__share-button"
+            >
+              <TwitterIcon size={25} round />
+            </TwitterShareButton>
+          </li>
+        </ul>
+      </div>
+    );
   };
 
   renderDetails = () => {
@@ -219,15 +257,24 @@ class ProductDetail extends Component {
 
   renderRelatedProducts = (limit = 4) => {
     let { relatedProducts } = this.props.container;
+    const { isShowMoreClicked } = this.state;
+
+    const shouldExpand = isShowMoreClicked && relatedProducts.length > limit;
 
     relatedProducts =
-      relatedProducts.length > limit
+      !isShowMoreClicked && relatedProducts.length > limit
         ? relatedProducts.slice(0, limit)
         : relatedProducts;
 
     return (
       !!relatedProducts.length && (
-        <div className="product-suggest">
+        <div
+          className="product-suggest"
+          style={{
+            height: shouldExpand && "500px",
+            overflowY: shouldExpand && "scroll"
+          }}
+        >
           <p className="title">
             <strong>Хослох бараа</strong>
           </p>
@@ -274,7 +321,8 @@ class ProductDetail extends Component {
           <div className="more-link text-center">
             <Button
               className="btn btn-border"
-              onClick={this.handleMoreRelatedProductsClick}
+              onClick={this.handleShowMoreClick}
+              style={{ display: shouldExpand && "none" }}
             >
               <span className="text text-uppercase">
                 Бүх хослох барааг үзэх
@@ -321,7 +369,9 @@ class ProductDetail extends Component {
               {attributes.map((attr, index) => {
                 return (
                   <div key={index} className="row row10">
-                    <dt className="col-sm-3">{attr.value}</dt>
+                    <dt className="col-sm-3" style={{ maxWidth: "15%" }}>
+                      {attr.value}
+                    </dt>
                     <dd className="col-sm-6">{attr.name}</dd>
                   </div>
                 );
@@ -483,7 +533,10 @@ class ProductDetail extends Component {
           <div className="product-detail-page col-md-12 col-sm-12 col-lg-12">
             <div className="row row10">
               <div className="col-sm-9 col-md-9 col-lg-9 row">
-                <Gallery images={product.images} />
+                <div className="col-xl-5 col-lg-5 col-md-5">
+                  <Gallery images={product.images} tags={product.tags} />
+                  {this.renderSocialButtons(product)}
+                </div>
                 {this.renderDetails()}
               </div>
               <div className="col-xl-3 col-lg-3 col-sm-3 col-md-3">

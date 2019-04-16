@@ -1,3 +1,7 @@
+const has = name => {
+  return localStorage.getItem(name) !== null;
+};
+
 const set = (name, data) => {
   localStorage.setItem(name, JSON.stringify(data));
 };
@@ -11,6 +15,7 @@ const remove = name => {
 };
 
 export default {
+  has,
   set,
   get,
   remove

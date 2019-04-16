@@ -24,7 +24,7 @@ class Magnifier extends React.Component {
             height: 1800
           },
           enlargedImageContainerDimensions: {
-            width: "200%",
+            width: "250%",
             height: "200%"
           }
         }}
