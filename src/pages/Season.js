@@ -13,10 +13,28 @@ class Season extends React.Component {
   constructor(props) {
     super(props);
 
+    const attributes = props.container.attributes;
+    const prices = this.getPrices(attributes);
+
+    this.state = {
+      loading: false,
+      isListViewOn: false,
+      minPrice: prices.min,
+      maxPrice: prices.max,
+      sort: "price_asc",
+      checkedList: [],
+      attributes: this.props.container.attributes || [],
+      products: this.props.container.products || [],
+      promoCats: this.props.container.promoCats || [],
+      selectedPromoCatId: null,
+      searchProdItem: []
+    };
+  }
+
+  getPrices = attributes => {
     let min = 0;
     let max = 0;
 
-    const attributes = props.container.attributes;
     attributes &&
       attributes.forEach(attr => {
         if (attr.type === "PRICE") {
@@ -32,20 +50,8 @@ class Season extends React.Component {
       });
     max = min > max ? min : max;
 
-    this.state = {
-      loading: false,
-      isListViewOn: false,
-      minPrice: min,
-      maxPrice: max,
-      sort: "price_asc",
-      checkedList: [],
-      attributes: this.props.container.attributes || [],
-      products: this.props.container.products || [],
-      promoCats: this.props.container.promoCats || [],
-      selectedPromoCatId: null,
-      searchProdItem: []
-    };
-  }
+    return { min, max };
+  };
 
   notify = message => toast(message, { autoClose: 5000 });
 
@@ -64,6 +70,40 @@ class Season extends React.Component {
 
     api.season.findAllFilteredInfo(data).then(res => {
       if (res.success) {
+        if (shouldChangeFilterSet) {
+          const attributes = res.data[0].attributes;
+          const prices = this.getPrices(attributes);
+
+          this.setState({
+            minPrice: prices.min,
+            maxPrice: prices.max
+          });
+
+          // attributes &&
+          //   attributes.forEach(attr => {
+          //     if (attr.type === "PRICE") {
+          //       attr.attributes[0].values.forEach(val => {
+          //         if (val.valuecd === "MIN") {
+          //           this.setState({
+          //             minPrice: parseInt(val.valueid.substring(3))
+          //           });
+          //         }
+          //         if (val.valuecd === "MAX") {
+          //           this.setState({
+          //             maxPrice: parseInt(val.valueid.substring(3))
+          //           });
+          //         }
+          //       });
+
+          //       if (this.state.minPrice > this.state.maxPrice) {
+          //         this.setState({ maxPrice: this.state.minPrice });
+          //       }
+          //     }
+          //   });
+        }
+
+        console.log("attributes", res.data[0].attributes);
+
         this.setState({
           products: res.data[0].products
         });
@@ -81,10 +121,10 @@ class Season extends React.Component {
   };
 
   handlePriceAfterChange = value => {
-    const { checkedList, sort } = this.state;
+    const { checkedList, sort, selectedPromoCatId } = this.state;
 
     const params = {
-      promoCatId: this.props.container.id,
+      promoCatId: selectedPromoCatId,
       checkedList,
       minPrice: value[0],
       maxPrice: value[1],
@@ -93,14 +133,14 @@ class Season extends React.Component {
 
     this.fetchProductData(params);
 
-    // this.setState({
-    //   minPrice: value[0],
-    //   maxPrice: value[1]
-    // });
+    this.setState({
+      minPrice: value[0],
+      maxPrice: value[1]
+    });
   };
 
   handleAttributeChange = e => {
-    const { minPrice, maxPrice, sort } = this.state;
+    const { minPrice, maxPrice, sort, selectedPromoCatId } = this.state;
 
     let checkedList = this.state.checkedList;
     const i = checkedList.indexOf(e.target.value);
@@ -114,7 +154,7 @@ class Season extends React.Component {
     this.setState({ checkedList });
 
     const params = {
-      promoCatId: this.props.container.id,
+      promoCatId: selectedPromoCatId,
       checkedList,
       minPrice,
       maxPrice,
@@ -125,9 +165,9 @@ class Season extends React.Component {
   };
 
   handleSortChange = value => {
-    const { checkedList, minPrice, maxPrice } = this.state;
+    const { checkedList, minPrice, maxPrice, selectedPromoCatId } = this.state;
     const params = {
-      promoCatId: this.props.container.id,
+      promoCatId: selectedPromoCatId,
       checkedList,
       minPrice,
       maxPrice,
@@ -173,15 +213,15 @@ class Season extends React.Component {
   handlePromoCatCancel = e => {
     e.preventDefault();
 
-    const { checkedList, minPrice, maxPrice, sort } = this.state;
+    const { checkedList, sort } = this.state;
 
     this.setState({ selectedPromoCatId: null }, () => {
       this.fetchProductData(
         {
           promoCatId: null,
           checkedList,
-          minPrice,
-          maxPrice,
+          minPrice: 0,
+          maxPrice: 0,
           sort
         },
         true
