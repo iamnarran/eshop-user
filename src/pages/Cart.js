@@ -111,6 +111,7 @@ class Cart extends React.Component {
                         </Link>
                       </div>
                       <div className="info-container">
+                        {console.log(product)}
                         <Link
                           to={product.route ? product.route : ""}
                           style={{ color: "#6c757d" }}
@@ -138,7 +139,6 @@ class Cart extends React.Component {
                           type="text"
                           className="form-control"
                           placeholder=""
-                          defaultValue="1"
                           value={product.qty}
                           aria-label=""
                           aria-describedby="button-addon4"

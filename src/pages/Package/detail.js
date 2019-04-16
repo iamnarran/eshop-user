@@ -349,6 +349,7 @@ class PackageDetail extends React.Component {
       );
     }
 
+    console.log("products", this.state.products);
     // Багцад орсон бараанууд
     products = this.state.products.map((item, index) => {
       return (

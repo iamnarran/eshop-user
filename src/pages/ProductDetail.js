@@ -447,8 +447,8 @@ class ProductDetail extends Component {
     } = this.props.container.product;
     const { productQty } = this.state;
 
-    if (availableqty > 0 && availableqty > productQty) {
-      if (salemaxqty > productQty || salemaxqty === 0) {
+    if (availableqty >= productQty) {
+      if (salemaxqty >= productQty || salemaxqty === 0) {
         this.setState({
           productQty:
             productQty < addminqty ? addminqty : productQty + addminqty
@@ -516,6 +516,8 @@ class ProductDetail extends Component {
 
   render() {
     const { categories, product } = this.props.container;
+
+    console.log("product", product);
 
     if (!product) {
       return (
