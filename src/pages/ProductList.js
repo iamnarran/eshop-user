@@ -17,17 +17,14 @@ class ProductList extends React.Component {
     attributes &&
       attributes.forEach(attr => {
         if (attr.type === "PRICE") {
-          console.log("iishee orohguil bndaa");
           max = parseInt(
             attr.attributes[0].values.find(val => val.valuecd === "MAX")
               .valuename
           );
-          console.log(max);
           min = parseInt(
             attr.attributes[0].values.find(val => val.valuecd === "MIN")
               .valuename
           );
-          console.log(min);
         }
       });
 
@@ -270,7 +267,6 @@ class ProductList extends React.Component {
               <ul className="list-unstyled">
                 {parentCats &&
                   parentCats.map(category => {
-                    console.log("hah");
                     return (
                       <li key={category.catnm}>
                         <a href={category.route ? category.route : ""}>
@@ -282,7 +278,7 @@ class ProductList extends React.Component {
               </ul>
             </div>
             <div className="row row10">
-              <div className="col-xl-3 pad10">
+              <div className="col-xl-3 col-lg-3 col-md-3 pad10">
                 <div className="text-right d-block d-md-none">
                   <a href=" " className="btn btn-gray btn-filter">
                     <i className="fa fa-filter" aria-hidden="true" />
@@ -328,7 +324,7 @@ class ProductList extends React.Component {
                   {filters}
                 </div>
               </div>
-              <div className="col-xl-9 col-lg-9 col-md-8 pad10">
+              <div className="col-xl-9 col-lg-9 col-md-9 pad10">
                 <div className="list-filter">
                   <div className="row row10">
                     <div className="col-lg-6 pad10">
