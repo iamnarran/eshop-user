@@ -21,7 +21,7 @@ import cart from "./cart";
 import checkout from "./checkout";
 import wishlist from "./wishlist";
 import viewList from "./viewlist";
-import suggestion from "./search";
+import search from "./search";
 import storage from "../utils/storage";
 let rest = {};
 
@@ -158,9 +158,9 @@ viewList.forEach(api => {
   rest.viewList[api.NAME] = data => generateAPI(api, data);
 });
 
-rest["suggestion"] = {};
-suggestion.forEach(api => {
-  rest.suggestion[api.NAME] = data => generateAPI(api, data);
+rest["search"] = {};
+search.forEach(api => {
+  rest.search[api.NAME] = data => generateAPI(api, data);
 });
 
 export { rest as default, setAuthorizationHeader };
