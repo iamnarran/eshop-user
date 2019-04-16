@@ -75,6 +75,15 @@ const withCart = WrappedComponent => {
         itemQty = found.qty;
       }
 
+      // if (availableqty > 0 && availableqty > productQty) {
+      //   if (salemaxqty > productQty || salemaxqty === 0) {
+      //     this.setState({
+      //       productQty:
+      //         productQty < addminqty ? addminqty : productQty + addminqty
+      //     });
+      //   }
+      // }
+
       return new Promise((resolve, reject) => {
         api.product
           .isAvailable({
@@ -82,6 +91,7 @@ const withCart = WrappedComponent => {
             qty: itemQty + 1
           })
           .then(res => {
+            console.log("item", item);
             if (res.success) {
               if (found) {
                 found.qty++;
@@ -89,6 +99,7 @@ const withCart = WrappedComponent => {
                   .map(product => product.cd)
                   .indexOf(found.cd);
                 cart.products.splice(i, 1, found);
+                item = { ...found };
               } else {
                 item.qty = 1;
                 cart.products.push(item);
@@ -114,7 +125,9 @@ const withCart = WrappedComponent => {
                 totalPrice: cart.totalPrice
               });
 
-              this.handleNotify("+1");
+              this.handleNotify(
+                `Таны сагсанд "${item.name}" бараа ${item.qty}ш нэмэгдлээ.`
+              );
 
               resolve();
             } else {

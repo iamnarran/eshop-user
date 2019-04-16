@@ -13,23 +13,24 @@ class Season extends React.Component {
   constructor(props) {
     super(props);
 
-    let min,
-      max = 0;
+    let min = 0;
+    let max = 0;
 
     const attributes = props.container.attributes;
     attributes &&
       attributes.forEach(attr => {
         if (attr.type === "PRICE") {
-          min = parseInt(
-            attr.attributes[0].values.find(val => val.valuecd === "MIN")
-              .valuename
-          );
-          max = parseInt(
-            attr.attributes[0].values.find(val => val.valuecd === "MAX")
-              .valuename
-          );
+          attr.attributes[0].values.forEach(val => {
+            if (val.valuecd === "MIN") {
+              min = parseInt(val.valueid);
+            }
+            if (val.valuecd === "MAX") {
+              max = parseInt(val.valueid);
+            }
+          });
         }
       });
+    // max = min > max ? min : max;
 
     this.state = {
       loading: false,
@@ -38,20 +39,26 @@ class Season extends React.Component {
       maxPrice: max,
       sort: "price_asc",
       checkedList: [],
+      attributes: this.props.container.attributes || [],
       products: this.props.container.products || [],
-      searchedProd: [],
-      promotId: null,
-      searchProdItem: [],
-      searched: false
+      promoCats: this.props.container.promoCats || [],
+      selectedPromoCatId: null,
+      searchProdItem: []
     };
   }
 
   notify = message => toast(message, { autoClose: 5000 });
 
-  fetchProductData = ({ promoId, checkedList, minPrice, maxPrice, sort }) => {
+  fetchProductData = ({
+    promoCatId,
+    checkedList,
+    minPrice,
+    maxPrice,
+    sort
+  }) => {
     this.setState({ loading: true });
     const data = {
-      promotid: this.state.promotId,
+      promotid: promoCatId,
       parameters: checkedList,
       minprice: minPrice,
       maxprice: maxPrice,
@@ -60,8 +67,10 @@ class Season extends React.Component {
 
     api.season.findAllFilteredInfo(data).then(res => {
       if (res.success) {
+        console.log("res", res);
         this.setState({
-          products: res.data[0].products
+          products: res.data[0].products,
+          attributes: res.data[0].attributes
         });
       } else {
         this.notify(res.message);
@@ -71,10 +80,11 @@ class Season extends React.Component {
   };
 
   handlePriceAfterChange = value => {
+    console.log("value", value);
     const { checkedList, sort } = this.state;
 
     const params = {
-      catId: this.props.container.id,
+      promoCatId: this.props.container.id,
       checkedList,
       minPrice: value[0],
       maxPrice: value[1],
@@ -88,11 +98,6 @@ class Season extends React.Component {
       maxPrice: value[1]
     });
   };
-
-  componentDidMount() {
-    const { promoCats } = this.props.container;
-    this.setState({ searchedProd: promoCats });
-  }
 
   handleAttributeChange = e => {
     const { minPrice, maxPrice, sort } = this.state;
@@ -109,7 +114,7 @@ class Season extends React.Component {
     this.setState({ checkedList });
 
     const params = {
-      promoId: this.props.container.id,
+      promoCatId: this.props.container.id,
       checkedList,
       minPrice,
       maxPrice,
@@ -122,7 +127,7 @@ class Season extends React.Component {
   handleSortChange = value => {
     const { checkedList, minPrice, maxPrice } = this.state;
     const params = {
-      catId: this.props.container.id,
+      promoCatId: this.props.container.id,
       checkedList,
       minPrice,
       maxPrice,
@@ -146,74 +151,110 @@ class Season extends React.Component {
     this.setState({ isListViewOn: false });
   };
 
-  handleSearch = (e, item) => {
-    const { checkedList, minPrice, maxPrice } = this.state;
-    let tmp = [];
-    tmp.push(item);
-    this.setState(
-      { promotId: item.promotid, searchedProd: tmp, searched: true },
-      () => {
-        const params = {
-          promoId: this.state.promotId,
-          catId: this.props.container.id,
-          checkedList,
-          minPrice,
-          maxPrice,
-          sort: this.state.sort
-        };
-        this.fetchProductData(params);
-      }
-    );
-  };
+  // handleReturn = () => {
+  //   this.setState(
+  //     {
+  //       promoCats: this.props.container.promoCats,
+  //       selectedPromoCatId: false,
+  //       promotId: null
+  //     },
+  //     () => {
+  //       const { checkedList, minPrice, maxPrice } = this.state;
+  //       const params = {
+  //         promoCatId: this.state.promotId,
+  //         catId: this.props.container.id,
+  //         checkedList,
+  //         minPrice,
+  //         maxPrice,
+  //         sort: this.state.sort
+  //       };
+  //       this.fetchProductData(params);
+  //     }
+  //   );
+  // };
 
-  renderDeparts = () => {
-    const { searchedProd } = this.state;
-    let tmp;
-    if (searchedProd.length !== 0) {
-      tmp = searchedProd.map((item, i) => {
-        return (
-          <li key={i} style={{ marginBottom: "8px" }}>
-            <a onClick={e => this.handleSearch(e, item)}>{item.promotnm}</a>
-          </li>
-        );
+  handlePromoCatClick = cat => e => {
+    e.preventDefault();
+
+    const { checkedList, minPrice, maxPrice, sort } = this.state;
+
+    this.setState({ selectedPromoCatId: cat.promotid }, () => {
+      this.fetchProductData({
+        promoCatId: cat.promotid,
+        checkedList,
+        minPrice,
+        maxPrice,
+        sort
       });
-    }
-    return tmp;
+    });
   };
 
-  handleReturn = () => {
-    this.setState(
-      {
-        searchedProd: this.props.container.promoCats,
-        searched: false,
-        promotId: null
-      },
-      () => {
-        const { checkedList, minPrice, maxPrice } = this.state;
-        const params = {
-          promoId: this.state.promotId,
-          catId: this.props.container.id,
-          checkedList,
-          minPrice,
-          maxPrice,
-          sort: this.state.sort
-        };
-        this.fetchProductData(params);
-      }
-    );
+  handlePromoCatCancel = e => {
+    e.preventDefault();
+
+    const { checkedList, minPrice, maxPrice, sort } = this.state;
+
+    this.setState({ selectedPromoCatId: null }, () => {
+      this.fetchProductData({
+        promoCatId: null,
+        checkedList,
+        minPrice,
+        maxPrice,
+        sort
+      });
+    });
+  };
+
+  renderPromoCats = () => {
+    const { promoCats, selectedPromoCatId } = this.state;
+
+    if (promoCats.length) {
+      return (
+        <ul className="list-unstyled category-list">
+          {promoCats.map((cat, index) => {
+            let className = "";
+
+            if (selectedPromoCatId) {
+              if (selectedPromoCatId !== cat.promotid) {
+                className = "disabled";
+              } else {
+                className = "selected";
+              }
+            }
+
+            return (
+              <li key={index} className={className}>
+                <Link to="" onClick={this.handlePromoCatClick(cat)}>
+                  {cat.promotnm}
+                </Link>
+              </li>
+            );
+          })}
+
+          {selectedPromoCatId && (
+            <Link
+              to=""
+              style={{
+                color: "#f00",
+                fontSize: "12px",
+                float: "right"
+              }}
+              onClick={this.handlePromoCatCancel}
+            >
+              <span className="badge badge-pill badge-danger">Цуцлах</span>
+            </Link>
+          )}
+        </ul>
+      );
+    }
+
+    return <div className="block">Ангилал байхгүй байна</div>;
   };
 
   render() {
-    const {
-      promoCats,
-      attributes,
-      menu,
-      primaryBanners
-    } = this.props.container;
-    const products = this.state.products;
+    const { menu, primaryBanners } = this.props.container;
+    const { attributes, products } = this.state;
     const Option = Select.Option;
-
-    let cats = <div className="block">Ангилал байхгүй байна</div>;
 
     let filters =
       attributes &&
@@ -306,22 +347,7 @@ class Season extends React.Component {
                     >
                       <div className="collapse-content">
                         <ul className="list-unstyled">
-                          {this.renderDeparts()}
-
-                          {this.state.searched == true ? (
-                            <a
-                              style={{
-                                color: "grey",
-                                fontSize: "12px",
-                                float: "right"
-                              }}
-                              onClick={this.handleReturn}
-                            >
-                              х шүүлтүүр цэвэрлэх
-                            </a>
-                          ) : (
-                            ""
-                          )}
+                          {this.renderPromoCats()}
                         </ul>
                       </div>
                     </div>

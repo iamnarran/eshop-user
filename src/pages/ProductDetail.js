@@ -447,14 +447,14 @@ class ProductDetail extends Component {
     } = this.props.container.product;
     const { productQty } = this.state;
 
-    if (availableqty > 0 && availableqty > productQty) {
-      if (salemaxqty > productQty || salemaxqty === 0) {
-        this.setState({
-          productQty:
-            productQty < addminqty ? addminqty : productQty + addminqty
-        });
-      }
-    }
+    // if (availableqty > 0 && availableqty > productQty) {
+    //   if (salemaxqty > productQty || salemaxqty === 0) {
+    //     this.setState({
+    //       productQty:
+    //         productQty < addminqty ? addminqty : productQty + addminqty
+    //     });
+    //   }
+    // }
   };
 
   handleDecrementClick = () => {
