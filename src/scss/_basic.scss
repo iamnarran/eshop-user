@@ -2748,4 +2748,9 @@ MuiInputBase-input-49 MuiOutlinedInput-input-34 MuiInputBase-inputType-52 {
     -o-transition: 0.5s;
     transition: 0.5s;
   }
+
+  a.cancel {
+    color: #f00;
+    float: right;
+  }
 }

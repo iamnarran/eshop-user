@@ -232,15 +232,7 @@ class Season extends React.Component {
           })}
 
           {selectedPromoCatId && (
-            <Link
-              to=""
-              style={{
-                color: "#f00",
-                fontSize: "12px",
-                float: "right"
-              }}
-              onClick={this.handlePromoCatCancel}
-            >
+            <Link to="" className="cancel" onClick={this.handlePromoCatCancel}>
               <span className="badge badge-pill badge-danger">Цуцлах</span>
             </Link>
           )}
