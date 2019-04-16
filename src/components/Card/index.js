@@ -8,7 +8,7 @@ import Label from "../Label";
 import { Avatar } from "antd";
 import withCart from "../HOC/withCart";
 import { IMAGE, CARD_TYPES, LABEL_TYPES } from "../../utils/consts";
-import productPlus from "../../scss/assets/images/demo/productPlus.png";
+import productPlus from "../../scss/assets/images/demo/plusEmart.png";
 
 import "./Card.css";
 

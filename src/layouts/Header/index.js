@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Icon, Button } from "antd";
+import { Icon } from "antd";
 import Category from "../../components/Category";
 import MainMenu from "../../components/Menu";
 import LoginModal from "../../components/LoginModal";
@@ -21,12 +21,17 @@ class AppHeader extends Component {
       menucategories: [],
       item: "Бүх бараа",
       suggestion: [],
-      hello: ""
+      word: " ",
+      k: []
     };
   }
 
   handleChange = e => {
-    console.log("odoo end huudas shiljine");
+    api.suggestion
+      .findHistorySuggestion({ custid: "14", word: this.state.word })
+      .then(res => {
+        console.log(res.success);
+      });
   };
 
   onSuggestion = e => {
@@ -37,9 +42,9 @@ class AppHeader extends Component {
       }
     });
     this.setState({
-      hello: e.target.value
+      word: e.target.value
     });
-    if (this.state.hello.length >= 1) {
+    if (this.state.word.length >= 1) {
       api.suggestion
         .findSuggestion({ keyword: e.target.value, rownum: 10 })
         .then(res => {
@@ -52,14 +57,10 @@ class AppHeader extends Component {
     }
   };
 
-  onClickSuggestion(e, item) {
-    console.log(e, item);
-    console.log("click");
-  }
-
   onItem = (e, item) => {
     this.setState({ item: item.name });
   };
+
   onItem1 = e => {
     this.setState({ item: "Бүх бараа" });
   };
@@ -90,8 +91,8 @@ class AppHeader extends Component {
 
   componentWillMount() {
     const { categories } = this.props.container;
-
     let root = [];
+
     categories.map(item => {
       if (item.parentid === 0) {
         item.children = [];
@@ -106,7 +107,6 @@ class AppHeader extends Component {
         }
       });
     });
-
     this.setState({ menucategories: root });
   }
 
