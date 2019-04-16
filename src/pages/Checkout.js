@@ -5,12 +5,16 @@ import storage from "../utils/storage";
 import api from "../api";
 import LoginModal from "../components/LoginModal";
 import actions from "../actions/checkout";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import { IMAGE } from "../utils/consts";
+const MySwal = withReactContent(Swal);
 const Option = Select.Option;
 const Panel = Collapse.Panel;
 const TabPane = Tabs.TabPane;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
+const InputGroup = Input.Group;
 const formatter = new Intl.NumberFormat("en-US");
 @connect(
   mapStateToProps,
@@ -84,6 +88,12 @@ class Checkout extends React.Component {
             this.setState({ defaultAddress: item });
           }
         });
+        this.props.form.setFieldsValue({
+          lastName: res.data.info.firstname,
+          phone: res.data.info.phone,
+          address: this.state.defaultAddress.address
+        });
+
         this.setState({
           userInfo: res.data.info,
           userAddress: res.data.addrs,
@@ -132,6 +142,7 @@ class Checkout extends React.Component {
 
   renderAddrsOption = () => {
     const { userAddress } = this.state;
+
     let tmp;
     if (userAddress.length !== 0) {
       tmp = userAddress.map((item, i) => {
@@ -213,29 +224,18 @@ class Checkout extends React.Component {
           if (values.address == defaultAddress.address) {
             values.address = defaultAddress.id;
           }
-          let adrs = {};
-          adrs.custid = this.state.userInfo.id;
-          adrs.locid = values.subLocation;
-          adrs.address = values.address;
-          adrs.ismain = 1;
-
           try {
-            this.setUser(adrs);
-            // const res = await api.checkout.saveUserAddress(adrs); //await this.props.saveUserAddress(adrs);
-            // console.log(res);
+            if (userAddress.length == 0) {
+              let adrs = {};
+              adrs.custid = this.state.userInfo.id;
+              adrs.locid = values.subLocation;
+              adrs.address = values.address;
+              adrs.ismain = 1;
+              this.setUser(adrs);
+            }
           } catch (err) {
             console.log(err);
           }
-          /*   try {
-            let adrs = {};
-            adrs.custid = this.state.userInfo.id;
-            adrs.locid = values.subLocation;
-            adrs.address = values.address;
-            adrs.ismain = 1;
-            const res = await this.props.saveUserAddress(adrs);
-            console.log(res);
-            this.setState({ chosenDelivery: values });
-          } catch (err) {} */
         } else if (e.target.name == "payment") {
           tmp.push("4");
         }
@@ -301,8 +301,19 @@ class Checkout extends React.Component {
     if (bankInfo !== 0) {
       tmp = bankInfo.map((item, i) => {
         return (
+          /* <TabPane
+            tab={
+              <span>
+                <Icon type="android" />
+                {item.banknm}
+              </span>
+            }
+            key={item.bankid}
+          >
+            {item.account}
+          </TabPane> */
           <RadioButton value={item.bankid} key={i}>
-            {item.banknm}
+            <p>{item.banknm}</p>
           </RadioButton>
         );
       });
@@ -349,6 +360,53 @@ class Checkout extends React.Component {
     return tmp;
   };
 
+  renderReturnTab = () => {
+    let tmp = (
+      <Tabs defaultActiveKey="2">
+        <TabPane
+          tab={
+            <span>
+              <Icon type="apple" />
+              Tab 1
+            </span>
+          }
+          key="1"
+        >
+          Tab 1
+        </TabPane>
+        <TabPane
+          tab={
+            <span>
+              <Icon type="android" />
+              Tab 2
+            </span>
+          }
+          key="2"
+        >
+          Tab 2
+        </TabPane>
+      </Tabs>
+    );
+
+    return tmp;
+  };
+
+  handleSubmit = e => {
+    e.preventDefault();
+    Swal.fire({
+      title: "<strong>HTML <u>example</u></strong>",
+      type: "info",
+      html: "<Icon type='apple' />",
+      showCloseButton: true,
+      showCancelButton: true,
+      focusConfirm: false,
+      confirmButtonText: '<i class="fa fa-thumbs-up"></i> Great!',
+      confirmButtonAriaLabel: "Thumbs up, great!",
+      cancelButtonText: '<i class="fa fa-thumbs-down"></i>',
+      cancelButtonAriaLabel: "Thumbs down"
+    });
+  };
+
   render() {
     const {
       userInfo,
@@ -360,6 +418,7 @@ class Checkout extends React.Component {
       cardno,
       chosenPlusRadio
     } = this.state;
+    const { isLoggedIn } = this.props;
     const deliver1 = delivery == [] ? 0 : delivery.price;
     const { getFieldDecorator } = this.props.form;
     return (
@@ -447,7 +506,9 @@ class Checkout extends React.Component {
                                         />
                                         <p className="text">
                                           <strong>{item.typenm}</strong>
-                                          <span>{item.price + "₮"}</span>
+                                          <span>
+                                            {formatter.format(item.price) + "₮"}
+                                          </span>
                                         </p>
                                       </div>
                                     }
@@ -459,11 +520,7 @@ class Checkout extends React.Component {
                                       role="tabpanel"
                                       aria-labelledby="home-tab"
                                     >
-                                      <p className="text">
-                                        Энийг хүргэлт (48 цагийн дотор) - 89,000
-                                        төгрөгнөөс дээш бараа авсан тохиолдолд
-                                        үнэгүй
-                                      </p>
+                                      <p className="text">{item.featuretxt}</p>
                                       <Form
                                         onSubmit={this.onSubmit}
                                         name="delivery"
@@ -473,8 +530,6 @@ class Checkout extends React.Component {
                                             <div className="col-xl-12 col-md-12">
                                               <Form.Item>
                                                 {getFieldDecorator("address", {
-                                                  initialValue:
-                                                    defaultAddress.address,
                                                   rules: [
                                                     {
                                                       required: true,
@@ -482,7 +537,7 @@ class Checkout extends React.Component {
                                                     }
                                                   ]
                                                 })(
-                                                  userAddress.length != 0 ? (
+                                                  userAddress.length == 0 ? (
                                                     <Input
                                                       type="text"
                                                       placeholder="Хаягаа сонгоно уу ?*"
@@ -498,7 +553,7 @@ class Checkout extends React.Component {
                                           ) : (
                                             ""
                                           )}
-                                          <div className="col-xl-6 col-md-6">
+                                          <div className="col-xl-4 col-md-4">
                                             <Form.Item>
                                               {getFieldDecorator(
                                                 "mainLocation",
@@ -524,7 +579,7 @@ class Checkout extends React.Component {
                                               )}
                                             </Form.Item>
                                           </div>
-                                          <div className="col-xl-6 col-md-6">
+                                          <div className="col-xl-4 col-md-4">
                                             <Form.Item>
                                               {getFieldDecorator(
                                                 "subLocation",
@@ -544,7 +599,27 @@ class Checkout extends React.Component {
                                               )}
                                             </Form.Item>
                                           </div>
-                                          <div className="col-xl-6 col-md-6">
+                                          <div className="col-xl-4 col-md-4">
+                                            <Form.Item>
+                                              {getFieldDecorator(
+                                                "subLocation",
+                                                {
+                                                  rules: [
+                                                    {
+                                                      required: true,
+                                                      message:
+                                                        "Дүүрэг/Сум сонгоно уу?"
+                                                    }
+                                                  ]
+                                                }
+                                              )(
+                                                <Select placeholder="Дүүрэг/Сум*">
+                                                  {this.renderSubLocation()}
+                                                </Select>
+                                              )}
+                                            </Form.Item>
+                                          </div>
+                                          <div className="col-xl-4 col-md-4">
                                             <Form.Item>
                                               {getFieldDecorator("lastName", {
                                                 rules: [
@@ -555,6 +630,7 @@ class Checkout extends React.Component {
                                                 ]
                                               })(
                                                 <Input
+                                                  initialValue="dwadwa"
                                                   type="text"
                                                   placeholder="Нэр*"
                                                   className="col-md-12"
@@ -562,7 +638,25 @@ class Checkout extends React.Component {
                                               )}
                                             </Form.Item>
                                           </div>
-                                          <div className="col-xl-6 col-md-6">
+                                          <div className="col-xl-4 col-md-4">
+                                            <Form.Item>
+                                              {getFieldDecorator("phone", {
+                                                rules: [
+                                                  {
+                                                    required: true,
+                                                    message: "Утас оруулна уу"
+                                                  }
+                                                ]
+                                              })(
+                                                <Input
+                                                  type="text"
+                                                  placeholder="Утас*"
+                                                  className="col-md-12"
+                                                />
+                                              )}
+                                            </Form.Item>
+                                          </div>
+                                          <div className="col-xl-4 col-md-4">
                                             <Form.Item>
                                               {getFieldDecorator("phone", {
                                                 rules: [
@@ -623,6 +717,7 @@ class Checkout extends React.Component {
                                   {this.renderBankInfo()}
                                 </RadioGroup>
                               ) : (
+                                /*  <Tabs>{this.renderBankInfo()}</Tabs> */
                                 ""
                               )}
                             </div>
@@ -823,12 +918,15 @@ class Checkout extends React.Component {
                         ₮
                       </strong>
                     </p>
-                    <p className="text text-center">
+                    {/*   <p className="text text-center">
                       <span>89,000₮-с дээш бол хүргэлт үнэгүй</span>
-                    </p>
-                    <a href="#" className="btn btn-main btn-block">
+                    </p> */}
+                    <button
+                      className="btn btn-main btn-block"
+                      onClick={this.handleSubmit}
+                    >
                       <span className="text-uppercase">Тооцоо хийх</span>
-                    </a>
+                    </button>
                   </div>
                 </div>
               </div>
