@@ -15,17 +15,25 @@ const options = {
 };
 
 const fetch = async (props, onData) => {
+  let products = [];
+  let attributes = [];
   try {
-    const data = {
-      ismart: 1
-    };
-    const prodsEmart = await api.product.findAllEmartProducts({
-      jumcd: "99"
-    });
-    const attributes = await api.product.emartAtt(data);
+    if (props.match.params.id) {
+      products = await api.search.findProductBrand({
+        brandid: props.match.params.id
+      });
+    } else {
+      const data = {
+        ismart: 1
+      };
+      products = await api.product.findAllEmartProducts({
+        jumcd: "99"
+      });
+      attributes = await api.product.emartAtt(data);
+    }
     onData(null, {
       container: {
-        prodsEmart: prodsEmart.data,
+        products: products.data,
         attributes: attributes.data
       }
     });

@@ -27,11 +27,12 @@ class AppHeader extends Component {
   }
 
   handleChange = e => {
-    api.suggestion
+    api.search
       .findHistorySuggestion({ custid: "14", word: this.state.word })
       .then(res => {
         console.log(res.success);
       });
+    console.log("hah");
   };
 
   onSuggestion = e => {
@@ -45,7 +46,7 @@ class AppHeader extends Component {
       word: e.target.value
     });
     if (this.state.word.length >= 1) {
-      api.suggestion
+      api.search
         .findSuggestion({ keyword: e.target.value, rownum: 10 })
         .then(res => {
           if (res.success) {

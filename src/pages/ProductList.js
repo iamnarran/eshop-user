@@ -4,7 +4,6 @@ import { Spin, Select } from "antd";
 import { toast } from "react-toastify";
 import api from "../api";
 import { CARD_LIST_TYPES, CARD_TYPES } from "../utils/consts";
-import PageHeader from "../components/PageHeader";
 import CardList from "../components/CardList";
 import FilterSet from "../components/FilterSet";
 
@@ -35,7 +34,7 @@ class ProductList extends React.Component {
       maxPrice: max,
       sort: "price_asc",
       checkedList: [],
-      products: this.props.container.prodsEmart || [],
+      products: this.props.container.products || [],
       searchedProd: [],
       promotId: null,
       searchProdItem: [],
@@ -255,12 +254,6 @@ class ProductList extends React.Component {
 
     return (
       <div className="top-container">
-        {/* <PageHeader
-          title={menu.menunm}
-          subtitle={menu.subtitle}
-          banners={primaryBanners}
-          bgColor="#4286f4"
-        /> */}
         <div className="section">
           <div className="container pad10">
             <div className="e-breadcrumb">

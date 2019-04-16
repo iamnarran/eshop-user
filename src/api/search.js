@@ -12,5 +12,11 @@ export default [
     METHOD: "POST",
     URL: `${API}/api/search/:custid/:word`,
     REPLACE: "custid,word"
+  },
+  {
+    NAME: "findProductBrand",
+    METHOD: "GET",
+    URL: `${API}/api/search/:brandid`,
+    REPLACE: "brandid"
   }
 ];

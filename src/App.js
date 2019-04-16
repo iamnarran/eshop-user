@@ -158,6 +158,16 @@ class Localization extends Component {
         exact: true,
         path: "/emart",
         component: rest => <ProductList {...rest} {...this.props} />
+      },
+      {
+        exact: true,
+        path: "/brand/:id",
+        component: rest => <ProductList {...rest} {...this.props} />
+      },
+      {
+        exact: true,
+        path: "/search",
+        component: rest => <ProductList {...rest} {...this.props} />
       }
     ];
 
