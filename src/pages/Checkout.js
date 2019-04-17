@@ -7,6 +7,7 @@ import LoginModal from "../components/LoginModal";
 import actions from "../actions/checkout";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import withCart from "../components/HOC/withCart";
 import { IMAGE } from "../utils/consts";
 const MySwal = withReactContent(Swal);
 const Option = Select.Option;
@@ -40,25 +41,24 @@ class Checkout extends React.Component {
       chosenPlusRadio: 1,
       isLoginModalVisible: false,
       mainLocation: [],
-      subLocation: []
+      subLocation: [],
+      chosenInfo: []
     };
   }
 
   componentWillMount() {
-    const { deliveryTypes, paymentTypes } = this.props.container;
+    const { deliveryTypes, paymentTypes, bankInfo } = this.props.container;
+    const { cart } = this.props;
     if (this.props.isLoggedIn == true) {
       this.getUserInfo(this.props.user);
     }
-
     this.getMainLocation();
 
-    let cart = storage.get("cart")
-      ? storage.get("cart")
-      : { products: [], totalQty: 0, totalPrice: 0 };
     this.setState({
       products: cart,
       delivery: deliveryTypes[0],
-      chosenPayment: paymentTypes[0]
+      chosenPayment: paymentTypes[0],
+      chosenBankInfo: bankInfo[0]
     });
   }
 
@@ -71,7 +71,7 @@ class Checkout extends React.Component {
   };
 
   toggleLoginModal = e => {
-    e.preventDefault();
+    // e.preventDefault();
     this.setState({ isLoginModalVisible: !this.state.isLoginModalVisible });
   };
 
@@ -81,6 +81,7 @@ class Checkout extends React.Component {
   };
 
   getUserInfo = async user => {
+    console.log(this.props.form);
     await api.checkout.findUserData({ id: user.id }).then(res => {
       if (res.success == true) {
         res.data.addrs.map((item, i) => {
@@ -88,10 +89,13 @@ class Checkout extends React.Component {
             this.setState({ defaultAddress: item });
           }
         });
-        this.props.form.setFieldsValue({
+        console.log(res.data);
+        this.props.form.setFieldsInitialValue({
           lastName: res.data.info.firstname,
           phone: res.data.info.phone,
-          address: this.state.defaultAddress.address
+          address: this.state.defaultAddress.id,
+          mainLocation: res.data.addrs[0].provincenm,
+          subLocation: res.data.addrs[0].districtnm
         });
 
         this.setState({
@@ -217,9 +221,15 @@ class Checkout extends React.Component {
     e.preventDefault();
     const { defaultAddress, userAddress } = this.state;
     let tmp = [];
+    let chosenInfo = {};
     this.props.form.validateFields((err, values) => {
       if (!err) {
         if (e.target.name == "delivery") {
+          chosenInfo.address = values.address;
+          chosenInfo.lastName = values.lastName;
+          chosenInfo.mainLocation = values.mainLocation;
+          chosenInfo.subLocation = values.subLocation;
+          chosenInfo.phone = values.phone;
           tmp.push("3");
           if (values.address == defaultAddress.address) {
             values.address = defaultAddress.id;
@@ -241,7 +251,8 @@ class Checkout extends React.Component {
         }
         this.setState({
           collapseType: e.target.name,
-          activeKey: tmp
+          activeKey: tmp,
+          chosenInfo: chosenInfo
         });
       } else {
         console.log("error");
@@ -265,6 +276,7 @@ class Checkout extends React.Component {
 
   renderPaymentTypes = () => {
     const { paymentTypes } = this.props.container;
+    const { chosenPayment } = this.state;
     let tmp;
     if (paymentTypes.length !== 0) {
       tmp = paymentTypes.map((item, i) => {
@@ -287,6 +299,18 @@ class Checkout extends React.Component {
                 <span>{item.description}</span>
               </p>
             </h5>
+            {chosenPayment.id == 1 && item.id == 1 ? (
+              <RadioGroup
+                buttonStyle="solid"
+                defaultValue={1}
+                size="large"
+                onChange={this.bankRadioChange}
+              >
+                {this.renderBankInfo()}
+              </RadioGroup>
+            ) : (
+              ""
+            )}
           </label>
         );
       });
@@ -393,7 +417,28 @@ class Checkout extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    Swal.fire({
+    const { products } = this.state;
+    console.log(this.state);
+
+    let tmp = {};
+    tmp.custid = this.state.userInfo.id;
+    tmp.deliveryTypeId = this.state.delivery.id;
+    tmp.custAddressId = null;
+    tmp.phone1 = null;
+    tmp.phone2 = null;
+    tmp.paymentType = this.state.chosenPayment.id;
+    tmp.bankId = this.state.chosenBankInfo.bankid;
+    tmp.accountId = this.state.chosenBankInfo.account;
+    tmp.companyRegNo = "";
+    tmp.companyName = "";
+    tmp.cardNo = "";
+    tmp.usedPoint = "";
+    tmp.items = [];
+    products.products.map((item, i) => {
+      tmp.items.push(item);
+    });
+    console.log(tmp);
+    /*  Swal.fire({
       title: "<strong>HTML <u>example</u></strong>",
       type: "info",
       html: "<Icon type='apple' />",
@@ -404,7 +449,7 @@ class Checkout extends React.Component {
       confirmButtonAriaLabel: "Thumbs up, great!",
       cancelButtonText: '<i class="fa fa-thumbs-down"></i>',
       cancelButtonAriaLabel: "Thumbs down"
-    });
+    }); */
   };
 
   render() {
@@ -630,7 +675,6 @@ class Checkout extends React.Component {
                                                 ]
                                               })(
                                                 <Input
-                                                  initialValue="dwadwa"
                                                   type="text"
                                                   placeholder="Нэр*"
                                                   className="col-md-12"
@@ -707,19 +751,6 @@ class Checkout extends React.Component {
                           <Form onSubmit={this.onSubmit} name="payment">
                             <div className="content-container">
                               {this.renderPaymentTypes()}
-                              {chosenPayment.id == 1 ? (
-                                <RadioGroup
-                                  buttonStyle="solid"
-                                  defaultValue={1}
-                                  size="large"
-                                  onChange={this.bankRadioChange}
-                                >
-                                  {this.renderBankInfo()}
-                                </RadioGroup>
-                              ) : (
-                                /*  <Tabs>{this.renderBankInfo()}</Tabs> */
-                                ""
-                              )}
                             </div>
                             <hr />
                             <div className="text-right">
@@ -945,7 +976,8 @@ class Checkout extends React.Component {
 function mapStateToProps(state) {
   return {
     isLoggedIn: state.auth.isLoggedIn,
-    user: state.auth.user
+    user: state.auth.user,
+    cart: state.cart
   };
 }
 
