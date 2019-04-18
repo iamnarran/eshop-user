@@ -16,12 +16,12 @@ class Card extends React.Component {
   handleAddToCart = item => {
     let products = [];
     if (item.recipeid) {
+      // Хоолны жор
       api.recipe.findAllProducts({ id: item.recipeid }).then(res => {
         if (res.success) {
           products = res.data[0].products;
           if (products.length) {
             products.reduce((acc, next) => {
-              console.log("next", next);
               return acc.then(() => {
                 return this.props.onIncrement(next);
               });
@@ -32,17 +32,23 @@ class Card extends React.Component {
         }
       });
     } else if (item.id) {
+      // Багц
       api.packageInfo.findAllProducts({ id: item.id }).then(res => {
         if (res.success) {
           products = res.data[0].products;
           if (products.length) {
-            return this.props.onIncrement(products);
+            products.reduce((acc, next) => {
+              return acc.then(() => {
+                return this.props.onIncrement(next);
+              });
+            }, Promise.resolve());
           }
         } else {
           this.props.onNotify(res.message);
         }
       });
     } else {
+      // Бараа
       this.props.onIncrement(item);
     }
   };
@@ -106,10 +112,10 @@ class Card extends React.Component {
 
     const hover = (
       <div className="search-hover">
-        <Link to="">
+        <a onClick={() => this.props.onSave(item)}>
           <i className="fa fa-heart-o" aria-hidden="true" />
           <span />
-        </Link>
+        </a>
         <button
           onClick={() => this.handleAddToCart(item)}
           type="button"
@@ -328,9 +334,9 @@ class Card extends React.Component {
                   />
                 ))}
               <div className="cart-container">
-                <Link to="" className="wishlist">
+                <a className="wishlist" onClick={() => this.props.onSave(item)}>
                   <i className="fa fa-heart-o" aria-hidden="true" />
-                </Link>
+                </a>
                 <button
                   onClick={() => this.handleAddToCart(item)}
                   type="button"

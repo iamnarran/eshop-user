@@ -7,6 +7,7 @@ import { CARD_LIST_TYPES } from "../../utils/consts";
 
 class Recipe extends React.Component {
   render() {
+    console.log(this.props);
     const {
       products,
       primaryBanners,

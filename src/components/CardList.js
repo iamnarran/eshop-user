@@ -155,7 +155,7 @@ class CardList extends React.Component {
   };
 
   render() {
-    return this.renderCardList();
+    return <div>{this.renderCardList()}</div>;
   }
 }
 

@@ -10,22 +10,87 @@ class Cart extends React.Component {
   handleQtyChange = product => e => {
     const { products } = this.props.cart;
 
-    const found = products.find(prod => prod.cd === product.cd);
+    let found = products.find(prod => prod.cd === product.cd);
+
     if (found) {
       found.qty = parseInt(e.target.value || 1);
       const i = products.map(prod => prod.cd).indexOf(found.cd);
-      this.setState({ products: products.splice(i, 1, found) });
+
+      if (i !== -1) {
+        let tempProducts = products;
+        tempProducts.splice(i, 1, found);
+
+        this.setState({ products: tempProducts });
+      }
     }
   };
 
   handleQtyKeyDown = product => e => {
     if (e.key === "Enter") {
-      this.props.onUpdate(product, parseInt(e.target.value));
+      this.props.onUpdate(product, parseInt(e.target.value), true);
     }
   };
 
   handleQtyBlur = product => e => {
-    this.props.onUpdate(product, parseInt(e.target.value));
+    this.props.onUpdate(product, parseInt(e.target.value), true);
+  };
+
+  renderUnitPrice = product => {
+    const formatter = new Intl.NumberFormat("en-US");
+    const { getUnitPrice } = this.props;
+
+    if (product.sprice) {
+      if (product.issalekg && product.kgproduct[0]) {
+        return (
+          <p className="price">
+            <strong>{formatter.format(getUnitPrice(product).sprice)}₮</strong>
+          </p>
+        );
+      }
+
+      return (
+        <p className="price">
+          <strong>{formatter.format(getUnitPrice(product).sprice)}₮</strong>
+          <br />
+          <span
+            style={{
+              fontSize: "0.8em",
+              textDecoration: "line-through",
+              color: "#999"
+            }}
+          >
+            {formatter.format(getUnitPrice(product).price)}
+          </span>
+        </p>
+      );
+    }
+
+    if (product.issalekg && product.kgproduct[0]) {
+      return (
+        <p className="price">
+          <strong>{formatter.format(getUnitPrice(product).price)}₮</strong>
+        </p>
+      );
+    }
+
+    return (
+      <p className="price">
+        <strong>{formatter.format(getUnitPrice(product).price)}₮</strong>
+      </p>
+    );
+  };
+
+  renderTotalPrice = product => {
+    const formatter = new Intl.NumberFormat("en-US");
+    const { getUnitPrice } = this.props;
+
+    const price = getUnitPrice(product).sprice || getUnitPrice(product).price;
+
+    return (
+      <p className="price total">
+        <strong>{formatter.format(price * product.qty)}₮</strong>
+      </p>
+    );
   };
 
   render() {
@@ -69,26 +134,6 @@ class Cart extends React.Component {
             </tr>
           </thead>
           {products.map((product, index) => {
-            const price = product.sprice ? (
-              <p className="price">
-                <strong>{formatter.format(product.sprice)}₮</strong>
-                <br />
-                <span
-                  style={{
-                    fontSize: "0.8em",
-                    textDecoration: "line-through",
-                    color: "#999"
-                  }}
-                >
-                  {formatter.format(product.price)}
-                </span>
-              </p>
-            ) : (
-              <p className="price">
-                <strong>{formatter.format(product.price)}₮</strong>
-              </p>
-            );
-
             return (
               <tbody key={index}>
                 <tr>
@@ -111,7 +156,6 @@ class Cart extends React.Component {
                         </Link>
                       </div>
                       <div className="info-container">
-                        {console.log(product)}
                         <Link
                           to={product.route ? product.route : ""}
                           style={{ color: "#6c757d" }}
@@ -122,7 +166,7 @@ class Cart extends React.Component {
                       </div>
                     </div>
                   </td>
-                  <td>{price}</td>
+                  <td>{this.renderUnitPrice(product)}</td>
                   <td>
                     <form>
                       <div className="input-group e-input-group">
@@ -138,10 +182,7 @@ class Cart extends React.Component {
                         <input
                           type="text"
                           className="form-control"
-                          placeholder=""
                           value={product.qty}
-                          aria-label=""
-                          aria-describedby="button-addon4"
                           name="productQty"
                           maxLength={5}
                           onChange={this.handleQtyChange(product)}
@@ -160,16 +201,7 @@ class Cart extends React.Component {
                       </div>
                     </form>
                   </td>
-                  <td>
-                    <p className="price total">
-                      <strong>
-                        {formatter.format(
-                          (product.sprice || product.price) * product.qty
-                        )}
-                        ₮
-                      </strong>
-                    </p>
-                  </td>
+                  <td>{this.renderTotalPrice(product)}</td>
                 </tr>
                 <tr className="table-action">
                   <td colSpan="5">

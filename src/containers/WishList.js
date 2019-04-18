@@ -1,4 +1,5 @@
 import React from "react";
+import { connect } from "react-redux";
 import { compose } from "react-komposer";
 import api from "../api";
 import Loader from "../components/Loader";
@@ -9,12 +10,6 @@ const options = {
 
 const fetch = async (props, onData) => {
   try {
-    const wishList = await api.packageProduct.findWishList({ id: 1 });
-    onData(null, {
-      container: {
-        wishList: wishList.data
-      }
-    });
   } catch (e) {
     console.log("CUSTOM ERROR: ");
     console.log(e);
@@ -24,7 +19,6 @@ const fetch = async (props, onData) => {
 const dataLoader = (props, onData) => {
   fetch(props, onData);
 };
-
 export default compose(
   dataLoader,
   options

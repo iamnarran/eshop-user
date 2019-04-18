@@ -70,7 +70,6 @@ class Localization extends Component {
       this.state.isToggle ? " activated" : ""
     }`;
     const { auth } = this.props;
-
     const routes = [
       {
         path: "/",
@@ -166,7 +165,7 @@ class Localization extends Component {
       },
       {
         exact: true,
-        path: "/search",
+        path: "/search/:word",
         component: rest => <ProductList {...rest} {...this.props} />
       }
     ];
@@ -180,13 +179,11 @@ class Localization extends Component {
                 isToggle={this.state.isToggle}
                 onChange={this.toggleMenu}
               />
-
               <MobileMenu
                 popupClass={popupClass}
                 isToggle={this.state.isToggle}
                 onChange={this.toggleMenu}
               />
-
               <Switch>
                 {routes.map((route, index) => {
                   return route.isPrivate ? (
@@ -208,7 +205,6 @@ class Localization extends Component {
                   );
                 })}
               </Switch>
-
               <Footer />
               <ToastContainer />
             </div>
