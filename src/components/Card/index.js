@@ -112,10 +112,10 @@ class Card extends React.Component {
 
     const hover = (
       <div className="search-hover">
-        <Link to="">
+        <a onClick={() => this.props.onSave(item)}>
           <i className="fa fa-heart-o" aria-hidden="true" />
           <span />
-        </Link>
+        </a>
         <button
           onClick={() => this.handleAddToCart(item)}
           type="button"
@@ -334,9 +334,9 @@ class Card extends React.Component {
                   />
                 ))}
               <div className="cart-container">
-                <Link to="" className="wishlist">
+                <a className="wishlist" onClick={() => this.props.onSave(item)}>
                   <i className="fa fa-heart-o" aria-hidden="true" />
-                </Link>
+                </a>
                 <button
                   onClick={() => this.handleAddToCart(item)}
                   type="button"

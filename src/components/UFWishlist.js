@@ -1,4 +1,5 @@
 import React from "react";
+import { connect } from "react-redux";
 import { Form } from "antd";
 import api from "../api";
 import { IMAGE } from "../utils/consts";
@@ -8,8 +9,8 @@ class Component extends React.Component {
   state = {
     wishlist: []
   };
-  componentDidMount() {
-    api.wishList.findAlls({ custId: "14" }).then(res => {
+  getData() {
+    api.wishlist.findAll({ custId: this.props.user.id }).then(res => {
       if (res.success) {
         this.setState({
           wishlist: res.data
@@ -18,13 +19,26 @@ class Component extends React.Component {
       this.setState({ loading: false });
     });
   }
+  componentDidMount() {
+    this.getData();
+  }
 
   togglePopup = () => {
     this.props.onChange();
   };
 
+  onDelete = (e, item) => {
+    e.preventDefault();
+    api.wishlist
+      .onDelete({ custId: this.props.user.id, skucd: item.cd })
+      .then(res => {
+        if (res.success) {
+          this.getData();
+        }
+      });
+  };
+
   render() {
-    console.log("wishList", this.props);
     let tableList = null;
     const list = this.state.wishlist;
     const formatter = new Intl.NumberFormat("en-US");
@@ -67,7 +81,7 @@ class Component extends React.Component {
                 </a>
               </li>
               <li>
-                <a onClick={this.changeNumber}>
+                <a onClick={e => this.onDelete(e, item)}>
                   <i className="fa fa-times" aria-hidden="true" />
                 </a>
               </li>
@@ -91,4 +105,12 @@ class Component extends React.Component {
 }
 
 const App = Form.create({ name: "delivery" })(Component);
-export default App;
+
+const mapStateToProps = state => {
+  return {
+    isLoggedIn: state.auth.isLoggedIn,
+    user: state.auth.user
+  };
+};
+
+export default connect(mapStateToProps)(Component);

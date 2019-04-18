@@ -5,7 +5,7 @@ import { css } from "glamor";
 
 import api from "../../api";
 import { updateCart } from "../../actions/cart";
-
+import LoginModal from "../LoginModal";
 const withCart = WrappedComponent => {
   class CartHOC extends Component {
     getUnitPrice = product => {
@@ -277,6 +277,60 @@ const withCart = WrappedComponent => {
       }
     };
 
+    oneSave = item => {
+      api.product
+        .addViewList({ id: this.props.user.id, skucd: item.cd })
+        .then(res => {
+          if (res.success) {
+            this.handleNotify("Амжилттай хадгаллаа.");
+          }
+        });
+    };
+
+    getPackageData = async id => {
+      await api.packageInfo
+        .findAllProducts({
+          id: id
+        })
+        .then(res => {
+          if (res.success) {
+            console.log(res.data[0].products);
+            res.data[0].products.map(item => {
+              this.oneSave(item);
+            });
+          }
+        });
+    };
+
+    getRecipeData = async recipeid => {
+      await api.recipe
+        .findAllProducts({
+          id: recipeid
+        })
+        .then(res => {
+          if (res.success) {
+            res.data[0].products.map(item => {
+              this.oneSave(item);
+            });
+          }
+        });
+    };
+
+    handleSave = item => {
+      if (this.props.isLoggedIn && this.props.user) {
+        if (item.recipeid) {
+          this.getRecipeData(item.recipeid);
+        }
+        if (item.id) {
+          this.getPackageData(item.id);
+        } else {
+          this.oneSave(item);
+        }
+      } else {
+        window.alert("newtreech malaa");
+      }
+    };
+
     render() {
       const {
         onNotify,
@@ -306,7 +360,9 @@ const withCart = WrappedComponent => {
 
   const mapStateToProps = state => {
     return {
-      cart: state.cart
+      cart: state.cart,
+      isLoggedIn: state.auth.isLoggedIn,
+      user: state.auth.user
     };
   };
 
