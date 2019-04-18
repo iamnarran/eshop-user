@@ -21,7 +21,7 @@ const formatter = new Intl.NumberFormat("en-US");
 
 class ProductDetail extends Component {
   state = {
-    productQty: 1,
+    productQty: this.props.container.product.addminqty || 1,
     isLoginModalVisible: false,
     isShowMoreClicked: false
   };
@@ -115,6 +115,7 @@ class ProductDetail extends Component {
 
   renderCartInfo = () => {
     const { product } = this.props.container;
+    const { productQty } = this.state;
 
     let priceTitle = "Үнэ: ";
     let price = product.price;
@@ -153,7 +154,7 @@ class ProductDetail extends Component {
     return (
       <form>
         <div className="row row10">
-          <div className="col-xl-4 col-6">
+          <div className="col-xl-5 col-6">
             <div className="input-group">
               <div className="input-group-prepend" id="button-addon4">
                 <button
@@ -167,8 +168,9 @@ class ProductDetail extends Component {
 
               <input
                 type="text"
+                maxLength="5"
                 className="form-control"
-                value={this.state.productQty}
+                value={productQty}
                 name="productQty"
                 onChange={this.handleQtyChange}
               />
@@ -185,7 +187,7 @@ class ProductDetail extends Component {
             </div>
           </div>
 
-          <div className="col-xl-8">
+          <div className="col-xl-7">
             <div className="count-text text-right">
               {priceTitle}
               {price}
@@ -220,7 +222,7 @@ class ProductDetail extends Component {
             type="button"
             className="btn btn-main text-uppercase"
             disabled={product.availableqty < 1}
-            onClick={() => this.props.onUpdate(product, this.state.productQty)}
+            onClick={() => this.props.onUpdate(product, productQty)}
           >
             <i className="fa fa-shopping-cart" aria-hidden="true" />{" "}
             <span>Сагсанд нэмэх</span>
@@ -260,6 +262,7 @@ class ProductDetail extends Component {
     const { isShowMoreClicked } = this.state;
 
     const shouldExpand = isShowMoreClicked && relatedProducts.length > limit;
+    const shouldButtonHide = relatedProducts.length <= limit;
 
     relatedProducts =
       !isShowMoreClicked && relatedProducts.length > limit
@@ -322,7 +325,7 @@ class ProductDetail extends Component {
             <Button
               className="btn btn-border"
               onClick={this.handleShowMoreClick}
-              style={{ display: shouldExpand && "none" }}
+              style={{ display: (shouldExpand || shouldButtonHide) && "none" }}
             >
               <span className="text text-uppercase">
                 Бүх хослох барааг үзэх
@@ -423,7 +426,7 @@ class ProductDetail extends Component {
 
     let average = 0;
     if (product && product.rate && product.rate.length) {
-      let total = product.rate.reduce((a, b) => a + b.rate, 0);
+      let total = product.rate.reduce((acc, curr) => acc + curr.rate, 0);
       if (total > 0) {
         average = this.round(total / product.rate.length, 0.5);
       }
@@ -436,19 +439,20 @@ class ProductDetail extends Component {
   };
 
   handleQtyChange = e => {
-    this.setState({ productQty: e.target.value });
+    this.setState({ productQty: parseInt(e.target.value) });
   };
 
   handleIncrementClick = () => {
     const {
       addminqty,
       availableqty,
-      salemaxqty
+      salemaxqty,
+      isgift
     } = this.props.container.product;
     const { productQty } = this.state;
 
     if (availableqty >= productQty) {
-      if (salemaxqty >= productQty || salemaxqty === 0) {
+      if (salemaxqty >= productQty || salemaxqty === 0 || isgift !== 0) {
         this.setState({
           productQty:
             productQty < addminqty ? addminqty : productQty + addminqty
@@ -516,8 +520,6 @@ class ProductDetail extends Component {
 
   render() {
     const { categories, product } = this.props.container;
-
-    console.log("product", product);
 
     if (!product) {
       return (
