@@ -21,7 +21,7 @@ class AppHeader extends Component {
       menucategories: [],
       item: "Бүх бараа",
       suggestion: [],
-      word: " ",
+      word: "",
       k: []
     };
   }
@@ -250,7 +250,11 @@ class AppHeader extends Component {
                             <li>
                               <Link
                                 className="btn"
-                                to=""
+                                to={
+                                  this.state.word
+                                    ? "/search/" + this.state.word
+                                    : ""
+                                }
                                 onClick={this.handleChange}
                               >
                                 <i

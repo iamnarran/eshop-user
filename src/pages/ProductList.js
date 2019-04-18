@@ -198,6 +198,7 @@ class ProductList extends React.Component {
   };
 
   render() {
+    console.log("productList", this.props);
     const {
       promoCats,
       menu,

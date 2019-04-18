@@ -4,7 +4,13 @@ export default [
   {
     NAME: "findAll",
     METHOD: "GET",
-    URL: `${API}/api/customer/wishlist/:custid`,
-    REPLACE: "custid"
+    URL: `${API}/api/customer/WishList/:custId`,
+    REPLACE: "custId"
+  },
+  {
+    NAME: "onDelete",
+    METHOD: "DELETE",
+    URL: `${API}/api/customer/WishList/:custId/:skucd`,
+    REPLACE: "custId, skucd"
   }
 ];
