@@ -55,7 +55,7 @@ class Package extends React.Component {
             </div>
           </div>
         </div>
-        <div className="section">
+        <div className="section package">
           <div className="container pad10">
             {
               <CardList
