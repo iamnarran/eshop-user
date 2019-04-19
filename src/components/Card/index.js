@@ -183,7 +183,7 @@ class Card extends React.Component {
                 {item.rate ? (
                   <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} />
                 ) : null}
-                <br />
+                {/* <br /> */}
                 <Link to={item.route ? item.route : ""} className="price">
                   {prices}
                 </Link>

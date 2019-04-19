@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Modal } from "antd";
 import { Menu } from "antd";
+import crossImage from "../scss/assets/svg/error.svg";
 const SubMenu = Menu.SubMenu;
 
 class MobileMenu extends React.Component {
@@ -94,11 +95,6 @@ class MobileMenu extends React.Component {
         <div className={popupClass}>
           <div className="single">
             <ul className="list-unstyled flex-this flex-space top-1">
-              <li className="list-inline-item" onClick={this.togglePopup}>
-                <button className="button buttonBlack">
-                  <i className="fa fa-times" aria-hidden="true" />
-                </button>
-              </li>
               <li className="list-inline-item">
                 <Link to="" className="e-phone">
                   <i className="fa fa-phone" aria-hidden="true" />
@@ -112,6 +108,12 @@ class MobileMenu extends React.Component {
                     <option value="1">ENG</option>
                   </select>
                 </form>
+              </li>
+              <li className="list-inline-item" onClick={this.togglePopup}>
+                <button className="button buttonBlack">
+                  {/* <i className="fa fa-times" aria-hidden="true" /> */}
+                  <img src={crossImage} alt="cross" height="25px"/>
+                </button>
               </li>
             </ul>
             <ul className="list-unstyled flex-this flex-space top-2">

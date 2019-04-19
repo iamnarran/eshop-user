@@ -1,6 +1,16 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Collapse, Icon, Tabs, Radio, Input, Form, Select } from "antd";
+import {
+  Collapse,
+  Icon,
+  Tabs,
+  Radio,
+  Input,
+  Form,
+  Select,
+  message,
+  Divider
+} from "antd";
 import storage from "../utils/storage";
 import api from "../api";
 import LoginModal from "../components/LoginModal";
@@ -19,12 +29,13 @@ const InputGroup = Input.Group;
 const formatter = new Intl.NumberFormat("en-US");
 @connect(
   mapStateToProps,
-  { saveUserAddress: actions.saveUserAddress }
+  { saveUserAddress: actions.saveUserAddress, sentPayment: actions.sentPayment }
 )
 class Checkout extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      addresstype: "edit",
       menu: false,
       collapse: [],
       collapseKey: [],
@@ -42,7 +53,12 @@ class Checkout extends React.Component {
       isLoginModalVisible: false,
       mainLocation: [],
       subLocation: [],
-      chosenInfo: []
+      chosenInfo: [],
+      commiteLocation: [],
+      companyInfo: [],
+      epointcard: null,
+      useEpoint: false,
+      epointUsedPoint: 0
     };
   }
 
@@ -81,27 +97,33 @@ class Checkout extends React.Component {
   };
 
   getUserInfo = async user => {
-    console.log(this.props.form);
     await api.checkout.findUserData({ id: user.id }).then(res => {
       if (res.success == true) {
-        res.data.addrs.map((item, i) => {
-          if (item.ismain == 1) {
-            this.setState({ defaultAddress: item });
-          }
-        });
-        console.log(res.data);
+        if (res.data.addrs.length != 0) {
+          res.data.addrs.map((item, i) => {
+            if (item.ismain == 1) {
+              this.setState({ defaultAddress: item });
+            }
+          });
+          this.props.form.setFieldsInitialValue({
+            address: this.state.defaultAddress.id,
+            mainLocation: res.data.addrs[0].provincenm,
+            subLocation: res.data.addrs[0].districtnm,
+            commiteLocation: res.data.addrs[0].committeenm
+          });
+        }
+
         this.props.form.setFieldsInitialValue({
           lastName: res.data.info.firstname,
-          phone: res.data.info.phone,
-          address: this.state.defaultAddress.id,
-          mainLocation: res.data.addrs[0].provincenm,
-          subLocation: res.data.addrs[0].districtnm
+          phone1: res.data.info.phone1,
+          phone2: res.data.info.phone2
         });
 
         this.setState({
+          addresstype: res.data.addrs.length === 0 ? "new" : "edit",
           userInfo: res.data.info,
           userAddress: res.data.addrs,
-          cardno: res.data.cardno
+          epointcard: res.data.card
         });
       }
     });
@@ -129,6 +151,72 @@ class Checkout extends React.Component {
         </h5>
       </div>
     );
+  };
+
+  saveCustomerCard = async e => {
+    e.preventDefault();
+    let cardpass = this.refs.cardpass.value;
+    let cardno = this.refs.cardno.value;
+    await api.checkout
+      .saveCustomerCard({
+        custid: this.state.userInfo.id,
+        cardno: cardno,
+        pincode: cardpass
+      })
+      .then(res => {
+        if (res.success == true) {
+          message.success(res.data);
+        } else {
+          message.error(res.data);
+        }
+      });
+  };
+
+  addAddress = (value, event) => {
+    if (value == null) {
+      this.setState({ addresstype: "new" });
+      this.props.form.setFieldsInitialValue({
+        address: "",
+        mainLocation: "",
+        subLocation: "",
+        commiteLocation: ""
+      });
+    } else {
+      this.getLocs(value);
+    }
+  };
+
+  getLocs = async id => {
+    await api.checkout.getlocs({ locid: id }).then(res => {
+      if (res.success == true) {
+        this.props.form.setFieldsInitialValue({
+          address: res.data.address,
+          mainLocation: res.data.provincenm,
+          subLocation: res.data.districtnm,
+          commiteLocation: res.data.committeenm
+        });
+      } else {
+        console.log("aldaa");
+      }
+    });
+  };
+
+  getCompanyRegno = async e => {
+    e.preventDefault();
+    let regno = this.refs.regno.value;
+    await api.checkout.getCompanyRegno({ regNo: regno }).then(res => {
+      if (res.success == true) {
+        res.data.regno = regno;
+        this.setState({ companyInfo: res.data });
+      } else {
+        console.log("aldaa");
+      }
+    });
+  };
+
+  handleEditCompany = e => {
+    e.preventDefault();
+    this.setState({ companyInfo: [] });
   };
 
   optionType = () => {
@@ -219,7 +307,7 @@ class Checkout extends React.Component {
 
   onSubmit = e => {
     e.preventDefault();
-    const { defaultAddress, userAddress } = this.state;
+    const { defaultAddress, userAddress, addresstype } = this.state;
     let tmp = [];
     let chosenInfo = {};
     this.props.form.validateFields((err, values) => {
@@ -229,18 +317,20 @@ class Checkout extends React.Component {
           chosenInfo.lastName = values.lastName;
           chosenInfo.mainLocation = values.mainLocation;
           chosenInfo.subLocation = values.subLocation;
-          chosenInfo.phone = values.phone;
+          chosenInfo.phone1 = values.phone1;
+          chosenInfo.phone2 = values.phone2;
+          chosenInfo.commiteLocation = values.commiteLocation;
           tmp.push("3");
           if (values.address == defaultAddress.address) {
             values.address = defaultAddress.id;
           }
           try {
-            if (userAddress.length == 0) {
+            if (addresstype == "new") {
               let adrs = {};
               adrs.custid = this.state.userInfo.id;
-              adrs.locid = values.subLocation;
+              adrs.locid = values.commiteLocation;
               adrs.address = values.address;
-              adrs.ismain = 1;
+              adrs.isenable = "Идэвхтэй";
               this.setUser(adrs);
             }
           } catch (err) {
@@ -262,7 +352,6 @@ class Checkout extends React.Component {
 
   setUser = async adrs => {
     const res = await this.props.saveUserAddress(adrs);
-    console.log(res);
   };
 
   changeTab = e => {
@@ -356,8 +445,8 @@ class Checkout extends React.Component {
     }
   };
 
-  generateNoat = (total, deliver) => {
-    let noat = ((total + deliver) / 110) * 10;
+  generateNoat = (total, deliver, usedpoint) => {
+    let noat = ((total + deliver - usedpoint) / 110) * 10;
     return noat.toFixed(2);
   };
 
@@ -369,14 +458,43 @@ class Checkout extends React.Component {
     });
   };
 
+  onChangeSubLoc = e => {
+    this.props.form.validateFields((err, values) => {
+      if (values.mainLocation != "") {
+        api.location
+          .findCommiteLocation({ provid: values.mainLocation, distid: e })
+          .then(res => {
+            if (res.success == true) {
+              this.setState({ commiteLocation: res.data });
+            }
+          });
+      }
+    });
+  };
+
   renderSubLocation = e => {
     const { subLocation } = this.state;
     let tmp;
     if (subLocation.length !== 0) {
       tmp = subLocation.map((item, i) => {
         return (
-          <Option key={i} value={item.id}>
+          <Option key={i} value={item.districtid}>
             {item.districtnm}
+          </Option>
+        );
+      });
+    }
+    return tmp;
+  };
+
+  renderCommiteLocation = e => {
+    const { commiteLocation } = this.state;
+    let tmp;
+    if (commiteLocation.length !== 0) {
+      tmp = commiteLocation.map((item, i) => {
+        return (
+          <Option key={i} value={item.id}>
+            {item.committeenm}
           </Option>
         );
       });
@@ -415,29 +533,91 @@ class Checkout extends React.Component {
     return tmp;
   };
 
+  handleUserEpoint = async e => {
+    e.preventDefault();
+    const { epointcard, delivery, products } = this.state;
+    let point = epointcard.point;
+    const { value: password } = await Swal.fire({
+      title: "Нууц үг",
+      input: "password",
+      width: "20rem",
+      confirmButtonText: "Ok",
+      cancelButtonText: "Болих",
+      inputPlaceholder: "Картын нууц үгээ оруулна уу ?",
+      showCancelButton: true,
+      inputAttributes: {
+        maxlength: 4,
+        autocapitalize: "off",
+        autocorrect: "off"
+      }
+    });
+
+    if (password) {
+      await api.checkout
+        .checkpass({ cardno: epointcard.cardno, pincode: password })
+        .then(res => {
+          if (res.success == true) {
+            let tmp = epointcard;
+            if (
+              (delivery.price + products.totalPrice) / 2 >=
+              epointcard.point
+            ) {
+              tmp.point = 0;
+              this.setState({
+                epointUsedPoint: point,
+                epointcard: tmp
+              });
+            } else {
+              tmp.point =
+                tmp.point - (delivery.price + products.totalPrice) / 2;
+              this.setState({
+                epointUsedPoint: (delivery.price + products.totalPrice) / 2,
+                epointcard: tmp
+              });
+            }
+            this.setState({ useEpoint: true });
+          } else {
+            message.error(res.message);
+          }
+        });
+      // Swal.fire("Entered password: " + password);
+    }
+  };
+
+  sentPaymentF = async tmp => {
+    const res = await this.props.sentPayment(tmp);
+  };
+
   handleSubmit = e => {
     e.preventDefault();
-    const { products } = this.state;
-    console.log(this.state);
-
+    const { products, epointcard, epointUsedPoint, companyInfo } = this.state;
     let tmp = {};
     tmp.custid = this.state.userInfo.id;
     tmp.deliveryTypeId = this.state.delivery.id;
     tmp.custAddressId = null;
-    tmp.phone1 = null;
-    tmp.phone2 = null;
+    tmp.phone1 = this.state.chosenInfo.phone1;
+    tmp.phone2 = this.state.chosenInfo.phone2;
     tmp.paymentType = this.state.chosenPayment.id;
     tmp.bankId = this.state.chosenBankInfo.bankid;
     tmp.accountId = this.state.chosenBankInfo.account;
-    tmp.companyRegNo = "";
-    tmp.companyName = "";
-    tmp.cardNo = "";
-    tmp.usedPoint = "";
+
+    tmp.cardNo = epointcard.cardno;
+    tmp.usedPoint = epointUsedPoint;
     tmp.items = [];
     products.products.map((item, i) => {
       tmp.items.push(item);
     });
-    console.log(tmp);
+    if (companyInfo.length == 0) {
+      tmp.companyRegNo = "";
+      tmp.companyName = "";
+    } else {
+      tmp.companyRegNo = companyInfo.regno;
+      tmp.companyName = companyInfo.name;
+    }
+    this.sentPaymentF(tmp);
+
+    //sentPayment
+
     /*  Swal.fire({
       title: "<strong>HTML <u>example</u></strong>",
       type: "info",
@@ -461,10 +641,16 @@ class Checkout extends React.Component {
       chosenPayment,
       products,
       cardno,
-      chosenPlusRadio
+      chosenPlusRadio,
+      epointcard,
+      companyInfo,
+      epointUsedPoint,
+      useEpoint,
+      addresstype
     } = this.state;
     const { isLoggedIn } = this.props;
     const deliver1 = delivery == [] ? 0 : delivery.price;
+    const usedpoint = useEpoint == true ? epointUsedPoint : 0;
     const { getFieldDecorator } = this.props.form;
     return (
       <div className="section section-gray">
@@ -486,7 +672,7 @@ class Checkout extends React.Component {
                         activeKey={this.state.activeKey}
                         onChange={this.callback}
                       >
-                        {userInfo.length == 0 ? (
+                        {isLoggedIn == false ? (
                           <Panel
                             showArrow={false}
                             header={this.customerTab()}
@@ -582,14 +768,40 @@ class Checkout extends React.Component {
                                                     }
                                                   ]
                                                 })(
-                                                  userAddress.length == 0 ? (
+                                                  addresstype == "new" ? (
                                                     <Input
                                                       type="text"
                                                       placeholder="Хаягаа сонгоно уу ?*"
                                                     />
                                                   ) : (
-                                                    <Select placeholder="Хаягаа сонгоно уу ?">
+                                                    <Select
+                                                      onSelect={(
+                                                        value,
+                                                        event
+                                                      ) =>
+                                                        this.addAddress(
+                                                          value,
+                                                          event
+                                                        )
+                                                      }
+                                                      placeholder="Хаягаа сонгоно уу ?"
+                                                    >
                                                       {this.renderAddrsOption()}
+                                                      <Option value={null}>
+                                                        {/*  <Divider
+                                                          style={{
+                                                            margin: "4px 0"
+                                                          }}
+                                                        /> */}
+                                                        <div
+                                                          style={{
+                                                            cursor: "pointer"
+                                                          }}
+                                                        >
+                                                          <Icon type="plus" />{" "}
+                                                          Хаяг нэмэх
+                                                        </div>
+                                                      </Option>
                                                     </Select>
                                                   )
                                                 )}
@@ -638,7 +850,10 @@ class Checkout extends React.Component {
                                                   ]
                                                 }
                                               )(
-                                                <Select placeholder="Дүүрэг/Сум*">
+                                                <Select
+                                                  placeholder="Дүүрэг/Сум*"
+                                                  onChange={this.onChangeSubLoc}
+                                                >
                                                   {this.renderSubLocation()}
                                                 </Select>
                                               )}
@@ -647,19 +862,19 @@ class Checkout extends React.Component {
                                           <div className="col-xl-4 col-md-4">
                                             <Form.Item>
                                               {getFieldDecorator(
-                                                "subLocation",
+                                                "commiteLocation",
                                                 {
                                                   rules: [
                                                     {
                                                       required: true,
                                                       message:
-                                                        "Дүүрэг/Сум сонгоно уу?"
+                                                        "Хороо сонгоно уу?"
                                                     }
                                                   ]
                                                 }
                                               )(
-                                                <Select placeholder="Дүүрэг/Сум*">
-                                                  {this.renderSubLocation()}
+                                                <Select placeholder="Хороо*">
+                                                  {this.renderCommiteLocation()}
                                                 </Select>
                                               )}
                                             </Form.Item>
@@ -684,7 +899,7 @@ class Checkout extends React.Component {
                                           </div>
                                           <div className="col-xl-4 col-md-4">
                                             <Form.Item>
-                                              {getFieldDecorator("phone", {
+                                              {getFieldDecorator("phone1", {
                                                 rules: [
                                                   {
                                                     required: true,
@@ -702,7 +917,7 @@ class Checkout extends React.Component {
                                           </div>
                                           <div className="col-xl-4 col-md-4">
                                             <Form.Item>
-                                              {getFieldDecorator("phone", {
+                                              {getFieldDecorator("phone2", {
                                                 rules: [
                                                   {
                                                     required: true,
@@ -808,32 +1023,55 @@ class Checkout extends React.Component {
                                 <div className="row row10">
                                   <div className="col-xl-6 pad10">
                                     <div className="form-group">
-                                      <input
-                                        type="text"
-                                        className="form-control"
-                                        id="exampleInputEmail1"
-                                        aria-describedby="emailHelp"
-                                        placeholder="Байгууллагын регистэр"
-                                      />
+                                      {companyInfo.length == 0 ? (
+                                        <input
+                                          type="text"
+                                          className="form-control"
+                                          id="exampleInputEmail1"
+                                          name="regno"
+                                          ref="regno"
+                                          aria-describedby="emailHelp"
+                                          placeholder="Байгууллагын регистэр"
+                                        />
+                                      ) : (
+                                        <input
+                                          type="text"
+                                          className="form-control"
+                                          id="exampleInputEmail1"
+                                          name="regno"
+                                          ref="regno"
+                                          value={companyInfo.name}
+                                          aria-describedby="emailHelp"
+                                          placeholder="Байгууллагын регистэр"
+                                        />
+                                      )}
                                     </div>
                                   </div>
                                 </div>
-                                <button className="btn btn-gray solid">
-                                  <span className="text-uppercase">
-                                    Ашиглах
-                                  </span>
-                                </button>
-                                <button className="btn btn-main solid">
-                                  <span className="text-uppercase">Холбох</span>
-                                </button>
-                                <button className="btn ">
-                                  <span className="text-uppercase">Засах</span>
-                                </button>
+                                {companyInfo.length == 0 ? (
+                                  <button
+                                    className="btn btn-main solid"
+                                    onClick={this.getCompanyRegno}
+                                  >
+                                    <span className="text-uppercase">
+                                      Холбох
+                                    </span>
+                                  </button>
+                                ) : (
+                                  <button
+                                    className="btn"
+                                    onClick={this.handleEditCompany}
+                                  >
+                                    <span className="text-uppercase">
+                                      Засах
+                                    </span>
+                                  </button>
+                                )}
                               </form>
                             ) : (
                               ""
                             )}
-                            {cardno == null ? (
+                            {epointcard == null ? (
                               <div>
                                 <p className="title">
                                   <strong>Имарт картаа холбох</strong>
@@ -846,11 +1084,15 @@ class Checkout extends React.Component {
                                           type="text"
                                           className="form-control"
                                           id="exampleInputEmail1"
+                                          name="cardno"
+                                          ref="cardno"
                                           aria-describedby="emailHelp"
                                           placeholder="Картын дугаар"
                                         />
                                         <input
                                           type="password"
+                                          ref="cardpass"
+                                          name="cardpass"
                                           className="form-control"
                                           id="exampleInputEmail1"
                                           aria-describedby="emailHelp"
@@ -862,6 +1104,7 @@ class Checkout extends React.Component {
                                   <button
                                     type="submit"
                                     className="btn btn-gray solid"
+                                    onClick={this.saveCustomerCard}
                                   >
                                     <span className="text-uppercase">
                                       Холбох
@@ -870,7 +1113,51 @@ class Checkout extends React.Component {
                                 </form>
                               </div>
                             ) : (
-                              ""
+                              <div>
+                                <p className="title">
+                                  <strong>Оноо</strong>
+                                </p>
+                                <form>
+                                  <div className="row row10">
+                                    <div className="col-xl-6 pad10">
+                                      <div className="form-group">
+                                        <input
+                                          type="text"
+                                          className="form-control"
+                                          id="exampleInputEmail1"
+                                          value={
+                                            epointcard.status == 1
+                                              ? epointcard.point
+                                              : epointcard.cardno
+                                          }
+                                          name="cardInfo"
+                                          ref="cardInfo"
+                                          aria-describedby="emailHelp"
+                                          placeholder="Картын дугаар"
+                                        />
+                                        {epointcard.status == 0 ? (
+                                          <label>
+                                            Таны карт идэвхгүй болсон байна.
+                                            Хэрэглэгчийн үйлчилгээний төвд
+                                            хандаж картаа шинэчилүүлнэ үү.
+                                          </label>
+                                        ) : (
+                                          ""
+                                        )}
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <button
+                                    type="submit"
+                                    className="btn btn-gray solid"
+                                    onClick={this.handleUserEpoint}
+                                  >
+                                    <span className="text-uppercase">
+                                      Ашиглах
+                                    </span>
+                                  </button>
+                                </form>
+                              </div>
                             )}
                           </div>
                         </Panel>
@@ -933,18 +1220,31 @@ class Checkout extends React.Component {
                       <span>Хүргэлтийн үнэ:</span>
                       <strong>{formatter.format(deliver1)}₮</strong>
                     </p>
+                    <p className="text flex-space">
+                      <span>Имарт карт оноо:</span>
+                      <strong style={{ color: "red" }}>
+                        {"-" + formatter.format(usedpoint)}₮
+                      </strong>
+                    </p>
                     <hr />
                     <p className="text flex-space">
                       <span>Нийт дүн:</span>
                       <strong>
-                        {formatter.format(products.totalPrice + deliver1)}₮
+                        {formatter.format(
+                          products.totalPrice + deliver1 - usedpoint
+                        )}
+                        ₮
                       </strong>
                     </p>
                     <p className="text flex-space">
                       <span>НӨАТ:</span>
                       <strong>
                         {formatter.format(
-                          this.generateNoat(products.totalPrice, deliver1)
+                          this.generateNoat(
+                            products.totalPrice,
+                            deliver1,
+                            usedpoint
+                          )
                         )}
                         ₮
                       </strong>

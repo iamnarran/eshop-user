@@ -32,5 +32,46 @@ export default [
     METHOD: "POST",
     URL: `${API}/api/customer/address`,
     TOKEN: true
+  },
+  {
+    NAME: "saveCustomerCard",
+    METHOD: "POST",
+    URL: `${API}/api/customer/card/:custid/:cardno/:pincode`,
+    REPLACE: "custid, cardno, pincode",
+    TOKEN: true
+  },
+  {
+    NAME: "getCompanyRegno",
+    METHOD: "GET",
+    URL: `${API}/api/order/company/:regNo`,
+    REPLACE: "regNo",
+    TOKEN: true
+  },
+  {
+    NAME: "getepoint",
+    METHOD: "GET",
+    URL: `${API}/api/customer/card/:custId`,
+    REPLACE: "custId",
+    TOKEN: true
+  },
+  {
+    NAME: "checkpass",
+    METHOD: "GET",
+    URL: `${API}/api/customer/card/pin/:cardno/:pincode`,
+    REPLACE: "cardno, pincode",
+    TOKEN: true
+  },
+  {
+    NAME: "sentPayment",
+    METHOD: "POST",
+    URL: `${API}/api/order`,
+    TOKEN: true
+  },
+  {
+    NAME: "getlocs",
+    METHOD: "GET",
+    URL: `${API}/api/customer/address/loc/:locid`,
+    REPLACE: "locid",
+    TOKEN: true
   }
 ];
