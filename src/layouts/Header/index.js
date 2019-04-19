@@ -8,6 +8,9 @@ import UserButton from "../../components/UserButton";
 import CartButton from "../../components/CartButton";
 import { IMAGE } from "../../utils/consts";
 import api from "../../api";
+import searchImage from "../../scss/assets/svg/001-search.svg";
+import heartImage from "../../scss/assets/svg/003-chat.svg";
+import navImage from "../../scss/assets/svg/list.svg";
 import "./style.css";
 
 class AppHeader extends Component {
@@ -170,7 +173,12 @@ class AppHeader extends Component {
                         className="d-block d-md-none button buttonGrey"
                         onClick={this.togglePopup}
                       >
-                        <i className="fa fa-navicon" aria-hidden="true" />
+                        {/* <i className="fa fa-navicon" aria-hidden="true" /> */}
+                        <img
+                          src={navImage}
+                          alt="mobile navigation"
+                          height="25px"
+                        />
                       </button>
                       <Link to="/" className="logo">
                         <img alt="logo" src={IMAGE + staticInfo.logopath} />
@@ -283,7 +291,8 @@ class AppHeader extends Component {
                             className="flex-this search-mobile-btn d-flex d-lg-none row10"
                             onClick={this.toggleSearch}
                           >
-                            <i className="fa fa-search" />
+                            {/* <i className="fa fa-search" /> */}
+                            <img src={searchImage} alt="search" height="25px" />
                             <p>
                               <small>Хайлт</small>
                               <span className="text-uppercase">хийх</span>
@@ -292,7 +301,12 @@ class AppHeader extends Component {
                         </li>
                         <li className="list-inline-item">
                           <Link to="" className="row10">
-                            <Icon type="heart" theme="filled" />
+                            {/* <Icon type="heart" theme="filled" /> */}
+                            <img
+                              src={heartImage}
+                              alt="wishlist"
+                              height="25px"
+                            />
                             <p>
                               <small>Хадгалсан</small>
                               <span className="text-uppercase">бараа</span>
