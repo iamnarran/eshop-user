@@ -1,39 +1,73 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { toast } from "react-toastify";
+import { css } from "glamor";
 
 import api from "../../api";
 import { updateCart } from "../../actions/cart";
 import LoginModal from "../LoginModal";
 const withCart = WrappedComponent => {
   class CartHOC extends Component {
-    state = { isLoginModalVisible: false, data: [] };
-    handleNotify = message => toast(message, { autoClose: 5000 });
+    getUnitPrice = product => {
+      if (product.sprice) {
+        if (product.issalekg && product.kgproduct[0]) {
+          // Хямдарсан бөгөөд кг-ын бараа
+          return {
+            price: product.kgproduct[0].salegramprice,
+            sprice: product.kgproduct[0].salegramprice
+          };
+        }
 
-    handleUpdate = (item, qty) => {
+        // Хямдарсан бараа
+        return { price: product.price, sprice: product.sprice };
+      }
+
+      if (product.issalekg && product.kgproduct[0]) {
+        // Хямдраагүй бөгөөд кг-ын бараа
+        return { price: product.kgproduct[0].salegramprice, sprice: null };
+      }
+
+      // Хямдраагүй бараа
+      return { price: product.price, sprice: null };
+    };
+
+    handleNotify = message =>
+      toast(message, {
+        autoClose: 5000,
+        progressClassName: css({
+          background: "#feb415"
+        })
+      });
+
+    handleUpdate = (item, qty, shouldOverride = false) => {
+      let { cart } = this.props;
+
+      if (!cart) {
+        cart = { products: [], totalQty: 0, totalPrice: 0 };
+      }
+
+      const found = cart.products.find(product => product.cd === item.cd);
+
+      let itemQty = qty;
+      if (!shouldOverride && found) {
+        itemQty = found.qty + qty;
+      }
+
       api.product
         .isAvailable({
-          skucd: item.cd ? item.cd : null,
-          qty
+          skucd: item.cd || null,
+          qty: itemQty
         })
         .then(res => {
           if (res.success) {
-            let { cart } = this.props;
-
-            if (!cart) {
-              cart = { products: [], totalQty: 0, totalPrice: 0 };
-            }
-
-            const found = cart.products.find(product => product.cd === item.cd);
-
             if (found) {
-              found.qty = qty;
+              found.qty = itemQty;
               const i = cart.products
                 .map(product => product.cd)
                 .indexOf(found.cd);
               cart.products.splice(i, 1, found);
             } else {
-              item.qty = qty;
+              item.qty = itemQty;
               cart.products.push(item);
             }
 
@@ -41,12 +75,11 @@ const withCart = WrappedComponent => {
             cart.totalQty = qties.reduce((acc, curr) => acc + curr);
 
             const prices = cart.products.map(product => {
-              const price = product.sprice
-                ? product.sprice
-                : product.price
-                ? product.price
-                : 0;
-              return product.qty * price;
+              const price =
+                this.getUnitPrice(product).sprice ||
+                this.getUnitPrice(product).price;
+
+              return price * product.qty;
             });
             cart.totalPrice = prices.reduce((acc, curr) => acc + curr);
 
@@ -56,6 +89,11 @@ const withCart = WrappedComponent => {
               totalQty: cart.totalQty,
               totalPrice: cart.totalPrice
             });
+
+            this.handleNotify(
+              `Таны сагсанд "${item.name ||
+                item.skunm}" бараа ${itemQty}ш нэмэгдлээ.`
+            );
           } else {
             this.handleNotify(res.message);
           }
@@ -105,12 +143,11 @@ const withCart = WrappedComponent => {
                   cart.totalQty = qties.reduce((acc, curr) => acc + curr);
 
                   const prices = cart.products.map(product => {
-                    const price = product.sprice
-                      ? product.sprice
-                      : product.price
-                      ? product.price
-                      : 0;
-                    return product.qty * price;
+                    const price =
+                      this.getUnitPrice(product).sprice ||
+                      this.getUnitPrice(product).price;
+
+                    return price * product.qty;
                   });
                   cart.totalPrice = prices.reduce((acc, curr) => acc + curr);
 
@@ -122,7 +159,8 @@ const withCart = WrappedComponent => {
                   });
 
                   this.handleNotify(
-                    `Таны сагсанд "${item.name}" бараа ${qtyToAdd}ш нэмэгдлээ.`
+                    `Таны сагсанд "${item.name ||
+                      item.skunm}" бараа ${qtyToAdd}ш нэмэгдлээ.`
                   );
 
                   resolve();
@@ -135,7 +173,9 @@ const withCart = WrappedComponent => {
           });
         } else {
           this.handleNotify(
-            "Тухайн өдөр зарагдах боломжтой тоо хэмжээ хэтэрсэн байна"
+            `Тус бараанаас хамгийн ихдээ ${
+              item.salemaxqty
+            }-г худалдан авах боломжтой`
           );
         }
       } else {
@@ -172,12 +212,10 @@ const withCart = WrappedComponent => {
         : 0;
 
       const prices = cart.products.map(product => {
-        const price = product.sprice
-          ? product.sprice
-          : product.price
-          ? product.price
-          : 0;
-        return product.qty * price;
+        const price =
+          this.getUnitPrice(product).sprice || this.getUnitPrice(product).price;
+
+        return price * product.qty;
       });
       cart.totalPrice = prices.length
         ? prices.reduce((acc, curr) => acc + curr)
@@ -211,12 +249,10 @@ const withCart = WrappedComponent => {
         : 0;
 
       const prices = cart.products.map(product => {
-        const price = product.sprice
-          ? product.sprice
-          : product.price
-          ? product.price
-          : 0;
-        return product.qty * price;
+        const price =
+          this.getUnitPrice(product).sprice || this.getUnitPrice(product).price;
+
+        return price * product.qty;
       });
       cart.totalPrice = prices.length
         ? prices.reduce((acc, curr) => acc + curr)
@@ -297,22 +333,25 @@ const withCart = WrappedComponent => {
 
     render() {
       const {
+        onNotify,
         onIncrement,
         onDecrement,
         onUpdate,
         onRemove,
         onClear,
+        getUnitPrice,
         ...otherProps
       } = this.props;
 
       return (
         <WrappedComponent
+          onNotify={this.handleNotify}
           onIncrement={this.handleIncrement}
           onDecrement={this.handleDecrement}
           onUpdate={this.handleUpdate}
           onRemove={this.handleRemove}
           onClear={this.handleClear}
-          onSave={this.handleSave}
+          getUnitPrice={this.getUnitPrice}
           {...otherProps}
         />
       );

@@ -16,17 +16,20 @@ const options = {
 
 const fetch = async (props, onData) => {
   try {
-    const packageProduct = await api.packageInfo.findAllProducts({
+    const packageInfo = await api.packageInfo.findImf({
       id: props.match.params.id
     });
-    const packageName = await api.packageInfo.findImf({
+    const products = await api.packageInfo.findAllProducts({
       id: props.match.params.id
     });
 
+    console.log("package", packageInfo);
+    console.log("products", products);
+
     onData(null, {
       container: {
-        Products: packageProduct.data,
-        Package: packageName.data[0]
+        packageInfo: packageInfo.data[0],
+        products: products.data[0]
       }
     });
   } catch (e) {

@@ -3,21 +3,22 @@
 @import "common";
 @import "basic";
 @import "lg";
+@import "nresponsive";
 
 .fixed-mobile-menu {
-  display: none;
+    display: none;
 }
 
 .swiper-slide .col-five {
-  width: 100%;
-  max-width: 100%;
-  flex: 0 0 100%;
+    width: 100%;
+    max-width: 100%;
+    flex: 0 0 100%;
 }
 
 @media (max-width: 767.97px) {
-  .fixed-mobile-menu {
-    display: block;
-  }
+    .fixed-mobile-menu {
+        display: block;
+    }
 }
 
 /*

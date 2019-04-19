@@ -51,7 +51,7 @@ class Widget extends React.Component {
             {subtitle}
             {data.interval ? data.interval : ""}
           </h1>
-          <h1>hello</h1>
+
           {cardList}
 
           <div className="more-link text-center">

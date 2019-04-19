@@ -164,8 +164,9 @@ export default Component;
  */
 
 import React from "react";
-/* import proimg from "../../scss/assets/images/demo/1.jpg"; */
-import { Route, Link, Switch, BrowserRouter } from "react-router-dom";
+import { connect } from "react-redux";
+import { Route, Link, Switch, BrowserRouter as Router } from "react-router-dom";
+
 import {
   UserProfile,
   DeliveryAddress,
@@ -174,7 +175,9 @@ import {
   WishList
 } from "../components";
 
-class Component extends React.Component {
+import p1 from "../scss/assets/images/demo/1.jpg";
+
+class UserProfilePage extends React.Component {
   state = {
     cityOrProvince: [],
     districtOrSum: [],
@@ -189,141 +192,176 @@ class Component extends React.Component {
     this.setState({ isToggle: !this.state.isToggle });
   };
 
-  render() {
-    const { match } = this.props;
-    return (
-      <div className="section section-gray">
-        <BrowserRouter>
-          <div>
-            <div className="container pad10">
-              <div className="user-section">
-                <div class="btn btn-gray">
-                  <Link to="/">
-                    <span class="text-uppercase">Нүүр хуудас</span>
-                  </Link>
-                </div>
-                <div className="user-section-container">
-                  <div className="row row10">
-                    <div className="col-md-4 d-none d-md-block pad10">
-                      <div className="profile-menu">
-                        <div className="menu-header">
-                          <div className="flex-this">
-                            <div className="image-container default">
-                              <span
-                                className="image"
-                                /* style={{ backgroundImage: `url(${proimg})` }} */
+  renderProfileInfo = () => {
+    if (this.props.isLoggedIn && this.props.user) {
+      const { match, user } = this.props;
+
+      return (
+        <div className="section section-gray">
+          <Router>
+            <div>
+              <div className="container pad10">
+                <div className="user-section">
+                  <div class="btn btn-gray">
+                    <Link to="/">
+                      <span class="text-uppercase">Нүүр хуудас</span>
+                    </Link>
+                  </div>
+                  <div className="user-section-container">
+                    <div className="row row10">
+                      <div className="col-md-4 d-none d-md-block pad10">
+                        <div className="profile-menu">
+                          <div className="menu-header">
+                            <div className="flex-this">
+                              <div className="image-container default">
+                                <span
+                                  className="image"
+                                  style={{
+                                    backgroundImage: `url(${
+                                      user.picture
+                                        ? user.picture.data
+                                          ? user.picture.data.url
+                                          : user.picture
+                                        : p1
+                                    })`
+                                  }}
+                                />
+                              </div>
+                              <p className="name">
+                                {user.firstname
+                                  ? user.lastname
+                                    ? `${user.firstname} ${user.lastname}`
+                                    : user.firstname
+                                  : user.email
+                                  ? user.email
+                                  : ""}
+                              </p>
+                            </div>
+                            <div className="progress">
+                              <div
+                                className="progress-bar"
+                                role="progressbar"
+                                style={{ width: "100%" }}
+                                aria-valuenow="100"
+                                aria-valuemin="0"
+                                aria-valuemax="100"
                               />
                             </div>
-                            <p className="name">
-                              Болд
-                              <br />
-                              Ганзориг
+                            <p className="text text-center">
+                              <strong>Таны мэдээлэл</strong>
+                              <span>100% / 100%</span>
                             </p>
                           </div>
-                          <div className="progress">
-                            <div
-                              className="progress-bar"
-                              role="progressbar"
-                              style={{ width: "100%" }}
-                              aria-valuenow="100"
-                              aria-valuemin="0"
-                              aria-valuemax="100"
-                            />
-                          </div>
-                          <p className="text text-center">
-                            <strong>Таны мэдээлэл</strong>
-                            <span>100% / 100%</span>
-                          </p>
+                          <ul className="list-unstyled">
+                            <li className="">
+                              <Link to={`${match.path}`} className="flex-this">
+                                <i className="fa fa-user" aria-hidden="true" />
+                                <span>Профайл хуудас</span>
+                              </Link>
+                            </li>
+                            <li>
+                              <Link
+                                to={`${match.path}/history`}
+                                className="flex-this"
+                              >
+                                <i
+                                  className="fa fa-check-square"
+                                  aria-hidden="true"
+                                />
+                                <span>Таны үзсэн барааны түүх</span>
+                              </Link>
+                            </li>
+                            <li>
+                              <Link
+                                to={`${match.path}/wishlist`}
+                                className="flex-this"
+                              >
+                                <i className="fa fa-heart" aria-hidden="true" />
+                                <span>Хадгалсан бараа</span>
+                              </Link>
+                            </li>
+                            <li>
+                              <Link
+                                to={`${match.path}/delivery`}
+                                className="flex-this"
+                              >
+                                <i
+                                  className="fa fa-compass"
+                                  aria-hidden="true"
+                                />
+                                <span>Хүргэлтийн хаяг</span>
+                              </Link>
+                            </li>
+                            <li>
+                              <Link
+                                to={`${match.path}/password`}
+                                className="flex-this"
+                              >
+                                <i className="fa fa-lock" aria-hidden="true" />
+                                <span>Нууц үгээ солих</span>
+                              </Link>
+                            </li>
+                          </ul>
                         </div>
-                        <ul className="list-unstyled">
-                          <li className="">
-                            <Link to={`${match.path}`} className="flex-this">
-                              <i className="fa fa-user" aria-hidden="true" />
-                              <span>Профайл хуудас</span>
-                            </Link>
-                          </li>
-                          <li>
-                            <Link
-                              to={`${match.path}/history`}
-                              className="flex-this"
-                            >
-                              <i
-                                className="fa fa-check-square"
-                                aria-hidden="true"
-                              />
-                              <span>Таны үзсэн барааны түүх</span>
-                            </Link>
-                          </li>
-                          <li>
-                            <Link
-                              to={`${match.path}/wishlist`}
-                              className="flex-this"
-                            >
-                              <i className="fa fa-heart" aria-hidden="true" />
-                              <span>Хадгалсан бараа</span>
-                            </Link>
-                          </li>
-                          <li>
-                            <Link
-                              to={`${match.path}/delivery`}
-                              className="flex-this"
-                            >
-                              <i className="fa fa-compass" aria-hidden="true" />
-                              <span>Хүргэлтийн хаяг</span>
-                            </Link>
-                          </li>
-                          <li>
-                            <Link
-                              to={`${match.path}/password`}
-                              className="flex-this"
-                            >
-                              <i className="fa fa-lock" aria-hidden="true" />
-                              <span>Нууц үгээ солих</span>
-                            </Link>
-                          </li>
-                        </ul>
+                        <a href="/" className="btn btn-gray">
+                          <i
+                            className="fa fa-chevron-left"
+                            aria-hidden="true"
+                          />
+                          <span className="text-uppercase">Гарах</span>
+                        </a>
                       </div>
-                      <a href="/" className="btn btn-gray">
-                        <i className="fa fa-chevron-left" aria-hidden="true" />
-                        <span className="text-uppercase">Гарах</span>
-                      </a>
-                    </div>
 
-                    <Switch>
-                      <Route
-                        exact
-                        path={`${match.url}`}
-                        component={UserProfile}
-                      />
-                      <Route
-                        exact
-                        path={`${match.url}/delivery`}
-                        component={DeliveryAddress}
-                      />
-                      <Route
-                        exact
-                        path={`${match.url}/password`}
-                        component={ChangePass}
-                      />
-                      <Route
-                        exact
-                        path={`${match.url}/history`}
-                        component={History}
-                      />
-                      <Route
-                        exact
-                        path={`${match.url}/wishlist`}
-                        component={WishList}
-                      />
-                    </Switch>
+                      <Switch>
+                        <Route
+                          exact
+                          path={`${match.url}`}
+                          component={UserProfile}
+                        />
+                        <Route
+                          exact
+                          path={`${match.url}/delivery`}
+                          component={DeliveryAddress}
+                        />
+                        <Route
+                          exact
+                          path={`${match.url}/password`}
+                          component={ChangePass}
+                        />
+                        <Route
+                          exact
+                          path={`${match.url}/history`}
+                          component={History}
+                        />
+                        <Route
+                          exact
+                          path={`${match.url}/wishlist`}
+                          component={WishList}
+                        />
+                      </Switch>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </BrowserRouter>
-      </div>
-    );
+          </Router>
+        </div>
+      );
+    }
+
+    return <div>Нэвтрээгүй байна</div>;
+  };
+
+  render() {
+    return this.renderProfileInfo();
   }
 }
-export default Component;
+
+const mapStateToProps = state => {
+  return {
+    isLoggedIn: state.auth.isLoggedIn,
+    user: state.auth.user
+  };
+};
+
+export default connect(mapStateToProps)(UserProfilePage);

@@ -11,5 +11,11 @@ export default [
     METHOD: "GET",
     URL: `${API}/api/systemlocation/:id`,
     REPLACE: "id"
+  },
+  {
+    NAME: "findCommiteLocation",
+    METHOD: "GET",
+    URL: `${API}/api/systemlocation/committe/:provid/:distid`,
+    REPLACE: "provid, distid"
   }
 ];

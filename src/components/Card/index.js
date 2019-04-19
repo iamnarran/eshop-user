@@ -16,12 +16,12 @@ class Card extends React.Component {
   handleAddToCart = item => {
     let products = [];
     if (item.recipeid) {
+      // Хоолны жор
       api.recipe.findAllProducts({ id: item.recipeid }).then(res => {
         if (res.success) {
           products = res.data[0].products;
           if (products.length) {
             products.reduce((acc, next) => {
-              console.log("next", next);
               return acc.then(() => {
                 return this.props.onIncrement(next);
               });
@@ -32,17 +32,23 @@ class Card extends React.Component {
         }
       });
     } else if (item.id) {
+      // Багц
       api.packageInfo.findAllProducts({ id: item.id }).then(res => {
         if (res.success) {
           products = res.data[0].products;
           if (products.length) {
-            return this.props.onIncrement(products);
+            products.reduce((acc, next) => {
+              return acc.then(() => {
+                return this.props.onIncrement(next);
+              });
+            }, Promise.resolve());
           }
         } else {
           this.props.onNotify(res.message);
         }
       });
     } else {
+      // Бараа
       this.props.onIncrement(item);
     }
   };
@@ -177,7 +183,7 @@ class Card extends React.Component {
                 {item.rate ? (
                   <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} />
                 ) : null}
-                <br />
+                {/* <br /> */}
                 <Link to={item.route ? item.route : ""} className="price">
                   {prices}
                 </Link>
