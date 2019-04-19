@@ -320,6 +320,7 @@ class Checkout extends React.Component {
           chosenInfo.phone1 = values.phone1;
           chosenInfo.phone2 = values.phone2;
           chosenInfo.commiteLocation = values.commiteLocation;
+          this.setState({ chosenInfo: chosenInfo });
           tmp.push("3");
           if (values.address == defaultAddress.address) {
             values.address = defaultAddress.id;
@@ -341,8 +342,7 @@ class Checkout extends React.Component {
         }
         this.setState({
           collapseType: e.target.name,
-          activeKey: tmp,
-          chosenInfo: chosenInfo
+          activeKey: tmp
         });
       } else {
         console.log("error");
@@ -586,33 +586,42 @@ class Checkout extends React.Component {
 
   sentPaymentF = async tmp => {
     const res = await this.props.sentPayment(tmp);
+    if (res.success) {
+      message.success(res.data);
+    } else {
+      message.error(res.data);
+    }
   };
 
   handleSubmit = e => {
     e.preventDefault();
     const { products, epointcard, epointUsedPoint, companyInfo } = this.state;
     let tmp = {};
-    tmp.custid = this.state.userInfo.id;
+    tmp.custId = this.state.userInfo.id;
     tmp.deliveryTypeId = this.state.delivery.id;
-    tmp.custAddressId = null;
+    tmp.custName = this.state.chosenInfo.lastName;
+    tmp.custAddressId = this.state.chosenInfo.address;
     tmp.phone1 = this.state.chosenInfo.phone1;
     tmp.phone2 = this.state.chosenInfo.phone2;
     tmp.paymentType = this.state.chosenPayment.id;
-    tmp.bankId = this.state.chosenBankInfo.bankid;
-    tmp.accountId = this.state.chosenBankInfo.account;
-
+    tmp.addPoint = 0;
     tmp.cardNo = epointcard.cardno;
     tmp.usedPoint = epointUsedPoint;
     tmp.items = [];
+    if (isNaN(this.state.chosenInfo.commiteLocation)) {
+      tmp.locId = this.state.userAddress[0].locid;
+    } else {
+      tmp.locId = this.state.chosenInfo.commiteLocation;
+    }
     products.products.map((item, i) => {
       tmp.items.push(item);
     });
     if (companyInfo.length == 0) {
-      tmp.companyRegNo = "";
-      tmp.companyName = "";
+      tmp.taxRegno = "";
+      tmp.taxName = "";
     } else {
-      tmp.companyRegNo = companyInfo.regno;
-      tmp.companyName = companyInfo.name;
+      tmp.taxRegno = companyInfo.regno;
+      tmp.taxName = companyInfo.name;
     }
     this.sentPaymentF(tmp);
 
@@ -1223,7 +1232,7 @@ class Checkout extends React.Component {
                     <p className="text flex-space">
                       <span>Имарт карт оноо:</span>
                       <strong style={{ color: "red" }}>
-                        {"-" + formatter.format(usedpoint)}₮
+                        {"-" + formatter.format(usedpoint.toFixed(0))}₮
                       </strong>
                     </p>
                     <hr />
