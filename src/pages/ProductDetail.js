@@ -8,7 +8,6 @@ import {
   FacebookIcon,
   TwitterIcon
 } from "react-share";
-
 import { updateCart } from "../actions/cart";
 import { getFeedbacks } from "../actions/mainlogic";
 import { IMAGE } from "../utils/consts";
@@ -16,7 +15,7 @@ import Gallery from "../components/Gallery";
 import LoginModal from "../components/LoginModal";
 import { CommentList, CardSlider, Breadcrumb } from "../components";
 import withCart from "../components/HOC/withCart";
-
+import api from "../api";
 const formatter = new Intl.NumberFormat("en-US");
 
 class ProductDetail extends Component {
@@ -25,6 +24,21 @@ class ProductDetail extends Component {
     isLoginModalVisible: false,
     isShowMoreClicked: false
   };
+
+  componentDidMount() {
+    if (this.props.isLoggedIn) {
+      api.viewList
+        .addViewList({
+          custId: this.props.user.id,
+          skucd: this.props.match.params.id
+        })
+        .then(res => {
+          if (res.success) {
+            console.log(res.success);
+          }
+        });
+    }
+  }
 
   handleShowMoreClick = () => {
     this.setState({ isShowMoreClicked: true });

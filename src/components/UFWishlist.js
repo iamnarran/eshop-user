@@ -9,6 +9,7 @@ class Component extends React.Component {
   state = {
     wishlist: []
   };
+
   getData() {
     api.wishlist.findAll({ custId: this.props.user.id }).then(res => {
       if (res.success) {
@@ -19,6 +20,7 @@ class Component extends React.Component {
       this.setState({ loading: false });
     });
   }
+
   componentDidMount() {
     this.getData();
   }

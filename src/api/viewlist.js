@@ -6,5 +6,11 @@ export default [
     METHOD: "GET",
     URL: `${API}/api/customer/ViewList/:custId`,
     REPLACE: "custId"
+  },
+  {
+    NAME: "addViewList",
+    METHOD: "POST",
+    URL: `${API}/api/customer/viewList/:custId/:skucd`,
+    REPLACE: "custId, skucd"
   }
 ];

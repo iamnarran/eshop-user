@@ -1,5 +1,6 @@
 import React from "react";
 import { Form } from "antd";
+import { connect } from "react-redux";
 import api from "../api";
 import { IMAGE } from "../utils/consts";
 import Rate from "./Rate";
@@ -7,8 +8,9 @@ class Component extends React.Component {
   state = {
     wishlist: []
   };
+
   componentDidMount() {
-    api.viewList.findAlls({ custId: "14" }).then(res => {
+    api.viewList.findAlls({ custId: this.props.user.id }).then(res => {
       if (res.success) {
         this.setState({
           wishlist: res.data
@@ -17,7 +19,9 @@ class Component extends React.Component {
       this.setState({ loading: false });
     });
   }
+
   render() {
+    console.log(this.props);
     let tableList = null;
     const list = this.state.wishlist;
     const formatter = new Intl.NumberFormat("en-US");
@@ -89,4 +93,12 @@ class Component extends React.Component {
 }
 
 const App = Form.create({ name: "delivery" })(Component);
-export default App;
+
+const mapStateToProps = state => {
+  return {
+    isLoggedIn: state.auth.isLoggedIn,
+    user: state.auth.user
+  };
+};
+
+export default connect(mapStateToProps)(Component);
