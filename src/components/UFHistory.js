@@ -6,11 +6,12 @@ import { IMAGE } from "../utils/consts";
 import Rate from "./Rate";
 class Component extends React.Component {
   state = {
-    wishlist: []
+    wishlist: [],
+    deliveryList: []
   };
 
   componentDidMount() {
-    api.viewList.findAlls({ custId: this.props.user.id }).then(res => {
+    api.customer.getViewList({ custId: this.props.user.id }).then(res => {
       if (res.success) {
         this.setState({
           wishlist: res.data
@@ -21,7 +22,6 @@ class Component extends React.Component {
   }
 
   render() {
-    console.log(this.props);
     let tableList = null;
     const list = this.state.wishlist;
     const formatter = new Intl.NumberFormat("en-US");

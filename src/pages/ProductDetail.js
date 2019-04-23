@@ -27,7 +27,7 @@ class ProductDetail extends Component {
 
   componentDidMount() {
     if (this.props.isLoggedIn) {
-      api.viewList
+      api.customer
         .addViewList({
           custId: this.props.user.id,
           skucd: this.props.match.params.id

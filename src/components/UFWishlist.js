@@ -11,7 +11,7 @@ class Component extends React.Component {
   };
 
   getData() {
-    api.wishlist.findAll({ custId: this.props.user.id }).then(res => {
+    api.customer.getWishList({ custId: this.props.user.id }).then(res => {
       if (res.success) {
         this.setState({
           wishlist: res.data
@@ -31,8 +31,8 @@ class Component extends React.Component {
 
   onDelete = (e, item) => {
     e.preventDefault();
-    api.wishlist
-      .onDelete({ custId: this.props.user.id, skucd: item.cd })
+    api.customer
+      .deleteWishList({ custId: this.props.user.id, skucd: item.cd })
       .then(res => {
         if (res.success) {
           this.getData();

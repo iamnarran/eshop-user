@@ -1,37 +1,56 @@
 import React from "react";
 import { Form } from "antd";
+import { connect } from "react-redux";
 import api from "../api";
+import { IMAGE } from "../utils/consts";
+import Rate from "./Rate";
+
 class Component extends React.Component {
   state = {
-    wishlist: []
+    deliveryList: []
   };
+
   componentDidMount() {
-    api.wishList.findAlls({ custId: "14" }).then(res => {
+    /* api.customer.getOrderList({ custid: this.props.user.id }).then(res => {
       if (res.success) {
+        console.log(res);
         this.setState({
-          wishlist: res.data
+          deliveryList: res.data
         });
       }
       this.setState({ loading: false });
-    });
+    }); */
   }
+
+  renderDate = dateString => {
+    const dateParts = dateString.split("T")[0].split("-");
+
+    return (
+      <p className="date">
+        <span>
+          {`${dateParts[0]} оны ${dateParts[1]} сарын ${dateParts[2]}`}
+        </span>
+      </p>
+    );
+  };
+
   render() {
     const formatter = new Intl.NumberFormat("en-US");
     let tableList = null;
-    tableList = this.state.wishlist.map((item, index) => {
+    tableList = this.state.deliveryList.map((item, index) => {
       return (
         <tr>
           <td>
-            <span>#22</span>
+            <span>{item.id}</span>
           </td>
           <td>
-            <span>2018 оны 8 сарын 30</span>
+            <span>{this.renderDate(item.orderdate)}</span>
           </td>
           <td>
-            <span className="stat the-way">Замдаа гарсан</span>
+            <span className="stat the-way">{item.deliverytype}</span>
           </td>
           <td>
-            <span>24,000₮</span>
+            <span>{formatter.format(item.deliveryamount)}₮</span>
           </td>
           <td>
             <a href=" ">
@@ -45,7 +64,7 @@ class Component extends React.Component {
       <div className="col-md-8 pad10">
         <div className="user-menu-content">
           <p className="title">
-            <span>Үзсэн барааны түүх</span>
+            <span>Захиалгын түүх</span>
           </p>
           <table className="table table-borderless table-hover table-sm">
             <thead>
@@ -57,7 +76,7 @@ class Component extends React.Component {
                 <th width="15%">Дэлгэрэнгүй</th>
               </tr>
             </thead>
-            <tbody>{tableList}</tbody>
+            <tbody>{/* tableList */}</tbody>
           </table>
         </div>
       </div>
@@ -66,4 +85,12 @@ class Component extends React.Component {
 }
 
 const App = Form.create({ name: "delivery" })(Component);
-export default App;
+
+const mapStateToProps = state => {
+  return {
+    isLoggedIn: state.auth.isLoggedIn,
+    user: state.auth.user
+  };
+};
+
+export default connect(mapStateToProps)(Component);
