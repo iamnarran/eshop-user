@@ -172,7 +172,8 @@ import {
   DeliveryAddress,
   ChangePass,
   History,
-  WishList
+  WishList,
+  DeliveryHistory
 } from "../components";
 
 import p1 from "../scss/assets/images/demo/1.jpg";
@@ -202,9 +203,9 @@ class UserProfilePage extends React.Component {
             <div>
               <div className="container pad10">
                 <div className="user-section">
-                  <div class="btn btn-gray">
+                  <div className="btn btn-gray">
                     <Link to="/">
-                      <span class="text-uppercase">Нүүр хуудас</span>
+                      <span className="text-uppercase">Нүүр хуудас</span>
                     </Link>
                   </div>
                   <div className="user-section-container">
@@ -282,6 +283,15 @@ class UserProfilePage extends React.Component {
                             </li>
                             <li>
                               <Link
+                                to={`${match.path}/deliveryhistory`}
+                                className="flex-this"
+                              >
+                                <i className="fa fa-heart" aria-hidden="true" />
+                                <span>Захиалгын түүх</span>
+                              </Link>
+                            </li>
+                            <li>
+                              <Link
                                 to={`${match.path}/delivery`}
                                 className="flex-this"
                               >
@@ -337,6 +347,11 @@ class UserProfilePage extends React.Component {
                           exact
                           path={`${match.url}/wishlist`}
                           component={WishList}
+                        />
+                        <Route
+                          exact
+                          path={`${match.url}/deliveryhistory`}
+                          component={DeliveryHistory}
                         />
                       </Switch>
                     </div>

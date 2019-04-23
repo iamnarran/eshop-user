@@ -19,10 +19,9 @@ import categoryInfo from "./categoryInfo";
 import season from "./season";
 import cart from "./cart";
 import checkout from "./checkout";
-import wishlist from "./wishlist";
-import viewList from "./viewlist";
 import search from "./search";
 import storage from "../utils/storage";
+import customer from "./customer";
 let rest = {};
 
 const generateURL = (method, url, replace, data) => {
@@ -148,19 +147,13 @@ checkout.forEach(api => {
   rest.checkout[api.NAME] = data => generateAPI(api, data);
 });
 
-rest["wishlist"] = {};
-wishlist.forEach(api => {
-  rest.wishlist[api.NAME] = data => generateAPI(api, data);
-});
-
-rest["viewList"] = {};
-viewList.forEach(api => {
-  rest.viewList[api.NAME] = data => generateAPI(api, data);
-});
-
 rest["search"] = {};
 search.forEach(api => {
   rest.search[api.NAME] = data => generateAPI(api, data);
 });
 
+rest["customer"] = {};
+customer.forEach(api => {
+  rest.customer[api.NAME] = data => generateAPI(api, data);
+});
 export { rest as default, setAuthorizationHeader };
