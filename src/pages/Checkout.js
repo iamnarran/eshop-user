@@ -11,18 +11,14 @@ import {
   message,
   Divider
 } from "antd";
-import { Link, Redirect } from "react-router-dom";
-import storage from "../../utils/storage";
-import api from "../../api";
-import LoginModal from "../../components/LoginModal";
-import actions from "../../actions/checkout";
-import DeliveryInfo from "./DeliveryInfo";
-import SwalModals from "./SwalModals";
-import DeliveryPanel from "./DeliveryPanel";
+import storage from "../utils/storage";
+import api from "../api";
+import LoginModal from "../components/LoginModal";
+import actions from "../actions/checkout";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import withCart from "../../components/HOC/withCart";
-import { IMAGE } from "../../utils/consts";
+import withCart from "../components/HOC/withCart";
+import { IMAGE } from "../utils/consts";
 const MySwal = withReactContent(Swal);
 const Option = Select.Option;
 const Panel = Collapse.Panel;
@@ -65,14 +61,6 @@ class Checkout extends React.Component {
       epointUsedPoint: 0
     };
   }
-
-  errorMsg = txt => {
-    message.error(txt);
-  };
-
-  successMsg = txt => {
-    message.success(txt);
-  };
 
   componentWillMount() {
     const { deliveryTypes, paymentTypes, bankInfo } = this.props.container;
@@ -169,19 +157,19 @@ class Checkout extends React.Component {
     e.preventDefault();
     let cardpass = this.refs.cardpass.value;
     let cardno = this.refs.cardno.value;
-    let tmp = {
-      custid: this.state.userInfo.id,
-      cardno: cardno,
-      pincode: cardpass
-    };
-    await api.checkout.saveCustomerCard(tmp).then(res => {
-      if (res.success == true) {
-        this.setState({ epointcard: res.data });
-        message.success(res.message);
-      } else {
-        message.error(res.message);
-      }
-    });
+    await api.checkout
+      .saveCustomerCard({
+        custid: this.state.userInfo.id,
+        cardno: cardno,
+        pincode: cardpass
+      })
+      .then(res => {
+        if (res.success == true) {
+          message.success(res.data);
+        } else {
+          message.error(res.data);
+        }
+      });
   };
 
   addAddress = (value, event) => {
@@ -400,7 +388,7 @@ class Checkout extends React.Component {
                 <span>{item.description}</span>
               </p>
             </h5>
-            {/*  {chosenPayment.id == 1 && item.id == 1 ? (
+            {chosenPayment.id == 1 && item.id == 1 ? (
               <RadioGroup
                 buttonStyle="solid"
                 defaultValue={1}
@@ -411,7 +399,7 @@ class Checkout extends React.Component {
               </RadioGroup>
             ) : (
               ""
-            )} */}
+            )}
           </label>
         );
       });
@@ -455,6 +443,11 @@ class Checkout extends React.Component {
         }
       });
     }
+  };
+
+  generateNoat = (total, deliver, usedpoint) => {
+    let noat = ((total + deliver - usedpoint) / 110) * 10;
+    return noat.toFixed(2);
   };
 
   onChangeMainLoc = e => {
@@ -506,6 +499,37 @@ class Checkout extends React.Component {
         );
       });
     }
+    return tmp;
+  };
+
+  renderReturnTab = () => {
+    let tmp = (
+      <Tabs defaultActiveKey="2">
+        <TabPane
+          tab={
+            <span>
+              <Icon type="apple" />
+              Tab 1
+            </span>
+          }
+          key="1"
+        >
+          Tab 1
+        </TabPane>
+        <TabPane
+          tab={
+            <span>
+              <Icon type="android" />
+              Tab 2
+            </span>
+          }
+          key="2"
+        >
+          Tab 2
+        </TabPane>
+      </Tabs>
+    );
+
     return tmp;
   };
 
@@ -571,7 +595,7 @@ class Checkout extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    /*   const { products, epointcard, epointUsedPoint, companyInfo } = this.state;
+    const { products, epointcard, epointUsedPoint, companyInfo } = this.state;
     let tmp = {};
     tmp.custId = this.state.userInfo.id;
     tmp.deliveryTypeId = this.state.delivery.id;
@@ -600,25 +624,21 @@ class Checkout extends React.Component {
       tmp.taxName = companyInfo.name;
     }
     this.sentPaymentF(tmp);
- */
 
-    MySwal.fire({
-      html: <SwalModals type="paymentSucess" changePage={this.changePage} />,
-      width: "40em",
-      button: false,
-      showCloseButton: false,
-      showCancelButton: false,
-      showConfirmButton: false,
-      focusConfirm: false,
+    //sentPayment
+
+    /*  Swal.fire({
+      title: "<strong>HTML <u>example</u></strong>",
+      type: "info",
+      html: "<Icon type='apple' />",
       showCloseButton: true,
-      allowOutsideClick: false,
-      closeOnEsc: false
-    });
-  };
-
-  changePage = (e, item) => {
-    MySwal.close();
-    this.props.history.push(item);
+      showCancelButton: true,
+      focusConfirm: false,
+      confirmButtonText: '<i class="fa fa-thumbs-up"></i> Great!',
+      confirmButtonAriaLabel: "Thumbs up, great!",
+      cancelButtonText: '<i class="fa fa-thumbs-down"></i>',
+      cancelButtonAriaLabel: "Thumbs down"
+    }); */
   };
 
   render() {
@@ -635,12 +655,8 @@ class Checkout extends React.Component {
       companyInfo,
       epointUsedPoint,
       useEpoint,
-      addresstype,
-      mainLocation,
-      subLocation,
-      commiteLocation
+      addresstype
     } = this.state;
-    const { deliveryTypes } = this.props.container;
     const { isLoggedIn } = this.props;
     const deliver1 = delivery == [] ? 0 : delivery.price;
     const usedpoint = useEpoint == true ? epointUsedPoint : 0;
@@ -710,20 +726,7 @@ class Checkout extends React.Component {
                         ) : (
                           ""
                         )}
-                        {/*  <DeliveryPanel
-                          commiteLocation={commiteLocation}
-                          subLocation={subLocation}
-                          deliveryTypes={deliveryTypes}
-                          changeTab={this.changeTab}
-                          onSubmit={this.onSubmit}
-                          addresstype={addresstype}
-                          onChangeMainLoc={this.onChangeMainLoc}
-                          onChangeSubLoc={this.onChangeSubLoc}
-                          userAddress={userAddress}
-                          mainLocation={mainLocation}
-                          key={"2"}
-                          getFieldDecorator={getFieldDecorator}
-                        /> */}
+
                         <Panel
                           header={this.deliveryInfo()}
                           showArrow={false}
@@ -738,7 +741,7 @@ class Checkout extends React.Component {
                                       <div className="flex-this center">
                                         <img
                                           alt="icon"
-                                          src={require("../../scss/assets/images/demo/" +
+                                          src={require("../scss/assets/images/demo/" +
                                             item.logo)}
                                         />
                                         <p className="text">
@@ -794,6 +797,11 @@ class Checkout extends React.Component {
                                                     >
                                                       {this.renderAddrsOption()}
                                                       <Option value={null}>
+                                                        {/*  <Divider
+                                                          style={{
+                                                            margin: "4px 0"
+                                                          }}
+                                                        /> */}
                                                         <div
                                                           style={{
                                                             cursor: "pointer"
@@ -990,7 +998,7 @@ class Checkout extends React.Component {
                         >
                           <div className="content-container payment">
                             <p className="title">
-                              <strong>НӨАТ баримтын төрөл</strong>
+                              <strong>НӨАТ</strong>
                             </p>
                             <div className="hand-pay flex-this">
                               <div className="form-check">
@@ -1104,7 +1112,7 @@ class Checkout extends React.Component {
                                   </div>
                                   <button
                                     type="submit"
-                                    className="btn btn-main solid"
+                                    className="btn btn-gray solid"
                                     onClick={this.saveCustomerCard}
                                   >
                                     <span className="text-uppercase">
@@ -1113,7 +1121,7 @@ class Checkout extends React.Component {
                                   </button>
                                 </form>
                               </div>
-                            ) : chosenPlusRadio == 1 ? (
+                            ) : (
                               <div>
                                 <p className="title">
                                   <strong>Оноо</strong>
@@ -1150,7 +1158,7 @@ class Checkout extends React.Component {
                                   </div>
                                   <button
                                     type="submit"
-                                    className="btn btn-main solid"
+                                    className="btn btn-gray solid"
                                     onClick={this.handleUserEpoint}
                                   >
                                     <span className="text-uppercase">
@@ -1159,8 +1167,6 @@ class Checkout extends React.Component {
                                   </button>
                                 </form>
                               </div>
-                            ) : (
-                              ""
                             )}
                           </div>
                         </Panel>
@@ -1169,13 +1175,101 @@ class Checkout extends React.Component {
                   </div>
                 </div>
               </div>
-              <DeliveryInfo
-                userInfo={userInfo}
-                delivery={delivery}
-                products={products}
-                usedpoint={usedpoint}
-                handleClick={this.handleSubmit}
-              />
+              <div className="col-lg-4 pad10">
+                <div className="block right-panel">
+                  {" "}
+                  <p className="title">
+                    <strong>
+                      {userInfo.length == 0
+                        ? ""
+                        : userInfo.lastname + " " + userInfo.firstname}
+                    </strong>
+                  </p>
+                  <hr />
+                  <div className="content">
+                    <p className="title">
+                      <strong>Хүргэлтийн мэдээлэл</strong>
+                    </p>
+                    <p className="text flex-space">
+                      <span>Хүргэлтийн төрөл</span>
+                      <strong>{delivery == [] ? "" : delivery.typenm}</strong>
+                    </p>
+                    <p className="text flex-this">
+                      <i className="fa fa-user" aria-hidden="true" />
+                      <span>
+                        {userInfo.length == 0
+                          ? ""
+                          : userInfo.lastname + " " + userInfo.firstname}
+                      </span>
+                    </p>
+                    <p className="text flex-this">
+                      <i className="fa fa-phone" aria-hidden="true" />
+                      <span>{userInfo.length == 0 ? "" : userInfo.phone}</span>
+                    </p>
+                    <p className="text flex-this">
+                      <i className="fa fa-map-marker" aria-hidden="true" />
+                      <span>
+                        Улаанбаатар хот, Баянзүрх дүүрэг, 17 хороо, 35-р байр, 5
+                        давхар, 37 тоот, код - 8759
+                      </span>
+                    </p>
+                  </div>
+                  <hr />
+                  <div className="content">
+                    <p className="title">
+                      <strong>Төлөх дүн</strong>
+                    </p>
+                    <p className="text flex-space">
+                      <span>
+                        Бараа ({formatter.format(products.totalQty)}):
+                      </span>
+                      <strong>{formatter.format(products.totalPrice)}₮</strong>
+                    </p>
+                    <p className="text flex-space">
+                      <span>Хүргэлтийн үнэ:</span>
+                      <strong>{formatter.format(deliver1)}₮</strong>
+                    </p>
+                    <p className="text flex-space">
+                      <span>Имарт карт оноо:</span>
+                      <strong style={{ color: "red" }}>
+                        {"-" + formatter.format(usedpoint.toFixed(0))}₮
+                      </strong>
+                    </p>
+                    <hr />
+                    <p className="text flex-space">
+                      <span>Нийт дүн:</span>
+                      <strong>
+                        {formatter.format(
+                          products.totalPrice + deliver1 - usedpoint
+                        )}
+                        ₮
+                      </strong>
+                    </p>
+                    <p className="text flex-space">
+                      <span>НӨАТ:</span>
+                      <strong>
+                        {formatter.format(
+                          this.generateNoat(
+                            products.totalPrice,
+                            deliver1,
+                            usedpoint
+                          )
+                        )}
+                        ₮
+                      </strong>
+                    </p>
+                    {/*   <p className="text text-center">
+                      <span>89,000₮-с дээш бол хүргэлт үнэгүй</span>
+                    </p> */}
+                    <button
+                      className="btn btn-main btn-block"
+                      onClick={this.handleSubmit}
+                    >
+                      <span className="text-uppercase">Тооцоо хийх</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
