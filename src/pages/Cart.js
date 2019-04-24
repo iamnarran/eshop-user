@@ -6,37 +6,75 @@ import { createForm } from "rc-form";
 import { IMAGE } from "../utils/consts";
 import withCart from "../components/HOC/withCart";
 
+const formatter = new Intl.NumberFormat("en-US");
+
 class Cart extends React.Component {
-  handleQtyChange = product => e => {
-    const { products } = this.props.cart;
+  state = { products: [], abstractProducts: [] };
 
-    let found = products.find(prod => prod.cd === product.cd);
+  componentDidMount() {
+    const products = JSON.parse(JSON.stringify(this.props.cart.products));
+    const abstractProducts = JSON.parse(
+      JSON.stringify(this.props.cart.products)
+    );
 
-    if (found) {
-      found.qty = parseInt(e.target.value || 1);
-      const i = products.map(prod => prod.cd).indexOf(found.cd);
+    this.setState({ products, abstractProducts });
+  }
 
-      if (i !== -1) {
-        let tempProducts = products;
-        tempProducts.splice(i, 1, found);
+  findAndReplace = product => {
+    let tempProducts = this.state.abstractProducts;
+    const i = tempProducts.map(prod => prod.cd).indexOf(product.cd);
 
-        this.setState({ products: tempProducts });
-      }
+    if (i !== -1) {
+      tempProducts.splice(i, 1, product);
     }
+
+    this.setState({ abstractProducts: tempProducts });
+  };
+
+  handleQtyChange = product => e => {
+    product.qty = parseInt(e.target.value);
+    this.findAndReplace(product);
   };
 
   handleQtyKeyDown = product => e => {
     if (e.key === "Enter") {
-      this.props.onUpdate(product, parseInt(e.target.value), true);
+      e.preventDefault();
+      this.changeQty(product);
     }
   };
 
   handleQtyBlur = product => e => {
-    this.props.onUpdate(product, parseInt(e.target.value), true);
+    this.changeQty(product);
+  };
+
+  changeQty = abstractProduct => {
+    let product = this.state.products.find(
+      prod => prod.cd === abstractProduct.cd
+    );
+
+    if (product) {
+      const updatedProduct = this.props.onQtyChange(
+        product,
+        abstractProduct.qty
+      );
+
+      if (product.qty !== updatedProduct.qty) {
+        this.findAndReplace(updatedProduct);
+      }
+    }
+  };
+
+  handleIncrementClick = product => {
+    product = this.props.onIncrement(product);
+    this.findAndReplace(product);
+  };
+
+  handleDecrementClick = product => {
+    product = this.props.onDecrement(product);
+    this.findAndReplace(product);
   };
 
   renderUnitPrice = product => {
-    const formatter = new Intl.NumberFormat("en-US");
     const { getUnitPrice } = this.props;
 
     if (product.sprice) {
@@ -81,7 +119,6 @@ class Cart extends React.Component {
   };
 
   renderTotalPrice = product => {
-    const formatter = new Intl.NumberFormat("en-US");
     const { getUnitPrice } = this.props;
 
     const price = getUnitPrice(product).sprice || getUnitPrice(product).price;
@@ -94,17 +131,13 @@ class Cart extends React.Component {
   };
 
   render() {
-    const formatter = new Intl.NumberFormat("en-US");
+    console.log("products", this.state.products);
+    console.log("abstract products", this.state.abstractProducts);
+
     const { wishlistProducts, deliveryInfo } = this.props.container;
-    const {
-      isLoggedIn,
-      user,
-      cart,
-      onIncrement,
-      onDecrement,
-      onRemove
-    } = this.props;
-    const { products, totalPrice, totalQty } = cart;
+    const { isLoggedIn, user, cart, onRemove } = this.props;
+    const { totalPrice, totalQty } = cart;
+    const products = this.state.abstractProducts;
 
     let content = (
       <div style={{ textAlign: "center" }}>
@@ -112,7 +145,7 @@ class Cart extends React.Component {
       </div>
     );
 
-    if (products.length) {
+    if (products && products.length) {
       content = (
         <table className="table table-borderless">
           <thead className="thead-light">
@@ -172,7 +205,7 @@ class Cart extends React.Component {
                       <div className="input-group e-input-group">
                         <div className="input-group-prepend" id="button-addon4">
                           <button
-                            onClick={() => onDecrement(product)}
+                            onClick={() => this.handleDecrementClick(product)}
                             className="btn"
                             type="button"
                           >
@@ -191,7 +224,7 @@ class Cart extends React.Component {
                         />
                         <div className="input-group-append" id="button-addon4">
                           <button
-                            onClick={() => onIncrement(product)}
+                            onClick={() => this.handleIncrementClick(product)}
                             className="btn"
                             type="button"
                           >
