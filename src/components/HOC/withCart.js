@@ -249,6 +249,9 @@ const withCart = WrappedComponent => {
       if (!cart) {
         cart = { products: [], totalQty: 0, totalPrice: 0 };
       }
+      if (cart.products == undefined) {
+        cart.products = [];
+      }
 
       const found = cart.products.find(prod => prod.cd === product.cd);
       const productQty = found ? found.qty || 0 : 0;
