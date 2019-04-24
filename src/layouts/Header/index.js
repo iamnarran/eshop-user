@@ -25,7 +25,8 @@ class AppHeader extends Component {
       item: "Бүх бараа",
       suggestion: [],
       word: "",
-      k: []
+      k: [],
+      isSearch: false
     };
   }
 
@@ -85,6 +86,10 @@ class AppHeader extends Component {
     this.setState({ isLoginModalVisible: !this.state.isLoginModalVisible });
   };
 
+  toggleSearch = () => {
+    this.setState({ isSearch: !this.state.isSearch });
+  };
+
   showLoginModal = () => {
     this.setState({ isLoginModalVisible: true });
   };
@@ -121,7 +126,7 @@ class AppHeader extends Component {
       this.state.isDropdownOpen ? " show" : ""
     }`;
     const searchClass = `search-mobile${
-      this.state.isSearch ? " activated" : ""
+      this.state.isSearch ? " activated" : " "
     }`;
     return (
       <div>

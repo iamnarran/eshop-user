@@ -91,10 +91,10 @@ export default [
     REPLACE: "id"
   },
   {
-    NAME: "addViewList",
+    NAME: "addWishList",
     METHOD: "POST",
-    URL: `${API}/api/customer/wishlist/:id/:skucd`,
-    REPLACE: "id, skucd"
+    URL: `${API}/api/customer/wishlist/:custId/:skucd`,
+    REPLACE: "custId, skucd"
   },
   {
     NAME: "addCustomerRate",

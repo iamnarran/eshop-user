@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-
 import api from "../../api";
 import Rate from "../Rate";
 import Label from "../Label";
@@ -13,6 +12,59 @@ import productPlus from "../../scss/assets/images/demo/plusEmart.png";
 import "./Card.css";
 
 class Card extends React.Component {
+  oneSave = item => {
+    api.product
+      .addWishList({ custId: this.props.user.id, skucd: item.cd })
+      .then(res => {
+        if (res.success) {
+          this.props.onNotify("Амжилттай хадгаллаа.");
+        }
+      });
+  };
+
+  getPackageData = async id => {
+    await api.packageInfo
+      .findAllProducts({
+        id: id
+      })
+      .then(res => {
+        if (res.success) {
+          res.data[0].products.map(item => {
+            this.oneSave(item);
+          });
+        }
+      });
+  };
+
+  getRecipeData = async recipeid => {
+    await api.recipe
+      .findAllProducts({
+        id: recipeid
+      })
+      .then(res => {
+        if (res.success) {
+          res.data[0].products.map(item => {
+            this.oneSave(item);
+          });
+        }
+      });
+  };
+
+  handleSave = item => {
+    if (this.props.isLoggedIn && this.props.user) {
+      if (item.recipeid) {
+        this.getRecipeData(item.recipeid);
+      }
+      if (item.id) {
+        this.getPackageData(item.id);
+      } else {
+        this.oneSave(item);
+      }
+    } else {
+      this.props.onNotify("ehleed newter");
+    }
+  };
+
   handleAddToCart = item => {
     let products = [];
     if (item.recipeid) {
@@ -112,7 +164,7 @@ class Card extends React.Component {
 
     const hover = (
       <div className="search-hover">
-        <a onClick={() => this.props.onSave(item)}>
+        <a onClick={e => this.handleSave(item)}>
           <i className="fa fa-heart-o" aria-hidden="true" />
           <span />
         </a>
@@ -334,7 +386,7 @@ class Card extends React.Component {
                   />
                 ))}
               <div className="cart-container">
-                <a className="wishlist" onClick={() => this.props.onSave(item)}>
+                <a className="wishlist" onClick={e => this.handleSave(item)}>
                   <i className="fa fa-heart-o" aria-hidden="true" />
                 </a>
                 <button
