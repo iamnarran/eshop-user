@@ -7,10 +7,7 @@ import { connect } from "react-redux";
 import storage from "../../utils/storage";
 import { updateCart } from "../../actions/cart";
 import { toast } from "react-toastify";
-/* import Img from "react-image"; */
 import { Avatar } from "antd";
-import { getFeedbacks } from "../../actions/mainlogic";
-// import { url } from "inspector";
 import chef from "../../scss/assets/images/demo/chef.png";
 import time from "../../scss/assets/images/demo/time.png";
 import smile from "../../scss/assets/images/demo/smile.png";
@@ -73,16 +70,15 @@ class RecipeDetail extends React.Component {
 
             this.notify(
               "Таны сагсанд " +
-                item.titlenm +
+                item.name +
                 " бүтээгдэрхүүн нэмэгдлээ. Үнийн дүн: " +
                 item.price
             );
-
             resolve();
           } else {
             this.notify(
               "Таны сонгосон хоолны жорын " +
-                item.titlenm +
+                item.name +
                 " бараа дууссан байгаа тул худалдан авалт хийх боломжгүй байна."
             );
 
@@ -116,6 +112,7 @@ class RecipeDetail extends React.Component {
   };
 
   render() {
+    console.log(this.props);
     const { recipe, productsData } = this.props.container;
     const step = this.props.container.recipe[0].steps;
     const deliverytxt = this.props.container.recipe[0].recipe.deliverytxt;
@@ -167,7 +164,7 @@ class RecipeDetail extends React.Component {
               }}
             >
               <span>&#8226;</span>
-              {item.stepnm}
+              АЛХАМ {index + 1}
             </p>
             {item.description}
             <p />
@@ -200,8 +197,10 @@ class RecipeDetail extends React.Component {
                       </div>
                       <div className="info-container flex-space">
                         <Link to={product.route ? product.route : ""}>
-                          <span>{product.titlenm}</span>
-                          <strong>{formatter.format(product.price)}₮</strong>
+                          <strong>
+                            <span>{product.name}</span>
+                          </strong>
+                          Үнэ: {formatter.format(product.price)}₮
                         </Link>
                         <div className="action">
                           <a onClick={this.handleAddToCart(product)}>
@@ -217,7 +216,7 @@ class RecipeDetail extends React.Component {
           <div className="more-link text-center">
             <div className="pack-price">
               <p className="text flex-this end">
-                <span>Дүн:</span>
+                <span>Жоронд орсон бүтээгдэхүүнүүдийн үнэ:</span>
                 <strong>{formatter.format(productsData.total)}₮</strong>
               </p>
               <a
@@ -269,6 +268,7 @@ class RecipeDetail extends React.Component {
                         data={recipe[0].recipe.images}
                         params={sliderParams}
                         elContainer={"images"}
+                        type="Recipe"
                       />
                     </div>
                   </div>

@@ -9,51 +9,64 @@ class Slider extends React.Component {
   state = {
     params: [],
     data: [],
-    elContainer: ""
+    elContainer: "",
+    type: ""
   };
 
   componentDidMount() {
     this.setState({ ...this.props });
+    console.log(this.state);
   }
 
   render() {
+    console.log(this.state.type);
+    var repice = this.state.data.map(function(item, index) {
+      return (
+        <div
+          style={{ backgroundImage: `url(${IMAGE + item.imgnm})` }}
+          key={index}
+        />
+      );
+    });
     var indents = this.state.data.map(function(item, index) {
       return (
         <div
           style={{ backgroundImage: `url(${IMAGE + item.imgnm})` }}
           key={index}
         >
-          <Link to={item.brandid ? "/brand/" + item.brandid : ""}>
-            <div className="container pad10">
-              <div className="slide-container">
-                <div className="slide-content text-uppercase">
-                  {item && item.isshownm !== 0 && (
-                    <div>
-                      <h2 className="title">{item.bannernm}</h2>
-                      <p className="text">{item.description}</p>
-                    </div>
-                  )}
-                  {item && item.link && (
-                    <Link
-                      to={item.link}
-                      className="btn btn-main"
-                      target="_blank"
-                    >
-                      <i
-                        className="fa fa-long-arrow-right"
-                        aria-hidden="true"
-                      />
-                      <span className="text-uppercase">
-                        {item.btntext && item.btntext.trim()
-                          ? item.btntext
-                          : "Дэлгэрэнгүй"}
-                      </span>
-                    </Link>
-                  )}
+          {
+            <Link to={item.brandid ? "/brand/" + item.brandid : ""}>
+              <div className="container pad10">
+                <div className="slide-container">
+                  <div className="slide-content text-uppercase">
+                    {item && item.isshownm !== 0 && (
+                      <div>
+                        <h2 className="title">{item.bannernm}</h2>
+                        <p className="text">{item.description}</p>
+                      </div>
+                    )}
+                    {item && item.link && (
+                      <Link
+                        to={item.link}
+                        className="btn btn-main"
+                        target="_blank"
+                      >
+                        <i
+                          className="fa fa-long-arrow-right"
+                          aria-hidden="true"
+                        />
+                        <span className="text-uppercase">
+                          {item.btntext && item.btntext.trim()
+                            ? item.btntext
+                            : "Дэлгэрэнгүй"}
+                        </span>
+                      </Link>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          </Link>
+            </Link>
+          }
         </div>
       );
     });
@@ -65,7 +78,7 @@ class Slider extends React.Component {
           rebuildOnUpdate
           className={this.props.elContainer}
         >
-          {indents}
+          {this.state.type ? repice : indents}
         </Swiper>
       )
     );
