@@ -75,7 +75,7 @@ class Card extends React.Component {
           if (products.length) {
             products.reduce((acc, next) => {
               return acc.then(() => {
-                return this.props.onIncrement(next);
+                return this.props.onAddToCart(next);
               });
             }, Promise.resolve());
           }
@@ -91,7 +91,7 @@ class Card extends React.Component {
           if (products.length) {
             products.reduce((acc, next) => {
               return acc.then(() => {
-                return this.props.onIncrement(next);
+                return this.props.onAddToCart(next);
               });
             }, Promise.resolve());
           }
@@ -101,7 +101,7 @@ class Card extends React.Component {
       });
     } else {
       // Бараа
-      this.props.onIncrement(item);
+      this.props.onAddToCart(item);
     }
   };
 

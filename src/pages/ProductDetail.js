@@ -187,6 +187,8 @@ class ProductDetail extends Component {
                 value={productQty}
                 name="productQty"
                 onChange={this.handleQtyChange}
+                onKeyDown={this.handleQtyKeyDown}
+                onBlur={this.handleQtyBlur}
               />
 
               <div className="input-group-append" id="button-addon4">
@@ -236,7 +238,7 @@ class ProductDetail extends Component {
             type="button"
             className="btn btn-main text-uppercase"
             disabled={product.availableqty < 1}
-            onClick={() => this.props.onUpdate(product, productQty)}
+            onClick={() => this.props.onUpdateCart(product, productQty)}
           >
             <i className="fa fa-shopping-cart" aria-hidden="true" />{" "}
             <span>Сагсанд нэмэх</span>
@@ -317,10 +319,11 @@ class ProductDetail extends Component {
                         <strong>{formatter.format(prod.price)}₮</strong>
                       </Link>
                       <div className="action">
+                        {console.log("prod", prod)}
                         <button
                           type="button"
                           className="btn btn-link"
-                          onClick={() => this.props.onIncrement(prod)}
+                          onClick={() => this.props.onAddToCart(prod)}
                         >
                           <i
                             className="fa fa-cart-plus"
@@ -456,35 +459,35 @@ class ProductDetail extends Component {
     this.setState({ productQty: parseInt(e.target.value) });
   };
 
-  handleIncrementClick = () => {
-    const {
-      addminqty,
-      availableqty,
-      salemaxqty,
-      isgift
-    } = this.props.container.product;
-    const { productQty } = this.state;
-
-    if (availableqty >= productQty) {
-      if (salemaxqty >= productQty || salemaxqty === 0 || isgift !== 0) {
-        this.setState({
-          productQty:
-            productQty < addminqty ? addminqty : productQty + addminqty
-        });
-      }
+  handleQtyKeyDown = e => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      this.changeQty(parseInt(e.target.value));
     }
   };
 
-  handleDecrementClick = () => {
-    const { addminqty, saleminqty } = this.props.container.product;
-    const { productQty } = this.state;
+  handleQtyBlur = e => {
+    this.changeQty(parseInt(e.target.value));
+  };
 
-    if (saleminqty > 0 && saleminqty < productQty - addminqty) {
-      this.setState({
-        productQty:
-          productQty < saleminqty ? saleminqty : productQty - addminqty
-      });
-    }
+  changeQty = targetQty => {
+    let { product } = this.props.container;
+    product = this.props.onQtyChange(product, targetQty);
+    this.setState({ productQty: product.qty });
+  };
+
+  handleIncrementClick = () => {
+    let { product } = this.props.container;
+    product.qty = this.state.productQty;
+    product = this.props.onIncrement(product);
+    this.setState({ productQty: product.qty });
+  };
+
+  handleDecrementClick = () => {
+    let { product } = this.props.container;
+    product.qty = this.state.productQty;
+    product = this.props.onDecrement(product);
+    this.setState({ productQty: product.qty });
   };
 
   getPrice = () => {
