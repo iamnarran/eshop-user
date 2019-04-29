@@ -311,7 +311,7 @@ class ProductDetail extends Component {
                         <span
                           className="image"
                           style={{
-                            backgroundImage: `url(${IMAGE}${prod.imgnm})`
+                            backgroundImage: `url(${IMAGE}${prod.img})`
                           }}
                         />
                       </Link>
@@ -540,7 +540,7 @@ class ProductDetail extends Component {
   };
 
   render() {
-    const { categories, product } = this.props.container;
+    const { categories, product, images } = this.props.container;
 
     if (!product) {
       return (
@@ -559,7 +559,7 @@ class ProductDetail extends Component {
             <div className="row row10">
               <div className="col-sm-9 col-md-9 col-lg-9 row">
                 <div className="col-xl-5 col-lg-5 col-md-5">
-                  <Gallery images={product.images} tags={product.tags} />
+                  <Gallery images={images} tags={product.tags} />
                   {this.renderSocialButtons(product)}
                 </div>
                 {this.renderDetails()}
