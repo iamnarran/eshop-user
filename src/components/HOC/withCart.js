@@ -51,13 +51,14 @@ const withCart = WrappedComponent => {
         skunm,
         addminqty,
         availableqty,
+        saleminqty,
         salemaxqty,
         isgift
       } = product;
       const productName = name || skunm;
       let { qty } = product;
 
-      qty += addminqty || 1;
+      qty += (qty < saleminqty ? saleminqty : addminqty) || 1;
 
       if (availableqty >= qty) {
         if (salemaxqty >= qty || salemaxqty === 0 || isgift !== 0) {
@@ -89,6 +90,7 @@ const withCart = WrappedComponent => {
       if (saleminqty > 0 && saleminqty <= qty) {
         product.qty = qty;
       } else {
+        product.qty = 0;
         this.handleNotify(
           `"${productName}" барааг хамгийн багадаа "${saleminqty}" ширхэгээр худалдан авах боломжтой байна`
         );
@@ -172,74 +174,77 @@ const withCart = WrappedComponent => {
       const { name, skunm, qty, saleminqty, salemaxqty } = product;
       const productName = name || skunm;
 
-      if (qty < saleminqty) {
-        this.handleNotify(
-          `"${productName}" барааг хамгийн багадаа "${saleminqty}" ширхэгээр худалдан авах боломжтой байна`
-        );
-        return;
-      } else if (qty > salemaxqty) {
-        this.handleNotify(
-          `"${productName}" барааг хамгийн ихдээ "${salemaxqty}" ширхэгээр худалдан авах боломжтой байна`
-        );
-        return;
-      }
+      if (qty > 0) {
+        if (qty < saleminqty) {
+          this.handleNotify(
+            `"${productName}" барааг хамгийн багадаа "${saleminqty}" ширхэгээр худалдан авах боломжтой байна`
+          );
+          return;
+        } else if (salemaxqty > 0 && qty > salemaxqty) {
+          this.handleNotify(
+            `"${productName}" барааг хамгийн ихдээ "${salemaxqty}" ширхэгээр худалдан авах боломжтой байна`
+          );
+          return;
+        }
 
-      let { cart } = this.props;
+        let { cart } = this.props;
 
-      if (!cart) {
-        cart = { products: [], totalQty: 0, totalPrice: 0 };
-      }
+        if (!cart) {
+          cart = { products: [], totalQty: 0, totalPrice: 0 };
+        }
 
-      const found = cart.products.find(prod => prod.cd === product.cd);
+        const found = cart.products.find(prod => prod.cd === product.cd);
 
-      api.product
-        .isAvailable({
-          skucd: product.cd,
-          qty
-        })
-        .then(res => {
-          if (res.success) {
-            let productQty = qty;
-            if (!shouldOverride && found) {
-              productQty = found.qty + qty;
-            }
-
-            if (found) {
-              found.qty = productQty;
-              const i = cart.products.map(prod => prod.cd).indexOf(found.cd);
-              if (i !== -1) {
-                cart.products.splice(i, 1, found);
+        api.product
+          .isAvailable({
+            skucd: product.cd,
+            qty
+          })
+          .then(res => {
+            if (res.success) {
+              let productQty = qty;
+              if (!shouldOverride && found) {
+                productQty = found.qty + qty;
               }
+
+              if (found) {
+                found.qty = productQty;
+                const i = cart.products.map(prod => prod.cd).indexOf(found.cd);
+                if (i !== -1) {
+                  cart.products.splice(i, 1, found);
+                }
+              } else {
+                product.qty = productQty;
+                cart.products.push(product);
+              }
+
+              const qties = cart.products.map(prod => prod.qty);
+              cart.totalQty = qties.reduce((acc, cur) => acc + cur);
+
+              const prices = cart.products.map(prod => {
+                const price =
+                  this.getUnitPrice(prod).sprice ||
+                  this.getUnitPrice(prod).price;
+
+                return price * prod.qty;
+              });
+              cart.totalPrice = prices.reduce((acc, cur) => acc + cur);
+
+              // TODO: stop page refreshing
+              this.props.updateCart({
+                products: cart.products,
+                totalQty: cart.totalQty,
+                totalPrice: cart.totalPrice
+              });
+
+              this.handleNotify(
+                `Таны сагсанд "${productName}" бараа ${qty}ш нэмэгдлээ`
+              );
             } else {
-              product.qty = productQty;
-              cart.products.push(product);
+              this.handleNotify(res.message);
             }
-
-            const qties = cart.products.map(prod => prod.qty);
-            cart.totalQty = qties.reduce((acc, cur) => acc + cur);
-
-            const prices = cart.products.map(prod => {
-              const price =
-                this.getUnitPrice(prod).sprice || this.getUnitPrice(prod).price;
-
-              return price * prod.qty;
-            });
-            cart.totalPrice = prices.reduce((acc, cur) => acc + cur);
-
-            // TODO: stop page refreshing
-            this.props.updateCart({
-              products: cart.products,
-              totalQty: cart.totalQty,
-              totalPrice: cart.totalPrice
-            });
-
-            this.handleNotify(
-              `Таны сагсанд "${productName}" бараа ${qty}ш нэмэгдлээ`
-            );
-          } else {
-            this.handleNotify(res.message);
-          }
-        });
+          });
+      }
     };
 
     handleAddToCart = product => {
