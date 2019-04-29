@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { toast } from "react-toastify";
 import { css } from "glamor";
+import clonedeep from "lodash.clonedeep";
 
 import api from "../../api";
 import { updateCart } from "../../actions/cart";
@@ -97,15 +98,17 @@ const withCart = WrappedComponent => {
     };
 
     handleQtyChange = (product, targetQty) => {
-      if (!product) {
+      let localProduct = clonedeep(product);
+
+      if (!localProduct) {
         this.handleNotify("Бараа олдсонгүй");
         return;
       }
 
-      let { qty } = product;
+      let { qty } = localProduct;
 
       if (qty === targetQty) {
-        return product;
+        return localProduct;
       }
 
       const {
@@ -116,7 +119,7 @@ const withCart = WrappedComponent => {
         saleminqty,
         salemaxqty,
         isgift
-      } = product;
+      } = localProduct;
       const minQty = addminqty || 1;
       const productName = name || skunm;
 
@@ -124,15 +127,15 @@ const withCart = WrappedComponent => {
       targetQty = Math.round(targetQty / minQty) * minQty;
 
       if (targetQty > qty) {
-        if (availableqty >= qty) {
-          if (salemaxqty >= qty || salemaxqty === 0 || isgift !== 0) {
+        if (availableqty >= targetQty) {
+          if (salemaxqty >= targetQty || salemaxqty === 0 || isgift !== 0) {
             if (minQty !== 1) {
               this.handleNotify(
                 `Та "${productName}" бараанаас сагсандаа "${minQty}" ширхэгээр нэмэх боломжтой байна`
               );
             }
 
-            product.qty = targetQty;
+            localProduct.qty = targetQty;
           } else {
             this.handleNotify(
               `"${productName}" барааг хамгийн ихдээ "${salemaxqty}" ширхэгээр худалдан авах боломжтой байна`
@@ -142,14 +145,14 @@ const withCart = WrappedComponent => {
           this.handleNotify(`"${productName}" барааны нөөц хүрэлцэхгүй байна`);
         }
       } else {
-        if (saleminqty > 0 && qty >= saleminqty) {
+        if (saleminqty > 0 && targetQty >= saleminqty) {
           if (minQty !== 1) {
             this.handleNotify(
               `Та "${productName}" бараанаас сагсандаа "${minQty}" ширхэгээр нэмэх боломжтой байна`
             );
           }
 
-          product.qty = targetQty;
+          localProduct.qty = targetQty;
         } else {
           this.handleNotify(
             `"${productName}" барааг хамгийн багадаа "${saleminqty}" ширхэгээр худалдан авах боломжтой байна`
@@ -157,7 +160,7 @@ const withCart = WrappedComponent => {
         }
       }
 
-      return product;
+      return localProduct;
     };
 
     handleUpdateCart = (product, shouldOverride = false) => {
@@ -213,7 +216,7 @@ const withCart = WrappedComponent => {
             }
 
             const qties = cart.products.map(prod => prod.qty);
-            cart.totalQty = qties.reduce((acc, curr) => acc + curr);
+            cart.totalQty = qties.reduce((acc, cur) => acc + cur);
 
             const prices = cart.products.map(prod => {
               const price =
@@ -221,7 +224,7 @@ const withCart = WrappedComponent => {
 
               return price * prod.qty;
             });
-            cart.totalPrice = prices.reduce((acc, curr) => acc + curr);
+            cart.totalPrice = prices.reduce((acc, cur) => acc + cur);
 
             // TODO: stop page refreshing
             this.props.updateCart({
@@ -278,7 +281,7 @@ const withCart = WrappedComponent => {
                   }
 
                   const qties = cart.products.map(prod => prod.qty);
-                  cart.totalQty = qties.reduce((acc, curr) => acc + curr);
+                  cart.totalQty = qties.reduce((acc, cur) => acc + cur);
 
                   const prices = cart.products.map(prod => {
                     const price =
@@ -287,7 +290,7 @@ const withCart = WrappedComponent => {
 
                     return price * prod.qty;
                   });
-                  cart.totalPrice = prices.reduce((acc, curr) => acc + curr);
+                  cart.totalPrice = prices.reduce((acc, cur) => acc + cur);
 
                   // TODO: stop page refreshing
                   this.props.updateCart({
@@ -347,9 +350,7 @@ const withCart = WrappedComponent => {
       }
 
       const qties = cart.products.map(prod => prod.qty);
-      cart.totalQty = qties.length
-        ? qties.reduce((acc, curr) => acc + curr)
-        : 0;
+      cart.totalQty = qties.length ? qties.reduce((acc, cur) => acc + cur) : 0;
 
       const prices = cart.products.map(prod => {
         const price =
@@ -358,7 +359,7 @@ const withCart = WrappedComponent => {
         return price * prod.qty;
       });
       cart.totalPrice = prices.length
-        ? prices.reduce((acc, curr) => acc + curr)
+        ? prices.reduce((acc, cur) => acc + cur)
         : 0;
 
       this.props.updateCart({
@@ -384,9 +385,7 @@ const withCart = WrappedComponent => {
       cart.products.splice(i, 1);
 
       const qties = cart.products.map(prod => prod.qty);
-      cart.totalQty = qties.length
-        ? qties.reduce((acc, curr) => acc + curr)
-        : 0;
+      cart.totalQty = qties.length ? qties.reduce((acc, cur) => acc + cur) : 0;
 
       const prices = cart.products.map(prod => {
         const price =
@@ -395,7 +394,7 @@ const withCart = WrappedComponent => {
         return price * prod.qty;
       });
       cart.totalPrice = prices.length
-        ? prices.reduce((acc, curr) => acc + curr)
+        ? prices.reduce((acc, cur) => acc + cur)
         : 0;
 
       this.props.updateCart({

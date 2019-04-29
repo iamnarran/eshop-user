@@ -80,6 +80,10 @@ class ProductDetail extends Component {
   renderDetails = () => {
     const { categories, product } = this.props.container;
 
+    if (product == null) {
+      return <div>Бараа олдсонгүй</div>;
+    }
+
     const selectedCat =
       product.catid && categories.find(cat => cat.id === product.catid);
 
@@ -109,7 +113,7 @@ class ProductDetail extends Component {
 
             <p className="text">
               (
-              {product.rate.length
+              {!!product.rate && !!product.rate.length
                 ? `${product.rate.length} хүн үнэлгээ өгсөн байна`
                 : "Одоогоор үнэлгээ өгөөгүй байна"}
               )
