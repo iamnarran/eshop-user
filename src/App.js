@@ -20,7 +20,6 @@ import { far } from "@fortawesome/free-regular-svg-icons";
 import { fab } from "@fortawesome/free-brands-svg-icons";
 
 import store from "./store";
-
 import "scss/app.scss";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -43,7 +42,8 @@ import {
   CategoryInfo,
   Cart,
   Checkout,
-  ProductList
+  ProductList,
+  OrderDetail
 } from "./containers";
 
 import Private from "./components/Private";
@@ -116,7 +116,6 @@ class Localization extends Component {
         path: "/productdetail/:id",
         component: rest => <ProductDetail {...rest} {...this.props} />
       },
-
       {
         exact: true,
         path: "/WishList/:id",
@@ -167,6 +166,11 @@ class Localization extends Component {
         exact: true,
         path: "/search/:word",
         component: rest => <ProductList {...rest} {...this.props} />
+      },
+      {
+        exact: true,
+        path: "/order/:id",
+        component: rest => <OrderDetail {...rest} {...this.props} />
       }
     ];
 

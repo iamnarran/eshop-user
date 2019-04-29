@@ -14,6 +14,7 @@ import CategoryInfo from "./CategoryInfo";
 import Cart from "./Cart";
 import Checkout from "./Checkout/Checkout";
 import ProductList from "./ProductList";
+import OrderDetail from "./OrderDetail";
 export {
   Discount,
   Homepage,
@@ -30,5 +31,6 @@ export {
   CategoryInfo,
   Cart,
   Checkout,
-  ProductList
+  ProductList,
+  OrderDetail
 };

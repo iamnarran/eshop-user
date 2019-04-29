@@ -177,9 +177,9 @@ class Checkout extends React.Component {
     await api.checkout.saveCustomerCard(tmp).then(res => {
       if (res.success == true) {
         this.setState({ epointcard: res.data });
-        message.success(res.message);
+        message.success("Хэрэглэгчийн картын дугар эсвэл нууц үг таарсангүй.");
       } else {
-        message.error(res.message);
+        message.error("Таны бүртгэлийг Ипойнт карттай амжилттай холболоо.");
       }
     });
   };
@@ -221,13 +221,15 @@ class Checkout extends React.Component {
         res.data.regno = regno;
         this.setState({ companyInfo: res.data });
       } else {
-        console.log("aldaa");
+        this.setState({ companyInfo: [] });
+        message.error("Татвар төлөгч бүртгэлгүй байна");
       }
     });
   };
 
   handleEditCompany = e => {
     e.preventDefault();
+    this.refs.regno.value = "";
     this.setState({ companyInfo: [] });
   };
 
@@ -246,7 +248,6 @@ class Checkout extends React.Component {
 
   renderAddrsOption = () => {
     const { userAddress } = this.state;
-
     let tmp;
     if (userAddress.length !== 0) {
       tmp = userAddress.map((item, i) => {
@@ -314,6 +315,13 @@ class Checkout extends React.Component {
   };
 
   plusRadioChanged = e => {
+    const { useEpoint } = this.state;
+    if (useEpoint) {
+      message.error(
+        "Байгууллагаар баримт авах үед Ипойнт оноо ашиглах боломжгүй тул таны ашиглахаар тохируулсан оноо төлбөрөөс хасагдахгүйг анхаарна уу."
+      );
+      this.setState({ useEpoint: true });
+    }
     this.setState({ chosenPlusRadio: e.target.id });
   };
 
@@ -553,7 +561,7 @@ class Checkout extends React.Component {
             }
             this.setState({ useEpoint: true });
           } else {
-            message.error(res.message);
+            message.error("Нууц үг таарахгүй байна");
           }
         });
       // Swal.fire("Entered password: " + password);
@@ -571,6 +579,7 @@ class Checkout extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
+    const { chosenPayment } = this.state;
     /*   const { products, epointcard, epointUsedPoint, companyInfo } = this.state;
     let tmp = {};
     tmp.custId = this.state.userInfo.id;
@@ -601,9 +610,14 @@ class Checkout extends React.Component {
     }
     this.sentPaymentF(tmp);
  */
-
+    let type;
+    if (chosenPayment.id == 2) {
+      type = "msgBank";
+    } else if (chosenPayment.id == 3) {
+      type = "qpay";
+    }
     MySwal.fire({
-      html: <SwalModals type="paymentSucess" changePage={this.changePage} />,
+      html: <SwalModals type={type} changePage={this.changePage} />,
       width: "40em",
       button: false,
       showCloseButton: false,
@@ -685,12 +699,6 @@ class Checkout extends React.Component {
                                     className="btn btn-social btn-gmail"
                                   >
                                     <span>Gmail-р бүртгүүлэх</span>
-                                  </button>
-                                  <button
-                                    type="submit"
-                                    className="btn btn-social btn-emart"
-                                  >
-                                    <span>Имарт картаар бүртгүүлэх</span>
                                   </button>
                                 </div>
                                 <span className="divide-maker">Эсвэл</span>
@@ -1073,46 +1081,50 @@ class Checkout extends React.Component {
                               ""
                             )}
                             {epointcard == null ? (
-                              <div>
-                                <p className="title">
-                                  <strong>Имарт картаа холбох</strong>
-                                </p>
-                                <form>
-                                  <div className="row row10">
-                                    <div className="col-xl-6 pad10">
-                                      <div className="form-group">
-                                        <input
-                                          type="text"
-                                          className="form-control"
-                                          id="exampleInputEmail1"
-                                          name="cardno"
-                                          ref="cardno"
-                                          aria-describedby="emailHelp"
-                                          placeholder="Картын дугаар"
-                                        />
-                                        <input
-                                          type="password"
-                                          ref="cardpass"
-                                          name="cardpass"
-                                          className="form-control"
-                                          id="exampleInputEmail1"
-                                          aria-describedby="emailHelp"
-                                          placeholder="Нууц үг"
-                                        />
+                              chosenPlusRadio == 1 ? (
+                                <div>
+                                  <p className="title">
+                                    <strong>Имарт картаа холбох</strong>
+                                  </p>
+                                  <form>
+                                    <div className="row row10">
+                                      <div className="col-xl-6 pad10">
+                                        <div className="form-group">
+                                          <input
+                                            type="text"
+                                            className="form-control"
+                                            id="exampleInputEmail1"
+                                            name="cardno"
+                                            ref="cardno"
+                                            aria-describedby="emailHelp"
+                                            placeholder="Картын дугаар"
+                                          />
+                                          <input
+                                            type="password"
+                                            ref="cardpass"
+                                            name="cardpass"
+                                            className="form-control"
+                                            id="exampleInputEmail1"
+                                            aria-describedby="emailHelp"
+                                            placeholder="Нууц үг"
+                                          />
+                                        </div>
                                       </div>
                                     </div>
-                                  </div>
-                                  <button
-                                    type="submit"
-                                    className="btn btn-main solid"
-                                    onClick={this.saveCustomerCard}
-                                  >
-                                    <span className="text-uppercase">
-                                      Холбох
-                                    </span>
-                                  </button>
-                                </form>
-                              </div>
+                                    <button
+                                      type="submit"
+                                      className="btn btn-main solid"
+                                      onClick={this.saveCustomerCard}
+                                    >
+                                      <span className="text-uppercase">
+                                        Холбох
+                                      </span>
+                                    </button>
+                                  </form>
+                                </div>
+                              ) : (
+                                ""
+                              )
                             ) : chosenPlusRadio == 1 ? (
                               <div>
                                 <p className="title">
