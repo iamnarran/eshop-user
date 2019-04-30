@@ -34,7 +34,6 @@ class RecipeDetail extends React.Component {
 
   renderSteps = () => {
     const { steps } = this.props.container;
-
     return steps.map((step, index) => {
       return (
         <div className="row row10" key={index}>
@@ -52,10 +51,13 @@ class RecipeDetail extends React.Component {
               }}
             />
           </div>
-
           <div className="col-md-8">
             <h4>
-              <FontAwesomeIcon icon={["fas", "circle"]} /> АЛХАМ {++index}
+              <FontAwesomeIcon
+                icon={["fas", "circle"]}
+                style={{ width: "10px" }}
+              />{" "}
+              АЛХАМ {++index}
             </h4>
             {step.description}
             <p />
