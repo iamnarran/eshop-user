@@ -9,17 +9,42 @@ const MySwal = withReactContent(Swal);
 const formatter = new Intl.NumberFormat("en-US");
 const Panel = Collapse.Panel;
 const TabPane = Tabs.TabPane;
-
 class SwalModals extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
 
+  getOrderDate = () => {
+    const date = new Date();
+    let year = date.getFullYear();
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+    return year + " оны " + month + " сарын " + day + " ны өдөр";
+  };
+
   render() {
     let p = [1, 2, 3, 4, 5, 6];
-    const { type, changePage } = this.props;
+    const { type, changePage, data, readyBtn } = this.props;
     if (type == "paymentSucess") {
+      const {
+        delivery,
+        userInfo,
+        products,
+        chosenInfo,
+        userAddress,
+        chosenPayment
+      } = this.props;
+      let addrs;
+      if (userAddress.length !== 0) {
+        if (chosenInfo.length !== 0) {
+          userAddress.map((item, i) => {
+            if (item.id == chosenInfo.address) {
+              addrs = item.address;
+            }
+          });
+        }
+      }
       return (
         <div className="wrap">
           <div className="success-message-container">
@@ -34,7 +59,7 @@ class SwalModals extends React.Component {
                       />
                       <h4 className="title">
                         <span className="text-uppercase">
-                          Таны төлбөр баталгаажлаа
+                          Таны захиалга амжилттай үүслээ
                         </span>
                       </h4>
                     </div>
@@ -45,15 +70,19 @@ class SwalModals extends React.Component {
                       <ul className="list-unstyled class">
                         <li className="flex-this flex-space">
                           <span>Худалдаж авсан барааны тоо:</span>
-                          <strong className="big">2</strong>
+                          <strong className="big">
+                            {products.products.length}
+                          </strong>
                         </li>
                         <li className="flex-this flex-space">
                           <span>Мөнгөн дүн</span>
-                          <strong className="big">11,400₮</strong>
+                          <strong className="big">
+                            {formatter.format(products.totalPrice)}₮
+                          </strong>
                         </li>
                         <li className="flex-this flex-space">
                           <span>Төлбөрийн төрөл</span>
-                          <strong className="big">Интернэт банк</strong>
+                          <strong className="big">{chosenPayment.name}</strong>
                         </li>
                       </ul>
                     </div>
@@ -65,31 +94,48 @@ class SwalModals extends React.Component {
                       </h5>
                       <p className="text flex-this">
                         <i className="fa fa-user" aria-hidden="true" />
-                        <span>Болд Ганзориг</span>
+                        <span>
+                          {" "}
+                          {userInfo.length == 0
+                            ? ""
+                            : userInfo.lastname + " " + userInfo.firstname}
+                        </span>
                       </p>
                       <p className="text flex-this">
                         <i className="fa fa-phone" aria-hidden="true" />
-                        <span>9911 9911</span>
+                        <span>
+                          {" "}
+                          {chosenInfo.length != 0
+                            ? chosenInfo.phone1 + ", " + chosenInfo.phone2
+                            : ""}
+                        </span>
                       </p>
                       <p className="text flex-this">
                         <i className="fa fa-map-marker" aria-hidden="true" />
                         <span>
-                          Улаанбаатар хот, Баянзүрх дүүрэг, 17 хороо, 35-р байр,
-                          5 давхар, 37 тоот, код - 8759
+                          {chosenInfo.length != 0
+                            ? chosenInfo.mainLocation +
+                              ", " +
+                              chosenInfo.subLocation +
+                              ", " +
+                              chosenInfo.commiteLocation +
+                              ", " +
+                              addrs
+                            : ""}
                         </span>
                       </p>
                       <p className="text flex-this">
                         <i className="fa fa-calendar" aria-hidden="true" />
-                        <span>2018 оны 8 сарын 07</span>
+                        <span>{this.getOrderDate()}</span>
                       </p>
                     </div>
                     <div className="bottom-text text-center">
-                      <p>
+                      {/* <p>
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                         Sed ullamcorper congue felis porta feugiat. Integer
                         elementum quam dapibus est tincidunt, at posuere ipsum
                         imperdiet.{" "}
-                      </p>
+                      </p> */}
                       <strong className="text-uppercase">
                         Лавлах утас: 7700 7700
                       </strong>
@@ -118,11 +164,12 @@ class SwalModals extends React.Component {
         </div>
       );
     } else if (type == "msgBank") {
+      const { ordData } = this.props;
       return (
         <div className="checkout-container msg-bank">
           <div className="card-content" style={{ padding: "20px 20px 0px" }}>
             <Tabs tabPosition={"left"}>
-              {p.map((item, i) => {
+              {data.map((item, i) => {
                 return (
                   <TabPane
                     tab={
@@ -133,7 +180,7 @@ class SwalModals extends React.Component {
                             src={require("../../scss/assets/images/demo/golomt.png")}
                             style={{ marginRight: "5px" }}
                           />
-                          <span>Голомт банк</span>
+                          <span>{item.banknm}</span>
                         </span>
                       </li>
                     }
@@ -147,19 +194,21 @@ class SwalModals extends React.Component {
                         <ul className="list-unstyled">
                           <li>
                             <span>Данс</span>
-                            <strong>501020304050</strong>
+                            <strong>{item.account}</strong>
                           </li>
                           <li>
                             <span>Гүйлгээний утга</span>
-                            <strong>501020304050</strong>
+                            <strong>{ordData.ordernumber}</strong>
                           </li>
                           <li>
                             <span>Хүлээн авагчийн нэр</span>
-                            <strong>501020304050</strong>
+                            <strong>{item.name}</strong>
                           </li>
                           <li>
                             <span>Мөнгөн дүн</span>
-                            <strong>501020304050</strong>
+                            <strong>
+                              {formatter.format(ordData.totalamount)}₮
+                            </strong>
                           </li>
                         </ul>
                       </div>
@@ -169,7 +218,7 @@ class SwalModals extends React.Component {
               })}
             </Tabs>
             <div className="text-right">
-              <a href="#" className="btn btn-main">
+              <a onClick={e => readyBtn(e)} className="btn btn-main">
                 <span className="text-uppercase">Болсон</span>
               </a>
             </div>

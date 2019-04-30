@@ -62,16 +62,30 @@ class Checkout extends React.Component {
       companyInfo: [],
       epointcard: null,
       useEpoint: false,
-      epointUsedPoint: 0
+      epointUsedPoint: 0,
+      paymentButton: true,
+      cardNoInput: "",
+      regNoInput: ""
     };
   }
 
   errorMsg = txt => {
-    message.error(txt);
+    MySwal.hideLoading();
+    MySwal.fire({
+      type: "error",
+      text: txt,
+      animation: false
+    });
   };
 
   successMsg = txt => {
-    message.success(txt);
+    MySwal.hideLoading();
+    MySwal.fire({
+      type: "success",
+      title: "Амжилттай",
+      text: txt,
+      animation: false
+    });
   };
 
   componentWillMount() {
@@ -90,6 +104,64 @@ class Checkout extends React.Component {
     });
   }
 
+  cardNoChange = e => {
+    const { cardNoInput } = this.state;
+    if (e.target.value.length <= 14) {
+      this.setState({ cardNoInput: e.target.value });
+    }
+  };
+
+  regNoChange = e => {
+    const { regNoInput } = this.state;
+    let value = e.target.value;
+    let len = e.target.value.length;
+    this.setState({ regNoInput: e.target.value });
+    /* if (len == 1) {
+      if (isNaN(value.slice(0, 1))) {
+        if (/[а-яА-ЯЁёӨөҮү]/.test(value.slice(0, 1))) {
+          this.setState({ regNoInput: e.target.value });
+        }
+      }
+    }
+
+    if (len == 2) {
+      if (isNaN(value.slice(1, 2))) {
+        if (/[а-яА-ЯЁёӨөҮү]/.test(value.slice(1, 2))) {
+          this.setState({ regNoInput: e.target.value });
+        }
+      }
+    }
+
+    if (len >= 2 && len <= 10) {
+      if (!isNaN(value.slice(len, len + 1))) {
+        this.setState({ regNoInput: e.target.value });
+      }
+    } */
+
+    /*  if (isNaN(value.slice(0, 1)) || isNaN(value.slice(1, 2))) {
+      if (
+        /[а-яА-ЯЁё]/.test(value.slice(0, 1)) ||
+        /[а-яА-ЯЁё]/.test(value.slice(1, 2))
+      ) {
+        if (len >= 2 && len <= 10) {
+        } else {
+          this.setState({ regNoInput: value });
+        }
+      }
+    } else {
+      console.log("num");
+    }
+    console.log(e.target.value.slice(0, 1)); */
+    // if (e.target.value.length <= 10) {
+    // this.setState({ regNoInput: e.target.value });
+    // }
+    // console.log(/[а-яА-ЯЁё]/.test(e.target.value));
+
+    // let tmp = e.target.value.match(/[\w\u0430-\u044f]+/gi);
+    // console.log(tmp);
+    //console.log(e.target.value.replace("^[a-zA-Z][0-9]{7}$"));
+  };
+  //АА99999999 , 9999999
   getMainLocation = async () => {
     await api.location.findAll({}).then(res => {
       if (res.success == true) {
@@ -167,6 +239,7 @@ class Checkout extends React.Component {
 
   saveCustomerCard = async e => {
     e.preventDefault();
+    MySwal.showLoading();
     let cardpass = this.refs.cardpass.value;
     let cardno = this.refs.cardno.value;
     let tmp = {
@@ -177,9 +250,9 @@ class Checkout extends React.Component {
     await api.checkout.saveCustomerCard(tmp).then(res => {
       if (res.success == true) {
         this.setState({ epointcard: res.data });
-        message.success("Хэрэглэгчийн картын дугар эсвэл нууц үг таарсангүй.");
+        this.successMsg("Таны бүртгэлийг Ипойнт карттай амжилттай холболоо");
       } else {
-        message.error("Таны бүртгэлийг Ипойнт карттай амжилттай холболоо.");
+        this.errorMsg("Хэрэглэгчийн картын дугар эсвэл нууц үг таарсангүй.");
       }
     });
   };
@@ -218,11 +291,16 @@ class Checkout extends React.Component {
     let regno = this.refs.regno.value;
     await api.checkout.getCompanyRegno({ regNo: regno }).then(res => {
       if (res.success == true) {
-        res.data.regno = regno;
-        this.setState({ companyInfo: res.data });
+        if (res.data.name != "") {
+          res.data.regno = regno;
+          this.setState({ companyInfo: res.data, paymentButton: false });
+        } else {
+          this.setState({ companyInfo: [] });
+          this.errorMsg("Татвар төлөгч бүртгэлгүй байна");
+        }
       } else {
         this.setState({ companyInfo: [] });
-        message.error("Татвар төлөгч бүртгэлгүй байна");
+        this.errorMsg("Татвар төлөгч бүртгэлгүй байна");
       }
     });
   };
@@ -315,19 +393,36 @@ class Checkout extends React.Component {
   };
 
   plusRadioChanged = e => {
-    const { useEpoint } = this.state;
-    if (useEpoint) {
-      message.error(
-        "Байгууллагаар баримт авах үед Ипойнт оноо ашиглах боломжгүй тул таны ашиглахаар тохируулсан оноо төлбөрөөс хасагдахгүйг анхаарна уу."
-      );
-      this.setState({ useEpoint: true });
+    const {
+      useEpoint,
+      epointcard,
+      epointUsedPoint,
+      chosenPlusRadio
+    } = this.state;
+    if (e.target.id == 2) {
+      if (useEpoint) {
+        this.errorMsg(
+          "Байгууллагаар баримт авах үед Ипойнт оноо ашиглах боломжгүй тул таны ашиглахаар тохируулсан оноо төлбөрөөс хасагдахгүйг анхаарна уу."
+        );
+        epointcard.point = epointcard.point + epointUsedPoint;
+
+        this.setState({
+          useEpoint: false,
+          epointcard: epointcard
+        });
+      }
+      this.setState({ paymentButton: true });
+    } else {
+      this.setState({ paymentButton: false, companyInfo: [] });
     }
+
     this.setState({ chosenPlusRadio: e.target.id });
   };
 
   onSubmit = e => {
     e.preventDefault();
     const { defaultAddress, userAddress, addresstype } = this.state;
+
     let tmp = [];
     let chosenInfo = {};
     this.props.form.validateFields((err, values) => {
@@ -359,6 +454,7 @@ class Checkout extends React.Component {
           }
         } else if (e.target.name == "payment") {
           tmp.push("4");
+          this.setState({ paymentButton: false });
         }
         this.setState({
           collapseType: e.target.name,
@@ -408,18 +504,6 @@ class Checkout extends React.Component {
                 <span>{item.description}</span>
               </p>
             </h5>
-            {/*  {chosenPayment.id == 1 && item.id == 1 ? (
-              <RadioGroup
-                buttonStyle="solid"
-                defaultValue={1}
-                size="large"
-                onChange={this.bankRadioChange}
-              >
-                {this.renderBankInfo()}
-              </RadioGroup>
-            ) : (
-              ""
-            )} */}
           </label>
         );
       });
@@ -434,17 +518,6 @@ class Checkout extends React.Component {
     if (bankInfo !== 0) {
       tmp = bankInfo.map((item, i) => {
         return (
-          /* <TabPane
-            tab={
-              <span>
-                <Icon type="android" />
-                {item.banknm}
-              </span>
-            }
-            key={item.bankid}
-          >
-            {item.account}
-          </TabPane> */
           <RadioButton value={item.bankid} key={i}>
             <p>{item.banknm}</p>
           </RadioButton>
@@ -526,6 +599,7 @@ class Checkout extends React.Component {
       input: "password",
       width: "20rem",
       confirmButtonText: "Ok",
+      confirmButtonColor: "#feb415",
       cancelButtonText: "Болих",
       inputPlaceholder: "Картын нууц үгээ оруулна уу ?",
       showCancelButton: true,
@@ -537,6 +611,7 @@ class Checkout extends React.Component {
     });
 
     if (password) {
+      MySwal.showLoading();
       await api.checkout
         .checkpass({ cardno: epointcard.cardno, pincode: password })
         .then(res => {
@@ -561,26 +636,63 @@ class Checkout extends React.Component {
             }
             this.setState({ useEpoint: true });
           } else {
-            message.error("Нууц үг таарахгүй байна");
+            this.errorMsg("Нууц үг таарахгүй байна");
           }
         });
-      // Swal.fire("Entered password: " + password);
     }
   };
 
   sentPaymentF = async tmp => {
-    const res = await this.props.sentPayment(tmp);
-    if (res.success) {
-      message.success(res.data);
-    } else {
-      message.error(res.data);
-    }
+    const {
+      userInfo,
+      delivery,
+      products,
+      chosenInfo,
+      userAddress,
+      chosenPayment
+    } = this.state;
+
+    let data;
+    await this.props.sentPayment(tmp).then(res => {
+      if (res.success) {
+        let type;
+        if (chosenPayment.id == 2) {
+          type = "msgBank";
+          data = this.props.container.bankInfo;
+        } else if (chosenPayment.id == 3) {
+          type = "qpay";
+        }
+        MySwal.fire({
+          html: (
+            <SwalModals
+              type={type}
+              data={data}
+              ordData={res.data}
+              changePage={this.changePage}
+              readyBtn={this.handlePayment}
+            />
+          ),
+          width: "40em",
+          animation: false,
+          button: false,
+          showCloseButton: false,
+          showCancelButton: false,
+          showConfirmButton: false,
+          focusConfirm: false,
+          showCloseButton: true,
+          allowOutsideClick: false,
+          closeOnEsc: false
+        });
+      } else {
+        this.errorMsg(res.data);
+      }
+    });
   };
 
   handleSubmit = e => {
     e.preventDefault();
     const { chosenPayment } = this.state;
-    /*   const { products, epointcard, epointUsedPoint, companyInfo } = this.state;
+    const { products, epointcard, epointUsedPoint, companyInfo } = this.state;
     let tmp = {};
     tmp.custId = this.state.userInfo.id;
     tmp.deliveryTypeId = this.state.delivery.id;
@@ -590,7 +702,7 @@ class Checkout extends React.Component {
     tmp.phone2 = this.state.chosenInfo.phone2;
     tmp.paymentType = this.state.chosenPayment.id;
     tmp.addPoint = 0;
-    tmp.cardNo = epointcard.cardno;
+    //tmp.cardNo = epointcard.cardno;
     tmp.usedPoint = epointUsedPoint;
     tmp.items = [];
     if (isNaN(this.state.chosenInfo.commiteLocation)) {
@@ -608,16 +720,35 @@ class Checkout extends React.Component {
       tmp.taxRegno = companyInfo.regno;
       tmp.taxName = companyInfo.name;
     }
+
+    let data = [];
     this.sentPaymentF(tmp);
- */
-    let type;
-    if (chosenPayment.id == 2) {
-      type = "msgBank";
-    } else if (chosenPayment.id == 3) {
-      type = "qpay";
-    }
+  };
+
+  handlePayment = e => {
+    e.preventDefault();
+    const {
+      userInfo,
+      delivery,
+      products,
+      chosenInfo,
+      userAddress,
+      chosenPayment
+    } = this.state;
     MySwal.fire({
-      html: <SwalModals type={type} changePage={this.changePage} />,
+      html: (
+        <SwalModals
+          type={"paymentSucess"}
+          changePage={this.changePage}
+          chosenPayment={chosenPayment}
+          readyBtn={this.handlePayment}
+          userInfo={userInfo}
+          delivery={delivery}
+          products={products}
+          chosenInfo={chosenInfo}
+          userAddress={userAddress}
+        />
+      ),
       width: "40em",
       button: false,
       showCloseButton: false,
@@ -652,7 +783,8 @@ class Checkout extends React.Component {
       addresstype,
       mainLocation,
       subLocation,
-      commiteLocation
+      commiteLocation,
+      paymentButton
     } = this.state;
     const { deliveryTypes } = this.props.container;
     const { isLoggedIn } = this.props;
@@ -718,20 +850,6 @@ class Checkout extends React.Component {
                         ) : (
                           ""
                         )}
-                        {/*  <DeliveryPanel
-                          commiteLocation={commiteLocation}
-                          subLocation={subLocation}
-                          deliveryTypes={deliveryTypes}
-                          changeTab={this.changeTab}
-                          onSubmit={this.onSubmit}
-                          addresstype={addresstype}
-                          onChangeMainLoc={this.onChangeMainLoc}
-                          onChangeSubLoc={this.onChangeSubLoc}
-                          userAddress={userAddress}
-                          mainLocation={mainLocation}
-                          key={"2"}
-                          getFieldDecorator={getFieldDecorator}
-                        /> */}
                         <Panel
                           header={this.deliveryInfo()}
                           showArrow={false}
@@ -1039,8 +1157,10 @@ class Checkout extends React.Component {
                                           id="exampleInputEmail1"
                                           name="regno"
                                           ref="regno"
+                                          value={this.state.regNoInput}
                                           aria-describedby="emailHelp"
                                           placeholder="Байгууллагын регистэр"
+                                          onChange={this.regNoChange}
                                         />
                                       ) : (
                                         <input
@@ -1096,8 +1216,10 @@ class Checkout extends React.Component {
                                             id="exampleInputEmail1"
                                             name="cardno"
                                             ref="cardno"
+                                            value={this.state.cardNoInput}
                                             aria-describedby="emailHelp"
                                             placeholder="Картын дугаар"
+                                            onChange={this.cardNoChange}
                                           />
                                           <input
                                             type="password"
@@ -1185,8 +1307,11 @@ class Checkout extends React.Component {
                 userInfo={userInfo}
                 delivery={delivery}
                 products={products}
+                chosenInfo={this.state.chosenInfo}
                 usedpoint={usedpoint}
                 handleClick={this.handleSubmit}
+                userAddress={userAddress}
+                paymentButton={paymentButton}
               />
             </div>
           </div>
