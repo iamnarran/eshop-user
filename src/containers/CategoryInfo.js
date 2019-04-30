@@ -21,6 +21,8 @@ const fetch = async (props, onData) => {
       orderCol: "price_asc"
     });
 
+    console.log("info", info);
+
     onData(null, {
       container: {
         id: props.match.params.id,

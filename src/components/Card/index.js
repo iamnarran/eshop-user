@@ -11,6 +11,8 @@ import productPlus from "../../scss/assets/images/demo/plusEmart.png";
 
 import "./Card.css";
 
+const formatter = new Intl.NumberFormat("en-US");
+
 class Card extends React.Component {
   oneSave = item => {
     api.product
@@ -139,10 +141,26 @@ class Card extends React.Component {
     }
 
     if (item.sprice || item.price) {
-      const formatter = new Intl.NumberFormat("en-US");
+      let priceTitle = "";
+
+      if (item.id) {
+        priceTitle = (
+          <span style={{ fontWeight: "normal", marginRight: "10px" }}>
+            Багцын үнэ:
+          </span>
+        );
+      } else if (item.recipeid) {
+        priceTitle = (
+          <span style={{ fontWeight: "normal", marginRight: "10px" }}>
+            Орцны үнэ:
+          </span>
+        );
+      }
+
       if (item.sprice) {
         prices = (
           <div>
+            {priceTitle}
             <small className="sale">
               {isNaN(item.price) ? 0 : formatter.format(item.price)}₮
             </small>
@@ -154,6 +172,7 @@ class Card extends React.Component {
       } else {
         prices = (
           <div>
+            {priceTitle}
             <span className="current">
               {isNaN(item.price) ? 0 : formatter.format(item.price)}₮
             </span>
