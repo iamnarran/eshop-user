@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { createForm } from "rc-form";
+import clonedeep from "lodash.clonedeep";
 
 import { IMAGE } from "../utils/consts";
 import withCart from "../components/HOC/withCart";
@@ -12,55 +13,56 @@ class Cart extends React.Component {
   state = { products: [], abstractProducts: [] };
 
   componentDidMount() {
-    const products = JSON.parse(JSON.stringify(this.props.cart.products));
-    const abstractProducts = JSON.parse(
-      JSON.stringify(this.props.cart.products)
-    );
+    const products = clonedeep(this.props.cart.products);
+    const abstractProducts = clonedeep(this.props.cart.products);
 
     this.setState({ products, abstractProducts });
   }
 
-  findAndReplace = product => {
-    let tempProducts = this.state.abstractProducts;
-    const i = tempProducts.map(prod => prod.cd).indexOf(product.cd);
+  findAndReplace = abstractProduct => {
+    const localAbstractProduct = clonedeep(abstractProduct);
+    let tempProducts = clonedeep(this.state.abstractProducts);
+    const i = tempProducts
+      .map(prod => prod.cd)
+      .indexOf(localAbstractProduct.cd);
 
     if (i !== -1) {
-      tempProducts.splice(i, 1, product);
+      tempProducts.splice(i, 1, localAbstractProduct);
     }
 
     this.setState({ abstractProducts: tempProducts });
   };
 
-  handleQtyChange = product => e => {
-    product.qty = parseInt(e.target.value);
-    this.findAndReplace(product);
+  handleQtyChange = abstractProduct => e => {
+    abstractProduct.qty = parseInt(e.target.value);
+    this.findAndReplace(abstractProduct);
   };
 
-  handleQtyKeyDown = product => e => {
+  handleQtyKeyDown = abstractProduct => e => {
     if (e.key === "Enter") {
       e.preventDefault();
-      this.changeQty(product);
+      this.changeQty(abstractProduct);
     }
   };
 
-  handleQtyBlur = product => e => {
-    this.changeQty(product);
+  handleQtyBlur = abstractProduct => e => {
+    this.changeQty(abstractProduct);
   };
 
   changeQty = abstractProduct => {
+    const localAbstractProduct = clonedeep(abstractProduct);
+
     let product = this.state.products.find(
-      prod => prod.cd === abstractProduct.cd
+      prod => prod.cd === localAbstractProduct.cd
     );
 
     if (product) {
       const updatedProduct = this.props.onQtyChange(
         product,
-        abstractProduct.qty
+        localAbstractProduct.qty
       );
 
-      if (product.qty !== updatedProduct.qty) {
-        this.findAndReplace(updatedProduct);
-      }
+      this.findAndReplace(updatedProduct);
     }
   };
 
@@ -131,9 +133,6 @@ class Cart extends React.Component {
   };
 
   render() {
-    console.log("products", this.state.products);
-    console.log("abstract products", this.state.abstractProducts);
-
     const { wishlistProducts, deliveryInfo } = this.props.container;
     const { isLoggedIn, user, cart, onRemove } = this.props;
     const { totalPrice, totalQty } = cart;

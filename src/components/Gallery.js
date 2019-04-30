@@ -48,7 +48,7 @@ class Gallery extends Component {
 
   renderImages = () => {
     return this.props.images.map(image => ({
-      src: `${IMAGE}${image.imglrg}`
+      src: `${IMAGE}${image.lrgimg}`
     }));
   };
 
@@ -73,8 +73,8 @@ class Gallery extends Component {
               </div>
             )}
             <Magnifier
-              smallImage={images[current].imgmdm}
-              largeImage={images[current].imglrg}
+              smallImage={images[current].mdmimg}
+              largeImage={images[current].lrgimg}
             />
           </div>
         </div>
@@ -93,7 +93,7 @@ class Gallery extends Component {
                       <img
                         alt={`image${index}`}
                         className={`image${index}`}
-                        src={`${IMAGE}${image.imgmni}`}
+                        src={`${IMAGE}${image.mniimg}`}
                       />
                     </a>
                   </li>

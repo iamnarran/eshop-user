@@ -20,21 +20,25 @@ class PackageDetail extends React.Component {
     let tempProducts = this.state.products;
 
     tempProducts.forEach(product => {
-      product.qty = product.addminqty || 1;
+      product.qty = product.saleminqty || 1;
     });
 
     this.setState({ products: tempProducts });
   }
 
-  handleAddToCartClick = () => {
-    const { products } = this.state;
+  handleAddToCartClick = (product = null) => {
+    if (product) {
+      this.props.onUpdateCart(product);
+    } else {
+      const { products } = this.state;
 
-    if (products.length) {
-      products.reduce((acc, next) => {
-        return acc.then(() => {
-          return this.props.onUpdateCart(next, next.qty);
-        });
-      }, Promise.resolve());
+      if (products.length) {
+        products.reduce((acc, next) => {
+          return acc.then(() => {
+            return this.props.onUpdateCart(next);
+          });
+        }, Promise.resolve());
+      }
     }
   };
 
@@ -131,7 +135,7 @@ class PackageDetail extends React.Component {
                         <button
                           type="button"
                           className="btn btn-link"
-                          onClick={() => this.props.onIncrement(product)}
+                          onClick={this.handleAddToCartClick(product)}
                         >
                           <i
                             className="fa fa-cart-plus"
@@ -258,13 +262,17 @@ class PackageDetail extends React.Component {
                           </form>
 
                           <div className="action">
-                            <Link to="">
+                            <button
+                              className="btn btn-link"
+                              type="button"
+                              onClick={() => this.props.onAddToCart(product)}
+                            >
                               <i
                                 className="fa fa-cart-plus"
                                 aria-hidden="true"
                                 style={{ fontSize: "1.6rem" }}
                               />
-                            </Link>
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -276,7 +284,7 @@ class PackageDetail extends React.Component {
               <div className="col-xl-4 pad10">
                 <div className="pack-price">
                   <p className="text flex-this end">
-                    <span>Дүн:</span>
+                    <span>Багцад орсон барааны нийт дүн:</span>
                     {this.renderTotalPrice()}
                   </p>
 

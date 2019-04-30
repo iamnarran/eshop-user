@@ -29,6 +29,14 @@ export default [
     NAME: "getOrderList",
     METHOD: "GET",
     URL: `${API}/api/order/all/:custid`,
-    REPLACE: "custid"
+    REPLACE: "custid",
+    TOKEN: true
+  },
+  {
+    NAME: "getOrderDetail",
+    METHOD: "GET",
+    URL: `${API}/api/order/detail/:ordid`,
+    REPLACE: "ordid",
+    TOKEN: true
   }
 ];

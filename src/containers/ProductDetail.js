@@ -28,7 +28,8 @@ const fetch = async (props, onData) => {
     onData(null, {
       container: {
         categories: categories.data,
-        product: product.data[0],
+        product: product.data[0].products[0],
+        images: product.data[0].images,
         attributes: attributes.data,
         similarProducts: similarProducts.data,
         relatedProducts: relatedProducts.data,
