@@ -15,11 +15,9 @@ class Slider extends React.Component {
 
   componentDidMount() {
     this.setState({ ...this.props });
-    console.log(this.state);
   }
 
   render() {
-    console.log(this.state.type);
     var repice = this.state.data.map(function(item, index) {
       return (
         <div
@@ -29,44 +27,43 @@ class Slider extends React.Component {
       );
     });
     var indents = this.state.data.map(function(item, index) {
+      const container = (
+        <div className="container pad10">
+          <div className="slide-container">
+            <div className="slide-content text-uppercase">
+              {item && item.isshownm !== 0 && (
+                <div>
+                  <h2 className="title">{item.bannernm}</h2>
+                  <p className="text">{item.description}</p>
+                </div>
+              )}
+              {item && item.link && (
+                <Link to={item.link} className="btn btn-main" target="_blank">
+                  <i className="fa fa-long-arrow-right" aria-hidden="true" />
+                  <span className="text-uppercase">
+                    {item.btntext && item.btntext.trim()
+                      ? item.btntext
+                      : "Дэлгэрэнгүй"}
+                  </span>
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+
       return (
         <div
           style={{ backgroundImage: `url(${IMAGE + item.imgnm})` }}
           key={index}
         >
-          {
-            <Link to={item.brandid ? "/brand/" + item.brandid : ""}>
-              <div className="container pad10">
-                <div className="slide-container">
-                  <div className="slide-content text-uppercase">
-                    {item && item.isshownm !== 0 && (
-                      <div>
-                        <h2 className="title">{item.bannernm}</h2>
-                        <p className="text">{item.description}</p>
-                      </div>
-                    )}
-                    {item && item.link && (
-                      <Link
-                        to={item.link}
-                        className="btn btn-main"
-                        target="_blank"
-                      >
-                        <i
-                          className="fa fa-long-arrow-right"
-                          aria-hidden="true"
-                        />
-                        <span className="text-uppercase">
-                          {item.btntext && item.btntext.trim()
-                            ? item.btntext
-                            : "Дэлгэрэнгүй"}
-                        </span>
-                      </Link>
-                    )}
-                  </div>
-                </div>
-              </div>
+          {item.brandid ? (
+            <Link to={item.brandid ? `/brand/${item.brandid}` : ""}>
+              {container}
             </Link>
-          }
+          ) : (
+            container
+          )}
         </div>
       );
     });

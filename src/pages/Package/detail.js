@@ -26,7 +26,7 @@ class PackageDetail extends React.Component {
     this.setState({ products: tempProducts });
   }
 
-  handleAddToCartClick = (product = null) => {
+  handleAddToCartClick = product => {
     if (product) {
       this.props.onUpdateCart(product);
     } else {
@@ -135,7 +135,7 @@ class PackageDetail extends React.Component {
                         <button
                           type="button"
                           className="btn btn-link"
-                          onClick={this.handleAddToCartClick(product)}
+                          onClick={() => this.handleAddToCartClick(product)}
                         >
                           <i
                             className="fa fa-cart-plus"
@@ -185,7 +185,7 @@ class PackageDetail extends React.Component {
                               to={product.route || ""}
                               style={{ color: "#666" }}
                             >
-                              <span>{product.skunm}</span>
+                              <span>{product.name}</span>
                               <strong>
                                 {formatter.format(
                                   this.props.getUnitPrice(product).sprice ||
@@ -265,7 +265,7 @@ class PackageDetail extends React.Component {
                             <button
                               className="btn btn-link"
                               type="button"
-                              onClick={() => this.props.onAddToCart(product)}
+                              onClick={() => this.handleAddToCartClick(product)}
                             >
                               <i
                                 className="fa fa-cart-plus"
@@ -284,14 +284,14 @@ class PackageDetail extends React.Component {
               <div className="col-xl-4 pad10">
                 <div className="pack-price">
                   <p className="text flex-this end">
-                    <span>Багцад орсон барааны нийт дүн:</span>
+                    <span style={{ fontSize: "1.6rem" }}>Үнэ:</span>
                     {this.renderTotalPrice()}
                   </p>
 
                   <button
                     type="button"
                     className="btn btn-main"
-                    onClick={this.handleAddToCartClick}
+                    onClick={() => this.handleAddToCartClick()}
                   >
                     <i
                       className="fa fa-cart-plus"
