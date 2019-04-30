@@ -63,7 +63,7 @@ class Card extends React.Component {
         this.oneSave(item);
       }
     } else {
-      this.props.onNotify("ehleed newter");
+      /* this.props.onNotify("ehleed newter"); */
     }
   };
 

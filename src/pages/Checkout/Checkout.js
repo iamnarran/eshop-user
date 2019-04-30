@@ -58,6 +58,7 @@ class Checkout extends React.Component {
       mainLocation: [],
       subLocation: [],
       chosenInfo: [],
+      choseInfoNames: [],
       commiteLocation: [],
       companyInfo: [],
       epointcard: null,
@@ -65,7 +66,8 @@ class Checkout extends React.Component {
       epointUsedPoint: 0,
       paymentButton: true,
       cardNoInput: "",
-      regNoInput: ""
+      regNoInput: "",
+      chosenDeliveryAddrName: []
     };
   }
 
@@ -86,6 +88,61 @@ class Checkout extends React.Component {
       text: txt,
       animation: false
     });
+  };
+
+  getMainLocationName = id => {
+    const { mainLocation } = this.state;
+    let tmp = null;
+    if (mainLocation.length !== 0) {
+      if (!isNaN(id)) {
+        mainLocation.map((item, i) => {
+          if (item.provinceid == id) {
+            tmp = item.provincenm;
+          }
+        });
+      } else {
+        tmp = id;
+      }
+    }
+    return tmp;
+  };
+
+  getCommiteLocationName = id => {
+    const { commiteLocation } = this.state;
+    let tmp = null;
+    if (commiteLocation.length !== 0) {
+      if (!isNaN(id)) {
+        commiteLocation.map((item, i) => {
+          if (item.id == id) {
+            tmp = item.committeenm;
+          }
+        });
+      } else {
+        tmp = id;
+      }
+    } else {
+      tmp = id;
+    }
+    return tmp;
+  };
+
+  getSubLocationName = id => {
+    const { subLocation } = this.state;
+    let tmp = null;
+    if (subLocation.length !== 0) {
+      if (!isNaN(id)) {
+        subLocation.map((item, i) => {
+          if (item.districtrow == id) {
+            tmp = item.districtnm;
+          }
+        });
+      } else {
+        tmp = id;
+      }
+    } else {
+      tmp = id;
+    }
+    return tmp;
   };
 
   componentWillMount() {
@@ -239,22 +296,27 @@ class Checkout extends React.Component {
 
   saveCustomerCard = async e => {
     e.preventDefault();
-    MySwal.showLoading();
+
     let cardpass = this.refs.cardpass.value;
     let cardno = this.refs.cardno.value;
-    let tmp = {
-      custid: this.state.userInfo.id,
-      cardno: cardno,
-      pincode: cardpass
-    };
-    await api.checkout.saveCustomerCard(tmp).then(res => {
-      if (res.success == true) {
-        this.setState({ epointcard: res.data });
-        this.successMsg("Таны бүртгэлийг Ипойнт карттай амжилттай холболоо");
-      } else {
-        this.errorMsg("Хэрэглэгчийн картын дугар эсвэл нууц үг таарсангүй.");
-      }
-    });
+    if (cardpass != "" && cardno != "") {
+      MySwal.showLoading();
+      let tmp = {
+        custid: this.state.userInfo.id,
+        cardno: cardno,
+        pincode: cardpass
+      };
+      await api.checkout.saveCustomerCard(tmp).then(res => {
+        if (res.success == true) {
+          this.setState({ epointcard: res.data });
+          this.successMsg("Таны бүртгэлийг Ипойнт карттай амжилттай холболоо");
+        } else {
+          this.errorMsg("Хэрэглэгчийн картын дугар эсвэл нууц үг таарсангүй.");
+        }
+      });
+    } else {
+      message.error("Картын дугаар нууц үг оруулна уу ?");
+    }
   };
 
   addAddress = (value, event) => {
@@ -422,7 +484,6 @@ class Checkout extends React.Component {
   onSubmit = e => {
     e.preventDefault();
     const { defaultAddress, userAddress, addresstype } = this.state;
-
     let tmp = [];
     let chosenInfo = {};
     this.props.form.validateFields((err, values) => {
@@ -435,6 +496,12 @@ class Checkout extends React.Component {
           chosenInfo.phone1 = values.phone1;
           chosenInfo.phone2 = values.phone2;
           chosenInfo.commiteLocation = values.commiteLocation;
+          let chosenDeliveryAddrName = {
+            mainLocation: this.getMainLocationName(values.mainLocation),
+            subLocation: this.getSubLocationName(values.subLocation),
+            commiteLocation: this.getCommiteLocationName(values.commiteLocation)
+          };
+          this.setState({ chosenDeliveryAddrName: chosenDeliveryAddrName });
           this.setState({ chosenInfo: chosenInfo });
           tmp.push("3");
           if (values.address == defaultAddress.address) {
@@ -725,7 +792,7 @@ class Checkout extends React.Component {
     this.sentPaymentF(tmp);
   };
 
-  handlePayment = e => {
+  handlePayment = (e, item, ordData) => {
     e.preventDefault();
     const {
       userInfo,
@@ -747,6 +814,8 @@ class Checkout extends React.Component {
           products={products}
           chosenInfo={chosenInfo}
           userAddress={userAddress}
+          bankInfo={item}
+          ordData={ordData}
         />
       ),
       width: "40em",
@@ -757,8 +826,13 @@ class Checkout extends React.Component {
       focusConfirm: false,
       showCloseButton: true,
       allowOutsideClick: false,
-      closeOnEsc: false
+      closeOnEsc: false,
+      onClose: this.closeSwal
     });
+  };
+
+  closeSwal = e => {
+    this.props.history.push("/");
   };
 
   changePage = (e, item) => {
@@ -784,7 +858,8 @@ class Checkout extends React.Component {
       mainLocation,
       subLocation,
       commiteLocation,
-      paymentButton
+      paymentButton,
+      chosenDeliveryAddrName
     } = this.state;
     const { deliveryTypes } = this.props.container;
     const { isLoggedIn } = this.props;
@@ -1262,7 +1337,7 @@ class Checkout extends React.Component {
                                           id="exampleInputEmail1"
                                           value={
                                             epointcard.status == 1
-                                              ? epointcard.point
+                                              ? epointcard.point.toFixed(2)
                                               : epointcard.cardno
                                           }
                                           name="cardInfo"
@@ -1286,6 +1361,9 @@ class Checkout extends React.Component {
                                     type="submit"
                                     className="btn btn-main solid"
                                     onClick={this.handleUserEpoint}
+                                    disabled={
+                                      usedpoint.toFixed(0) != "0" ? true : false
+                                    }
                                   >
                                     <span className="text-uppercase">
                                       Ашиглах
@@ -1312,6 +1390,7 @@ class Checkout extends React.Component {
                 handleClick={this.handleSubmit}
                 userAddress={userAddress}
                 paymentButton={paymentButton}
+                chosenDeliveryAddrName={chosenDeliveryAddrName}
               />
             </div>
           </div>

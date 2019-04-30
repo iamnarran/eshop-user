@@ -69,7 +69,9 @@ class OrderDetail extends React.Component {
           <div className="container pad10">
             <div className="cart-container after-order">
               <div className="btn btn-gray">
-                <span className="text-uppercase">Буцах</span>
+                <span className="text-uppercase">
+                  <a href="http://localhost:3003/userprofile">Буцах</a>
+                </span>
               </div>
               <h1 className="title">
                 <span className="text-uppercase">Захиалга #022</span>

@@ -25,7 +25,8 @@ class DeliveryInfo extends React.Component {
       handleClick,
       chosenInfo,
       userAddress,
-      paymentButton
+      paymentButton,
+      chosenDeliveryAddrName
     } = this.props;
     let addrs;
     const deliver1 = delivery == [] ? 0 : delivery.price;
@@ -77,12 +78,12 @@ class DeliveryInfo extends React.Component {
             <p className="text flex-this">
               <i className="fa fa-map-marker" aria-hidden="true" />
               <span>
-                {chosenInfo.length != 0
-                  ? chosenInfo.mainLocation +
+                {chosenDeliveryAddrName.length != 0
+                  ? chosenDeliveryAddrName.mainLocation +
                     ", " +
-                    chosenInfo.subLocation +
+                    chosenDeliveryAddrName.subLocation +
                     ", " +
-                    chosenInfo.commiteLocation +
+                    chosenDeliveryAddrName.commiteLocation +
                     ", " +
                     addrs
                   : ""}

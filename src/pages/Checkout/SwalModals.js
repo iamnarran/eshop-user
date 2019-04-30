@@ -12,7 +12,19 @@ const TabPane = Tabs.TabPane;
 class SwalModals extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      chosenBank: []
+    };
+  }
+
+  componentWillMount() {
+    const { type } = this.props;
+    if (type == "msgBank") {
+      const { data } = this.props;
+      if (data.length !== 0) {
+        this.setState({ chosenBank: data[0] });
+      }
+    }
   }
 
   getOrderDate = () => {
@@ -23,8 +35,20 @@ class SwalModals extends React.Component {
     return year + " оны " + month + " сарын " + day + " ны өдөр";
   };
 
+  changeTab = e => {
+    const { data } = this.props;
+    if (data.length !== 0) {
+      data.map((item, i) => {
+        if (item.bankid == e) {
+          this.setState({ chosenBank: item });
+        }
+      });
+    }
+  };
+
   render() {
     let p = [1, 2, 3, 4, 5, 6];
+    const { chosenBank } = this.state;
     const { type, changePage, data, readyBtn } = this.props;
     if (type == "paymentSucess") {
       const {
@@ -33,7 +57,9 @@ class SwalModals extends React.Component {
         products,
         chosenInfo,
         userAddress,
-        chosenPayment
+        chosenPayment,
+        bankInfo,
+        ordData
       } = this.props;
       let addrs;
       if (userAddress.length !== 0) {
@@ -59,13 +85,15 @@ class SwalModals extends React.Component {
                       />
                       <h4 className="title">
                         <span className="text-uppercase">
-                          Таны захиалга амжилттай үүслээ
+                          Таны захиалга амжилттай бүртгэгдлээ
                         </span>
                       </h4>
                     </div>
                     <div className="message">
                       <h5 className="title flex-this flex-space">
-                        <span className="text-uppercase">Захиалга #022</span>
+                        <span className="text-uppercase">
+                          Захиалга {ordData.ordernumber}
+                        </span>
                       </h5>
                       <ul className="list-unstyled class">
                         <li className="flex-this flex-space">
@@ -83,6 +111,18 @@ class SwalModals extends React.Component {
                         <li className="flex-this flex-space">
                           <span>Төлбөрийн төрөл</span>
                           <strong className="big">{chosenPayment.name}</strong>
+                        </li>
+                        <li className="flex-this flex-space">
+                          <span>Банк</span>
+                          <strong className="big">{bankInfo.banknm}</strong>
+                        </li>
+                        <li className="flex-this flex-space">
+                          <span>Дансны дугаар</span>
+                          <strong className="big">{bankInfo.account}</strong>
+                        </li>
+                        <li className="flex-this flex-space">
+                          <span>Хүлээн авагч</span>
+                          <strong className="big">{bankInfo.name}</strong>
                         </li>
                       </ul>
                     </div>
@@ -130,12 +170,19 @@ class SwalModals extends React.Component {
                       </p>
                     </div>
                     <div className="bottom-text text-center">
-                      {/* <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        Sed ullamcorper congue felis porta feugiat. Integer
-                        elementum quam dapibus est tincidunt, at posuere ipsum
-                        imperdiet.{" "}
-                      </p> */}
+                      <p>
+                        Та төлбөрөө 2 цагийн дотор төлснөөр таны захиалга
+                        баталгаажиж идэвхжинэ. Тус хугацаанд төлбөр төлөгдөөгүй
+                        тохиолдолд тус захиалгыг автоматаар цуцлах болохыг
+                        анхаарна уу. <br />
+                        Төлбөрийг дээрх дансанд шилжүүлэх ба захиалгын{" "}
+                        {ordData.ordernumber} дугаарын гүйлгээний утга дээр
+                        заавал бичнэ үү.
+                        <br />
+                        <br />
+                        Хүргэлттэй холбоотой лавлах зүйлс байвал доорх утсаар
+                        холбогдоно уу ? Баярлалаа :)
+                      </p>
                       <strong className="text-uppercase">
                         Лавлах утас: 7700 7700
                       </strong>
@@ -149,13 +196,16 @@ class SwalModals extends React.Component {
                           Нүүр хуудасруу буцах
                         </span>
                       </a>
-                      <a href="#" className="btn btn-dark">
+                      <a
+                        className="btn btn-dark"
+                        onClick={e => changePage(e, "/order/" + ordData.id)}
+                      >
                         <span className="text-uppercase">Захиалга харах</span>
                       </a>
                     </div>
-                    <div className="bottom-text text-center">
+                    {/*  <div className="bottom-text text-center">
                       <p>И-баримтыг таны имэйлрүү явуулсан.</p>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>
@@ -168,7 +218,7 @@ class SwalModals extends React.Component {
       return (
         <div className="checkout-container msg-bank">
           <div className="card-content" style={{ padding: "20px 20px 0px" }}>
-            <Tabs tabPosition={"left"}>
+            <Tabs tabPosition={"left"} onChange={this.changeTab}>
               {data.map((item, i) => {
                 return (
                   <TabPane
@@ -184,7 +234,7 @@ class SwalModals extends React.Component {
                         </span>
                       </li>
                     }
-                    key={i}
+                    key={item.bankid}
                   >
                     <div className="col-md-12 pad10">
                       <p className="title">
@@ -218,7 +268,10 @@ class SwalModals extends React.Component {
               })}
             </Tabs>
             <div className="text-right">
-              <a onClick={e => readyBtn(e)} className="btn btn-main">
+              <a
+                onClick={e => readyBtn(e, chosenBank, ordData)}
+                className="btn btn-main"
+              >
                 <span className="text-uppercase">Болсон</span>
               </a>
             </div>

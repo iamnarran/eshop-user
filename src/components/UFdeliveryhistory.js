@@ -29,11 +29,7 @@ class Component extends React.Component {
     const dateParts = dateString.split("T")[0].split("-");
 
     return (
-      <p className="date">
-        <span>
-          {`${dateParts[0]} оны ${dateParts[1]} сарын ${dateParts[2]}`}
-        </span>
-      </p>
+      <span>{`${dateParts[0]} оны ${dateParts[1]} сарын ${dateParts[2]}`}</span>
     );
   };
 
@@ -61,8 +57,10 @@ class Component extends React.Component {
     let tableList = null;
     tableList = this.state.deliveryList.map((item, index) => {
       return (
-        <tr key={index}>
-          <td style={{ textAlign: "center" }}>#{item.id}</td>
+        <tr key={index} style={{ height: "70px" }}>
+          <td style={{ textAlign: "center", paddingLeft: "10px" }}>
+            #{item.id}
+          </td>
           <td style={{ textAlign: "center" }}>
             <span className="success">{this.renderDate(item.orderdate)}</span>
           </td>
@@ -91,9 +89,9 @@ class Component extends React.Component {
           <p className="title">
             <span>Захиалгын түүх</span>
           </p>
-          <table className="table table-borderless table-hover table-sm">
+          <table className="table-hover table-sm">
             <thead>
-              <tr>
+              <tr style={{ height: "70px" }}>
                 <th width="5%" style={{ textAlign: "center" }}>
                   №
                 </th>
