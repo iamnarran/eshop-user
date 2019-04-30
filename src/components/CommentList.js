@@ -80,7 +80,7 @@ class CommentList extends React.Component {
   render() {
     const { isLoggedIn, user, product } = this.props;
     const { comments } = this.state;
-    const rates = product.rate;
+    const { rate, rate_user_cnt } = product;
 
     return (
       <div
@@ -152,19 +152,17 @@ class CommentList extends React.Component {
             </h1>
 
             <div className="comments-list">
-              {!!rates.length && (
-                <div className="main-rating">
-                  <Rate allowHalf disabled defaultValue={this.getRateValue()} />
-                  <p className="text">
-                    ({rates.length} хүн үнэлгээ өгсөн байна)
-                  </p>
-                </div>
-              )}
+              <div className="main-rating">
+                <Rate allowHalf disabled defaultValue={rate} />
+                <p className="text">
+                  ({rate_user_cnt} хүн үнэлгээ өгсөн байна)
+                </p>
+              </div>
 
               {comments.map((comment, index) => {
                 return (
                   <div className="single" key={index}>
-                    {!!rates.length &&
+                    {/* {!!rates.length &&
                       rates.map((rate, index) => {
                         if (rate.custid === comment.custid) {
                           return (
@@ -180,7 +178,7 @@ class CommentList extends React.Component {
                             />
                           );
                         }
-                      })}
+                      })} */}
                     <p className="text">{comment.commnt}</p>
                     <ul className="list-unstyled bottom-info">
                       {comment.idate && (

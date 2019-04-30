@@ -17,8 +17,28 @@ class DeliveryInfo extends React.Component {
   };
 
   render() {
-    const { delivery, products, userInfo, usedpoint, handleClick } = this.props;
+    const {
+      delivery,
+      products,
+      userInfo,
+      usedpoint,
+      handleClick,
+      chosenInfo,
+      userAddress,
+      paymentButton,
+      chosenDeliveryAddrName
+    } = this.props;
+    let addrs;
     const deliver1 = delivery == [] ? 0 : delivery.price;
+    if (userAddress.length !== 0) {
+      if (chosenInfo.length !== 0) {
+        userAddress.map((item, i) => {
+          if (item.id == chosenInfo.address) {
+            addrs = item.address;
+          }
+        });
+      }
+    }
     return (
       <div className="col-lg-4 pad10">
         <div className="block right-panel">
@@ -49,13 +69,24 @@ class DeliveryInfo extends React.Component {
             </p>
             <p className="text flex-this">
               <i className="fa fa-phone" aria-hidden="true" />
-              <span>{userInfo.length == 0 ? "" : userInfo.phone}</span>
+              <span>
+                {chosenInfo.length != 0
+                  ? chosenInfo.phone1 + ", " + chosenInfo.phone2
+                  : ""}
+              </span>
             </p>
             <p className="text flex-this">
               <i className="fa fa-map-marker" aria-hidden="true" />
               <span>
-                Улаанбаатар хот, Баянзүрх дүүрэг, 17 хороо, 35-р байр, 5 давхар,
-                37 тоот, код - 8759
+                {chosenDeliveryAddrName.length != 0
+                  ? chosenDeliveryAddrName.mainLocation +
+                    ", " +
+                    chosenDeliveryAddrName.subLocation +
+                    ", " +
+                    chosenDeliveryAddrName.commiteLocation +
+                    ", " +
+                    addrs
+                  : ""}
               </span>
             </p>
           </div>
@@ -101,6 +132,7 @@ class DeliveryInfo extends React.Component {
             <button
               className="btn btn-main btn-block"
               onClick={e => handleClick(e)}
+              disabled={paymentButton}
             >
               <span className="text-uppercase">Тооцоо хийх</span>
             </button>
