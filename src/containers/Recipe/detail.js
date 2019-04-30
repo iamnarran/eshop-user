@@ -21,9 +21,12 @@ const fetch = async (props, onData) => {
       id: props.match.params.id
     });
 
+    console.log("products", products);
+
     onData(null, {
       container: {
-        recipe: recipe.data,
+        recipe: recipe.data[0].recipe,
+        steps: recipe.data[0].steps,
         productsData: products.data[0]
       }
     });

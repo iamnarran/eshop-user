@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Modal, Button, message } from "antd";
 import { Link, Redirect } from "react-router-dom";
@@ -10,13 +9,7 @@ import GoogleLogin from "./GoogleLogin";
 import actions, { setUser } from "../actions/login";
 import RegisterModal from "./RegisterModal";
 import storage from "../utils/storage";
-@connect(
-  null,
-  {
-    login: actions.login,
-    setUser
-  }
-)
+
 class LoginModal extends React.Component {
   state = {
     shouldRedirect: false,
@@ -206,4 +199,12 @@ class LoginModal extends React.Component {
   }
 }
 
-export default createForm()(LoginModal);
+export default createForm()(
+  connect(
+    null,
+    {
+      login: actions.login,
+      setUser
+    }
+  )(LoginModal)
+);
