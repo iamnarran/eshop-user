@@ -38,5 +38,11 @@ export default [
     URL: `${API}/api/order/detail/:ordid`,
     REPLACE: "ordid",
     TOKEN: true
+  },
+  {
+    NAME: "deleteSeenList",
+    METHOD: "DELETE",
+    URL: `${API}/api/customer/seenList/:custId/:skucd`,
+    REPLACE: "custId, skucd"
   }
 ];

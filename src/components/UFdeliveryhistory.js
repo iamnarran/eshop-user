@@ -59,7 +59,7 @@ class Component extends React.Component {
       return (
         <tr key={index} style={{ height: "70px" }}>
           <td style={{ textAlign: "center", paddingLeft: "10px" }}>
-            #{item.id}
+            #{item.ordernumber}
           </td>
           <td style={{ textAlign: "center" }}>
             <span className="success">{this.renderDate(item.orderdate)}</span>

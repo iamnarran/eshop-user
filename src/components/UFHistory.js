@@ -6,24 +6,39 @@ import { IMAGE } from "../utils/consts";
 import Rate from "./Rate";
 class Component extends React.Component {
   state = {
-    wishlist: [],
-    deliveryList: []
+    deliveryList: [],
+    loading: true
   };
 
-  componentDidMount() {
-    api.customer.getViewList({ custId: this.props.user.id }).then(res => {
+  getData = async () => {
+    await api.customer.getViewList({ custId: this.props.user.id }).then(res => {
       if (res.success) {
         this.setState({
-          wishlist: res.data
+          deliveryList: res.data
         });
       }
       this.setState({ loading: false });
     });
+  };
+
+  onDelete = (e, item) => {
+    e.preventDefault();
+    api.customer
+      .deleteSeenList({ custId: this.props.user.id, skucd: item.cd })
+      .then(res => {
+        if (res.success) {
+          this.getData();
+        }
+      });
+  };
+
+  componentDidMount() {
+    this.getData();
   }
 
   render() {
     let tableList = null;
-    const list = this.state.wishlist;
+    const list = this.state.deliveryList;
     const formatter = new Intl.NumberFormat("en-US");
     tableList = list.map((item, index) => {
       return (
@@ -69,7 +84,7 @@ class Component extends React.Component {
                 </a>
               </li>
               <li>
-                <a onClick={this.delete}>
+                <a onClick={e => this.onDelete(e, item)}>
                   <i className="fa fa-times" aria-hidden="true" />
                 </a>
               </li>
