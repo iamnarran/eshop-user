@@ -168,7 +168,7 @@ class RecipeDetail extends React.Component {
             <ul className="list-unstyled">
               <li>
                 <Link to="">
-                  <span>Нүүр хуудас</span>
+                  <span>Нүүр</span>
                 </Link>
               </li>
               <li>
@@ -202,18 +202,18 @@ class RecipeDetail extends React.Component {
                     </div>
                   </div>
                   <div className="row row10">
-                    <div className="col-md-4">
+                    <div className="col-md-4 col-xs-4">
                       <p>
                         <Avatar size="small" src={chef} />{" "}
                         {recipe.madeoflvlText}
                       </p>
                     </div>
-                    <div className="col-md-4">
+                    <div className="col-md-4 col-xs-4">
                       <p>
                         <Avatar size="small" src={time} /> {recipe.time}
                       </p>
                     </div>
-                    <div className="col-md-4">
+                    <div className="col-md-4 col-xs-4">
                       <p>
                         <Avatar size="small" src={smile} /> {recipe.humancnt}{" "}
                         хүний порц

@@ -1,3 +1,23 @@
+.top-main {
+    .action {
+        strong {
+            font-size: 1.2rem;
+        }
+
+        a {
+            img {
+                margin-right: 7px;
+            }
+        }
+    }
+}
+
+.image-container {
+    .label {
+        z-index: 0 !important;
+    }
+}
+
 .small-product .info-container .price {
     position: relative;
     display: block;
@@ -7,10 +27,76 @@
 }
 
 @media (max-width: 1100px) {
+    .homerenderblocks {
+        .container.pad10 {
+            .row.row10 {
+                div:last-child {
+                    flex: 0 0 100%;
+                }
+            }
+        }
+    }
+
+    .single-product .search-hover {
+        opacity: 1 !important;
+        visibility: visible !important;
+        bottom: 0 !important;
+    }
+
     .top-main {
         position: -webkit-sticky;
-        position: sticky;
+        // position: fixed;
+        background: #FFF;
         top: 0;
+
+        .search {
+            li:last-child {
+                margin: 0;
+                // width: 50px;
+                display: flex;
+                align-items: center;
+                background: #feb415;
+                color: #FFF;
+
+                a {
+                    color: #FFF;
+                }
+            }
+
+            li:first-child {
+                width: 30%;
+
+                .btn {
+                    white-space: inherit;
+                }
+            }
+
+            .dropdown-menu {
+                z-index: 10;
+                width: 100%;
+                min-width: 370px;
+                left: -15px;
+                margin: 0;
+                padding: 0;
+                margin-top: 3px;
+            }
+
+            button {
+                outline: 0;
+                box-shadow: none !important;
+
+                &:focus {
+                    outline: 0;
+                    box-shadow: none;
+                }
+            }
+        }
+
+        .logo {
+            img {
+                max-width: 70px;
+            }
+        }
 
         .buttonGrey {
             background: #FFF;
@@ -23,13 +109,17 @@
                 margin: 0 !important;
                 border: solid 1px #ededed;
                 border-radius: 3px;
-                margin-left: 10px !important;
+                margin-left: 3px !important;
 
                 a {
                     padding: 5px !important;
 
                     &.flex-this {
                         display: block !important;
+                    }
+
+                    img {
+                        margin: 0;
                     }
                 }
 
@@ -40,6 +130,10 @@
 
                 p {
                     display: none;
+                }
+
+                strong {
+                    font-size: 15px;
                 }
             }
         }
@@ -98,7 +192,7 @@
 
     .image-container {
         .label {
-            z-index: 10 !important;
+            z-index: 4 !important;
             opacity: 0.7;
         }
     }
@@ -128,7 +222,7 @@
                 span {
                     font-size: 18px;
                     font-weight: 600;
-                    color: #feb413;
+                    // color: #feb413;
                 }
             }
 
@@ -138,18 +232,18 @@
                 right: 0;
 
                 &>div {
-                    display: flex;
+                    // display: flex;
                     // justify-content: space-between;
-                    justify-content: flex-end;
-                    align-items: flex-end;
+                    // justify-content: flex-end;
+                    // align-items: flex-end;
 
                     small {
                         font-size: 12px;
                         padding-bottom: 10px;
                     }
 
-                    span {
-                        font-size: 25px;
+                    span.current {
+                        font-size: 20px;
                         // font-weight: bold;
                         font-weight: 300;
                     }
@@ -312,6 +406,106 @@
         display: block !important;
         width: 50%;
     }
+
+    .pack-product-container {
+
+        .pack-list {
+
+            .info-container form {
+                width: 180px !important;
+                margin-right: 10px;
+
+                .form-control {
+                    width: 30px !important;
+                }
+            }
+        }
+    }
+
+    .product-detail-page .product-info .total-price span {
+        font-size: 20px;
+    }
+
+    .htmlcontainer {
+        text-align: justify;
+        padding: 0px 10px;
+
+        table {
+            width: 100% !important;
+        }
+
+        img {
+            width: 100% !important;
+            height: auto !important;
+        }
+    }
+
+    .product-detail-page {
+        .col-sm-9 {
+            padding: 0;
+            margin: 0;
+
+            form {
+                &>div {
+                    justify-content: flex-end;
+                }
+            }
+
+            .total-price {
+                margin-top: 20px;
+            }
+        }
+
+        .image {
+            border: solid 1px #ededed;
+        }
+
+        .product-info {
+            .btn-container {
+                display: flex;
+                margin-top: 10px;
+
+                button {
+                    width: 100%;
+                    padding: 5px 10px !important;
+
+                    span {
+                        font-size: 11px;
+                        letter-spacing: 0;
+                    }
+                }
+            }
+        }
+    }
+
+    .food-recipe-detail .row.row10 {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .food-recipe-detail .row.row10 .col-md-4 {
+        width: auto;
+    }
+
+    .product-bottom-info {
+        .row.row10 {
+            display: flex;
+
+            .col-sm-6 {
+                max-width: 85%;
+            }
+        }
+    }
+
+    .comments-container .main-rating {
+        display: block;
+
+        .text {
+            padding-left: 0 !important;
+            margin-left: 0 !important;
+        }
+    }
 }
 
 @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
@@ -332,6 +526,18 @@
 
 
 @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
+    .product-detail-page {
+        .col-md-9 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
+        .col-md-3 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+    }
+
     .package {
         .lol {
             -webkit-box-flex: 0;

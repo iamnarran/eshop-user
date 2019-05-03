@@ -19,7 +19,7 @@ class PackageDetail extends React.Component {
   componentDidMount() {
     let tempProducts = this.state.products;
 
-    tempProducts.forEach(product => {
+    tempProducts && tempProducts.forEach(product => {
       product.qty = product.saleminqty || 1;
     });
 
@@ -102,7 +102,7 @@ class PackageDetail extends React.Component {
     const similarProducts = this.props.container.products.sameproducts;
 
     return (
-      !!similarProducts.length && (
+      similarProducts && !!similarProducts.length && (
         <div className="block product-suggest">
           <p className="title">
             <strong>Ижил бараа</strong>
@@ -160,7 +160,7 @@ class PackageDetail extends React.Component {
 
     return (
       <div className="pack-product-container" style={{ marginTop: "30px" }}>
-        {products.length && (
+        {products && products.length && (
           <div className="pack-list">
             <div className="row row10">
               <div className="col-xl-8 pad10">
