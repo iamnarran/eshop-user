@@ -144,38 +144,42 @@ class Card extends React.Component {
       let priceTitle = "";
 
       if (item.id) {
-        priceTitle = (
-          <span style={{ fontWeight: "normal", marginRight: "10px" }}>
-            Багцын үнэ:
-          </span>
-        );
+        priceTitle = <span style={{ fontWeight: "normal" }}>Багцын үнэ:</span>;
       } else if (item.recipeid) {
-        priceTitle = (
-          <span style={{ fontWeight: "normal", marginRight: "10px" }}>
-            Орцны үнэ:
-          </span>
-        );
+        priceTitle = <span style={{ fontWeight: "normal" }}>Орцын үнэ:</span>;
       }
 
       if (item.sprice) {
         prices = (
-          <div>
-            {priceTitle}
-            <small className="sale">
-              {isNaN(item.price) ? 0 : formatter.format(item.price)}₮
-            </small>
-            <span className="current">
-              {isNaN(item.sprice) ? 0 : formatter.format(item.sprice)}₮
-            </span>
+          <div className="row">
+            {!!priceTitle && (
+              <div className="col-md-6" style={{ textAlign: "left" }}>
+                {priceTitle}
+              </div>
+            )}
+            <div className={`col-md-${priceTitle ? "6" : "12"}`}>
+              <small className="sale">
+                {isNaN(item.price) ? 0 : formatter.format(item.price)}₮
+              </small>
+              <span className="current">
+                {isNaN(item.sprice) ? 0 : formatter.format(item.sprice)}₮
+              </span>
+            </div>
           </div>
         );
       } else {
         prices = (
-          <div>
-            {priceTitle}
-            <span className="current">
-              {isNaN(item.price) ? 0 : formatter.format(item.price)}₮
-            </span>
+          <div className="row">
+            {!!priceTitle && (
+              <div className="col-md-6" style={{ textAlign: "left" }}>
+                {priceTitle}
+              </div>
+            )}
+            <div className={`col-md-${priceTitle ? "6" : "12"}`}>
+              <span className="current">
+                {isNaN(item.price) ? 0 : formatter.format(item.price)}₮
+              </span>
+            </div>
           </div>
         );
       }

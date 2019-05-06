@@ -13,7 +13,7 @@ const formatter = new Intl.NumberFormat("en-US");
 
 class PackageDetail extends React.Component {
   state = {
-    products: this.props.container.products.products
+    products: this.props.container.products.products || []
   };
 
   componentDidMount() {
@@ -99,7 +99,7 @@ class PackageDetail extends React.Component {
   };
 
   renderSimilarProducts = () => {
-    const similarProducts = this.props.container.products.sameproducts;
+    const similarProducts = this.props.container.products.sameproducts || [];
 
     return (
       !!similarProducts.length && (
@@ -128,7 +128,7 @@ class PackageDetail extends React.Component {
                       <Link to={product.route || ""}>
                         <span>{product.skunm}</span>
                         <strong>
-                          {formatter.format(product.price1 || product.price2)}₮
+                          {formatter.format(product.sprice || product.price)}₮
                         </strong>
                       </Link>
                       <div className="action">

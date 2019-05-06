@@ -1,10 +1,16 @@
 import typeToReducer from "type-to-reducer";
 
-import { SET_USER, SIGN_OUT } from "../actions/types";
+import {
+  SET_USER,
+  SIGN_OUT,
+  SHOW_LOGIN_MODAL,
+  HIDE_LOGIN_MODAL
+} from "../actions/types";
 
 const initialState = {
   isLoggedIn: false,
-  user: null
+  user: null,
+  isLoginModalVisible: false
 };
 
 export default typeToReducer(
@@ -18,6 +24,14 @@ export default typeToReducer(
       ...state,
       isLoggedIn: false,
       user: null
+    }),
+    [SHOW_LOGIN_MODAL]: state => ({
+      ...state,
+      isLoginModalVisible: true
+    }),
+    [HIDE_LOGIN_MODAL]: state => ({
+      ...state,
+      isLoginModalVisible: false
     })
   },
   initialState

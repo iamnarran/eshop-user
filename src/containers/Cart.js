@@ -6,14 +6,14 @@ import { Spin } from "antd";
 import { Cart } from "../pages";
 import api from "../api";
 
-const options = {
-  loadingHandler: () => (
-    <div className="e-mart-loading">
-      <Spin />
-    </div>
-  ),
-  errorHandler: err => <p style={{ color: "red" }}>{err.message}</p>
-};
+// const options = {
+//   loadingHandler: () => (
+//     <div className="e-mart-loading">
+//       <Spin />
+//     </div>
+//   ),
+//   errorHandler: err => <p style={{ color: "red" }}>{err.message}</p>
+// };
 
 const fetch = async (props, onData) => {
   try {
@@ -50,7 +50,7 @@ const mapStateToProps = state => {
 
 export default connect(mapStateToProps)(
   compose(
-    dataLoader,
-    options
+    dataLoader
+    // options
   )(Cart)
 );

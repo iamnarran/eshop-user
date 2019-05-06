@@ -1,6 +1,11 @@
 import api, { setAuthorizationHeader } from "../api";
 import login from "../api/User/login";
-import { SET_USER, SIGN_OUT, EMPTY_CART } from "./types";
+import {
+  SET_USER,
+  SIGN_OUT,
+  SHOW_LOGIN_MODAL,
+  HIDE_LOGIN_MODAL
+} from "./types";
 
 export const setUser = user => {
   setAuthorizationHeader(user.token);
@@ -16,6 +21,18 @@ export const signOut = () => {
 
   return {
     type: SIGN_OUT
+  };
+};
+
+export const showLoginModal = () => {
+  return {
+    type: SHOW_LOGIN_MODAL
+  };
+};
+
+export const hideLoginModal = () => {
+  return {
+    type: HIDE_LOGIN_MODAL
   };
 };
 

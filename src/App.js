@@ -176,7 +176,7 @@ class Localization extends Component {
 
     return (
       auth && (
-        <Router history={BrowserHistory}>
+        <Router>
           <ScrollToTop>
             <div>
               <Header

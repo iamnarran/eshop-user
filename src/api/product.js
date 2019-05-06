@@ -81,8 +81,8 @@ export default [
   {
     NAME: "isAvailable",
     METHOD: "GET",
-    URL: `${API}/api/product/prodavailablesku/:skucd/:qty`,
-    REPLACE: "skucd,qty"
+    URL: `${API}/api/product/prodavailablesku/:custid/:skucd/:qty`,
+    REPLACE: "custid,skucd,qty"
   },
   {
     NAME: "seasonProductFilter",

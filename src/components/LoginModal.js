@@ -6,7 +6,11 @@ import { createForm } from "rc-form";
 
 import FacebookLogin from "./FacebookLogin";
 import GoogleLogin from "./GoogleLogin";
-import actions, { setUser } from "../actions/login";
+import actions, {
+  setUser,
+  showLoginModal,
+  hideLoginModal
+} from "../actions/login";
 import RegisterModal from "./RegisterModal";
 import storage from "../utils/storage";
 
@@ -28,11 +32,11 @@ class LoginModal extends React.Component {
   };
 
   handleOk = () => {
-    this.props.onVisibilityChange();
+    this.props.hideLoginModal();
   };
 
   handleCancel = () => {
-    this.props.onVisibilityChange();
+    this.props.hideLoginModal();
   };
 
   handleSocialSuccess = () => {
@@ -88,7 +92,7 @@ class LoginModal extends React.Component {
         {this.renderRedirect()}
         <Modal
           title="Нэвтрэх"
-          visible={this.props.visible}
+          visible={this.props.isVisible}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
         >
@@ -199,12 +203,20 @@ class LoginModal extends React.Component {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    isVisible: state.auth.isLoginModalVisible
+  };
+};
+
 export default createForm()(
   connect(
-    null,
+    mapStateToProps,
     {
       login: actions.login,
-      setUser
+      setUser,
+      showLoginModal,
+      hideLoginModal
     }
   )(LoginModal)
 );

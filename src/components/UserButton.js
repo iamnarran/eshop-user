@@ -4,13 +4,14 @@ import { Link } from "react-router-dom";
 
 import withCart from "./HOC/withCart";
 import storage from "../utils/storage";
-import { signOut } from "../actions/login";
+import { signOut, showLoginModal } from "../actions/login";
 import p1 from "../scss/assets/images/demo/1.jpg";
 
 class UserButton extends React.Component {
   showLoginModal = e => {
     e.preventDefault();
-    this.props.onUserButtonClick(e);
+    this.props.showLoginModal();
+    // this.props.onUserButtonClick(e);
   };
 
   handleLogout = () => {
@@ -176,6 +177,6 @@ const mapStateToProps = state => {
 export default withCart(
   connect(
     mapStateToProps,
-    { signOut }
+    { signOut, showLoginModal }
   )(UserButton)
 );

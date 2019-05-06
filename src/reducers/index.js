@@ -5,7 +5,7 @@ import auth from "./auth";
 import cart from "./cart";
 
 export default combineReducers({
-  auth: auth,
+  auth,
   intl: intlReducer,
-  cart: cart
+  cart
 });

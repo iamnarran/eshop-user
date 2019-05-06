@@ -197,6 +197,8 @@ const withCart = WrappedComponent => {
 
         api.product
           .isAvailable({
+            custid:
+              this.props.isLoggedIn && this.props.user ? this.props.user.id : 0,
             skucd: product.cd,
             qty
           })
@@ -271,6 +273,10 @@ const withCart = WrappedComponent => {
           return new Promise((resolve, reject) => {
             api.product
               .isAvailable({
+                custid:
+                  this.props.isLoggedIn && this.props.user
+                    ? this.props.user.id
+                    : 0,
                 skucd: product.id ? product.id : product.cd ? product.cd : null,
                 qty: newQty
               })

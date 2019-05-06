@@ -6,6 +6,7 @@ import clonedeep from "lodash.clonedeep";
 
 import { IMAGE } from "../utils/consts";
 import withCart from "../components/HOC/withCart";
+import { updateCart } from "../actions/cart";
 
 const formatter = new Intl.NumberFormat("en-US");
 
@@ -31,6 +32,11 @@ class Cart extends React.Component {
     }
 
     this.setState({ abstractProducts: tempProducts });
+  };
+
+  handleRemoveClick = product => e => {
+    e.preventDefault();
+    this.props.onRemove(product);
   };
 
   handleQtyChange = abstractProduct => e => {
@@ -134,7 +140,7 @@ class Cart extends React.Component {
 
   render() {
     const { wishlistProducts, deliveryInfo } = this.props.container;
-    const { isLoggedIn, user, cart, onRemove } = this.props;
+    const { isLoggedIn, user, cart } = this.props;
     const { totalPrice, totalQty } = cart;
     const products = this.state.abstractProducts;
 
@@ -246,14 +252,10 @@ class Cart extends React.Component {
                           </a>
                         </li>
                         <li>
-                          <button
-                            onClick={() => onRemove(product)}
-                            className="btn btn-link"
-                            type="button"
-                          >
-                            <i className="fa fa-times" aria-hidden="true" />
+                          <Link to="" onClick={this.handleRemoveClick(product)}>
+                            <i className="fa fa-times" aria-hidden="true" />{" "}
                             <span>Устгах</span>
-                          </button>
+                          </Link>
                         </li>
                       </ul>
                     </div>
@@ -383,4 +385,9 @@ const mapStateToProps = state => {
   };
 };
 
-export default withCart(connect(mapStateToProps)(createForm()(Cart)));
+export default withCart(
+  connect(
+    mapStateToProps,
+    { updateCart }
+  )(createForm()(Cart))
+);

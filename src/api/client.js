@@ -1,6 +1,6 @@
-import axios from 'axios';
-import config from '../config';
-import { storage } from '../utils';
+import axios from "axios";
+import config from "../config";
+import { storage } from "../utils";
 
 axios.defaults.auth = config.auth;
 
@@ -13,12 +13,12 @@ const setAuthorizationHeader = (token = null) => {
 };
 
 axios.interceptors.response.use(
-  function (response) {
+  function(response) {
     return response;
   },
 
-  function (error) {
-    const cant = error.config.url.indexOf('/login') !== -1;
+  function(error) {
+    const cant = error.config.url.indexOf("/login") !== -1;
 
     if (cant) {
       return Promise.reject(error);
@@ -26,8 +26,8 @@ axios.interceptors.response.use(
 
     if (!cant && error.response && error.response.status === 401) {
       setTimeout(() => {
-        storage.remove('user');
-        window.location.href = '/';
+        storage.remove("user");
+        window.location.href = "/";
       }, 2000);
     }
 
