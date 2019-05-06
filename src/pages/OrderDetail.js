@@ -2,29 +2,21 @@ import React from "react";
 import api from "../api";
 import { IMAGE } from "../utils/consts";
 class OrderDetail extends React.Component {
-  /*  state = {
-    orderList: []
-  }; */
-  componentDidMount() {
-    /* this.setState({
-      orderList: this.props.container.data
-    }); */
-  }
+  componentDidMount() {}
 
   render() {
     let orderList = this.props.container.data;
     const formatter = new Intl.NumberFormat("en-US");
-    let totalPrice = this.props.container.data[0].totalamount;
-    let totalProduct = this.props.container.data[0].totalquantity;
-    let deliveryAmount = this.props.container.data[0].deliveryamount;
-    let totalvate = this.props.container.data[0].totalvatamount;
     let firstName = this.props.auth.user.firstname;
     let lastName = this.props.auth.user.lastname;
     let phone = this.props.auth.user.phonE1;
-    let totalamount = this.props.container.data[0].totalamount;
-
     let total = 0;
     let tableList = null;
+    let totalProduct = this.props.container.data[0].totalquantity;
+    let itemamount = this.props.container.data[0].itemamount;
+    let totalPrice = this.props.container.data[0].totalamount;
+    let deliveryAmount = this.props.container.data[0].deliveryamount;
+    let totalvate = this.props.container.data[0].totalvatamount;
 
     tableList = orderList.map((item, index) => {
       total = parseInt(item.orderamount) * parseInt(item.orderquantity);
@@ -33,10 +25,12 @@ class OrderDetail extends React.Component {
           <td>
             <div className="flex-this">
               <div className="image-container default">
-                <span
-                  className="image"
-                  style={{ backgroundImage: `url(${IMAGE}${item.img})` }}
-                />
+                <a href={item.route}>
+                  <span
+                    className="image"
+                    style={{ backgroundImage: `url(${IMAGE}${item.img})` }}
+                  />
+                </a>
               </div>
               <div className="info-container">
                 <strong>{item.name}</strong>
@@ -111,7 +105,7 @@ class OrderDetail extends React.Component {
                         <li className="flex-this flex-space">
                           <span>Нийт бараа ({totalProduct})</span>
                           <strong className="big">
-                            {formatter.format(totalamount)}₮
+                            {formatter.format(itemamount)}₮
                           </strong>
                         </li>
                         <li className="flex-this flex-space">
@@ -133,7 +127,7 @@ class OrderDetail extends React.Component {
                       </ul>
                     </div>
                     <h5 className="title flex-this flex-space">
-                      <span>Төлсөн дүн</span>
+                      <span>Хүргэлтийн төлөв</span>
                       <strong className="success">
                         {/* deliverytype */}Хүргэгдсэн
                       </strong>

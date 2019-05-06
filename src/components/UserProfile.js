@@ -1,8 +1,7 @@
 import React from "react";
-import { TextField, Select } from "../";
-import { Form, message } from "antd";
+import { Form, message, Input, Select } from "antd";
 import api from "../api";
-
+const Option = Select.Option;
 class Component extends React.Component {
   state = {
     cityOrProvince: [],
@@ -67,9 +66,10 @@ class Component extends React.Component {
   };
 
   render() {
-    /* const { getFieldDecorator } = this.props.form;
+    console.log("this.state", this.state);
+    const { getFieldDecorator } = this.props.form;
     const { name, phone, homeaddress } = this.state;
-    const { cityOrProvince, districtOrSum } = this.state; */
+    const { cityOrProvince, districtOrSum } = this.state;
     return (
       <div className="col-md-8 pad10">
         <div className="user-menu-content">
@@ -77,7 +77,7 @@ class Component extends React.Component {
             <span>Профайл хуудас</span>
           </p>
           <div className="user-profile-contain">
-            {/* <form>
+            <form>
               <div className="row row10">
                 <div className="col-xl-6 pad10">
                   <div className="form-group">
@@ -90,7 +90,7 @@ class Component extends React.Component {
                           }
                         ]
                       })(
-                        <TextField
+                        <Input
                           label="Овог"
                           onChange={this.handleName}
                           value={name}
@@ -111,7 +111,7 @@ class Component extends React.Component {
                           }
                         ]
                       })(
-                        <TextField
+                        <Input
                           label="Нэр"
                           onChange={this.handleName}
                           value={name}
@@ -132,7 +132,7 @@ class Component extends React.Component {
                           }
                         ]
                       })(
-                        <TextField
+                        <Input
                           label="Утас"
                           onChange={this.handleName}
                           value={phone}
@@ -153,7 +153,7 @@ class Component extends React.Component {
                           }
                         ]
                       })(
-                        <TextField
+                        <Input
                           label="Имейл"
                           onChange={this.handleName}
                           value={name}
@@ -174,7 +174,7 @@ class Component extends React.Component {
                           }
                         ]
                       })(
-                        <TextField
+                        <Input
                           label="Нууц үг"
                           onChange={this.handleHomeAddress}
                           value={homeaddress}
@@ -213,7 +213,7 @@ class Component extends React.Component {
                           }
                         ]
                       })(
-                        <TextField
+                        <Input
                           label="Гэрийн хаяг"
                           onChange={this.handleHomeAddress}
                           value={homeaddress}
@@ -237,7 +237,7 @@ class Component extends React.Component {
                           }
                         ]
                       })(
-                        <TextField
+                        <Input
                           label="И-март картын дугаар"
                           onChange={this.handleName}
                           value={name}
@@ -259,7 +259,7 @@ class Component extends React.Component {
                           }
                         ]
                       })(
-                        <TextField
+                        <Input
                           label="И-март картын нууц үг"
                           onChange={this.handleName}
                           value={name}
@@ -270,7 +270,7 @@ class Component extends React.Component {
                   </div>
                 </div>
               </div>
-            </form> */}
+            </form>
             <div className="text-right">
               <button className="btn btn-dark">
                 <span className="text-uppercase" onClick={this.handleSubmit}>

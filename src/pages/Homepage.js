@@ -170,8 +170,9 @@ class Homepage extends React.Component {
             elContainer={"banner"}
           />
         </div>
-
-        {this.renderBlocks(items)}
+        <div className="homerenderblocks">
+          {this.renderBlocks(items)}
+        </div>
 
         <div className="main-slide brands-list">
           <div className="container pad10">
