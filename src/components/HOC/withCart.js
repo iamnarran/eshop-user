@@ -193,8 +193,6 @@ const withCart = WrappedComponent => {
           cart = { products: [], totalQty: 0, totalPrice: 0 };
         }
 
-        const found = cart.products.find(prod => prod.cd === product.cd);
-
         api.product
           .isAvailable({
             custid:
@@ -204,6 +202,8 @@ const withCart = WrappedComponent => {
           })
           .then(res => {
             if (res.success) {
+              const found = cart.products.find(prod => prod.cd === product.cd);
+
               let productQty = qty;
               if (!shouldOverride && found) {
                 productQty = found.qty + qty;

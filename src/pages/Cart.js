@@ -73,12 +73,12 @@ class Cart extends React.Component {
   };
 
   handleIncrementClick = product => {
-    product = this.props.onIncrement(product);
+    product = this.props.onUpdateCart(product, true);
     this.findAndReplace(product);
   };
 
   handleDecrementClick = product => {
-    product = this.props.onDecrement(product);
+    product = this.props.onUpdateCart(product, true);
     this.findAndReplace(product);
   };
 
@@ -252,10 +252,14 @@ class Cart extends React.Component {
                           </a>
                         </li>
                         <li>
-                          <Link to="" onClick={this.handleRemoveClick(product)}>
+                          <button
+                            type="button"
+                            className="btn btn-link"
+                            onClick={this.handleRemoveClick(product)}
+                          >
                             <i className="fa fa-times" aria-hidden="true" />{" "}
                             <span>Устгах</span>
-                          </Link>
+                          </button>
                         </li>
                       </ul>
                     </div>
