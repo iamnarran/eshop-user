@@ -74,6 +74,7 @@ class PaymentPanel extends React.Component {
                       id="exampleInputEmail1"
                       name="regno"
                       ref="regno"
+                      readOnly
                       value={companyInfo.name}
                       aria-describedby="emailHelp"
                       placeholder="Байгууллагын регистэр"
@@ -90,7 +91,10 @@ class PaymentPanel extends React.Component {
                 <span className="text-uppercase">Холбох</span>
               </button>
             ) : (
-              <button className="btn" onClick={e => handleEditCompany(e)}>
+              <button
+                className="btn"
+                onClick={e => handleEditCompany(e, this.refs)}
+              >
                 <span className="text-uppercase">Засах</span>
               </button>
             )}
@@ -161,6 +165,7 @@ class PaymentPanel extends React.Component {
                           ? epointcard.point.toFixed(2)
                           : epointcard.cardno
                       }
+                      readOnly
                       name="cardInfo"
                       ref="cardInfo"
                       aria-describedby="emailHelp"

@@ -13,6 +13,7 @@ import PaymentTypePanel from "./PaymentTypePanel";
 import LoginRegisterPanel from "./LoginRegisterPanel";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { parse } from "querystring";
 const MySwal = withReactContent(Swal);
 const Panel = Collapse.Panel;
 @connect(
@@ -283,6 +284,7 @@ class Checkout extends React.Component {
   getCompanyRegno = async (e, refs) => {
     e.preventDefault();
     let regno = refs.regno.value;
+    refs.regno.value = "";
     await api.checkout.getCompanyRegno({ regNo: regno }).then(res => {
       if (res.success == true) {
         if (res.data.name != "") {
@@ -299,10 +301,10 @@ class Checkout extends React.Component {
     });
   };
 
-  handleEditCompany = e => {
+  handleEditCompany = (e, refs) => {
     e.preventDefault();
-    this.refs.regno.value = "";
-    this.setState({ companyInfo: [] });
+    refs.regno.value = "";
+    this.setState({ companyInfo: [], paymentButton: true });
   };
 
   optionType = () => {
@@ -515,9 +517,9 @@ class Checkout extends React.Component {
               (delivery.price + products.totalPriceInCart) / 2 >=
               epointcard.point
             ) {
-              tmp.point = 0;
+              tmp.point = parseFloat(point - parseInt(point));
               this.setState({
-                epointUsedPoint: point,
+                epointUsedPoint: parseInt(point),
                 epointcard: tmp
               });
             } else {
