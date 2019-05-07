@@ -99,13 +99,13 @@ class SwalModals extends React.Component {
                         <li className="flex-this flex-space">
                           <span>Худалдаж авсан барааны тоо:</span>
                           <strong className="big">
-                            {products.products.length}
+                            {products.totalQtyInCart}
                           </strong>
                         </li>
                         <li className="flex-this flex-space">
                           <span>Мөнгөн дүн</span>
                           <strong className="big">
-                            {formatter.format(products.totalPrice)}₮
+                            {formatter.format(products.totalPriceInCart)}₮
                           </strong>
                         </li>
                         <li className="flex-this flex-space">
@@ -217,18 +217,23 @@ class SwalModals extends React.Component {
       const { ordData } = this.props;
       return (
         <div className="checkout-container msg-bank">
-          <div className="card-content" style={{ padding: "20px 20px 0px" }}>
+          <div className="card-content">
             <Tabs tabPosition={"left"} onChange={this.changeTab}>
               {data.map((item, i) => {
                 return (
                   <TabPane
                     tab={
-                      <li className="active">
+                      <li
+                        className="active"
+                        style={{ textAlign: "left", fontWeight: "100" }}
+                      >
                         <span className="contain">
                           <img
                             alt="logo"
-                            src={require("../../scss/assets/images/demo/golomt.png")}
+                            /* src={require("../../scss/assets/images/demo/golomt.png")} */
+                            src={IMAGE + item.logo}
                             style={{ marginRight: "5px" }}
+                            width="22px"
                           />
                           <span>{item.banknm}</span>
                         </span>
@@ -267,7 +272,7 @@ class SwalModals extends React.Component {
                 );
               })}
             </Tabs>
-            <div className="text-right">
+            <div className="text-right" style={{ marginTop: "10px" }}>
               <a
                 onClick={e => readyBtn(e, chosenBank, ordData)}
                 className="btn btn-main"

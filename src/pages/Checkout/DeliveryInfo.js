@@ -31,12 +31,14 @@ class DeliveryInfo extends React.Component {
     let addrs;
     const deliver1 = delivery == [] ? 0 : delivery.price;
     if (userAddress.length !== 0) {
-      if (chosenInfo.length !== 0) {
+      if (!chosenInfo.isNew) {
         userAddress.map((item, i) => {
           if (item.id == chosenInfo.address) {
             addrs = item.address;
           }
         });
+      } else {
+        addrs = chosenInfo.addressnm;
       }
     }
     return (
@@ -96,8 +98,8 @@ class DeliveryInfo extends React.Component {
               <strong>Төлөх дүн</strong>
             </p>
             <p className="text flex-space">
-              <span>Бараа ({formatter.format(products.totalQty)}):</span>
-              <strong>{formatter.format(products.totalPrice)}₮</strong>
+              <span>Бараа ({formatter.format(products.totalQtyInCart)}):</span>
+              <strong>{formatter.format(products.totalPriceInCart)}₮</strong>
             </p>
             <p className="text flex-space">
               <span>Хүргэлтийн үнэ:</span>
@@ -117,14 +119,21 @@ class DeliveryInfo extends React.Component {
             <p className="text flex-space">
               <span>Нийт дүн:</span>
               <strong>
-                {formatter.format(products.totalPrice + deliver1 - usedpoint)}₮
+                {formatter.format(
+                  products.totalPriceInCart + deliver1 - usedpoint
+                )}
+                ₮
               </strong>
             </p>
             <p className="text flex-space">
               <span>НӨАТ:</span>
               <strong>
                 {formatter.format(
-                  this.generateNoat(products.totalPrice, deliver1, usedpoint)
+                  this.generateNoat(
+                    products.totalPriceInCart,
+                    deliver1,
+                    usedpoint
+                  )
                 )}
                 ₮
               </strong>
