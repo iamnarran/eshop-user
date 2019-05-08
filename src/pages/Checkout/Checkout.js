@@ -1,9 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Collapse, Form, message } from "antd";
+import { Collapse, Form, message, Button } from "antd";
 import { Link } from "react-router-dom";
 import api from "../../api";
-import LoginModal from "../../components/LoginModal";
 import actions from "../../actions/checkout";
 import DeliveryInfo from "./DeliveryInfo";
 import SwalModals from "./SwalModals";
@@ -13,12 +12,17 @@ import PaymentTypePanel from "./PaymentTypePanel";
 import LoginRegisterPanel from "./LoginRegisterPanel";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { showLoginModal } from "../../actions/login";
 import { parse } from "querystring";
 const MySwal = withReactContent(Swal);
 const Panel = Collapse.Panel;
 @connect(
   mapStateToProps,
-  { saveUserAddress: actions.saveUserAddress, sentPayment: actions.sentPayment }
+  {
+    saveUserAddress: actions.saveUserAddress,
+    sentPayment: actions.sentPayment,
+    showLoginModal: showLoginModal
+  }
 )
 class Checkout extends React.Component {
   constructor(props) {
@@ -36,7 +40,6 @@ class Checkout extends React.Component {
       chosenBankInfo: [],
       cardno: null,
       chosenPlusRadio: 1,
-      isLoginModalVisible: false,
       mainLocation: [],
       subLocation: [],
       chosenInfo: [],
@@ -133,7 +136,6 @@ class Checkout extends React.Component {
       this.getUserInfo(this.props.user);
     }
     this.getMainLocation();
-    console.log(cart);
     this.setState({
       products: cart,
       delivery: deliveryTypes[0],
@@ -208,14 +210,9 @@ class Checkout extends React.Component {
     });
   };
 
-  toggleLoginModal = e => {
-    // e.preventDefault();
-    this.setState({ isLoginModalVisible: !this.state.isLoginModalVisible });
-  };
-
   showLoginModal = e => {
     e.preventDefault();
-    this.setState({ isLoginModalVisible: true });
+    this.props.showLoginModal();
   };
 
   getUserInfo = async user => {
@@ -330,10 +327,14 @@ class Checkout extends React.Component {
           </a>
         </h5>
         <div className="title-button text-right">
-          {/* <p className="text">Бүртгэлтэй бол:</p> */}
-          <a onClick={this.showLoginModal} className="btn btn-gray solid">
-            <span className="text-uppercase">Нэвтрэх</span>
-          </a>
+          <p className="text">Бүртгэлтэй бол:</p>
+          <Button
+            onClick={this.showLoginModal}
+            className="btn btn-login text-uppercase"
+            size={"large"}
+          >
+            Нэвтрэх
+          </Button>
         </div>
       </div>
     );
@@ -464,9 +465,13 @@ class Checkout extends React.Component {
     });
   };
 
-  onChangeMainLoc = e => {
+  onChangeMainLoc = (e, form) => {
     api.location.findLocationWidthId({ id: e }).then(res => {
       if (res.success == true) {
+        form.setFieldsInitialValue({
+          subLocation: "",
+          commiteLocation: ""
+        });
         this.setState({ subLocation: res.data });
       }
     });
@@ -572,6 +577,7 @@ class Checkout extends React.Component {
       addrs;
     await this.props.sentPayment(tmp).then(res => {
       if (res.success) {
+        MySwal.hideLoading();
         let type;
         if (chosenPayment.id == 2) {
           type = "msgBank";
@@ -601,6 +607,7 @@ class Checkout extends React.Component {
           closeOnEsc: false
         });
       } else {
+        MySwal.hideLoading();
         this.errorMsg(res.message);
       }
     });
@@ -608,6 +615,7 @@ class Checkout extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
+    MySwal.showLoading();
     const { chosenPayment } = this.state;
     const { products, epointcard, epointUsedPoint, companyInfo } = this.state;
     let tmp = {};
@@ -674,7 +682,6 @@ class Checkout extends React.Component {
       showCancelButton: false,
       showConfirmButton: false,
       focusConfirm: false,
-      showCloseButton: true,
       allowOutsideClick: false,
       closeOnEsc: false,
       onClose: this.closeSwal
@@ -748,6 +755,7 @@ class Checkout extends React.Component {
                         <Panel
                           header={this.deliveryInfo()}
                           showArrow={false}
+                          disabled={!isLoggedIn}
                           key={"2"}
                         >
                           <DeliveryPanel
@@ -827,10 +835,6 @@ class Checkout extends React.Component {
             </div>
           </div>
         </div>
-        <LoginModal
-          onVisibilityChange={this.toggleLoginModal}
-          visible={this.state.isLoginModalVisible}
-        />
       </div>
     );
   }

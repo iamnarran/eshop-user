@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Input, Form, Button } from "antd";
+import { Input, Form, Button, message } from "antd";
 import actions from "../../actions/register";
 import { EXPAND_LEFT } from "react-ladda";
 @connect(
@@ -22,9 +22,16 @@ class LoginRegisterPanel extends React.Component {
     this.props.form.validateFields(async (err, values) => {
       if (!err) {
         this.setState({ loading: true });
-        values.phone1 = "0";
+        values.phonE1 = values.phone;
+        values.phonE2 = 0;
         let res = await this.props.register(values);
-        console.log(res);
+        if (res.success) {
+          message.success(res.message);
+          this.setState({ loading: false });
+        } else {
+          message.error(res.message);
+          this.setState({ loading: false });
+        }
       }
     });
   };

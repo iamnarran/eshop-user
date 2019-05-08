@@ -34,11 +34,13 @@ class DeliveryPanel extends React.Component {
               this.setState({ defaultAddress: item });
             }
           });
+          //this.state.defaultAddress.provinceid = 11;
+          console.log(this.state.defaultAddress);
           this.props.form.setFieldsInitialValue({
             address: this.state.defaultAddress.id,
-            mainLocation: res.data.addrs[0].provincenm,
-            subLocation: res.data.addrs[0].districtnm,
-            commiteLocation: res.data.addrs[0].committeenm
+            mainLocation: this.state.defaultAddress.provincenm,
+            subLocation: this.state.defaultAddress.districtnm,
+            commiteLocation: this.state.defaultAddress.committeenm
           });
         }
 
@@ -103,7 +105,6 @@ class DeliveryPanel extends React.Component {
 
   renderAddrsOption = () => {
     const { userAddress } = this.props;
-
     let tmp;
     if (userAddress.length !== 0) {
       tmp = userAddress.map((item, i) => {
@@ -270,7 +271,7 @@ class DeliveryPanel extends React.Component {
                           <Select
                             placeholder="Хот/аймаг *"
                             className="col-md-12"
-                            onChange={e => onChangeMainLoc(e)}
+                            onChange={e => onChangeMainLoc(e, this.props.form)}
                           >
                             {this.renderMainLocation()}
                           </Select>
