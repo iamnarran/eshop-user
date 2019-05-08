@@ -4,6 +4,9 @@ import config from "../config";
 import { storage } from "../utils";
 import { signOut, showLoginModal } from "../actions/login";
 import reducer from "../reducers";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+const MySwal = withReactContent(Swal);
 axios.defaults.auth = config.auth;
 
 const setAuthorizationHeader = (token = null) => {
@@ -34,6 +37,7 @@ axios.interceptors.response.use(
       store.dispatch(signOut());
       store.dispatch(showLoginModal());
       storage.set("user", tmp);
+      //MySwal.hideLoading();
     }
 
     return Promise.reject(error);

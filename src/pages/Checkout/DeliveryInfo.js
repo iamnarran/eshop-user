@@ -26,6 +26,7 @@ class DeliveryInfo extends React.Component {
       chosenInfo,
       userAddress,
       paymentButton,
+      isLoggedIn,
       chosenDeliveryAddrName
     } = this.props;
     let addrs;
@@ -98,7 +99,7 @@ class DeliveryInfo extends React.Component {
               <strong>Төлөх дүн</strong>
             </p>
             <p className="text flex-space">
-              <span>Бараа ({formatter.format(products.totalQtyInCart)}):</span>
+              <span>Бараа ({products.products.length}):</span>
               <strong>{formatter.format(products.totalPriceInCart)}₮</strong>
             </p>
             <p className="text flex-space">
@@ -141,7 +142,9 @@ class DeliveryInfo extends React.Component {
             <button
               className="btn btn-main btn-block"
               onClick={e => handleClick(e)}
-              disabled={paymentButton}
+              disabled={
+                paymentButton == false && isLoggedIn == true ? false : true
+              }
             >
               <span className="text-uppercase">Тооцоо хийх</span>
             </button>

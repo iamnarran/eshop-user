@@ -323,6 +323,60 @@ class SwalModals extends React.Component {
           </div>
         </div>
       );
+    } else if (type == "agreement") {
+      const { agreementCancel, agreementApprove } = this.props;
+      return (
+        <div className="title-container">
+          <h5 className="title">
+            <a className="flex-this">
+              <span>Үйлчилгээний нөхцөл</span>
+            </a>
+          </h5>
+          <div className="title-button ">
+            <p className="text agreement-modal-text">
+              Бид үйлчлүүлэгчдийнхээ амьдралыг аз жаргалтай байлгахын тулд
+              хамгийн сайн бараа, үйлчилгээг үзүүлэхийг эрмэлздэг. Бид хэлж буй,
+              хийж буй бүхий л зүйлдээ хариуцлага хүлээх байлгахын хүсэл
+              тэмүүлэл, бахархал, бүтээлч сэтгэлгээ маань бидний брендүүд болон
+              байгууллагын дүр зурагт тусгагдсан байдаг.
+              <br /> Бид үйлчлүүлэгчдийнхээ амьдралыг аз жаргалтай байлгахын
+              тулд хамгийн сайн бараа, үйлчилгээг үзүүлэхийг эрмэлздэг. Бид хэлж
+              буй, хийж буй бүхий л зүйлдээ хариуцлага хүлээх байлгахын хүсэл
+              тэмүүлэл, бахархал, бүтээлч сэтгэлгээ маань бидний брендүүд болон
+              байгууллагын дүр зурагт тусгагдсан байдаг.
+            </p>
+          </div>
+          <h6 className="title">
+            <a className="flex-this">
+              <span>Хэрэглэгчдийг чухалчлах</span>
+            </a>
+          </h6>
+          <div className="title-button ">
+            <p className="text agreement-modal-text">
+              Имартын шинэ өдөр хэрэгчдэдээ хэрхэн илүү сайн үйлчлэх вэ гэсэн
+              бодлоор эхлэдэг. Учир нь бидний бизнесийн амжилтын ард хэрэглэгч,
+              үйлчлүүлэгчид маань байдаг гэдгийг мэддэг.
+            </p>
+          </div>
+          <h6 className="title">
+            <a className="flex-this">
+              <span>Үйлчилгээний нөхцөлийг зөвшөөрч байна уу ?</span>
+            </a>
+          </h6>
+          <div className="btn-container text-left">
+            <a
+              className="btn btn-main"
+              style={{ marginRight: "5px" }}
+              onClick={e => agreementApprove(e)}
+            >
+              <span className="text-uppercase">Зөвшөөрөх</span>
+            </a>
+            <a className="btn btn-dark" onClick={e => agreementCancel(e)}>
+              <span className="text-uppercase">Цуцлах</span>
+            </a>
+          </div>
+        </div>
+      );
     }
   }
 }

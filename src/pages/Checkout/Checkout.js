@@ -14,6 +14,7 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { showLoginModal } from "../../actions/login";
 import { parse } from "querystring";
+const err = require("../../scss/assets/icon/error.png");
 const MySwal = withReactContent(Swal);
 const Panel = Collapse.Panel;
 @connect(
@@ -51,14 +52,15 @@ class Checkout extends React.Component {
       paymentButton: true,
       cardNoInput: "",
       regNoInput: "",
-      chosenDeliveryAddrName: []
+      chosenDeliveryAddrName: [],
+      deliveryId: 1
     };
   }
 
   errorMsg = txt => {
     MySwal.hideLoading();
     MySwal.fire({
-      type: "error",
+      //type: "error",
       text: txt,
       animation: false
     });
@@ -132,6 +134,12 @@ class Checkout extends React.Component {
   componentWillMount() {
     const { deliveryTypes, paymentTypes, bankInfo } = this.props.container;
     const { cart } = this.props;
+    if (cart.products.length == 0) {
+      this.errorMsg(
+        "Уучлаарай таны сагс хоосон байна. Сагсандаа бараа нэмнэ үү ?"
+      );
+      this.props.history.push("/cart");
+    }
     if (this.props.isLoggedIn == true) {
       this.getUserInfo(this.props.user);
     }
@@ -460,7 +468,7 @@ class Checkout extends React.Component {
     const { deliveryTypes } = this.props.container;
     deliveryTypes.map((item, i) => {
       if (item.id == e) {
-        this.setState({ delivery: item });
+        this.setState({ delivery: item, deliveryId: e });
       }
     });
   };
@@ -577,7 +585,6 @@ class Checkout extends React.Component {
       addrs;
     await this.props.sentPayment(tmp).then(res => {
       if (res.success) {
-        MySwal.hideLoading();
         let type;
         if (chosenPayment.id == 2) {
           type = "msgBank";
@@ -607,7 +614,6 @@ class Checkout extends React.Component {
           closeOnEsc: false
         });
       } else {
-        MySwal.hideLoading();
         this.errorMsg(res.message);
       }
     });
@@ -615,7 +621,6 @@ class Checkout extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    MySwal.showLoading();
     const { chosenPayment } = this.state;
     const { products, epointcard, epointUsedPoint, companyInfo } = this.state;
     let tmp = {};
@@ -713,7 +718,8 @@ class Checkout extends React.Component {
       subLocation,
       commiteLocation,
       paymentButton,
-      chosenDeliveryAddrName
+      chosenDeliveryAddrName,
+      deliveryId
     } = this.state;
     const { deliveryTypes, paymentTypes } = this.props.container;
     const { isLoggedIn } = this.props;
@@ -766,6 +772,7 @@ class Checkout extends React.Component {
                             onChangeMainLoc={this.onChangeMainLoc}
                             onChangeSubLoc={this.onChangeSubLoc}
                             getFieldDecorator={getFieldDecorator}
+                            deliveryId={deliveryId}
                             key="2"
                             mainLocation={mainLocation}
                             subLocation={subLocation}
@@ -829,6 +836,7 @@ class Checkout extends React.Component {
                 usedpoint={usedpoint}
                 handleClick={this.handleSubmit}
                 userAddress={userAddress}
+                isLoggedIn={isLoggedIn}
                 paymentButton={paymentButton}
                 chosenDeliveryAddrName={chosenDeliveryAddrName}
               />

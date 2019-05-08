@@ -2766,7 +2766,36 @@ MuiInputBase-input-49 MuiOutlinedInput-input-34 MuiInputBase-inputType-52 {
 .swal2-close {
   z-index: 2 !important;
 }
+.swal2-content {
+  font-size: 0.9rem !important;
+}
 
+.agreement-modal-text {
+  font-size: 0.9rem;
+  font-weight: normal;
+  line-height: 1.4rem;
+}
+
+.swal2-styled.swal2-confirm {
+  font-size: 0.9rem !important;
+}
+
+.swal2-styled {
+  padding: 0.5rem 2rem !important;
+}
+
+.filteredImg {
+  filter: grayscale(10);
+}
+
+.filteredImg {
+  -webkit-filter: opacity(0.5) drop-shadow(0 0 0 purple) !important;
+  filter: opacity(0.5) drop-shadow(0 0 0 purple) !important;
+}
+
+.ant-tabs-ink-bar {
+  background-color: #feb415 !important;
+}
 /* .ant-tabs .ant-tabs-left-bar .ant-tabs-tab {
   text-align: left;
 }

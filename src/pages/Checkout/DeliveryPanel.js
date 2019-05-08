@@ -182,9 +182,9 @@ class DeliveryPanel extends React.Component {
       onChangeMainLoc,
       onChangeSubLoc,
       addAddress,
+      deliveryId,
       key
     } = this.props;
-
     return (
       <Tabs onChange={e => changeTab(e)}>
         {deliveryTypes.map((item, i) => {
@@ -194,6 +194,9 @@ class DeliveryPanel extends React.Component {
                 <div className="flex-this center">
                   <img
                     alt="icon"
+                    className={deliveryId == item.id ? "filteredImg" : ""}
+                    width="40px"
+                    height="40px"
                     src={require("../../scss/assets/images/demo/" + item.logo)}
                   />
                   <p className="text">
@@ -339,6 +342,7 @@ class DeliveryPanel extends React.Component {
                           rules: [
                             {
                               required: true,
+                              pattern: new RegExp("^[0-9]*$"),
                               message: "Утас оруулна уу"
                             }
                           ]
@@ -357,6 +361,7 @@ class DeliveryPanel extends React.Component {
                           rules: [
                             {
                               required: true,
+                              pattern: new RegExp("^[0-9]*$"),
                               message: "Утас оруулна уу"
                             }
                           ]

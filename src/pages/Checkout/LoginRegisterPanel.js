@@ -3,6 +3,10 @@ import { connect } from "react-redux";
 import { Input, Form, Button, message } from "antd";
 import actions from "../../actions/register";
 import { EXPAND_LEFT } from "react-ladda";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import SwalModals from "./SwalModals";
+const MySwal = withReactContent(Swal);
 @connect(
   null,
   {
@@ -17,23 +21,65 @@ class LoginRegisterPanel extends React.Component {
     };
   }
 
+  agreementApprove = e => {
+    e.preventDefault();
+    this.props.form.validateFields(async (err, values) => {
+      if (!err) {
+        this.register(values);
+      }
+    });
+
+    MySwal.close();
+  };
+
+  agreementCancel = e => {
+    e.preventDefault();
+    MySwal.close();
+  };
+
+  openAgreement = () => {
+    MySwal.fire({
+      html: (
+        <SwalModals
+          type={"agreement"}
+          agreementApprove={this.agreementApprove}
+          agreementCancel={this.agreementCancel}
+        />
+      ),
+      width: "38em",
+      animation: false,
+      button: false,
+      showCloseButton: false,
+      showCancelButton: false,
+      showConfirmButton: false,
+      focusConfirm: false,
+      showCloseButton: true,
+      allowOutsideClick: false,
+      closeOnEsc: false
+    });
+  };
+
   onSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields(async (err, values) => {
       if (!err) {
-        this.setState({ loading: true });
-        values.phonE1 = values.phone;
-        values.phonE2 = 0;
-        let res = await this.props.register(values);
-        if (res.success) {
-          message.success(res.message);
-          this.setState({ loading: false });
-        } else {
-          message.error(res.message);
-          this.setState({ loading: false });
-        }
+        this.openAgreement();
       }
     });
+  };
+
+  register = async values => {
+    this.setState({ loading: true });
+    values.phonE1 = values.phone;
+    values.phonE2 = 0;
+    let res = await this.props.register(values);
+    if (res.success) {
+      message.success(res.message);
+      this.setState({ loading: false });
+    } else {
+      message.error(res.message);
+      this.setState({ loading: false });
+    }
   };
 
   render() {

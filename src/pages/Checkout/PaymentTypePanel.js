@@ -25,7 +25,10 @@ class PaymentTypePanel extends React.Component {
       tmp = paymentTypes.map((item, i) => {
         return (
           <label className="card radio-card" key={i}>
-            <div className="radio-button-container">
+            <div
+              className="radio-button-container"
+              style={{ marginTop: "7px" }}
+            >
               <input
                 className="form-check-input radio-button"
                 type="radio"
@@ -36,7 +39,11 @@ class PaymentTypePanel extends React.Component {
               />
             </div>
             <h5 className="title radio-button-title">
-              <i className={item.imgnm} aria-hidden="true" />
+              <i
+                className={item.imgnm}
+                aria-hidden="true"
+                style={{ marginTop: "10px" }}
+              />
               <p>
                 <strong>{item.name}</strong>
                 <span>{item.description}</span>
