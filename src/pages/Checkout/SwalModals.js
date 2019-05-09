@@ -92,36 +92,36 @@ class SwalModals extends React.Component {
                     <div className="message">
                       <h5 className="title flex-this flex-space">
                         <span className="text-uppercase">
-                          Захиалга {ordData.ordernumber}
+                          Захиалга <strong>{ordData.ordernumber}</strong>
                         </span>
                       </h5>
                       <ul className="list-unstyled class">
                         <li className="flex-this flex-space">
                           <span>Худалдаж авсан барааны тоо:</span>
                           <strong className="big">
-                            {products.products.length}
+                            {products.totalQtyInCart}
                           </strong>
                         </li>
                         <li className="flex-this flex-space">
-                          <span>Мөнгөн дүн</span>
+                          <span>Мөнгөн дүн:</span>
                           <strong className="big">
-                            {formatter.format(products.totalPrice)}₮
+                            {formatter.format(products.totalPriceInCart)}₮
                           </strong>
                         </li>
                         <li className="flex-this flex-space">
-                          <span>Төлбөрийн төрөл</span>
+                          <span>Төлбөрийн төрөл:</span>
                           <strong className="big">{chosenPayment.name}</strong>
                         </li>
                         <li className="flex-this flex-space">
-                          <span>Банк</span>
+                          <span>Банк:</span>
                           <strong className="big">{bankInfo.banknm}</strong>
                         </li>
                         <li className="flex-this flex-space">
-                          <span>Дансны дугаар</span>
+                          <span>Дансны дугаар:</span>
                           <strong className="big">{bankInfo.account}</strong>
                         </li>
                         <li className="flex-this flex-space">
-                          <span>Хүлээн авагч</span>
+                          <span>Хүлээн авагч:</span>
                           <strong className="big">{bankInfo.name}</strong>
                         </li>
                       </ul>
@@ -129,7 +129,7 @@ class SwalModals extends React.Component {
                     <div className="user-detail">
                       <h5 className="title flex-this flex-space">
                         <span className="text-uppercase">
-                          Хүргэлтийн мэдээлэл
+                          Хүргэлтийн мэдээлэл:
                         </span>
                       </h5>
                       <p className="text flex-this">
@@ -171,20 +171,20 @@ class SwalModals extends React.Component {
                     </div>
                     <div className="bottom-text text-center">
                       <p>
-                        Та төлбөрөө 2 цагийн дотор төлснөөр таны захиалга
-                        баталгаажиж идэвхжинэ. Тус хугацаанд төлбөр төлөгдөөгүй
-                        тохиолдолд тус захиалгыг автоматаар цуцлах болохыг
-                        анхаарна уу. <br />
+                        Та төлбөрөө <strong>2</strong> цагийн дотор төлснөөр
+                        таны захиалга баталгаажиж идэвхжинэ. Тус хугацаанд
+                        төлбөр төлөгдөөгүй тохиолдолд захиалгыг автоматаар
+                        цуцлах болохыг анхаарна уу. <br />
                         Төлбөрийг дээрх дансанд шилжүүлэх ба захиалгын{" "}
-                        {ordData.ordernumber} дугаарын гүйлгээний утга дээр
+                        {ordData.ordernumber} дугаарыг гүйлгээний утга дээр
                         заавал бичнэ үү.
                         <br />
                         <br />
                         Хүргэлттэй холбоотой лавлах зүйлс байвал доорх утсаар
-                        холбогдоно уу ? Баярлалаа :)
+                        холбогдоно уу. Баярлалаа
                       </p>
                       <strong className="text-uppercase">
-                        Лавлах утас: 7700 7700
+                        Лавлах утас: 7611 0101
                       </strong>
                     </div>
                     <div className="btn-container text-center">
@@ -217,18 +217,23 @@ class SwalModals extends React.Component {
       const { ordData } = this.props;
       return (
         <div className="checkout-container msg-bank">
-          <div className="card-content" style={{ padding: "20px 20px 0px" }}>
+          <div className="card-content">
             <Tabs tabPosition={"left"} onChange={this.changeTab}>
               {data.map((item, i) => {
                 return (
                   <TabPane
                     tab={
-                      <li className="active">
+                      <li
+                        className="active"
+                        style={{ textAlign: "left", fontWeight: "100" }}
+                      >
                         <span className="contain">
                           <img
                             alt="logo"
-                            src={require("../../scss/assets/images/demo/golomt.png")}
+                            /* src={require("../../scss/assets/images/demo/golomt.png")} */
+                            src={IMAGE + item.logo}
                             style={{ marginRight: "5px" }}
+                            width="22px"
                           />
                           <span>{item.banknm}</span>
                         </span>
@@ -267,7 +272,7 @@ class SwalModals extends React.Component {
                 );
               })}
             </Tabs>
-            <div className="text-right">
+            <div className="text-right" style={{ marginTop: "10px" }}>
               <a
                 onClick={e => readyBtn(e, chosenBank, ordData)}
                 className="btn btn-main"
@@ -314,6 +319,60 @@ class SwalModals extends React.Component {
           <div className="text-right">
             <a href="#" className="btn btn-main">
               <span className="text-uppercase">Болсон</span>
+            </a>
+          </div>
+        </div>
+      );
+    } else if (type == "agreement") {
+      const { agreementCancel, agreementApprove } = this.props;
+      return (
+        <div className="title-container">
+          <h5 className="title">
+            <a className="flex-this">
+              <span>Үйлчилгээний нөхцөл</span>
+            </a>
+          </h5>
+          <div className="title-button ">
+            <p className="text agreement-modal-text">
+              Бид үйлчлүүлэгчдийнхээ амьдралыг аз жаргалтай байлгахын тулд
+              хамгийн сайн бараа, үйлчилгээг үзүүлэхийг эрмэлздэг. Бид хэлж буй,
+              хийж буй бүхий л зүйлдээ хариуцлага хүлээх байлгахын хүсэл
+              тэмүүлэл, бахархал, бүтээлч сэтгэлгээ маань бидний брендүүд болон
+              байгууллагын дүр зурагт тусгагдсан байдаг.
+              <br /> Бид үйлчлүүлэгчдийнхээ амьдралыг аз жаргалтай байлгахын
+              тулд хамгийн сайн бараа, үйлчилгээг үзүүлэхийг эрмэлздэг. Бид хэлж
+              буй, хийж буй бүхий л зүйлдээ хариуцлага хүлээх байлгахын хүсэл
+              тэмүүлэл, бахархал, бүтээлч сэтгэлгээ маань бидний брендүүд болон
+              байгууллагын дүр зурагт тусгагдсан байдаг.
+            </p>
+          </div>
+          <h6 className="title">
+            <a className="flex-this">
+              <span>Хэрэглэгчдийг чухалчлах</span>
+            </a>
+          </h6>
+          <div className="title-button ">
+            <p className="text agreement-modal-text">
+              Имартын шинэ өдөр хэрэгчдэдээ хэрхэн илүү сайн үйлчлэх вэ гэсэн
+              бодлоор эхлэдэг. Учир нь бидний бизнесийн амжилтын ард хэрэглэгч,
+              үйлчлүүлэгчид маань байдаг гэдгийг мэддэг.
+            </p>
+          </div>
+          <h6 className="title">
+            <a className="flex-this">
+              <span>Үйлчилгээний нөхцөлийг зөвшөөрч байна уу ?</span>
+            </a>
+          </h6>
+          <div className="btn-container text-left">
+            <a
+              className="btn btn-main"
+              style={{ marginRight: "5px" }}
+              onClick={e => agreementApprove(e)}
+            >
+              <span className="text-uppercase">Зөвшөөрөх</span>
+            </a>
+            <a className="btn btn-dark" onClick={e => agreementCancel(e)}>
+              <span className="text-uppercase">Цуцлах</span>
             </a>
           </div>
         </div>

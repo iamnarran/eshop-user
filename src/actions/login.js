@@ -18,7 +18,6 @@ export const setUser = user => {
 
 export const signOut = () => {
   setAuthorizationHeader();
-
   return {
     type: SIGN_OUT
   };

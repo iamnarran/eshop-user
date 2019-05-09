@@ -1,48 +1,35 @@
 import React from "react";
 import { connect } from "react-redux";
-import {
-  Collapse,
-  Icon,
-  Tabs,
-  Radio,
-  Input,
-  Form,
-  Select,
-  message,
-  Divider
-} from "antd";
-import { Link, Redirect } from "react-router-dom";
-import storage from "../../utils/storage";
+import { Collapse, Form, message, Button } from "antd";
+import { Link } from "react-router-dom";
 import api from "../../api";
-import LoginModal from "../../components/LoginModal";
 import actions from "../../actions/checkout";
 import DeliveryInfo from "./DeliveryInfo";
 import SwalModals from "./SwalModals";
 import DeliveryPanel from "./DeliveryPanel";
+import PaymentPanel from "./PaymentPanel";
+import PaymentTypePanel from "./PaymentTypePanel";
+import LoginRegisterPanel from "./LoginRegisterPanel";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import withCart from "../../components/HOC/withCart";
-import { IMAGE } from "../../utils/consts";
+import { showLoginModal } from "../../actions/login";
+import { parse } from "querystring";
+const err = require("../../scss/assets/icon/error.png");
 const MySwal = withReactContent(Swal);
-const Option = Select.Option;
 const Panel = Collapse.Panel;
-const TabPane = Tabs.TabPane;
-const RadioButton = Radio.Button;
-const RadioGroup = Radio.Group;
-const InputGroup = Input.Group;
-const formatter = new Intl.NumberFormat("en-US");
 @connect(
   mapStateToProps,
-  { saveUserAddress: actions.saveUserAddress, sentPayment: actions.sentPayment }
+  {
+    saveUserAddress: actions.saveUserAddress,
+    sentPayment: actions.sentPayment,
+    showLoginModal: showLoginModal
+  }
 )
 class Checkout extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       addresstype: "edit",
-      menu: false,
-      collapse: [],
-      collapseKey: [],
       collapseType: null,
       activeKey: ["1"],
       userInfo: [],
@@ -54,11 +41,9 @@ class Checkout extends React.Component {
       chosenBankInfo: [],
       cardno: null,
       chosenPlusRadio: 1,
-      isLoginModalVisible: false,
       mainLocation: [],
       subLocation: [],
       chosenInfo: [],
-      choseInfoNames: [],
       commiteLocation: [],
       companyInfo: [],
       epointcard: null,
@@ -67,7 +52,8 @@ class Checkout extends React.Component {
       paymentButton: true,
       cardNoInput: "",
       regNoInput: "",
-      chosenDeliveryAddrName: []
+      chosenDeliveryAddrName: [],
+      deliveryId: 1
     };
   }
 
@@ -76,7 +62,9 @@ class Checkout extends React.Component {
     MySwal.fire({
       type: "error",
       text: txt,
-      animation: false
+      animation: false,
+      width: "25rem",
+      confirmButtonColor: "#feb415"
     });
   };
 
@@ -86,7 +74,9 @@ class Checkout extends React.Component {
       type: "success",
       title: "Амжилттай",
       text: txt,
-      animation: false
+      animation: false,
+      width: "25rem",
+      confirmButtonColor: "#feb415"
     });
   };
 
@@ -148,11 +138,16 @@ class Checkout extends React.Component {
   componentWillMount() {
     const { deliveryTypes, paymentTypes, bankInfo } = this.props.container;
     const { cart } = this.props;
+    if (cart.products.length == 0) {
+      this.errorMsg(
+        "Уучлаарай таны сагс хоосон байна. Сагсандаа бараа нэмнэ үү ?"
+      );
+      this.props.history.push("/cart");
+    }
     if (this.props.isLoggedIn == true) {
       this.getUserInfo(this.props.user);
     }
     this.getMainLocation();
-
     this.setState({
       products: cart,
       delivery: deliveryTypes[0],
@@ -173,6 +168,7 @@ class Checkout extends React.Component {
     let value = e.target.value;
     let len = e.target.value.length;
     this.setState({ regNoInput: e.target.value });
+    // console.log(value[len]);
     /* if (len == 1) {
       if (isNaN(value.slice(0, 1))) {
         if (/[а-яА-ЯЁёӨөҮү]/.test(value.slice(0, 1))) {
@@ -227,14 +223,9 @@ class Checkout extends React.Component {
     });
   };
 
-  toggleLoginModal = e => {
-    // e.preventDefault();
-    this.setState({ isLoginModalVisible: !this.state.isLoginModalVisible });
-  };
-
   showLoginModal = e => {
     e.preventDefault();
-    this.setState({ isLoginModalVisible: true });
+    this.props.showLoginModal();
   };
 
   getUserInfo = async user => {
@@ -246,19 +237,7 @@ class Checkout extends React.Component {
               this.setState({ defaultAddress: item });
             }
           });
-          this.props.form.setFieldsInitialValue({
-            address: this.state.defaultAddress.id,
-            mainLocation: res.data.addrs[0].provincenm,
-            subLocation: res.data.addrs[0].districtnm,
-            commiteLocation: res.data.addrs[0].committeenm
-          });
         }
-
-        this.props.form.setFieldsInitialValue({
-          lastName: res.data.info.firstname,
-          phone1: res.data.info.phone1,
-          phone2: res.data.info.phone2
-        });
 
         this.setState({
           addresstype: res.data.addrs.length === 0 ? "new" : "edit",
@@ -270,15 +249,8 @@ class Checkout extends React.Component {
     });
   };
 
-  changeRadio = e => {
-    const { paymentTypes } = this.props.container;
-    if (paymentTypes !== 0) {
-      paymentTypes.map((item, i) => {
-        if (item.id == e.target.id) {
-          this.setState({ chosenPayment: item });
-        }
-      });
-    }
+  changeRadio = item => {
+    this.setState({ chosenPayment: item });
   };
 
   paymentType = () => {
@@ -294,11 +266,11 @@ class Checkout extends React.Component {
     );
   };
 
-  saveCustomerCard = async e => {
+  saveCustomerCard = async (e, refs) => {
     e.preventDefault();
 
-    let cardpass = this.refs.cardpass.value;
-    let cardno = this.refs.cardno.value;
+    let cardpass = refs.cardpass.value;
+    let cardno = refs.cardno.value;
     if (cardpass != "" && cardno != "") {
       MySwal.showLoading();
       let tmp = {
@@ -311,7 +283,7 @@ class Checkout extends React.Component {
           this.setState({ epointcard: res.data });
           this.successMsg("Таны бүртгэлийг Ипойнт карттай амжилттай холболоо");
         } else {
-          this.errorMsg("Хэрэглэгчийн картын дугар эсвэл нууц үг таарсангүй.");
+          this.errorMsg(res.data);
         }
       });
     } else {
@@ -319,39 +291,13 @@ class Checkout extends React.Component {
     }
   };
 
-  addAddress = (value, event) => {
-    if (value == null) {
-      this.setState({ addresstype: "new" });
-      this.props.form.setFieldsInitialValue({
-        address: "",
-        mainLocation: "",
-        subLocation: "",
-        commiteLocation: ""
-      });
-    } else {
-      this.getLocs(value);
-    }
-  };
-
-  getLocs = async id => {
-    await api.checkout.getlocs({ locid: id }).then(res => {
-      if (res.success == true) {
-        this.props.form.setFieldsInitialValue({
-          address: res.data.address,
-          mainLocation: res.data.provincenm,
-          subLocation: res.data.districtnm,
-          commiteLocation: res.data.committeenm
-        });
-      } else {
-        console.log("aldaa");
-      }
-    });
-  };
-
-  getCompanyRegno = async e => {
+  getCompanyRegno = async (e, refs) => {
     e.preventDefault();
-    let regno = this.refs.regno.value;
+    //MySwal.showLoading();
+    let regno = refs.regno.value;
+    refs.regno.value = "";
     await api.checkout.getCompanyRegno({ regNo: regno }).then(res => {
+      console.log(res);
       if (res.success == true) {
         if (res.data.name != "") {
           res.data.regno = regno;
@@ -360,6 +306,7 @@ class Checkout extends React.Component {
           this.setState({ companyInfo: [] });
           this.errorMsg("Татвар төлөгч бүртгэлгүй байна");
         }
+        // MySwal.hideLoading();
       } else {
         this.setState({ companyInfo: [] });
         this.errorMsg("Татвар төлөгч бүртгэлгүй байна");
@@ -367,10 +314,10 @@ class Checkout extends React.Component {
     });
   };
 
-  handleEditCompany = e => {
+  handleEditCompany = (e, refs) => {
     e.preventDefault();
-    this.refs.regno.value = "";
-    this.setState({ companyInfo: [] });
+    refs.regno.value = "";
+    this.setState({ companyInfo: [], paymentButton: true });
   };
 
   optionType = () => {
@@ -386,21 +333,6 @@ class Checkout extends React.Component {
     );
   };
 
-  renderAddrsOption = () => {
-    const { userAddress } = this.state;
-    let tmp;
-    if (userAddress.length !== 0) {
-      tmp = userAddress.map((item, i) => {
-        return (
-          <Option key={i} value={item.id}>
-            {item.address}
-          </Option>
-        );
-      });
-    }
-    return tmp;
-  };
-
   customerTab = () => {
     return (
       <div className="title-container flex-space">
@@ -411,10 +343,14 @@ class Checkout extends React.Component {
           </a>
         </h5>
         <div className="title-button text-right">
-          {/* <p className="text">Бүртгэлтэй бол:</p> */}
-          <a onClick={this.showLoginModal} className="btn btn-gray solid">
-            <span className="text-uppercase">Нэвтрэх</span>
-          </a>
+          <p className="text">Бүртгэлтэй бол:</p>
+          <Button
+            onClick={this.showLoginModal}
+            className="btn btn-login text-uppercase"
+            size={"large"}
+          >
+            Нэвтрэх
+          </Button>
         </div>
       </div>
     );
@@ -425,7 +361,7 @@ class Checkout extends React.Component {
       <div className="title-container flex-space">
         <h5 className="title">
           <a className="flex-this">
-            <i className="fa fa-credit-card" aria-hidden="true" />
+            <i className="fa fa-truck" aria-hidden="true" />
             <span>Хүргэлтийн төрөл</span>
           </a>
         </h5>
@@ -437,21 +373,6 @@ class Checkout extends React.Component {
     this.setState({
       activeKey: key
     });
-  };
-
-  renderMainLocation = () => {
-    const { mainLocation } = this.state;
-    let tmp;
-    if (mainLocation.length != 0) {
-      tmp = mainLocation.map((item, i) => {
-        return (
-          <Option key={i} value={item.provinceid}>
-            {item.provincenm}
-          </Option>
-        );
-      });
-    }
-    return tmp;
   };
 
   plusRadioChanged = e => {
@@ -481,14 +402,14 @@ class Checkout extends React.Component {
     this.setState({ chosenPlusRadio: e.target.id });
   };
 
-  onSubmit = e => {
+  onSubmit = (e, validateFields) => {
     e.preventDefault();
     const { defaultAddress, userAddress, addresstype } = this.state;
     let tmp = [];
     let chosenInfo = {};
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        if (e.target.name == "delivery") {
+    if (e.target.name == "delivery") {
+      validateFields((err, values) => {
+        if (!err) {
           chosenInfo.address = values.address;
           chosenInfo.lastName = values.lastName;
           chosenInfo.mainLocation = values.mainLocation;
@@ -496,13 +417,13 @@ class Checkout extends React.Component {
           chosenInfo.phone1 = values.phone1;
           chosenInfo.phone2 = values.phone2;
           chosenInfo.commiteLocation = values.commiteLocation;
+          chosenInfo.isNew = false;
           let chosenDeliveryAddrName = {
             mainLocation: this.getMainLocationName(values.mainLocation),
             subLocation: this.getSubLocationName(values.subLocation),
             commiteLocation: this.getCommiteLocationName(values.commiteLocation)
           };
-          this.setState({ chosenDeliveryAddrName: chosenDeliveryAddrName });
-          this.setState({ chosenInfo: chosenInfo });
+
           tmp.push("3");
           if (values.address == defaultAddress.address) {
             values.address = defaultAddress.id;
@@ -514,107 +435,66 @@ class Checkout extends React.Component {
               adrs.locid = values.commiteLocation;
               adrs.address = values.address;
               adrs.isenable = "Идэвхтэй";
+              chosenInfo.address = values.address;
+              chosenInfo.addressnm = values.address;
+              chosenInfo.isNew = true;
               this.setUser(adrs);
             }
+            this.setState({ chosenInfo: chosenInfo });
+            this.setState({ chosenDeliveryAddrName: chosenDeliveryAddrName });
           } catch (err) {
             console.log(err);
           }
-        } else if (e.target.name == "payment") {
-          tmp.push("4");
-          this.setState({ paymentButton: false });
+        } else {
+          console.log("error");
         }
-        this.setState({
-          collapseType: e.target.name,
-          activeKey: tmp
-        });
-      } else {
-        console.log("error");
-      }
+      });
+    } else if (e.target.name == "payment") {
+      tmp.push("4");
+      this.setState({ paymentButton: false });
+    }
+    this.setState({
+      collapseType: e.target.name,
+      activeKey: tmp
     });
+  };
+
+  changeAddressType = item => {
+    this.setState({ addresstype: item });
   };
 
   setUser = async adrs => {
     const res = await this.props.saveUserAddress(adrs);
+    if (res.success) {
+      let tmp = this.state.chosenInfo;
+      tmp.address = res.data;
+      this.setState({ chosenInfo: tmp });
+    }
   };
 
   changeTab = e => {
     const { deliveryTypes } = this.props.container;
     deliveryTypes.map((item, i) => {
       if (item.id == e) {
-        this.setState({ delivery: item });
+        this.setState({ delivery: item, deliveryId: e });
       }
     });
   };
 
-  renderPaymentTypes = () => {
-    const { paymentTypes } = this.props.container;
-    const { chosenPayment } = this.state;
-    let tmp;
-    if (paymentTypes.length !== 0) {
-      tmp = paymentTypes.map((item, i) => {
-        return (
-          <label className="card radio-card" key={i}>
-            <div className="radio-button-container">
-              <input
-                className="form-check-input radio-button"
-                type="radio"
-                name="paymentRadios"
-                defaultChecked={item.id == 1 ? true : false}
-                id={item.id}
-                onChange={this.changeRadio}
-              />
-            </div>
-            <h5 className="title radio-button-title">
-              <i className={item.imgnm} aria-hidden="true" />
-              <p>
-                <strong>{item.name}</strong>
-                <span>{item.description}</span>
-              </p>
-            </h5>
-          </label>
-        );
-      });
-    }
-
-    return tmp;
-  };
-
-  renderBankInfo = () => {
-    const { bankInfo } = this.props.container;
-    let tmp;
-    if (bankInfo !== 0) {
-      tmp = bankInfo.map((item, i) => {
-        return (
-          <RadioButton value={item.bankid} key={i}>
-            <p>{item.banknm}</p>
-          </RadioButton>
-        );
-      });
-    }
-    return tmp;
-  };
-
-  bankRadioChange = e => {
-    const { bankInfo } = this.props.container;
-    if (bankInfo.length !== 0) {
-      bankInfo.map((item, i) => {
-        if (item.bankid == e.target.value) {
-          this.setState({ chosenBankInfo: item });
-        }
-      });
-    }
-  };
-
-  onChangeMainLoc = e => {
+  onChangeMainLoc = (e, form) => {
     api.location.findLocationWidthId({ id: e }).then(res => {
       if (res.success == true) {
+        form.setFieldsInitialValue({
+          subLocation: "",
+          commiteLocation: ""
+        });
         this.setState({ subLocation: res.data });
       }
     });
   };
 
-  onChangeSubLoc = e => {
-    this.props.form.validateFields((err, values) => {
+  onChangeSubLoc = (e, validateFields) => {
+    validateFields((err, values) => {
       if (values.mainLocation != "") {
         api.location
           .findCommiteLocation({ provid: values.mainLocation, distid: e })
@@ -625,36 +505,6 @@ class Checkout extends React.Component {
           });
       }
     });
-  };
-
-  renderSubLocation = e => {
-    const { subLocation } = this.state;
-    let tmp;
-    if (subLocation.length !== 0) {
-      tmp = subLocation.map((item, i) => {
-        return (
-          <Option key={i} value={item.districtid}>
-            {item.districtnm}
-          </Option>
-        );
-      });
-    }
-    return tmp;
-  };
-
-  renderCommiteLocation = e => {
-    const { commiteLocation } = this.state;
-    let tmp;
-    if (commiteLocation.length !== 0) {
-      tmp = commiteLocation.map((item, i) => {
-        return (
-          <Option key={i} value={item.id}>
-            {item.committeenm}
-          </Option>
-        );
-      });
-    }
-    return tmp;
   };
 
   handleUserEpoint = async e => {
@@ -682,22 +532,24 @@ class Checkout extends React.Component {
       await api.checkout
         .checkpass({ cardno: epointcard.cardno, pincode: password })
         .then(res => {
+          console.log(res);
           if (res.success == true) {
             let tmp = epointcard;
             if (
-              (delivery.price + products.totalPrice) / 2 >=
+              (delivery.price + products.totalPriceInCart) / 2 >=
               epointcard.point
             ) {
-              tmp.point = 0;
+              tmp.point = parseFloat(point - parseInt(point));
               this.setState({
-                epointUsedPoint: point,
+                epointUsedPoint: parseInt(point),
                 epointcard: tmp
               });
             } else {
               tmp.point =
-                tmp.point - (delivery.price + products.totalPrice) / 2;
+                tmp.point - (delivery.price + products.totalPriceInCart) / 2;
               this.setState({
-                epointUsedPoint: (delivery.price + products.totalPrice) / 2,
+                epointUsedPoint:
+                  (delivery.price + products.totalPriceInCart) / 2,
                 epointcard: tmp
               });
             }
@@ -716,10 +568,30 @@ class Checkout extends React.Component {
       products,
       chosenInfo,
       userAddress,
-      chosenPayment
+      chosenPayment,
+      chosenDeliveryAddrName
     } = this.state;
-
     let data;
+    let addrs;
+    if (userAddress.length !== 0) {
+      if (!chosenInfo.isNew) {
+        userAddress.map((item, i) => {
+          if (item.id == chosenInfo.address) {
+            addrs = item.address;
+          }
+        });
+      } else {
+        addrs = chosenInfo.addressnm;
+      }
+    }
+    tmp.custAddress =
+      chosenDeliveryAddrName.mainLocation +
+      ", " +
+      chosenDeliveryAddrName.subLocation +
+      ", " +
+      chosenDeliveryAddrName.commiteLocation +
+      ", " +
+      addrs;
     await this.props.sentPayment(tmp).then(res => {
       if (res.success) {
         let type;
@@ -751,7 +623,7 @@ class Checkout extends React.Component {
           closeOnEsc: false
         });
       } else {
-        this.errorMsg(res.data);
+        this.errorMsg(res.message);
       }
     });
   };
@@ -824,7 +696,6 @@ class Checkout extends React.Component {
       showCancelButton: false,
       showConfirmButton: false,
       focusConfirm: false,
-      showCloseButton: true,
       allowOutsideClick: false,
       closeOnEsc: false,
       onClose: this.closeSwal
@@ -845,25 +716,22 @@ class Checkout extends React.Component {
       userInfo,
       delivery,
       userAddress,
-      defaultAddress,
       chosenPayment,
       products,
-      cardno,
       chosenPlusRadio,
       epointcard,
       companyInfo,
       epointUsedPoint,
       useEpoint,
-      addresstype,
       mainLocation,
       subLocation,
       commiteLocation,
       paymentButton,
-      chosenDeliveryAddrName
+      chosenDeliveryAddrName,
+      deliveryId
     } = this.state;
-    const { deliveryTypes } = this.props.container;
+    const { deliveryTypes, paymentTypes } = this.props.container;
     const { isLoggedIn } = this.props;
-    const deliver1 = delivery == [] ? 0 : delivery.price;
     const usedpoint = useEpoint == true ? epointUsedPoint : 0;
     const { getFieldDecorator } = this.props.form;
     return (
@@ -871,10 +739,16 @@ class Checkout extends React.Component {
         <div className="container pad10">
           <div className="checkout-container">
             <div className="btn btn-gray">
-              <i className="fa fa-chevron-left" aria-hidden="true">
+              <i
+                className="fa fa-chevron-left"
+                aria-hidden="true"
+                style={{ color: "#feb415" }}
+              >
                 {" "}
               </i>
-              <span className="text-uppercase">Захиалга засах</span>
+              <Link to="/cart">
+                <span className="text-uppercase">Сагс руу буцах</span>
+              </Link>
             </div>
             <div className="row row10">
               <div className="col-lg-8 pad10">
@@ -892,35 +766,7 @@ class Checkout extends React.Component {
                             header={this.customerTab()}
                             key="1"
                           >
-                            <div>
-                              <div className="content-container">
-                                <div className="socials flex-this flex-wrap">
-                                  <button
-                                    type="submit"
-                                    className="btn btn-social btn-facebook"
-                                  >
-                                    <span>Facebook-р бүртгүүлэх</span>
-                                  </button>
-                                  <button
-                                    type="submit"
-                                    className="btn btn-social btn-gmail"
-                                  >
-                                    <span>Gmail-р бүртгүүлэх</span>
-                                  </button>
-                                </div>
-                                <span className="divide-maker">Эсвэл</span>
-                                <form>
-                                  <button
-                                    type="submit"
-                                    className="btn btn-dark btn-bigger"
-                                  >
-                                    <span className="text-uppercase">
-                                      Бүртгүүлэх
-                                    </span>
-                                  </button>
-                                </form>
-                              </div>
-                            </div>
+                            <LoginRegisterPanel />
                           </Panel>
                         ) : (
                           ""
@@ -928,231 +774,25 @@ class Checkout extends React.Component {
                         <Panel
                           header={this.deliveryInfo()}
                           showArrow={false}
-                          key="2"
+                          disabled={!isLoggedIn}
+                          key={"2"}
                         >
-                          <Tabs onChange={this.changeTab}>
-                            {this.props.container.deliveryTypes.map(
-                              (item, i) => {
-                                return (
-                                  <TabPane
-                                    tab={
-                                      <div className="flex-this center">
-                                        <img
-                                          alt="icon"
-                                          src={require("../../scss/assets/images/demo/" +
-                                            item.logo)}
-                                        />
-                                        <p className="text">
-                                          <strong>{item.typenm}</strong>
-                                          <span>
-                                            {formatter.format(item.price) + "₮"}
-                                          </span>
-                                        </p>
-                                      </div>
-                                    }
-                                    key={item.id}
-                                  >
-                                    <div
-                                      className="tab-pane active"
-                                      id="home"
-                                      role="tabpanel"
-                                      aria-labelledby="home-tab"
-                                    >
-                                      <p className="text">{item.featuretxt}</p>
-                                      <Form
-                                        onSubmit={this.onSubmit}
-                                        name="delivery"
-                                      >
-                                        <div className="row row10">
-                                          {item.id != 3 ? (
-                                            <div className="col-xl-12 col-md-12">
-                                              <Form.Item>
-                                                {getFieldDecorator("address", {
-                                                  rules: [
-                                                    {
-                                                      required: true,
-                                                      message: "Хаяг оруулна уу"
-                                                    }
-                                                  ]
-                                                })(
-                                                  addresstype == "new" ? (
-                                                    <Input
-                                                      type="text"
-                                                      placeholder="Хаягаа сонгоно уу ?*"
-                                                    />
-                                                  ) : (
-                                                    <Select
-                                                      onSelect={(
-                                                        value,
-                                                        event
-                                                      ) =>
-                                                        this.addAddress(
-                                                          value,
-                                                          event
-                                                        )
-                                                      }
-                                                      placeholder="Хаягаа сонгоно уу ?"
-                                                    >
-                                                      {this.renderAddrsOption()}
-                                                      <Option value={null}>
-                                                        <div
-                                                          style={{
-                                                            cursor: "pointer"
-                                                          }}
-                                                        >
-                                                          <Icon type="plus" />{" "}
-                                                          Хаяг нэмэх
-                                                        </div>
-                                                      </Option>
-                                                    </Select>
-                                                  )
-                                                )}
-                                              </Form.Item>
-                                            </div>
-                                          ) : (
-                                            ""
-                                          )}
-                                          <div className="col-xl-4 col-md-4">
-                                            <Form.Item>
-                                              {getFieldDecorator(
-                                                "mainLocation",
-                                                {
-                                                  rules: [
-                                                    {
-                                                      required: true,
-                                                      message:
-                                                        "Хот/Аймаг сонгоно уу?"
-                                                    }
-                                                  ]
-                                                }
-                                              )(
-                                                <Select
-                                                  placeholder="Хот/аймаг *"
-                                                  className="col-md-12"
-                                                  onChange={
-                                                    this.onChangeMainLoc
-                                                  }
-                                                >
-                                                  {this.renderMainLocation()}
-                                                </Select>
-                                              )}
-                                            </Form.Item>
-                                          </div>
-                                          <div className="col-xl-4 col-md-4">
-                                            <Form.Item>
-                                              {getFieldDecorator(
-                                                "subLocation",
-                                                {
-                                                  rules: [
-                                                    {
-                                                      required: true,
-                                                      message:
-                                                        "Дүүрэг/Сум сонгоно уу?"
-                                                    }
-                                                  ]
-                                                }
-                                              )(
-                                                <Select
-                                                  placeholder="Дүүрэг/Сум*"
-                                                  onChange={this.onChangeSubLoc}
-                                                >
-                                                  {this.renderSubLocation()}
-                                                </Select>
-                                              )}
-                                            </Form.Item>
-                                          </div>
-                                          <div className="col-xl-4 col-md-4">
-                                            <Form.Item>
-                                              {getFieldDecorator(
-                                                "commiteLocation",
-                                                {
-                                                  rules: [
-                                                    {
-                                                      required: true,
-                                                      message:
-                                                        "Хороо сонгоно уу?"
-                                                    }
-                                                  ]
-                                                }
-                                              )(
-                                                <Select placeholder="Хороо*">
-                                                  {this.renderCommiteLocation()}
-                                                </Select>
-                                              )}
-                                            </Form.Item>
-                                          </div>
-                                          <div className="col-xl-4 col-md-4">
-                                            <Form.Item>
-                                              {getFieldDecorator("lastName", {
-                                                rules: [
-                                                  {
-                                                    required: true,
-                                                    message: "Нэр оруулна уу?"
-                                                  }
-                                                ]
-                                              })(
-                                                <Input
-                                                  type="text"
-                                                  placeholder="Нэр*"
-                                                  className="col-md-12"
-                                                />
-                                              )}
-                                            </Form.Item>
-                                          </div>
-                                          <div className="col-xl-4 col-md-4">
-                                            <Form.Item>
-                                              {getFieldDecorator("phone1", {
-                                                rules: [
-                                                  {
-                                                    required: true,
-                                                    message: "Утас оруулна уу"
-                                                  }
-                                                ]
-                                              })(
-                                                <Input
-                                                  type="text"
-                                                  placeholder="Утас*"
-                                                  className="col-md-12"
-                                                />
-                                              )}
-                                            </Form.Item>
-                                          </div>
-                                          <div className="col-xl-4 col-md-4">
-                                            <Form.Item>
-                                              {getFieldDecorator("phone2", {
-                                                rules: [
-                                                  {
-                                                    required: true,
-                                                    message: "Утас оруулна уу"
-                                                  }
-                                                ]
-                                              })(
-                                                <Input
-                                                  type="text"
-                                                  placeholder="Утас*"
-                                                  className="col-md-12"
-                                                />
-                                              )}
-                                            </Form.Item>
-                                          </div>
-                                        </div>
-                                        <hr />
-                                        <div className="text-right">
-                                          <button
-                                            className="btn btn-main"
-                                            name="delivery"
-                                            type="submit"
-                                          >
-                                            Дараах
-                                          </button>
-                                        </div>
-                                      </Form>
-                                    </div>
-                                  </TabPane>
-                                );
-                              }
-                            )}
-                          </Tabs>
+                          <DeliveryPanel
+                            deliveryTypes={deliveryTypes}
+                            changeTab={this.changeTab}
+                            onSubmit={this.onSubmit}
+                            addresstype={this.addresstype}
+                            onChangeMainLoc={this.onChangeMainLoc}
+                            onChangeSubLoc={this.onChangeSubLoc}
+                            getFieldDecorator={getFieldDecorator}
+                            deliveryId={deliveryId}
+                            key="2"
+                            mainLocation={mainLocation}
+                            subLocation={subLocation}
+                            commiteLocation={commiteLocation}
+                            userAddress={userAddress}
+                            changeAddressType={this.changeAddressType}
+                          />
                         </Panel>
                         <Panel
                           header={this.paymentType()}
@@ -1165,21 +805,12 @@ class Checkout extends React.Component {
                               : true
                           }
                         >
-                          <Form onSubmit={this.onSubmit} name="payment">
-                            <div className="content-container">
-                              {this.renderPaymentTypes()}
-                            </div>
-                            <hr />
-                            <div className="text-right">
-                              <button
-                                className="btn btn-main"
-                                name="payment"
-                                type="submit"
-                              >
-                                Дараах
-                              </button>
-                            </div>
-                          </Form>
+                          <PaymentTypePanel
+                            paymentTypes={paymentTypes}
+                            chosenPayment={chosenPayment}
+                            changeRadio={this.changeRadio}
+                            onSubmit={this.onSubmit}
+                          />
                         </Panel>
                         <Panel
                           header={this.optionType()}
@@ -1189,192 +820,21 @@ class Checkout extends React.Component {
                             this.state.collapseType === "payment" ? false : true
                           }
                         >
-                          <div className="content-container payment">
-                            <p className="title">
-                              <strong>НӨАТ баримтын төрөл</strong>
-                            </p>
-                            <div className="hand-pay flex-this">
-                              <div className="form-check">
-                                <input
-                                  className="form-check-input"
-                                  type="radio"
-                                  defaultChecked
-                                  name="plusRadios"
-                                  id="1"
-                                  onChange={this.plusRadioChanged}
-                                />
-                                <label className="form-check-label">
-                                  Хувь хүн
-                                </label>
-                              </div>
-                              <div className="form-check">
-                                <input
-                                  className="form-check-input"
-                                  type="radio"
-                                  name="plusRadios"
-                                  id="2"
-                                  onChange={this.plusRadioChanged}
-                                />
-                                <label className="form-check-label">
-                                  Байгууллага
-                                </label>
-                              </div>
-                            </div>
-                            {chosenPlusRadio == 2 ? (
-                              <form>
-                                <div className="row row10">
-                                  <div className="col-xl-6 pad10">
-                                    <div className="form-group">
-                                      {companyInfo.length == 0 ? (
-                                        <input
-                                          type="text"
-                                          className="form-control"
-                                          id="exampleInputEmail1"
-                                          name="regno"
-                                          ref="regno"
-                                          value={this.state.regNoInput}
-                                          aria-describedby="emailHelp"
-                                          placeholder="Байгууллагын регистэр"
-                                          onChange={this.regNoChange}
-                                        />
-                                      ) : (
-                                        <input
-                                          type="text"
-                                          className="form-control"
-                                          id="exampleInputEmail1"
-                                          name="regno"
-                                          ref="regno"
-                                          value={companyInfo.name}
-                                          aria-describedby="emailHelp"
-                                          placeholder="Байгууллагын регистэр"
-                                        />
-                                      )}
-                                    </div>
-                                  </div>
-                                </div>
-                                {companyInfo.length == 0 ? (
-                                  <button
-                                    className="btn btn-main solid"
-                                    onClick={this.getCompanyRegno}
-                                  >
-                                    <span className="text-uppercase">
-                                      Холбох
-                                    </span>
-                                  </button>
-                                ) : (
-                                  <button
-                                    className="btn"
-                                    onClick={this.handleEditCompany}
-                                  >
-                                    <span className="text-uppercase">
-                                      Засах
-                                    </span>
-                                  </button>
-                                )}
-                              </form>
-                            ) : (
-                              ""
-                            )}
-                            {epointcard == null ? (
-                              chosenPlusRadio == 1 ? (
-                                <div>
-                                  <p className="title">
-                                    <strong>Имарт картаа холбох</strong>
-                                  </p>
-                                  <form>
-                                    <div className="row row10">
-                                      <div className="col-xl-6 pad10">
-                                        <div className="form-group">
-                                          <input
-                                            type="text"
-                                            className="form-control"
-                                            id="exampleInputEmail1"
-                                            name="cardno"
-                                            ref="cardno"
-                                            value={this.state.cardNoInput}
-                                            aria-describedby="emailHelp"
-                                            placeholder="Картын дугаар"
-                                            onChange={this.cardNoChange}
-                                          />
-                                          <input
-                                            type="password"
-                                            ref="cardpass"
-                                            name="cardpass"
-                                            className="form-control"
-                                            id="exampleInputEmail1"
-                                            aria-describedby="emailHelp"
-                                            placeholder="Нууц үг"
-                                          />
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <button
-                                      type="submit"
-                                      className="btn btn-main solid"
-                                      onClick={this.saveCustomerCard}
-                                    >
-                                      <span className="text-uppercase">
-                                        Холбох
-                                      </span>
-                                    </button>
-                                  </form>
-                                </div>
-                              ) : (
-                                ""
-                              )
-                            ) : chosenPlusRadio == 1 ? (
-                              <div>
-                                <p className="title">
-                                  <strong>Оноо</strong>
-                                </p>
-                                <form>
-                                  <div className="row row10">
-                                    <div className="col-xl-6 pad10">
-                                      <div className="form-group">
-                                        <input
-                                          type="text"
-                                          className="form-control"
-                                          id="exampleInputEmail1"
-                                          value={
-                                            epointcard.status == 1
-                                              ? epointcard.point.toFixed(2)
-                                              : epointcard.cardno
-                                          }
-                                          name="cardInfo"
-                                          ref="cardInfo"
-                                          aria-describedby="emailHelp"
-                                          placeholder="Картын дугаар"
-                                        />
-                                        {epointcard.status == 0 ? (
-                                          <label>
-                                            Таны карт идэвхгүй болсон байна.
-                                            Хэрэглэгчийн үйлчилгээний төвд
-                                            хандаж картаа шинэчилүүлнэ үү.
-                                          </label>
-                                        ) : (
-                                          ""
-                                        )}
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <button
-                                    type="submit"
-                                    className="btn btn-main solid"
-                                    onClick={this.handleUserEpoint}
-                                    disabled={
-                                      usedpoint.toFixed(0) != "0" ? true : false
-                                    }
-                                  >
-                                    <span className="text-uppercase">
-                                      Ашиглах
-                                    </span>
-                                  </button>
-                                </form>
-                              </div>
-                            ) : (
-                              ""
-                            )}
-                          </div>
+                          <PaymentPanel
+                            plusRadioChanged={this.plusRadioChanged}
+                            companyInfo={companyInfo}
+                            epointcard={epointcard}
+                            usedpoint={usedpoint}
+                            chosenPlusRadio={chosenPlusRadio}
+                            cardNoInput={this.state.cardNoInput}
+                            cardNoChange={this.cardNoChange}
+                            regNoInput={this.state.regNoInput}
+                            regNoChange={this.regNoChange}
+                            handleEditCompany={this.handleEditCompany}
+                            getCompanyRegno={this.getCompanyRegno}
+                            saveCustomerCard={this.saveCustomerCard}
+                            handleUserEpoint={this.handleUserEpoint}
+                          />
                         </Panel>
                       </Collapse>
                     </div>
@@ -1389,16 +849,13 @@ class Checkout extends React.Component {
                 usedpoint={usedpoint}
                 handleClick={this.handleSubmit}
                 userAddress={userAddress}
+                isLoggedIn={isLoggedIn}
                 paymentButton={paymentButton}
                 chosenDeliveryAddrName={chosenDeliveryAddrName}
               />
             </div>
           </div>
         </div>
-        <LoginModal
-          onVisibilityChange={this.toggleLoginModal}
-          visible={this.state.isLoginModalVisible}
-        />
       </div>
     );
   }

@@ -186,7 +186,6 @@ const withCart = WrappedComponent => {
         if (!cart) {
           cart = { products: [], totalQty: 0, totalPrice: 0 };
         }
-
         api.product
           .isAvailable({
             custid:

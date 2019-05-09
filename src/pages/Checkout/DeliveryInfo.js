@@ -26,17 +26,20 @@ class DeliveryInfo extends React.Component {
       chosenInfo,
       userAddress,
       paymentButton,
+      isLoggedIn,
       chosenDeliveryAddrName
     } = this.props;
     let addrs;
     const deliver1 = delivery == [] ? 0 : delivery.price;
     if (userAddress.length !== 0) {
-      if (chosenInfo.length !== 0) {
+      if (!chosenInfo.isNew) {
         userAddress.map((item, i) => {
           if (item.id == chosenInfo.address) {
             addrs = item.address;
           }
         });
+      } else {
+        addrs = chosenInfo.addressnm;
       }
     }
     return (
@@ -60,7 +63,11 @@ class DeliveryInfo extends React.Component {
               <strong>{delivery == [] ? "" : delivery.typenm}</strong>
             </p>
             <p className="text flex-this">
-              <i className="fa fa-user" aria-hidden="true" />
+              <i
+                className="fa fa-user"
+                aria-hidden="true"
+                style={{ color: "#feb415" }}
+              />
               <span>
                 {userInfo.length == 0
                   ? ""
@@ -68,7 +75,11 @@ class DeliveryInfo extends React.Component {
               </span>
             </p>
             <p className="text flex-this">
-              <i className="fa fa-phone" aria-hidden="true" />
+              <i
+                className="fa fa-phone"
+                aria-hidden="true"
+                style={{ color: "#feb415" }}
+              />
               <span>
                 {chosenInfo.length != 0
                   ? chosenInfo.phone1 + ", " + chosenInfo.phone2
@@ -76,7 +87,11 @@ class DeliveryInfo extends React.Component {
               </span>
             </p>
             <p className="text flex-this">
-              <i className="fa fa-map-marker" aria-hidden="true" />
+              <i
+                className="fa fa-map-marker"
+                aria-hidden="true"
+                style={{ color: "#feb415" }}
+              />
               <span>
                 {chosenDeliveryAddrName.length != 0
                   ? chosenDeliveryAddrName.mainLocation +
@@ -96,8 +111,8 @@ class DeliveryInfo extends React.Component {
               <strong>Төлөх дүн</strong>
             </p>
             <p className="text flex-space">
-              <span>Бараа ({formatter.format(products.totalQty)}):</span>
-              <strong>{formatter.format(products.totalPrice)}₮</strong>
+              <span>Бараа ({products.products.length}):</span>
+              <strong>{formatter.format(products.totalPriceInCart)}₮</strong>
             </p>
             <p className="text flex-space">
               <span>Хүргэлтийн үнэ:</span>
@@ -117,14 +132,21 @@ class DeliveryInfo extends React.Component {
             <p className="text flex-space">
               <span>Нийт дүн:</span>
               <strong>
-                {formatter.format(products.totalPrice + deliver1 - usedpoint)}₮
+                {formatter.format(
+                  products.totalPriceInCart + deliver1 - usedpoint
+                )}
+                ₮
               </strong>
             </p>
             <p className="text flex-space">
               <span>НӨАТ:</span>
               <strong>
                 {formatter.format(
-                  this.generateNoat(products.totalPrice, deliver1, usedpoint)
+                  this.generateNoat(
+                    products.totalPriceInCart,
+                    deliver1,
+                    usedpoint
+                  )
                 )}
                 ₮
               </strong>
@@ -132,7 +154,9 @@ class DeliveryInfo extends React.Component {
             <button
               className="btn btn-main btn-block"
               onClick={e => handleClick(e)}
-              disabled={paymentButton}
+              disabled={
+                paymentButton == false && isLoggedIn == true ? false : true
+              }
             >
               <span className="text-uppercase">Тооцоо хийх</span>
             </button>
