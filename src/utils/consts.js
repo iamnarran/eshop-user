@@ -46,6 +46,8 @@ const LABEL_TYPES = {
 };
 Object.freeze(CARD_LIST_TYPES);
 
+const PRODUCTS_PER_PAGE = 20;
+
 const SOCIAL_IDS = {
   google:
     "385681945952-cuekq38feemk8gk2elbtctbpanregnnj.apps.googleusercontent.com",
@@ -61,5 +63,6 @@ export {
   CARD_LIST_TYPES,
   WIDGET_SLUGS,
   LABEL_TYPES,
+  PRODUCTS_PER_PAGE,
   SOCIAL_IDS
 };

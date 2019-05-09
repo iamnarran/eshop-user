@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import NotificationBadge, { Effect } from "react-notification-badge";
 import { Link } from "react-router-dom";
+
+import api from "../api";
 import cartImage from "../scss/assets/svg/002-shopping-cart.svg";
 // import { Icon } from "antd";
 

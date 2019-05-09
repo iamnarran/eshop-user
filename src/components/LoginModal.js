@@ -13,6 +13,7 @@ import actions, {
 } from "../actions/login";
 import RegisterModal from "./RegisterModal";
 import storage from "../utils/storage";
+import withCart from "./HOC/withCart";
 
 class LoginModal extends React.Component {
   state = {
@@ -66,9 +67,31 @@ class LoginModal extends React.Component {
         try {
           const res = await this.props.login(form);
           if (res.success) {
-            storage.set("access_token", res.data.access_token);
-            this.props.setUser(res.data.customerInfo);
-            this.setState({ isLoading: false });
+            storage.set("access_token", res.data[0].info.access_token);
+            this.props.setUser(res.data[0].info.customerInfo);
+
+            // this.props.cart.products.forEach(prod => {
+            //   this.props.onUpdateCart(prod);
+            // });
+
+            // const qties = res.data[0].basket.map(prod => prod.qty);
+            // const totalQty = qties.reduce((acc, cur) => acc + cur);
+
+            // const prices = res.data[0].basket.map(prod => {
+            //   const price =
+            //     this.getUnitPrice(prod).sprice || this.getUnitPrice(prod).price;
+
+            //   return price * prod.qty;
+            // });
+            // const totalPrice = prices.reduce((acc, cur) => acc + cur);
+
+            // this.props.updateCart({
+            //   products: cart.products,
+            //   totalQty,
+            //   totalPrice
+            // });
+
+            this.props.cart.totalQty = this.setState({ isLoading: false });
             this.handleOk();
             this.setRedirect();
           } else {
@@ -82,6 +105,29 @@ class LoginModal extends React.Component {
         }
       }
     });
+  };
+
+  getUnitPrice = product => {
+    if (product.sprice) {
+      if (product.issalekg && product.kgproduct[0]) {
+        // Хямдарсан бөгөөд кг-ын бараа
+        return {
+          price: product.kgproduct[0].salegramprice,
+          sprice: product.kgproduct[0].salegramprice
+        };
+      }
+
+      // Хямдарсан бараа
+      return { price: product.price, sprice: product.sprice };
+    }
+
+    if (product.issalekg && product.kgproduct[0]) {
+      // Хямдраагүй бөгөөд кг-ын бараа
+      return { price: product.kgproduct[0].salegramprice, sprice: null };
+    }
+
+    // Хямдраагүй бараа
+    return { price: product.price, sprice: null };
   };
 
   render() {
@@ -205,18 +251,21 @@ class LoginModal extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    isVisible: state.auth.isLoginModalVisible
+    isVisible: state.auth.isLoginModalVisible,
+    cart: state.cart
   };
 };
 
-export default createForm()(
-  connect(
-    mapStateToProps,
-    {
-      login: actions.login,
-      setUser,
-      showLoginModal,
-      hideLoginModal
-    }
-  )(LoginModal)
+export default withCart(
+  createForm()(
+    connect(
+      mapStateToProps,
+      {
+        login: actions.login,
+        setUser,
+        showLoginModal,
+        hideLoginModal
+      }
+    )(LoginModal)
+  )
 );

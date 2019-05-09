@@ -4,7 +4,11 @@ import { Spin, Select } from "antd";
 import { toast } from "react-toastify";
 
 import api from "../api";
-import { CARD_LIST_TYPES, CARD_TYPES } from "../utils/consts";
+import {
+  CARD_LIST_TYPES,
+  CARD_TYPES,
+  PRODUCTS_PER_PAGE
+} from "../utils/consts";
 import CardList from "../components/CardList";
 import FilterSet from "../components/FilterSet";
 
@@ -75,6 +79,8 @@ class CategoryInfo extends React.Component {
       parameters: checkedList,
       minprice: minPrice,
       maxprice: maxPrice,
+      startsWith: 0,
+      rowCount: PRODUCTS_PER_PAGE,
       orderCol: sort
     };
 

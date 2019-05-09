@@ -4,20 +4,17 @@ export default [
   {
     NAME: "findAllEmartProducts",
     METHOD: "GET",
-    URL: `${API}/api/product/emartproduct/:jumcd`,
-    REPLACE: "jumcd"
+    URL: `${API}/api/product/emartproduct/:jumcd/:startwith/:rowcount/:ordercol`
   },
   {
     NAME: "findAllDiscountProducts",
     METHOD: "GET",
-    URL: `${API}/api/product/discountproduct/:jumcd`,
-    REPLACE: "jumcd"
+    URL: `${API}/api/product/discountproduct/:jumcd/:startwith/:rowcount/:ordercol`
   },
   {
     NAME: "findAllNewProducts",
     METHOD: "GET",
-    URL: `${API}/api/product/newproduct/:jumcd`,
-    REPLACE: "jumcd"
+    URL: `${API}/api/product/newproduct/:jumcd/:startwith/:rowcount/:ordercol`
   },
   {
     NAME: "findAllSeasonProducts",
@@ -81,8 +78,8 @@ export default [
   {
     NAME: "isAvailable",
     METHOD: "GET",
-    URL: `${API}/api/product/prodavailablesku/:custid/:skucd/:qty`,
-    REPLACE: "custid,skucd,qty"
+    URL: `${API}/api/product/prodavailablesku/:custid/:skucd/:qty/:iscart`,
+    REPLACE: "custid, skucd, qty, iscart"
   },
   {
     NAME: "seasonProductFilter",

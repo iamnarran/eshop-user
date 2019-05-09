@@ -22,13 +22,22 @@ const fetch = async (props, onData) => {
     const recipes = await api.recipe.findAll();
     const prodsPackage = await api.packageInfo.findAll();
     const prodsEmart = await api.product.findAllEmartProducts({
-      jumcd: "99"
+      jumcd: "99",
+      startWith: 0,
+      rowCount: 10,
+      orderCol: "price_asc"
     });
     const prodsDiscount = await api.product.findAllDiscountProducts({
-      jumcd: "99"
+      jumcd: "99",
+      startWith: 0,
+      rowCount: 10,
+      orderCol: "price_asc"
     });
     const prodsNew = await api.product.findAllNewProducts({
-      jumcd: "99"
+      jumcd: "99",
+      startWith: 0,
+      rowCount: 10,
+      orderCol: "price_asc"
     });
     const mainBanners = await api.banner.findAll({ type: "A1" });
     const secondaryBanners = await api.banner.findAll({ type: "A2" });

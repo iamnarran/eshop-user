@@ -22,15 +22,24 @@ import checkout from "./checkout";
 import search from "./search";
 import storage from "../utils/storage";
 import customer from "./customer";
+
 let rest = {};
 
 const generateURL = (method, url, replace, data) => {
+  console.log({ replace });
+  console.log({ data });
   if (!replace) return url;
+  console.log({ url });
   let tmpURL = url;
   let tmp = replace.replace(/ /g, "").split(",");
+  console.log({ tmp });
   tmp.forEach(s => {
-    tmpURL = tmpURL.replace(`:${s}`, data && data[s] ? data[s] : "");
+    tmpURL = tmpURL.replace(
+      `:${s}`,
+      data && data[s] != undefined ? data[s] : ""
+    );
   });
+  console.log({ tmpURL });
   return tmpURL;
 };
 
@@ -156,4 +165,5 @@ rest["customer"] = {};
 customer.forEach(api => {
   rest.customer[api.NAME] = data => generateAPI(api, data);
 });
+
 export { rest as default, setAuthorizationHeader };

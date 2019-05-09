@@ -18,6 +18,7 @@ const fetch = async (props, onData) => {
   try {
     const info = await api.categoryInfo.findAllInfo({
       id: props.match.params.id,
+      rowCound: 20,
       orderCol: "price_asc"
     });
 

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { createForm } from "rc-form";
 import clonedeep from "lodash.clonedeep";
 
+import api from "../api";
 import { IMAGE } from "../utils/consts";
 import withCart from "../components/HOC/withCart";
 import { updateCart } from "../actions/cart";
@@ -14,24 +15,38 @@ class Cart extends React.Component {
   state = { products: [], abstractProducts: [] };
 
   componentDidMount() {
-    const products = clonedeep(this.props.cart.products);
-    const abstractProducts = clonedeep(this.props.cart.products);
-
-    this.setState({ products, abstractProducts });
+    if (this.props.isLoggedIn && this.props.user) {
+      api.cart.findAllProducts({ custid: this.props.user.id }).then(res => {
+        if (res.success) {
+          this.setState({
+            products: res.data,
+            abstractProducts: clonedeep(res.data)
+          });
+        } else {
+          this.setState({
+            products: this.props.cart.products,
+            abstractProducts: clonedeep(this.props.cart.products)
+          });
+        }
+      });
+    } else {
+      this.setState({
+        products: this.props.cart.products,
+        abstractProducts: clonedeep(this.props.cart.products)
+      });
+    }
   }
 
-  findAndReplace = abstractProduct => {
-    const localAbstractProduct = clonedeep(abstractProduct);
-    let tempProducts = clonedeep(this.state.abstractProducts);
-    const i = tempProducts
-      .map(prod => prod.cd)
-      .indexOf(localAbstractProduct.cd);
+  findAndReplace = product => {
+    let tempProducts = clonedeep(this.state.products);
+
+    const i = tempProducts.map(prod => prod.cd).indexOf(product.cd);
 
     if (i !== -1) {
-      tempProducts.splice(i, 1, localAbstractProduct);
+      tempProducts.splice(i, 1, product);
     }
 
-    this.setState({ abstractProducts: tempProducts });
+    this.setState({ products: tempProducts });
   };
 
   handleRemoveClick = product => e => {
@@ -39,47 +54,45 @@ class Cart extends React.Component {
     this.props.onRemove(product);
   };
 
-  handleQtyChange = abstractProduct => e => {
-    abstractProduct.qty = parseInt(e.target.value);
-    this.findAndReplace(abstractProduct);
+  handleQtyChange = product => e => {
+    product.qty = parseInt(e.target.value || 1);
+    this.findAndReplace(product);
   };
 
-  handleQtyKeyDown = abstractProduct => e => {
+  handleQtyKeyDown = product => e => {
     if (e.key === "Enter") {
       e.preventDefault();
-      this.changeQty(abstractProduct);
+      this.changeQty(product);
     }
   };
 
-  handleQtyBlur = abstractProduct => e => {
-    this.changeQty(abstractProduct);
+  handleQtyBlur = product => e => {
+    this.changeQty(product);
   };
 
-  changeQty = abstractProduct => {
-    const localAbstractProduct = clonedeep(abstractProduct);
-
-    let product = this.state.products.find(
-      prod => prod.cd === localAbstractProduct.cd
+  changeQty = product => {
+    const abstractProduct = this.state.abstractProducts.find(
+      abstractProd => abstractProd.cd === product.cd
     );
 
-    if (product) {
+    if (abstractProduct) {
       const updatedProduct = this.props.onQtyChange(
-        product,
-        localAbstractProduct.qty
+        abstractProduct,
+        product.qty
       );
-
+      this.props.onUpdateCart(updatedProduct, true);
       this.findAndReplace(updatedProduct);
     }
   };
 
   handleIncrementClick = product => {
-    product = this.props.onUpdateCart(product, true);
-    this.findAndReplace(product);
+    product = this.props.onIncrement(product);
+    this.props.onUpdateCart(product, true);
   };
 
   handleDecrementClick = product => {
-    product = this.props.onUpdateCart(product, true);
-    this.findAndReplace(product);
+    product = this.props.onDecrement(product);
+    this.props.onUpdateCart(product, true);
   };
 
   renderUnitPrice = product => {
@@ -142,7 +155,7 @@ class Cart extends React.Component {
     const { wishlistProducts, deliveryInfo } = this.props.container;
     const { isLoggedIn, user, cart } = this.props;
     const { totalPrice, totalQty } = cart;
-    const products = this.state.abstractProducts;
+    const products = this.state.products;
 
     let content = (
       <div style={{ textAlign: "center" }}>
@@ -150,7 +163,7 @@ class Cart extends React.Component {
       </div>
     );
 
-    if (products && products.length) {
+    if (products.length) {
       content = (
         <table className="table table-borderless">
           <thead className="thead-light">
@@ -171,23 +184,19 @@ class Cart extends React.Component {
               </th>
             </tr>
           </thead>
-          {products.map((product, index) => {
+          {products.map((prod, index) => {
             return (
               <tbody key={index}>
                 <tr>
                   <td>
                     <div className="flex-this">
                       <div className="image-container default">
-                        <Link to={product.route ? product.route : ""}>
+                        <Link to={prod.route ? prod.route : ""}>
                           <span
                             className="image"
                             style={{
                               backgroundImage: `url(${IMAGE}${
-                                product.img
-                                  ? product.img
-                                  : product.imgnm
-                                  ? product.imgnm
-                                  : ""
+                                prod.img ? prod.img : ""
                               })`
                             }}
                           />
@@ -195,22 +204,22 @@ class Cart extends React.Component {
                       </div>
                       <div className="info-container">
                         <Link
-                          to={product.route ? product.route : ""}
+                          to={prod.route ? prod.route : ""}
                           style={{ color: "#6c757d" }}
                         >
-                          <strong>{product.name}</strong>
-                          <span>{product.shortnm}</span>
+                          <strong>{prod.name}</strong>
+                          <span>{prod.shortnm}</span>
                         </Link>
                       </div>
                     </div>
                   </td>
-                  <td>{this.renderUnitPrice(product)}</td>
+                  <td>{this.renderUnitPrice(prod)}</td>
                   <td>
                     <form>
                       <div className="input-group e-input-group">
                         <div className="input-group-prepend" id="button-addon4">
                           <button
-                            onClick={() => this.handleDecrementClick(product)}
+                            onClick={() => this.handleDecrementClick(prod)}
                             className="btn"
                             type="button"
                           >
@@ -220,16 +229,16 @@ class Cart extends React.Component {
                         <input
                           type="text"
                           className="form-control"
-                          value={product.qty}
+                          value={prod.qty}
                           name="productQty"
                           maxLength={5}
-                          onChange={this.handleQtyChange(product)}
-                          onKeyDown={this.handleQtyKeyDown(product)}
-                          onBlur={this.handleQtyBlur(product)}
+                          onChange={this.handleQtyChange(prod)}
+                          onKeyDown={this.handleQtyKeyDown(prod)}
+                          onBlur={this.handleQtyBlur(prod)}
                         />
                         <div className="input-group-append" id="button-addon4">
                           <button
-                            onClick={() => this.handleIncrementClick(product)}
+                            onClick={() => this.handleIncrementClick(prod)}
                             className="btn"
                             type="button"
                           >
@@ -239,7 +248,7 @@ class Cart extends React.Component {
                       </div>
                     </form>
                   </td>
-                  <td>{this.renderTotalPrice(product)}</td>
+                  <td>{this.renderTotalPrice(prod)}</td>
                 </tr>
                 <tr className="table-action">
                   <td colSpan="5">
@@ -255,7 +264,7 @@ class Cart extends React.Component {
                           <button
                             type="button"
                             className="btn btn-link"
-                            onClick={this.handleRemoveClick(product)}
+                            onClick={this.handleRemoveClick(prod)}
                           >
                             <i className="fa fa-times" aria-hidden="true" />{" "}
                             <span>Устгах</span>
@@ -324,7 +333,7 @@ class Cart extends React.Component {
                         <strong>Хадгалсан бараа</strong>
                       </p>
                       <ul className="list-unstyled">
-                        {wishlistProducts.map(product => (
+                        {wishlistProducts.map(wishlistProd => (
                           <li className="flex-this">
                             <div className="image-container default">
                               <a href="#">
@@ -332,7 +341,7 @@ class Cart extends React.Component {
                                   className="image"
                                   style={{
                                     backgroundImage: `url(${IMAGE}${
-                                      product.img
+                                      wishlistProd.img
                                     })`
                                   }}
                                 />
@@ -342,12 +351,12 @@ class Cart extends React.Component {
                               <div className="flex-space">
                                 <a href="#">
                                   <div className="text">
-                                    <span>{product.skunm}</span>
+                                    <span>{wishlistProd.skunm}</span>
                                     <strong>
-                                      {product.sprice
-                                        ? product.sprice
-                                        : product.price
-                                        ? product.price
+                                      {wishlistProd.sprice
+                                        ? wishlistProd.sprice
+                                        : wishlistProd.price
+                                        ? wishlistProd.price
                                         : 0}
                                       ₮
                                     </strong>

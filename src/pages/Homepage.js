@@ -170,9 +170,7 @@ class Homepage extends React.Component {
             elContainer={"banner"}
           />
         </div>
-        <div className="homerenderblocks">
-          {this.renderBlocks(items)}
-        </div>
+        <div className="homerenderblocks">{this.renderBlocks(items)}</div>
 
         <div className="main-slide brands-list">
           <div className="container pad10">
@@ -182,7 +180,6 @@ class Homepage extends React.Component {
 
         <MessengerCustomerChat
           pageId="169275059877520"
-          // appId="570055533421847"
           appId={SOCIAL_IDS.facebook}
           htmlRef={window.location.pathname}
         />
