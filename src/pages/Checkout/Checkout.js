@@ -142,7 +142,7 @@ class Checkout extends React.Component {
       this.errorMsg(
         "Уучлаарай таны сагс хоосон байна. Сагсандаа бараа нэмнэ үү ?"
       );
-      //this.props.history.push("/cart");
+      this.props.history.push("/cart");
     }
     if (this.props.isLoggedIn == true) {
       this.getUserInfo(this.props.user);
