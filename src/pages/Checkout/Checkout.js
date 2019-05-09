@@ -142,7 +142,7 @@ class Checkout extends React.Component {
       this.errorMsg(
         "Уучлаарай таны сагс хоосон байна. Сагсандаа бараа нэмнэ үү ?"
       );
-      this.props.history.push("/cart");
+      //this.props.history.push("/cart");
     }
     if (this.props.isLoggedIn == true) {
       this.getUserInfo(this.props.user);
@@ -297,7 +297,6 @@ class Checkout extends React.Component {
     let regno = refs.regno.value;
     refs.regno.value = "";
     await api.checkout.getCompanyRegno({ regNo: regno }).then(res => {
-      console.log(res);
       if (res.success == true) {
         if (res.data.name != "") {
           res.data.regno = regno;
@@ -402,15 +401,21 @@ class Checkout extends React.Component {
     this.setState({ chosenPlusRadio: e.target.id });
   };
 
-  onSubmit = (e, validateFields) => {
+  onSubmit = (e, form) => {
     e.preventDefault();
+
     const { defaultAddress, userAddress, addresstype } = this.state;
     let tmp = [];
     let chosenInfo = {};
     if (e.target.name == "delivery") {
-      validateFields((err, values) => {
+      form.validateFields((err, values) => {
         if (!err) {
-          chosenInfo.address = values.address;
+          if (values.address == undefined) {
+            chosenInfo.address = values.addresstype;
+          } else {
+            chosenInfo.address = values.address;
+          }
+
           chosenInfo.lastName = values.lastName;
           chosenInfo.mainLocation = values.mainLocation;
           chosenInfo.subLocation = values.subLocation;
@@ -433,10 +438,10 @@ class Checkout extends React.Component {
               let adrs = {};
               adrs.custid = this.state.userInfo.id;
               adrs.locid = values.commiteLocation;
-              adrs.address = values.address;
+              adrs.address = values.addresstype;
               adrs.isenable = "Идэвхтэй";
-              chosenInfo.address = values.address;
-              chosenInfo.addressnm = values.address;
+              chosenInfo.address = values.addresstype;
+              chosenInfo.addressnm = values.addresstype;
               chosenInfo.isNew = true;
               this.setUser(adrs);
             }
@@ -446,7 +451,7 @@ class Checkout extends React.Component {
             console.log(err);
           }
         } else {
-          console.log("error");
+          tmp.push("2");
         }
       });
     } else if (e.target.name == "payment") {
@@ -465,6 +470,7 @@ class Checkout extends React.Component {
 
   setUser = async adrs => {
     const res = await this.props.saveUserAddress(adrs);
+    console.log(res);
     if (res.success) {
       let tmp = this.state.chosenInfo;
       tmp.address = res.data;
@@ -472,7 +478,7 @@ class Checkout extends React.Component {
     }
   };
 
-  changeTab = e => {
+  changeTab = (e, form) => {
     const { deliveryTypes } = this.props.container;
     deliveryTypes.map((item, i) => {
       if (item.id == e) {
@@ -532,7 +538,6 @@ class Checkout extends React.Component {
       await api.checkout
         .checkpass({ cardno: epointcard.cardno, pincode: password })
         .then(res => {
-          console.log(res);
           if (res.success == true) {
             let tmp = epointcard;
             if (
@@ -573,6 +578,8 @@ class Checkout extends React.Component {
     } = this.state;
     let data;
     let addrs;
+    console.log(userAddress);
+    console.log(chosenInfo, "chos");
     if (userAddress.length !== 0) {
       if (!chosenInfo.isNew) {
         userAddress.map((item, i) => {
@@ -600,6 +607,8 @@ class Checkout extends React.Component {
           data = this.props.container.bankInfo;
         } else if (chosenPayment.id == 3) {
           type = "qpay";
+        } else if (chosenPayment.id == 1) {
+          type = "emarchant";
         }
         MySwal.fire({
           html: (
@@ -702,6 +711,34 @@ class Checkout extends React.Component {
     });
   };
 
+  addAddress = (value, event, form) => {
+    if (value == null) {
+      form.setFieldsInitialValue({
+        mainLocation: "",
+        subLocation: "",
+        commiteLocation: ""
+      });
+      this.setState({ addresstype: "new" });
+    } else {
+      this.getLocs(value);
+    }
+  };
+
+  getLocs = async id => {
+    await api.checkout.getlocs({ locid: id }).then(res => {
+      if (res.success == true) {
+        this.props.form.setFieldsInitialValue({
+          address: res.data.address,
+          mainLocation: res.data.provincenm,
+          subLocation: res.data.districtnm,
+          commiteLocation: res.data.committeenm
+        });
+      } else {
+        console.log("aldaa");
+      }
+    });
+  };
+
   closeSwal = e => {
     this.props.history.push("/");
   };
@@ -779,9 +816,10 @@ class Checkout extends React.Component {
                         >
                           <DeliveryPanel
                             deliveryTypes={deliveryTypes}
+                            addAddress={this.addAddress}
                             changeTab={this.changeTab}
                             onSubmit={this.onSubmit}
-                            addresstype={this.addresstype}
+                            addresstype={this.state.addresstype}
                             onChangeMainLoc={this.onChangeMainLoc}
                             onChangeSubLoc={this.onChangeSubLoc}
                             getFieldDecorator={getFieldDecorator}

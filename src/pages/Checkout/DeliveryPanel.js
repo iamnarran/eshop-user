@@ -35,7 +35,6 @@ class DeliveryPanel extends React.Component {
             }
           });
           //this.state.defaultAddress.provinceid = 11;
-          console.log(this.state.defaultAddress);
           this.props.form.setFieldsInitialValue({
             address: this.state.defaultAddress.id,
             mainLocation: this.state.defaultAddress.provincenm,
@@ -134,16 +133,16 @@ class DeliveryPanel extends React.Component {
   };
 
   addAddress = (value, event) => {
-    const { changeAddressType } = this.props;
-    changeAddressType("new");
+    const { addAddress } = this.props;
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        addAddress(value, event, this.props.form);
+      }
+    });
+    //changeAddressType("new");
     if (value == null) {
+      this.props.form.resetFields();
       this.setState({ addresstype: "new" });
-      this.props.form.setFieldsInitialValue({
-        address: "",
-        mainLocation: "",
-        subLocation: "",
-        commiteLocation: ""
-      });
     } else {
       this.getLocs(value);
     }
@@ -174,7 +173,7 @@ class DeliveryPanel extends React.Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { addresstype } = this.state;
+    //const { addresstype } = this.state;
     const {
       deliveryTypes,
       changeTab,
@@ -183,15 +182,20 @@ class DeliveryPanel extends React.Component {
       onChangeSubLoc,
       addAddress,
       deliveryId,
-      key
+      key,
+      addresstype
     } = this.props;
+    const style = {
+      color: "#feb415"
+    };
     return (
-      <Tabs onChange={e => changeTab(e)}>
+      <Tabs onChange={e => changeTab(e, this.props.form)} defaultActiveKey="1">
         {deliveryTypes.map((item, i) => {
           let k = item.logo;
           if (deliveryId == item.id) {
             k = item.logo.split(".")[0] + "color." + item.logo.split(".")[1];
           }
+          // k = item.logo.split(".")[0] + "color." + item.logo.split(".")[1];
           return (
             <TabPane
               tab={
@@ -218,32 +222,42 @@ class DeliveryPanel extends React.Component {
                 aria-labelledby="home-tab"
               >
                 <p className="text">{item.featuretxt}</p>
-
                 <Form
-                  onSubmit={e => onSubmit(e, this.props.form.validateFields)}
+                  onSubmit={e => onSubmit(e, this.props.form)}
                   name="delivery"
                 >
                   <div className="row row10">
                     {item.id != 3 ? (
                       <div className="col-xl-12 col-md-12">
-                        <Form.Item>
-                          {getFieldDecorator("address", {
-                            rules: [
-                              {
-                                required: true,
-                                message: "Хаяг оруулна уу"
-                              }
-                            ]
-                          })(
-                            addresstype == "new" ? (
+                        {addresstype == "new" ? (
+                          <Form.Item>
+                            {getFieldDecorator("addresstype", {
+                              rules: [
+                                {
+                                  required: true,
+                                  message: "Хаяг оруулна уу"
+                                }
+                              ]
+                            })(
                               <Input
                                 type="text"
                                 placeholder="Хаягаа сонгоно уу ?*"
                               />
-                            ) : (
+                            )}
+                          </Form.Item>
+                        ) : (
+                          <Form.Item>
+                            {getFieldDecorator("address", {
+                              rules: [
+                                {
+                                  required: true,
+                                  message: "Хаяг оруулна уу"
+                                }
+                              ]
+                            })(
                               <Select
                                 onSelect={(value, event) =>
-                                  this.addAddress(value, event)
+                                  addAddress(value, event, this.props.form)
                                 }
                                 placeholder="Хаягаа сонгоно уу ?"
                               >
@@ -258,9 +272,9 @@ class DeliveryPanel extends React.Component {
                                   </div>
                                 </Option>
                               </Select>
-                            )
-                          )}
-                        </Form.Item>
+                            )}
+                          </Form.Item>
+                        )}
                       </div>
                     ) : (
                       ""
@@ -380,6 +394,7 @@ class DeliveryPanel extends React.Component {
                     </div>
                   </div>
                   <hr />
+
                   <div className="text-right">
                     <button
                       className="btn btn-main"
@@ -406,4 +421,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default Form.create({ name: "checkout" })(DeliveryPanel);
+export default Form.create({ name: "checkoutdelivery" })(DeliveryPanel);
