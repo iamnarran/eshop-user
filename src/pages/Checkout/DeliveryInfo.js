@@ -63,7 +63,11 @@ class DeliveryInfo extends React.Component {
               <strong>{delivery == [] ? "" : delivery.typenm}</strong>
             </p>
             <p className="text flex-this">
-              <i className="fa fa-user" aria-hidden="true" />
+              <i
+                className="fa fa-user"
+                aria-hidden="true"
+                style={{ color: "#feb415" }}
+              />
               <span>
                 {userInfo.length == 0
                   ? ""
@@ -71,7 +75,11 @@ class DeliveryInfo extends React.Component {
               </span>
             </p>
             <p className="text flex-this">
-              <i className="fa fa-phone" aria-hidden="true" />
+              <i
+                className="fa fa-phone"
+                aria-hidden="true"
+                style={{ color: "#feb415" }}
+              />
               <span>
                 {chosenInfo.length != 0
                   ? chosenInfo.phone1 + ", " + chosenInfo.phone2
@@ -79,7 +87,11 @@ class DeliveryInfo extends React.Component {
               </span>
             </p>
             <p className="text flex-this">
-              <i className="fa fa-map-marker" aria-hidden="true" />
+              <i
+                className="fa fa-map-marker"
+                aria-hidden="true"
+                style={{ color: "#feb415" }}
+              />
               <span>
                 {chosenDeliveryAddrName.length != 0
                   ? chosenDeliveryAddrName.mainLocation +

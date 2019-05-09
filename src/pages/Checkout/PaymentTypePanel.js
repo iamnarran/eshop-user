@@ -27,7 +27,7 @@ class PaymentTypePanel extends React.Component {
           <label className="card radio-card" key={i}>
             <div
               className="radio-button-container"
-              style={{ marginTop: "7px" }}
+              style={{ marginTop: "5px" }}
             >
               <input
                 className="form-check-input radio-button"
@@ -37,6 +37,7 @@ class PaymentTypePanel extends React.Component {
                 id={item.id}
                 onChange={this.changeRadio}
               />
+              <span className="checkmark" style={{ right: "15px" }} />
             </div>
             <h5 className="title radio-button-title">
               <i

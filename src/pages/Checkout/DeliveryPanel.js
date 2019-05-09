@@ -188,16 +188,20 @@ class DeliveryPanel extends React.Component {
     return (
       <Tabs onChange={e => changeTab(e)}>
         {deliveryTypes.map((item, i) => {
+          let k = item.logo;
+          if (deliveryId == item.id) {
+            k = item.logo.split(".")[0] + "color." + item.logo.split(".")[1];
+          }
           return (
             <TabPane
               tab={
                 <div className="flex-this center">
                   <img
                     alt="icon"
-                    className={deliveryId == item.id ? "filteredImg" : ""}
+                    //className={deliveryId == item.id ? "filteredImg" : ""}
                     width="40px"
                     height="40px"
-                    src={require("../../scss/assets/images/demo/" + item.logo)}
+                    src={require("../../scss/assets/images/demo/" + k)}
                   />
                   <p className="text">
                     <strong>{item.typenm}</strong>

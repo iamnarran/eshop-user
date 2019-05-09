@@ -164,6 +164,7 @@ class Checkout extends React.Component {
     let value = e.target.value;
     let len = e.target.value.length;
     this.setState({ regNoInput: e.target.value });
+    // console.log(value[len]);
     /* if (len == 1) {
       if (isNaN(value.slice(0, 1))) {
         if (/[а-яА-ЯЁёӨөҮү]/.test(value.slice(0, 1))) {
@@ -730,7 +731,11 @@ class Checkout extends React.Component {
         <div className="container pad10">
           <div className="checkout-container">
             <div className="btn btn-gray">
-              <i className="fa fa-chevron-left" aria-hidden="true">
+              <i
+                className="fa fa-chevron-left"
+                aria-hidden="true"
+                style={{ color: "#feb415" }}
+              >
                 {" "}
               </i>
               <Link to="/cart">

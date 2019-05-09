@@ -37,6 +37,7 @@ class PaymentPanel extends React.Component {
               id="1"
               onChange={e => plusRadioChanged(e)}
             />
+
             <label className="form-check-label">Хувь хүн</label>
           </div>
           <div className="form-check">
