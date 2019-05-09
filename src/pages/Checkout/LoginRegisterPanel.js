@@ -134,7 +134,7 @@ class LoginRegisterPanel extends React.Component {
                   )}
                 </Form.Item>
               </div>
-              <div className="col-xl-12 pad10">
+              <div className="col-xl-6 pad10">
                 <Form.Item>
                   {getFieldDecorator("email", {
                     rules: [
@@ -170,7 +170,7 @@ class LoginRegisterPanel extends React.Component {
                   )}
                 </Form.Item>
               </div>
-              <div className="col-xl-12 pad10">
+              <div className="col-xl-6 pad10">
                 <Form.Item>
                   {getFieldDecorator("password", {
                     rules: [
@@ -183,6 +183,24 @@ class LoginRegisterPanel extends React.Component {
                     <Input
                       type="password"
                       placeholder="Нууц үг*"
+                      className="form-control"
+                    />
+                  )}
+                </Form.Item>
+              </div>
+              <div className="col-xl-6 pad10">
+                <Form.Item>
+                  {getFieldDecorator("confirmpassword", {
+                    rules: [
+                      {
+                        required: true,
+                        message: "Нууц үг оруулна уу ?"
+                      }
+                    ]
+                  })(
+                    <Input
+                      type="password"
+                      placeholder="Нууц үг давт*"
                       className="form-control"
                     />
                   )}

@@ -60,9 +60,11 @@ class Checkout extends React.Component {
   errorMsg = txt => {
     MySwal.hideLoading();
     MySwal.fire({
-      //type: "error",
+      type: "error",
       text: txt,
-      animation: false
+      animation: false,
+      width: "25rem",
+      confirmButtonColor: "#feb415"
     });
   };
 
@@ -72,7 +74,9 @@ class Checkout extends React.Component {
       type: "success",
       title: "Амжилттай",
       text: txt,
-      animation: false
+      animation: false,
+      width: "25rem",
+      confirmButtonColor: "#feb415"
     });
   };
 
@@ -138,7 +142,7 @@ class Checkout extends React.Component {
       this.errorMsg(
         "Уучлаарай таны сагс хоосон байна. Сагсандаа бараа нэмнэ үү ?"
       );
-      this.props.history.push("/cart");
+      //this.props.history.push("/cart");
     }
     if (this.props.isLoggedIn == true) {
       this.getUserInfo(this.props.user);
@@ -262,11 +266,11 @@ class Checkout extends React.Component {
     );
   };
 
-  saveCustomerCard = async e => {
+  saveCustomerCard = async (e, refs) => {
     e.preventDefault();
 
-    let cardpass = this.refs.cardpass.value;
-    let cardno = this.refs.cardno.value;
+    let cardpass = refs.cardpass.value;
+    let cardno = refs.cardno.value;
     if (cardpass != "" && cardno != "") {
       MySwal.showLoading();
       let tmp = {
@@ -279,7 +283,7 @@ class Checkout extends React.Component {
           this.setState({ epointcard: res.data });
           this.successMsg("Таны бүртгэлийг Ипойнт карттай амжилттай холболоо");
         } else {
-          this.errorMsg("Хэрэглэгчийн картын дугар эсвэл нууц үг таарсангүй.");
+          this.errorMsg(res.data);
         }
       });
     } else {
@@ -354,7 +358,7 @@ class Checkout extends React.Component {
       <div className="title-container flex-space">
         <h5 className="title">
           <a className="flex-this">
-            <i className="fa fa-credit-card" aria-hidden="true" />
+            <i className="fa fa-truck" aria-hidden="true" />
             <span>Хүргэлтийн төрөл</span>
           </a>
         </h5>
@@ -525,6 +529,7 @@ class Checkout extends React.Component {
       await api.checkout
         .checkpass({ cardno: epointcard.cardno, pincode: password })
         .then(res => {
+          console.log(res);
           if (res.success == true) {
             let tmp = epointcard;
             if (

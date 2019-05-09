@@ -92,7 +92,7 @@ class SwalModals extends React.Component {
                     <div className="message">
                       <h5 className="title flex-this flex-space">
                         <span className="text-uppercase">
-                          Захиалга {ordData.ordernumber}
+                          Захиалга <strong>{ordData.ordernumber}</strong>
                         </span>
                       </h5>
                       <ul className="list-unstyled class">
@@ -103,25 +103,25 @@ class SwalModals extends React.Component {
                           </strong>
                         </li>
                         <li className="flex-this flex-space">
-                          <span>Мөнгөн дүн</span>
+                          <span>Мөнгөн дүн:</span>
                           <strong className="big">
                             {formatter.format(products.totalPriceInCart)}₮
                           </strong>
                         </li>
                         <li className="flex-this flex-space">
-                          <span>Төлбөрийн төрөл</span>
+                          <span>Төлбөрийн төрөл:</span>
                           <strong className="big">{chosenPayment.name}</strong>
                         </li>
                         <li className="flex-this flex-space">
-                          <span>Банк</span>
+                          <span>Банк:</span>
                           <strong className="big">{bankInfo.banknm}</strong>
                         </li>
                         <li className="flex-this flex-space">
-                          <span>Дансны дугаар</span>
+                          <span>Дансны дугаар:</span>
                           <strong className="big">{bankInfo.account}</strong>
                         </li>
                         <li className="flex-this flex-space">
-                          <span>Хүлээн авагч</span>
+                          <span>Хүлээн авагч:</span>
                           <strong className="big">{bankInfo.name}</strong>
                         </li>
                       </ul>
@@ -129,7 +129,7 @@ class SwalModals extends React.Component {
                     <div className="user-detail">
                       <h5 className="title flex-this flex-space">
                         <span className="text-uppercase">
-                          Хүргэлтийн мэдээлэл
+                          Хүргэлтийн мэдээлэл:
                         </span>
                       </h5>
                       <p className="text flex-this">
@@ -171,20 +171,20 @@ class SwalModals extends React.Component {
                     </div>
                     <div className="bottom-text text-center">
                       <p>
-                        Та төлбөрөө 2 цагийн дотор төлснөөр таны захиалга
-                        баталгаажиж идэвхжинэ. Тус хугацаанд төлбөр төлөгдөөгүй
-                        тохиолдолд тус захиалгыг автоматаар цуцлах болохыг
-                        анхаарна уу. <br />
+                        Та төлбөрөө <strong>2</strong> цагийн дотор төлснөөр
+                        таны захиалга баталгаажиж идэвхжинэ. Тус хугацаанд
+                        төлбөр төлөгдөөгүй тохиолдолд захиалгыг автоматаар
+                        цуцлах болохыг анхаарна уу. <br />
                         Төлбөрийг дээрх дансанд шилжүүлэх ба захиалгын{" "}
-                        {ordData.ordernumber} дугаарын гүйлгээний утга дээр
+                        {ordData.ordernumber} дугаарыг гүйлгээний утга дээр
                         заавал бичнэ үү.
                         <br />
                         <br />
                         Хүргэлттэй холбоотой лавлах зүйлс байвал доорх утсаар
-                        холбогдоно уу ? Баярлалаа :)
+                        холбогдоно уу. Баярлалаа
                       </p>
                       <strong className="text-uppercase">
-                        Лавлах утас: 7700 7700
+                        Лавлах утас: 7611 0101
                       </strong>
                     </div>
                     <div className="btn-container text-center">

@@ -139,7 +139,7 @@ class PaymentPanel extends React.Component {
                 <button
                   type="submit"
                   className="btn btn-main solid"
-                  onClick={e => saveCustomerCard(e)}
+                  onClick={e => saveCustomerCard(e, this.refs)}
                 >
                   <span className="text-uppercase">Холбох</span>
                 </button>
