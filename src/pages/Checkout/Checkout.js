@@ -142,7 +142,7 @@ class Checkout extends React.Component {
       this.errorMsg(
         "Уучлаарай таны сагс хоосон байна. Сагсандаа бараа нэмнэ үү ?"
       );
-      //this.props.history.push("/cart");
+      this.props.history.push("/cart");
     }
     if (this.props.isLoggedIn == true) {
       this.getUserInfo(this.props.user);
@@ -293,9 +293,11 @@ class Checkout extends React.Component {
 
   getCompanyRegno = async (e, refs) => {
     e.preventDefault();
+    //MySwal.showLoading();
     let regno = refs.regno.value;
     refs.regno.value = "";
     await api.checkout.getCompanyRegno({ regNo: regno }).then(res => {
+      console.log(res);
       if (res.success == true) {
         if (res.data.name != "") {
           res.data.regno = regno;
@@ -304,6 +306,7 @@ class Checkout extends React.Component {
           this.setState({ companyInfo: [] });
           this.errorMsg("Татвар төлөгч бүртгэлгүй байна");
         }
+        // MySwal.hideLoading();
       } else {
         this.setState({ companyInfo: [] });
         this.errorMsg("Татвар төлөгч бүртгэлгүй байна");
