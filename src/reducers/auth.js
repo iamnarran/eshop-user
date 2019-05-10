@@ -18,12 +18,14 @@ export default typeToReducer(
     [SET_USER]: (state, action) => ({
       ...state,
       isLoggedIn: true,
-      user: action.payload
+      user: action.payload,
+      action: SET_USER
     }),
     [SIGN_OUT]: state => ({
       ...state,
       isLoggedIn: false,
-      user: null
+      user: null,
+      action: SIGN_OUT
     }),
     [SHOW_LOGIN_MODAL]: state => ({
       ...state,

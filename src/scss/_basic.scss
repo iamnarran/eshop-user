@@ -2780,17 +2780,29 @@ MuiInputBase-input-49 MuiOutlinedInput-input-34 MuiInputBase-inputType-52 {
   font-size: 0.9rem !important;
 }
 
+.swal2-styled.swal2-cancel {
+  font-size: 0.9rem !important;
+}
+
 .swal2-styled.swal2-confirm {
   padding: 0.5rem 1rem !important;
 }
 
-.filteredImg {
-  filter: grayscale(10);
+.swal2-actions {
+  margin: 0em auto 0 !important;
+}
+
+.swal2-styled.swal2-cancel {
+  padding: 0.5rem 1rem !important;
+}
+
+.filteredImg1 {
+  -webkit-filter: opacity(0.5) drop-shadow(0 0 0 yellow);
+  filter: opacity(0.5) drop-shadow(0 0 0 yellow);
 }
 
 .filteredImg {
-  -webkit-filter: opacity(0.5) drop-shadow(0 0 0 purple) !important;
-  filter: opacity(0.5) drop-shadow(0 0 0 purple) !important;
+  color: #feb415;
 }
 
 .ant-tabs-ink-bar {
@@ -2847,6 +2859,7 @@ MuiInputBase-input-49 MuiOutlinedInput-input-34 MuiInputBase-inputType-52 {
 .swal2-icon.swal2-error {
   width: 35px !important;
   height: 35px !important;
+  margin: 0em auto 0.8em;
 }
 
 .swal2-icon.swal2-error [class^="swal2-x-mark-line"] {
