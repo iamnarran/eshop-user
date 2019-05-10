@@ -13,7 +13,7 @@ import LoginRegisterPanel from "./LoginRegisterPanel";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { showLoginModal } from "../../actions/login";
-import { parse } from "querystring";
+import { updateCart } from "../../actions/cart";
 const err = require("../../scss/assets/icon/error.png");
 const MySwal = withReactContent(Swal);
 const Panel = Collapse.Panel;
@@ -22,7 +22,8 @@ const Panel = Collapse.Panel;
   {
     saveUserAddress: actions.saveUserAddress,
     sentPayment: actions.sentPayment,
-    showLoginModal: showLoginModal
+    showLoginModal: showLoginModal,
+    updateCart
   }
 )
 class Checkout extends React.Component {
@@ -135,15 +136,29 @@ class Checkout extends React.Component {
     return tmp;
   };
 
+  handleClear = () => {
+    let { cart } = this.props;
+    console.log(cart, "fbjhb");
+    console.log(this.props);
+    //if (cart) {
+    this.props.updateCart({
+      products: [],
+      totalQty: 0,
+      totalPrice: 0
+    });
+    // }
+  };
+
   componentWillMount() {
     const { deliveryTypes, paymentTypes, bankInfo } = this.props.container;
-    const { cart } = this.props;
+    const { cart, auth } = this.props;
     if (cart.products.length == 0) {
       this.errorMsg(
         "Уучлаарай таны сагс хоосон байна. Сагсандаа бараа нэмнэ үү ?"
       );
       this.props.history.push("/cart");
     }
+
     if (this.props.isLoggedIn == true) {
       this.getUserInfo(this.props.user);
     }
@@ -616,7 +631,6 @@ class Checkout extends React.Component {
               type={type}
               data={data}
               ordData={res.data}
-              changePage={this.changePage}
               readyBtn={this.handlePayment}
             />
           ),
@@ -745,6 +759,8 @@ class Checkout extends React.Component {
 
   changePage = (e, item) => {
     MySwal.close();
+    console.log(item, "wfdgkaj");
+    this.handleClear();
     this.props.history.push(item);
   };
 

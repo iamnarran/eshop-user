@@ -26,20 +26,15 @@ import customer from "./customer";
 let rest = {};
 
 const generateURL = (method, url, replace, data) => {
-  console.log({ replace });
-  console.log({ data });
   if (!replace) return url;
-  console.log({ url });
   let tmpURL = url;
   let tmp = replace.replace(/ /g, "").split(",");
-  console.log({ tmp });
   tmp.forEach(s => {
     tmpURL = tmpURL.replace(
       `:${s}`,
       data && data[s] != undefined ? data[s] : ""
     );
   });
-  console.log({ tmpURL });
   return tmpURL;
 };
 

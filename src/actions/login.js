@@ -9,7 +9,6 @@ import {
 
 export const setUser = user => {
   setAuthorizationHeader(user.token);
-
   return {
     type: SET_USER,
     payload: user
