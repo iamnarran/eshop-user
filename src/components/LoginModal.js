@@ -14,6 +14,7 @@ import actions, {
 import RegisterModal from "./RegisterModal";
 import storage from "../utils/storage";
 import withCart from "./HOC/withCart";
+import api from "../api";
 
 class LoginModal extends React.Component {
   state = {
@@ -68,28 +69,42 @@ class LoginModal extends React.Component {
           const res = await this.props.login(form);
           if (res.success) {
             storage.set("access_token", res.data[0].info.access_token);
-            this.props.setUser(res.data[0].info.customerInfo);
 
-            // this.props.cart.products.forEach(prod => {
-            //   this.props.onUpdateCart(prod);
-            // });
+            const customer = res.data[0].info.customerInfo;
+            this.props.setUser(customer);
 
-            // const qties = res.data[0].basket.map(prod => prod.qty);
-            // const totalQty = qties.reduce((acc, cur) => acc + cur);
+            let { products } = this.props.cart;
+            if (products.length) {
+              products.forEach(prod => {
+                this.props.onUpdateCart(prod);
+              });
 
-            // const prices = res.data[0].basket.map(prod => {
-            //   const price =
-            //     this.getUnitPrice(prod).sprice || this.getUnitPrice(prod).price;
+              api.cart.findAllProducts({ custid: customer.id }).then(res => {
+                if (res.success) {
+                  products = res.data;
+                }
+              });
+            } else {
+              products = res.data[0].basket;
+            }
 
-            //   return price * prod.qty;
-            // });
-            // const totalPrice = prices.reduce((acc, cur) => acc + cur);
+            const qties = products.map(prod => prod.qty);
+            const totalQty = qties.reduce((acc, cur) => acc + cur);
 
-            // this.props.updateCart({
-            //   products: cart.products,
-            //   totalQty,
-            //   totalPrice
-            // });
+            const prices = products.map(prod => {
+              const price =
+                this.props.getUnitPrice(prod).sprice ||
+                this.props.getUnitPrice(prod).price;
+
+              return price * prod.qty;
+            });
+            const totalPrice = prices.reduce((acc, cur) => acc + cur);
+
+            this.props.updateCart({
+              products,
+              totalQty,
+              totalPrice
+            });
 
             this.props.cart.totalQty = this.setState({ isLoading: false });
             this.handleOk();
@@ -107,29 +122,6 @@ class LoginModal extends React.Component {
     });
   };
 
-  getUnitPrice = product => {
-    if (product.sprice) {
-      if (product.issalekg && product.kgproduct[0]) {
-        // Хямдарсан бөгөөд кг-ын бараа
-        return {
-          price: product.kgproduct[0].salegramprice,
-          sprice: product.kgproduct[0].salegramprice
-        };
-      }
-
-      // Хямдарсан бараа
-      return { price: product.price, sprice: product.sprice };
-    }
-
-    if (product.issalekg && product.kgproduct[0]) {
-      // Хямдраагүй бөгөөд кг-ын бараа
-      return { price: product.kgproduct[0].salegramprice, sprice: null };
-    }
-
-    // Хямдраагүй бараа
-    return { price: product.price, sprice: null };
-  };
-
   render() {
     const { getFieldDecorator } = this.props.form;
 
@@ -142,102 +134,100 @@ class LoginModal extends React.Component {
           onOk={this.handleOk}
           onCancel={this.handleCancel}
         >
-          <div className="modal-body">
-            <form onSubmit={this._submit}>
-              <div className="form-group">
-                <label htmlFor="email" className="sr-only">
-                  Имэйл
-                </label>
-                {getFieldDecorator("email", {
-                  rule: [
-                    {
-                      required: true,
-                      message: "Имэйл хаяг оруулна уу"
-                    }
-                  ],
-                  initialValue: "tulgaa@datacare.mn"
-                })(
-                  <input
-                    type="email"
-                    className="form-control"
-                    id="email"
-                    aria-describedby="emailHelp"
-                    placeholder="Имэйл"
-                  />
-                )}
-              </div>
-              <div className="form-group">
-                <label htmlFor="password" className="sr-only">
-                  Нууц үг
-                </label>
-                {getFieldDecorator("password", {
-                  rule: [
-                    {
-                      required: true,
-                      message: "Нууц үг оруулна уу"
-                    }
-                  ],
-                  initialValue: "123123"
-                })(
-                  <input
-                    type="password"
-                    className="form-control"
-                    id="password"
-                    aria-describedby="passwordHelp"
-                    placeholder="Нууц үг"
-                  />
-                )}
-              </div>
-              <div className="form-group">
-                <div className="row row10">
-                  <div className="col-xl-6 pad10">
-                    <div className="custom-control custom-checkbox">
-                      <input
-                        type="checkbox"
-                        className="custom-control-input"
-                        id="rememberMe"
-                      />
-                      <label
-                        className="custom-control-label"
-                        htmlFor="rememberMe"
-                      >
-                        Сануулах
-                      </label>
-                    </div>
+          <form onSubmit={this._submit}>
+            <div className="form-group">
+              <label htmlFor="email" className="sr-only">
+                Имэйл
+              </label>
+              {getFieldDecorator("email", {
+                rule: [
+                  {
+                    required: true,
+                    message: "Имэйл хаяг оруулна уу"
+                  }
+                ],
+                initialValue: "tulgaa@datacare.mn"
+              })(
+                <input
+                  type="email"
+                  className="form-control"
+                  id="email"
+                  aria-describedby="emailHelp"
+                  placeholder="Имэйл"
+                />
+              )}
+            </div>
+            <div className="form-group">
+              <label htmlFor="password" className="sr-only">
+                Нууц үг
+              </label>
+              {getFieldDecorator("password", {
+                rule: [
+                  {
+                    required: true,
+                    message: "Нууц үг оруулна уу"
+                  }
+                ],
+                initialValue: "123123"
+              })(
+                <input
+                  type="password"
+                  className="form-control"
+                  id="password"
+                  aria-describedby="passwordHelp"
+                  placeholder="Нууц үг"
+                />
+              )}
+            </div>
+            <div className="form-group">
+              <div className="row row10">
+                <div className="col-xl-6 pad10">
+                  <div className="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      className="custom-control-input"
+                      id="rememberMe"
+                    />
+                    <label
+                      className="custom-control-label"
+                      htmlFor="rememberMe"
+                    >
+                      Сануулах
+                    </label>
                   </div>
-                  <div className="col-xl-6 pad10">
-                    <div className="text-right">
-                      <Link to="" className="btn btn-link">
-                        Нууц үгээ мартсан
-                      </Link>
-                    </div>
+                </div>
+                <div className="col-xl-6 pad10">
+                  <div className="text-right">
+                    <Link to="" className="btn btn-link">
+                      Нууц үгээ мартсан
+                    </Link>
                   </div>
                 </div>
               </div>
-
-              <Button
-                type="primary"
-                className="btn btn-block btn-login text-uppercase"
-                htmlType="submit"
-              >
-                Нэвтрэх
-              </Button>
-            </form>
-
-            <span className="divide-maker">Эсвэл</span>
-
-            <FacebookLogin onFbSuccess={this.handleSocialSuccess} />
-            <GoogleLogin onGoogleSuccess={this.handleSocialSuccess} />
-
-            <div className="text-center">
-              <Link
-                to=""
-                className="btn btn-link"
-                onClick={this.showRegisterModal}
-              >
-                Та шинээр бүртгүүлэх бол ЭНД ДАРЖ бүртгүүлнэ үү
-              </Link>
             </div>
+
+            <Button
+              type="primary"
+              className="btn btn-block btn-login text-uppercase"
+              htmlType="submit"
+            >
+              Нэвтрэх
+            </Button>
+          </form>
+
+          <span className="divide-maker">Эсвэл</span>
+
+          <FacebookLogin onFbSuccess={this.handleSocialSuccess} />
+          <GoogleLogin onGoogleSuccess={this.handleSocialSuccess} />
+
+          <div className="text-center">
+            <Link
+              to=""
+              className="btn btn-link"
+              onClick={this.showRegisterModal}
+            >
+              Та шинээр бүртгүүлэх бол ЭНД ДАРЖ бүртгүүлнэ үү
+            </Link>
           </div>
         </Modal>
         <RegisterModal

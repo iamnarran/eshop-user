@@ -25,7 +25,7 @@ class Label extends React.Component {
     } else {
       content = (
         <div>
-          {data.content ? <strong>{data.content}</strong> : ""}
+          {data.content != undefined ? <strong>{data.content}</strong> : ""}
           <small>{data.text ? data.text : ""}</small>
         </div>
       );

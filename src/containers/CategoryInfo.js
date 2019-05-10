@@ -18,11 +18,11 @@ const fetch = async (props, onData) => {
   try {
     const info = await api.categoryInfo.findAllInfo({
       id: props.match.params.id,
-      rowCound: 20,
-      orderCol: "price_asc"
+      rowcount: 20,
+      ordercol: "price_asc"
     });
 
-    console.log("info", info);
+    console.log({ info });
 
     onData(null, {
       container: {
