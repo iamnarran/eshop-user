@@ -20,8 +20,10 @@ const fetch = async (props, onData) => {
     const { isLoggedIn, user } = props;
     let wishlistProducts = [];
     if (isLoggedIn && user) {
-      wishlistProducts = await api.customer.getWishList(user.id);
+      wishlistProducts = await api.customer.getWishList({ custid: user.id });
     }
+
+    console.log({ wishlistProducts });
 
     const staticInfo = await api.staticInfo.findAll();
 

@@ -333,8 +333,8 @@ class Cart extends React.Component {
                         <strong>Хадгалсан бараа</strong>
                       </p>
                       <ul className="list-unstyled">
-                        {wishlistProducts.map(wishlistProd => (
-                          <li className="flex-this">
+                        {wishlistProducts.map((wishlistProd, index) => (
+                          <li className="flex-this" key={index}>
                             <div className="image-container default">
                               <a href="#">
                                 <span
