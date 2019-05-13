@@ -33,17 +33,17 @@ class Component extends React.Component {
     );
   };
 
-  renderType = status => {
+  renderType = item => {
     return (
       <span
         style={{
-          padding: "2px",
-          backgroundColor: "#8ec63f",
-          color: "white",
+          padding: "5px 10px",
+          backgroundColor: item.customerstatuscolor,
+          color: "rgba(0, 0, 0, 0.65)",
           borderRadius: "15px"
         }}
       >
-        {status}
+        {item.statusnm}
       </span>
     );
   };
@@ -64,16 +64,14 @@ class Component extends React.Component {
           <td style={{ textAlign: "center" }}>
             <span className="success">{this.renderDate(item.orderdate)}</span>
           </td>
-          <td style={{ textAlign: "center" }}>
-            {this.renderType(item.statusnm)}
-          </td>
+          <td style={{ textAlign: "center" }}>{this.renderType(item)}</td>
           <td style={{ textAlign: "center" }}>
             {formatter.format(item.totalamount)}₮
           </td>
           <td style={{ textAlign: "center", paddingRight: "5px" }}>
             <a
               style={{
-                color: "#cccdce"
+                color: "#595959"
               }}
               href={"/order/" + item.id}
             >

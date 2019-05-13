@@ -99,13 +99,13 @@ class SwalModals extends React.Component {
                         <li className="flex-this flex-space">
                           <span>Худалдаж авсан барааны тоо:</span>
                           <strong className="big">
-                            {products.totalQtyInCart}
+                            {ordData.orderquantity}
                           </strong>
                         </li>
                         <li className="flex-this flex-space">
                           <span>Мөнгөн дүн:</span>
                           <strong className="big">
-                            {formatter.format(products.totalPriceInCart)}₮
+                            {formatter.format(ordData.totalamount)}₮
                           </strong>
                         </li>
                         <li className="flex-this flex-space">

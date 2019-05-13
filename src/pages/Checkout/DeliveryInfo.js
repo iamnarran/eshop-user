@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import Swal from "sweetalert2";
+import { Checkbox } from "antd";
 import withReactContent from "sweetalert2-react-content";
 const MySwal = withReactContent(Swal);
 const formatter = new Intl.NumberFormat("en-US");
@@ -8,8 +9,14 @@ const formatter = new Intl.NumberFormat("en-US");
 class DeliveryInfo extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      checkedAgreement: false
+    };
   }
+
+  handleAgreement = e => {
+    this.setState({ checkedAgreement: e.target.checked });
+  };
 
   generateNoat = (total, deliver, usedpoint) => {
     let noat = ((total + deliver - usedpoint) / 110) * 10;
@@ -17,6 +24,7 @@ class DeliveryInfo extends React.Component {
   };
 
   render() {
+    const { checkedAgreement } = this.state;
     const {
       delivery,
       products,
@@ -151,11 +159,21 @@ class DeliveryInfo extends React.Component {
                 ₮
               </strong>
             </p>
+            <Checkbox onChange={this.handleAgreement}>
+              {" "}
+              <a>
+                <span>Үйлчилгээний нөхцөл</span>
+              </a>
+            </Checkbox>
             <button
               className="btn btn-main btn-block"
               onClick={e => handleClick(e)}
               disabled={
-                paymentButton == false && isLoggedIn == true ? false : true
+                paymentButton == false &&
+                isLoggedIn == true &&
+                checkedAgreement == true
+                  ? false
+                  : true
               }
             >
               <span className="text-uppercase">Тооцоо хийх</span>

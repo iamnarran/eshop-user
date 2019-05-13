@@ -1,23 +1,33 @@
 import React from "react";
 import api from "../api";
 import { IMAGE } from "../utils/consts";
+import { Link } from "react-router-dom";
 class OrderDetail extends React.Component {
   componentDidMount() {}
 
   render() {
-    let orderList = this.props.container.data;
+    let orderList = this.props.container.data[0].items;
     const formatter = new Intl.NumberFormat("en-US");
     let firstName = this.props.auth.user.firstname;
     let lastName = this.props.auth.user.lastname;
     let phone = this.props.auth.user.phonE1;
+    let phone2 = this.props.auth.user.phonE2;
     let total = 0;
     let tableList = null;
-    let totalProduct = this.props.container.data[0].totalquantity;
-    let itemamount = this.props.container.data[0].itemamount;
-    let totalPrice = this.props.container.data[0].totalamount;
-    let deliveryAmount = this.props.container.data[0].deliveryamount;
-    let totalvate = this.props.container.data[0].totalvatamount;
-
+    let totalProduct = this.props.container.data[0].info.totalquantity;
+    let itemamount = this.props.container.data[0].info.itemamount;
+    let totalPrice = this.props.container.data[0].info.totalamount;
+    let deliveryAmount = this.props.container.data[0].info.deliveryamount;
+    let totalvate = this.props.container.data[0].info.totalvatamount;
+    let ordernumber = this.props.container.data[0].info.ordernumber;
+    let orderdate = this.props.container.data[0].info.orderdate;
+    let address = this.props.container.data[0].info.address;
+    let deliveryStatus = this.props.container.data[0].info.customerstatusname;
+    let deliveryStatusColor = this.props.container.data[0].info
+      .customerstatuscolor;
+    console.log(orderList);
+    console.log(this.props.auth);
+    console.log(this.props.container.data[0]);
     tableList = orderList.map((item, index) => {
       total = parseInt(item.orderamount) * parseInt(item.orderquantity);
       return (
@@ -39,18 +49,23 @@ class OrderDetail extends React.Component {
             </div>
           </td>
           <td>
-            <p className="price">
-              <strong>{formatter.format(item.orderamount)}₮</strong>
+            <p className="price" style={{ float: "right" }}>
+              <strong>
+                {formatter.format(
+                  item.newprice > 0 ? item.newprice : item.price
+                )}
+                ₮
+              </strong>
             </p>
           </td>
           <td>
-            <p className="price total">
+            <p className="price total" style={{ float: "right" }}>
               <strong>{item.orderquantity}</strong>
             </p>
           </td>
           <td>
-            <p className="price total">
-              <strong>{formatter.format(total)}₮</strong>
+            <p className="price total" style={{ float: "right" }}>
+              <strong>{formatter.format(item.orderamount)}₮</strong>
             </p>
           </td>
         </tr>
@@ -63,12 +78,12 @@ class OrderDetail extends React.Component {
           <div className="container pad10">
             <div className="cart-container after-order">
               <div className="btn btn-gray">
-                <span className="text-uppercase">
-                  <a href="http://localhost:3003/userprofile">Буцах</a>
-                </span>
+                <Link to="/">
+                  <span className="text-uppercase">Буцах</span>
+                </Link>
               </div>
               <h1 className="title">
-                <span className="text-uppercase">Захиалга #022</span>
+                <span className="text-uppercase">Захиалга #{ordernumber}</span>
               </h1>
               <div className="row row10">
                 <div className="col-xl-8 pad10">
@@ -79,15 +94,19 @@ class OrderDetail extends React.Component {
                     <table className="table table-borderless">
                       <thead className="thead-light">
                         <tr>
-                          <th className="column-1">
-                            <span>Бүтээгдэхүүний нэр</span>
+                          <th className="column-1">Бүтээгдэхүүний нэр</th>
+                          <th className="column-2">
+                            <span style={{ float: "right" }}>Нэгжийн үнэ</span>
                           </th>
-                          <th className="column-2">Нэгжийн үнэ</th>
-                          <th className="column-3">Тоо ширхэг</th>
+                          <th className="column-3">
+                            <span style={{ float: "right" }}>Тоо ширхэг</span>
+                          </th>
                           <th className="column-4">
-                            <p className="price total">
-                              <strong>Барааны үнэ</strong>
-                            </p>
+                            <span style={{ float: "right" }}>
+                              <p className="price total">
+                                <strong>Нийт үнэ</strong>
+                              </p>
+                            </span>
                           </th>
                         </tr>
                       </thead>
@@ -98,12 +117,12 @@ class OrderDetail extends React.Component {
                 <div className="col-xl-4 pad10">
                   <div className="cart-info">
                     <h5 className="title">
-                      <span>Төлсөн дүн</span>
+                      <span>Захиалгын дүн</span>
                     </h5>
                     <div className="block">
                       <ul className="list-unstyled">
                         <li className="flex-this flex-space">
-                          <span>Нийт бараа ({totalProduct})</span>
+                          <span>Нийт барааны үнэ ({totalProduct + " ш"})</span>
                           <strong className="big">
                             {formatter.format(itemamount)}₮
                           </strong>
@@ -115,7 +134,7 @@ class OrderDetail extends React.Component {
                           </strong>
                         </li>
                         <li className="line text-right">
-                          <strong>Нийт дүн</strong>
+                          <strong>Захиалгын дүн</strong>
                           <strong className="big">
                             {formatter.format(totalPrice)}₮
                           </strong>
@@ -127,33 +146,52 @@ class OrderDetail extends React.Component {
                       </ul>
                     </div>
                     <h5 className="title flex-this flex-space">
-                      <span>Хүргэлтийн төлөв</span>
-                      <strong className="success">
-                        {/* deliverytype */}Хүргэгдсэн
+                      <span>Захиалгын төлөв</span>
+                      <strong style={{ backgroundColor: deliveryStatusColor }}>
+                        {deliveryStatus}
                       </strong>
                     </h5>
                     <div className="block">
                       <div className="content">
                         <p className="text flex-this">
-                          <i className="fa fa-user" aria-hidden="true" />
+                          <i
+                            className="fa fa-user"
+                            aria-hidden="true"
+                            style={{ color: "#feb415" }}
+                          />
                           <span>
                             {firstName} {lastName}
                           </span>
                         </p>
                         <p className="text flex-this">
-                          <i className="fa fa-phone" aria-hidden="true" />
+                          <i
+                            className="fa fa-phone"
+                            aria-hidden="true"
+                            style={{ color: "#feb415" }}
+                          />
                           <span>
                             {phone ? phone.slice(0, 4) : " "}{" "}
                             {phone ? phone.slice(4) : " "}
+                            {", "}
+                            {phone2 ? phone2.slice(0, 4) : " "}{" "}
+                            {phone2 ? phone2.slice(4) : " "}
                           </span>
                         </p>
                         <p className="text flex-this">
-                          <i className="fa fa-map-marker" aria-hidden="true" />
-                          <span />
+                          <i
+                            className="fa fa-map-marker"
+                            aria-hidden="true"
+                            style={{ color: "#feb415" }}
+                          />
+                          <span>{address}</span>
                         </p>
                         <p className="text flex-this">
-                          <i className="fa fa-calendar" aria-hidden="true" />
-                          <span />
+                          <i
+                            className="fa fa-calendar"
+                            aria-hidden="true"
+                            style={{ color: "#feb415" }}
+                          />
+                          <span>{orderdate}</span>
                         </p>
                       </div>
                     </div>

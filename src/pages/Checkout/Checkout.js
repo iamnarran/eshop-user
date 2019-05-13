@@ -138,8 +138,6 @@ class Checkout extends React.Component {
 
   handleClear = () => {
     let { cart } = this.props;
-    console.log(cart, "fbjhb");
-    console.log(this.props);
     //if (cart) {
     this.props.updateCart({
       products: [],
@@ -593,8 +591,6 @@ class Checkout extends React.Component {
     } = this.state;
     let data;
     let addrs;
-    console.log(userAddress);
-    console.log(chosenInfo, "chos");
     if (userAddress.length !== 0) {
       if (!chosenInfo.isNew) {
         userAddress.map((item, i) => {
