@@ -235,7 +235,7 @@ class DeliveryPanel extends React.Component {
                               rules: [
                                 {
                                   required: true,
-                                  message: "Хаяг оруулна уу"
+                                  message: "Хаяг оруулна уу1"
                                 }
                               ]
                             })(

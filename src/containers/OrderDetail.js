@@ -13,7 +13,6 @@ const fetch = async (props, onData) => {
     const data = await api.customer.getOrderDetail({
       ordid: props.match.params.id
     });
-
     onData(null, {
       container: {
         data: data.data

@@ -18,6 +18,11 @@ class MobileMenu extends React.Component {
   handleSingUpSave = () => this.setState({ SingUpVisible: false });
   handleSingUpCancel = () => this.setState({ SingUpVisible: false });
 
+  handleRegister = () => {
+    this.handleLogInCancel();
+    this.showSingUpModal();
+  };
+
   togglePopup = () => {
     this.props.onChange();
   };
@@ -112,7 +117,7 @@ class MobileMenu extends React.Component {
               <li className="list-inline-item" onClick={this.togglePopup}>
                 <button className="button buttonBlack">
                   {/* <i className="fa fa-times" aria-hidden="true" /> */}
-                  <img src={crossImage} alt="cross" height="25px"/>
+                  <img src={crossImage} alt="cross" height="25px" />
                 </button>
               </li>
             </ul>
@@ -128,11 +133,11 @@ class MobileMenu extends React.Component {
                   <span className="text-uppercase">Нэвтрэх</span>
                 </Link>
               </li>
-              <li className="list-inline-item">
+              {/*  <li className="list-inline-item">
                 <Link to="#" onClick={this.showSingUpModal}>
                   <span className="text-uppercase">Бүртгүүлэх</span>
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
           {
@@ -230,16 +235,16 @@ class MobileMenu extends React.Component {
             >
               Gmail-р бүртгүүлэх
             </button>
-            <button
+            {/*  <button
               type="submit"
               className="btn btn-block btn-social btn-emart"
             >
               Имарт картаар бүртгүүлэх
-            </button>
+            </button> */}
             <div className="text-center">
-              <Link to="#" className="btn btn-link">
+              <a className="btn btn-link" onClick={this.handleRegister}>
                 Та шинээр бүртгүүлэх бол ЭНД ДАРЖ бүртгүүлнэ үү
-              </Link>
+              </a>
             </div>
           </div>
         </Modal>
@@ -342,12 +347,12 @@ class MobileMenu extends React.Component {
             >
               Gmail-р бүртгүүлэх
             </button>
-            <button
+            {/* <button
               type="submit"
               className="btn btn-block btn-social btn-emart"
             >
               Имарт картаар бүртгүүлэх
-            </button>
+            </button> */}
           </div>
         </Modal>
       </div>
