@@ -46,6 +46,8 @@ const withCart = WrappedComponent => {
         return;
       }
 
+      const cloned = clonedeep(product);
+
       const {
         name,
         addminqty,
@@ -53,14 +55,14 @@ const withCart = WrappedComponent => {
         saleminqty,
         salemaxqty,
         isgift
-      } = product;
-      let { qty } = product;
+      } = cloned;
+      let { qty } = cloned;
 
       qty += (qty < saleminqty ? saleminqty : addminqty) || 1;
 
       if (availableqty >= qty) {
         if (salemaxqty >= qty || salemaxqty === 0 || isgift !== 0) {
-          product.qty = qty;
+          cloned.qty = qty;
         } else {
           this.handleNotify(
             `"${name}" барааг хамгийн ихдээ "${salemaxqty}" ширхэгээр худалдан авах боломжтой байна`
@@ -70,7 +72,7 @@ const withCart = WrappedComponent => {
         this.handleNotify(`"${name}" барааны нөөц хүрэлцэхгүй байна`);
       }
 
-      return product;
+      return cloned;
     };
 
     handleDecrement = product => {
@@ -160,13 +162,13 @@ const withCart = WrappedComponent => {
       return localProduct;
     };
 
-    handleUpdateCart = (product, shouldOverride = false) => {
+    handleUpdateCart = (product, updated, shouldOverride = false) => {
       if (!product) {
         this.handleNotify("Бараа олдсонгүй");
         return;
       }
 
-      const { cd, name, qty, saleminqty, salemaxqty } = product;
+      const { cd, name, qty, saleminqty, salemaxqty } = updated;
 
       if (qty > 0) {
         if (qty < saleminqty) {

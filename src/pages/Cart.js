@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { createForm } from "rc-form";
 import clonedeep from "lodash.clonedeep";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import api from "../api";
 import { IMAGE } from "../utils/consts";
@@ -19,19 +20,19 @@ class Cart extends React.Component {
       api.cart.findAllProducts({ custid: this.props.user.id }).then(res => {
         if (res.success) {
           this.setState({
-            products: res.data,
+            products: clonedeep(res.data),
             abstractProducts: clonedeep(res.data)
           });
         } else {
           this.setState({
-            products: this.props.cart.products,
+            products: clonedeep(this.props.cart.products),
             abstractProducts: clonedeep(this.props.cart.products)
           });
         }
       });
     } else {
       this.setState({
-        products: this.props.cart.products,
+        products: clonedeep(this.props.cart.products),
         abstractProducts: clonedeep(this.props.cart.products)
       });
     }
@@ -40,7 +41,7 @@ class Cart extends React.Component {
   findAndReplace = product => {
     let tempProducts = clonedeep(this.state.products);
 
-    const i = tempProducts.map(prod => prod.cd).indexOf(product.cd);
+    const i = tempProducts.map(tempProd => tempProd.cd).indexOf(product.cd);
 
     if (i !== -1) {
       tempProducts.splice(i, 1, product);
@@ -86,8 +87,8 @@ class Cart extends React.Component {
   };
 
   handleIncrementClick = product => {
-    product = this.props.onIncrement(product);
-    this.props.onUpdateCart(product, true);
+    const updated = this.props.onIncrement(product);
+    this.props.onUpdateCart(product, updated, true);
   };
 
   handleDecrementClick = product => {
@@ -155,15 +156,16 @@ class Cart extends React.Component {
     const { wishlistProducts, deliveryInfo } = this.props.container;
     const { isLoggedIn, user, cart } = this.props;
     const { totalPrice, totalQty } = cart;
-    const products = this.state.products;
+    const { products } = this.state;
 
     let content = (
       <div style={{ textAlign: "center" }}>
-        <p>Таны сагс хоосон байна</p>
+        <FontAwesomeIcon icon={["fas", "shopping-basket"]} /> Таны сагс хоосон
+        байна
       </div>
     );
 
-    if (products.length) {
+    if (products && products.length) {
       content = (
         <table className="table table-borderless">
           <thead className="thead-light">
@@ -191,20 +193,18 @@ class Cart extends React.Component {
                   <td>
                     <div className="flex-this">
                       <div className="image-container default">
-                        <Link to={prod.route ? prod.route : ""}>
+                        <Link to={prod.route || ""}>
                           <span
                             className="image"
                             style={{
-                              backgroundImage: `url(${IMAGE}${
-                                prod.img ? prod.img : ""
-                              })`
+                              backgroundImage: `url(${IMAGE}${prod.img || ""})`
                             }}
                           />
                         </Link>
                       </div>
                       <div className="info-container">
                         <Link
-                          to={prod.route ? prod.route : ""}
+                          to={prod.route || ""}
                           style={{ color: "#6c757d" }}
                         >
                           <strong>{prod.name}</strong>
@@ -286,7 +286,7 @@ class Cart extends React.Component {
         <div className="container pad10">
           <div className="cart-container">
             <Link to="/" className="btn btn-gray">
-              <span className="text-uppercase">Дэлгүүрлүү буцах</span>
+              <span className="text-uppercase">Нүүр хуудас руу буцах</span>
             </Link>
             <h1 className="title">
               <span className="text-uppercase">Миний сагс</span>
@@ -303,6 +303,7 @@ class Cart extends React.Component {
                   <h5 className="title">
                     <span>Төлбөр</span>
                   </h5>
+
                   <div className="block cart-info-container">
                     <p className="count">
                       <span>Нийт бараа: </span>
@@ -327,7 +328,8 @@ class Cart extends React.Component {
                       <span className="text-uppercase">Баталгаажуулах</span>
                     </Link>
                   </div>
-                  {isLoggedIn && user && wishlistProducts.length && (
+
+                  {isLoggedIn && user && !!wishlistProducts.length && (
                     <div className="block fav-products">
                       <p className="title">
                         <strong>Хадгалсан бараа</strong>

@@ -52,7 +52,9 @@ class Card extends React.Component {
       });
   };
 
-  handleSave = item => {
+  handleSave = item => e => {
+    e.preventDefault();
+
     if (this.props.isLoggedIn && this.props.user) {
       if (item.recipeid) {
         this.getRecipeData(item.recipeid);
@@ -67,7 +69,9 @@ class Card extends React.Component {
     }
   };
 
-  handleAddToCart = item => {
+  handleAddToCart = item => e => {
+    e.preventDefault();
+
     let products = [];
     if (item.recipeid) {
       // Хоолны жор
@@ -185,24 +189,29 @@ class Card extends React.Component {
       }
     }
 
+    let isDisabled = true;
+    if (item.id || item.recipeid || item.availableqty > 0) {
+      isDisabled = false;
+    }
+
     const hover = (
       <div className="search-hover">
-        <a onClick={e => this.handleSave(item)}>
+        <Link to="" onClick={() => this.handleSave(item)}>
           <i className="fa fa-heart-o" aria-hidden="true" />
           <span />
-        </a>
-        <button
-          onClick={() => this.handleAddToCart(item)}
-          type="button"
-          className="btn btn-link"
-          style={{ color: "#ff9b00", fontSize: "1.6em", marginBottom: "8px" }}
+        </Link>
+        <Link
+          to=""
+          onClick={this.handleAddToCart(item)}
+          style={{
+            color: isDisabled ? "rgba(255, 155, 0, 0.5)" : "#ff9b00",
+            fontSize: "1.6em",
+            marginBottom: "8px",
+            pointerEvents: isDisabled ? "none" : "auto"
+          }}
         >
-          <Avatar
-            size="small"
-            src={productPlus}
-            style={{ verticalAlign: "middle" }}
-          />
-        </button>
+          <i className="fa fa-cart-plus" aria-hidden="true" />
+        </Link>
       </div>
     );
 
@@ -409,20 +418,23 @@ class Card extends React.Component {
                   />
                 ))}
               <div className="cart-container">
-                <a className="wishlist" onClick={e => this.handleSave(item)}>
+                <Link
+                  to=""
+                  className="wishlist"
+                  onClick={e => this.handleSave(item)}
+                >
                   <i className="fa fa-heart-o" aria-hidden="true" />
-                </a>
-                <button
-                  onClick={() => this.handleAddToCart(item)}
-                  type="button"
-                  className="btn btn-link"
+                </Link>
+                <Link
+                  to=""
+                  onClick={this.handleAddToCart(item)}
                   style={{
                     fontSize: "1.1rem"
                   }}
                 >
                   <i className="fa fa-cart-plus" aria-hidden="true" />
                   <span />
-                </button>
+                </Link>
               </div>
             </div>
           </div>

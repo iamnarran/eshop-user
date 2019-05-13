@@ -179,6 +179,7 @@ class ProductDetail extends Component {
                   onClick={this.handleDecrementClick}
                   className="btn"
                   type="button"
+                  disabled={product.availableqty < 1}
                 >
                   <i className="fa fa-minus" aria-hidden="true" />
                 </button>
@@ -193,6 +194,7 @@ class ProductDetail extends Component {
                 onChange={this.handleQtyChange}
                 onKeyDown={this.handleQtyKeyDown}
                 onBlur={this.handleQtyBlur}
+                disabled={product.availableqty < 1}
               />
 
               <div className="input-group-append" id="button-addon4">
@@ -200,6 +202,7 @@ class ProductDetail extends Component {
                   onClick={this.handleIncrementClick}
                   className="btn"
                   type="button"
+                  disabled={product.availableqty < 1}
                 >
                   <i className="fa fa-plus" aria-hidden="true" />
                 </button>

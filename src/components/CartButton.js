@@ -3,9 +3,7 @@ import { connect } from "react-redux";
 import NotificationBadge, { Effect } from "react-notification-badge";
 import { Link } from "react-router-dom";
 
-import api from "../api";
 import cartImage from "../scss/assets/svg/002-shopping-cart.svg";
-// import { Icon } from "antd";
 
 class CartButton extends Component {
   render() {
@@ -21,7 +19,6 @@ class CartButton extends Component {
             right: "-11px"
           }}
         />
-        {/* <Icon type="shopping-cart" /> */}
         <img src={cartImage} alt="cart" height="25px" />
         <p>
           <small>Миний</small>
@@ -35,8 +32,8 @@ class CartButton extends Component {
 
 const mapStateToProps = state => {
   return {
-    totalQty: state.cart.totalQtyInCart,
-    totalPrice: state.cart.totalPriceInCart
+    totalQty: state.cart.totalQty,
+    totalPrice: state.cart.totalPrice
   };
 };
 

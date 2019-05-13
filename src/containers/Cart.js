@@ -23,8 +23,6 @@ const fetch = async (props, onData) => {
       wishlistProducts = await api.customer.getWishList({ custid: user.id });
     }
 
-    console.log({ wishlistProducts });
-
     const staticInfo = await api.staticInfo.findAll();
 
     onData(null, {

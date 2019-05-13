@@ -1,13 +1,10 @@
 import typeToReducer from "type-to-reducer";
 
 import { UPDATE_CART } from "../actions/types";
-import storage from "../utils/storage";
 
 const initialState = {
-  totalQtyInCart: storage.get("cart") ? storage.get("cart").totalQty || 0 : 0,
-  totalPriceInCart: storage.get("cart")
-    ? storage.get("cart").totalPrice || 0
-    : 0
+  totalQty: 0,
+  totalPrice: 0
 };
 
 export default typeToReducer(
@@ -15,8 +12,8 @@ export default typeToReducer(
     [UPDATE_CART]: (state, action) => ({
       ...state,
       products: action.payload.products,
-      totalQtyInCart: action.payload.totalQty,
-      totalPriceInCart: action.payload.totalPrice
+      totalQty: action.payload.totalQty,
+      totalPrice: action.payload.totalPrice
     })
   },
   initialState

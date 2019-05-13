@@ -25,6 +25,8 @@ const fetch = async (props, onData) => {
     const relatedProducts = await api.product.productRelational({ skucd });
     const comments = await api.product.productComment({ skucd });
 
+    console.log({product});
+
     onData(null, {
       container: {
         categories: categories.data,

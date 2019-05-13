@@ -78,31 +78,7 @@ class Season extends React.Component {
             minPrice: prices.min,
             maxPrice: prices.max
           });
-
-          // attributes &&
-          //   attributes.forEach(attr => {
-          //     if (attr.type === "PRICE") {
-          //       attr.attributes[0].values.forEach(val => {
-          //         if (val.valuecd === "MIN") {
-          //           this.setState({
-          //             minPrice: parseInt(val.valueid.substring(3))
-          //           });
-          //         }
-          //         if (val.valuecd === "MAX") {
-          //           this.setState({
-          //             maxPrice: parseInt(val.valueid.substring(3))
-          //           });
-          //         }
-          //       });
-
-          //       if (this.state.minPrice > this.state.maxPrice) {
-          //         this.setState({ maxPrice: this.state.minPrice });
-          //       }
-          //     }
-          //   });
         }
-
-        console.log("attributes", res.data[0].attributes);
 
         this.setState({
           products: res.data[0].products
