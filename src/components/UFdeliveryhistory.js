@@ -71,7 +71,7 @@ class Component extends React.Component {
           <td style={{ textAlign: "center", paddingRight: "5px" }}>
             <a
               style={{
-                color: "#cccdce"
+                color: "#595959"
               }}
               href={"/order/" + item.id}
             >
