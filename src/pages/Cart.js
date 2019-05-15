@@ -88,12 +88,12 @@ class Cart extends React.Component {
 
   handleIncrementClick = product => {
     const updated = this.props.onIncrement(product);
-    this.props.onUpdateCart(product, updated, true);
+    // this.props.onUpdateCart(product, updated, true);
   };
 
   handleDecrementClick = product => {
     product = this.props.onDecrement(product);
-    this.props.onUpdateCart(product, true);
+    // this.props.onUpdateCart(product, true);
   };
 
   renderUnitPrice = product => {
