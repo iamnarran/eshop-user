@@ -2881,6 +2881,44 @@ MuiInputBase-input-49 MuiOutlinedInput-input-34 MuiInputBase-inputType-52 {
 
 .ant-checkbox-checked .ant-checkbox-inner {
   background-color: #feb415 !important;
+  border-color: #feb415;
+}
+
+.ant-calendar-today .ant-calendar-date {
+  border-color: #feb415;
+}
+
+.ant-calendar-selected-date .ant-calendar-date,
+.ant-calendar-selected-start-date .ant-calendar-date,
+.ant-calendar-selected-end-date .ant-calendar-date {
+  background: #feb415;
+}
+
+/* .anticon svg {
+  color: #feb415;
+} */
+
+/* .ant-calendar-selected-day .ant-calendar-date {
+  background: #ffe4aa;
+} */
+
+.ant-calendar-selected-date .ant-calendar-date:hover,
+.ant-calendar-selected-start-date .ant-calendar-date:hover,
+.ant-calendar-selected-end-date .ant-calendar-date:hover {
+  background: #feb415;
+}
+
+.ant-radio-checked .ant-radio-inner {
+  border-color: #feb415;
+}
+
+.ant-radio-inner:after {
+  background-color: #feb415;
+}
+
+.checkout-qpay {
+  width: 80px;
+  margin: 10px 20px;
 }
 
 /* .ant-select-open .ant-select-selection {

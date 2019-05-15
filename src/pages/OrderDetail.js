@@ -25,9 +25,6 @@ class OrderDetail extends React.Component {
     let deliveryStatus = this.props.container.data[0].info.customerstatusname;
     let deliveryStatusColor = this.props.container.data[0].info
       .customerstatuscolor;
-    console.log(orderList);
-    console.log(this.props.auth);
-    console.log(this.props.container.data[0]);
     tableList = orderList.map((item, index) => {
       total = parseInt(item.orderamount) * parseInt(item.orderquantity);
       return (

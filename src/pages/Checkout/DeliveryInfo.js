@@ -119,8 +119,8 @@ class DeliveryInfo extends React.Component {
               <strong>Төлөх дүн</strong>
             </p>
             <p className="text flex-space">
-              <span>Бараа ({products.products.length}):</span>
-              <strong>{formatter.format(products.totalPriceInCart)}₮</strong>
+              <span>Бараа ({products.totalQty}):</span>
+              <strong>{formatter.format(products.totalPrice)}₮</strong>
             </p>
             <p className="text flex-space">
               <span>Хүргэлтийн үнэ:</span>
@@ -140,21 +140,14 @@ class DeliveryInfo extends React.Component {
             <p className="text flex-space">
               <span>Нийт дүн:</span>
               <strong>
-                {formatter.format(
-                  products.totalPriceInCart + deliver1 - usedpoint
-                )}
-                ₮
+                {formatter.format(products.totalPrice + deliver1 - usedpoint)}₮
               </strong>
             </p>
             <p className="text flex-space">
               <span>НӨАТ:</span>
               <strong>
                 {formatter.format(
-                  this.generateNoat(
-                    products.totalPriceInCart,
-                    deliver1,
-                    usedpoint
-                  )
+                  this.generateNoat(products.totalPrice, deliver1, usedpoint)
                 )}
                 ₮
               </strong>

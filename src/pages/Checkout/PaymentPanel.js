@@ -1,9 +1,14 @@
 import React from "react";
+import { Radio } from "antd";
+
+const RadioGroup = Radio.Group;
 
 class PaymentPanel extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      value: 1
+    };
   }
 
   render() {
@@ -27,30 +32,18 @@ class PaymentPanel extends React.Component {
         <p className="title">
           <strong>НӨАТ баримтын төрөл</strong>
         </p>
-        <div className="hand-pay flex-this">
-          <div className="form-check">
-            <input
-              className="form-check-input"
-              type="radio"
-              defaultChecked
-              name="plusRadios"
-              id="1"
-              onChange={e => plusRadioChanged(e)}
-            />
 
-            <label className="form-check-label">Хувь хүн</label>
+        <RadioGroup onChange={e => plusRadioChanged(e)} value={chosenPlusRadio}>
+          <div className="hand-pay flex-this">
+            <div className="form-check">
+              <Radio value={1}>Хувь хүн</Radio>
+            </div>
+            <div className="form-check">
+              <Radio value={2}>Байгууллага</Radio>
+            </div>
           </div>
-          <div className="form-check">
-            <input
-              className="form-check-input"
-              type="radio"
-              name="plusRadios"
-              id="2"
-              onChange={e => plusRadioChanged(e)}
-            />
-            <label className="form-check-label">Байгууллага</label>
-          </div>
-        </div>
+        </RadioGroup>
+
         {chosenPlusRadio == 2 ? (
           <form>
             <div className="row row10">

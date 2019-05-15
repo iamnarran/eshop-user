@@ -2,6 +2,10 @@ import React from "react";
 import { connect } from "react-redux";
 import { Icon, Tabs, Input, Form, Select } from "antd";
 import api from "../../api";
+import moment from "moment";
+import { DatePicker } from "antd";
+
+const { MonthPicker, RangePicker } = DatePicker;
 const Option = Select.Option;
 const TabPane = Tabs.TabPane;
 const formatter = new Intl.NumberFormat("en-US");
@@ -183,6 +187,8 @@ class DeliveryPanel extends React.Component {
       addAddress,
       deliveryId,
       key,
+      dateString,
+      dateStringChange,
       addresstype
     } = this.props;
     const style = {
@@ -392,6 +398,32 @@ class DeliveryPanel extends React.Component {
                         )}
                       </Form.Item>
                     </div>
+                  </div>
+                  <hr />
+                  <div className="text-left">
+                    <span
+                      style={{
+                        marginLeft: "10px",
+                        color: "rgba(0, 0, 0, 0.5)",
+                        fontWeight: "bold"
+                      }}
+                    >
+                      Хүргэлтээр авах өдрөө сонгоно уу
+                    </span>
+
+                    <DatePicker
+                      style={{ marginLeft: "10px" }}
+                      format="YYYY-MM-DD"
+                      showTime={false}
+                      placeholder="Огноо сонгох"
+                      defaultValue={moment(dateString, "YYYY-MM-DD")}
+                      allowClear={false}
+                      onChange={(date, dateString) =>
+                        dateStringChange(date, dateString)
+                      }
+                      /*  disabledDate={disabledDate}
+                      disabledTime={disabledDateTime} */
+                    />
                   </div>
                   <hr />
 

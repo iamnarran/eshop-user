@@ -1,10 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Collapse, Tabs } from "antd";
+import { Collapse, Tabs, Divider } from "antd";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import withCart from "../../components/HOC/withCart";
 import { IMAGE } from "../../utils/consts";
+import { isMobile } from "react-device-detect";
 const MySwal = withReactContent(Swal);
 const formatter = new Intl.NumberFormat("en-US");
 const Panel = Collapse.Panel;
@@ -46,6 +47,30 @@ class SwalModals extends React.Component {
     }
   };
 
+  renderBankLogo = () => {
+    const { ordData } = this.props;
+    let tmp;
+    console.log(ordData.qpay);
+    if (ordData.qpay.qPay_deeplink.lenght != 0) {
+      tmp = ordData.qpay.qPay_deeplink.map((item, i) => {
+        return (
+          <div className="checkout-qpay" key={i}>
+            <a href={item.link}>
+              <img
+                alt="logo"
+                src={IMAGE + item.url}
+                height="80px"
+                style={{ marginBottom: "5px" }}
+              />
+              <center>{item.name}</center>
+            </a>
+          </div>
+        );
+      });
+    }
+    return tmp;
+  };
+
   render() {
     let p = [1, 2, 3, 4, 5, 6];
     const { chosenBank } = this.state;
@@ -59,7 +84,8 @@ class SwalModals extends React.Component {
         userAddress,
         chosenPayment,
         bankInfo,
-        ordData
+        ordData,
+        paymentType
       } = this.props;
       let addrs;
       if (userAddress.length !== 0) {
@@ -112,18 +138,26 @@ class SwalModals extends React.Component {
                           <span>Төлбөрийн төрөл:</span>
                           <strong className="big">{chosenPayment.name}</strong>
                         </li>
-                        <li className="flex-this flex-space">
-                          <span>Банк:</span>
-                          <strong className="big">{bankInfo.banknm}</strong>
-                        </li>
-                        <li className="flex-this flex-space">
-                          <span>Дансны дугаар:</span>
-                          <strong className="big">{bankInfo.account}</strong>
-                        </li>
-                        <li className="flex-this flex-space">
-                          <span>Хүлээн авагч:</span>
-                          <strong className="big">{bankInfo.name}</strong>
-                        </li>
+                        {paymentType != "qpay" ? (
+                          <div>
+                            <li className="flex-this flex-space">
+                              <span>Банк:</span>
+                              <strong className="big">{bankInfo.banknm}</strong>
+                            </li>
+                            <li className="flex-this flex-space">
+                              <span>Дансны дугаар:</span>
+                              <strong className="big">
+                                {bankInfo.account}
+                              </strong>
+                            </li>
+                            <li className="flex-this flex-space">
+                              <span>Хүлээн авагч:</span>
+                              <strong className="big">{bankInfo.name}</strong>
+                            </li>
+                          </div>
+                        ) : (
+                          ""
+                        )}
                       </ul>
                     </div>
                     <div className="user-detail">
@@ -175,11 +209,17 @@ class SwalModals extends React.Component {
                         цагийн дотор төлснөөр таны захиалга баталгаажиж
                         идэвхжинэ. Тус хугацаанд төлбөр төлөгдөөгүй тохиолдолд
                         захиалгыг автоматаар цуцлах болохыг анхаарна уу. <br />
-                        Төлбөрийг дээрх дансанд шилжүүлэх ба захиалгын{" "}
-                        <b style={{ fontWeight: "bold" }}>
-                          {ordData.ordernumber}
-                        </b>{" "}
-                        дугаарыг гүйлгээний утга дээр заавал бичнэ үү.
+                        {paymentType != "qpay" ? (
+                          <div>
+                            Төлбөрийг дээрх дансанд шилжүүлэх ба захиалгын
+                            <b style={{ fontWeight: "bold" }}>
+                              {ordData.ordernumber}
+                            </b>{" "}
+                            дугаарыг гүйлгээний утга дээр заавал бичнэ үү.
+                          </div>
+                        ) : (
+                          ""
+                        )}
                         <br />
                         <br />
                         Хүргэлттэй холбоотой лавлах зүйлс байвал доорх утсаар
@@ -276,7 +316,7 @@ class SwalModals extends React.Component {
             </Tabs>
             <div className="text-right" style={{ marginTop: "10px" }}>
               <a
-                onClick={e => readyBtn(e, chosenBank, ordData)}
+                onClick={e => readyBtn(e, chosenBank, ordData, type)}
                 className="btn btn-main"
               >
                 <span className="text-uppercase">Болсон</span>
@@ -286,42 +326,63 @@ class SwalModals extends React.Component {
         </div>
       );
     } else if (type == "qpay") {
+      const { data, type, ordData, readyBtn } = this.props;
       return (
-        <div>
-          <Tabs defaultActiveKey="1" tabPosition={"left"}>
-            {p.map((item, i) => {
-              return (
-                <TabPane
-                  tab={
-                    <li className="active">
-                      <span className="contain">
-                        <img
-                          alt="logo"
-                          src={require("../../scss/assets/images/demo/golomt.png")}
-                          style={{ marginRight: "5px" }}
-                        />
-                        <span>Голомт банк</span>
-                      </span>
+        <div className="checkout-container msg-bank">
+          <div className="card-content">
+            <div className="col-md-12 pad10">
+              <p className="title">
+                <strong>Гүйлгээний мэдээлэл</strong>
+              </p>
+              <div className="menu-content" style={{ display: "flex" }}>
+                <div style={{ width: "50%" }}>
+                  <ul className="list-unstyled">
+                    <li>
+                      <span>Гүйлгээний утга</span>
+                      <strong>{ordData.ordernumber}</strong>
                     </li>
-                  }
-                  key={i}
-                >
-                  <div className="menu-content">
-                    <img
-                      alt="qr code"
-                      src={require("../../scss/assets/images/demo/qr.png")}
-                      className="qr-code img-fluid"
-                      style={{ height: "150px" }}
-                    />
-                  </div>
-                </TabPane>
-              );
-            })}
-          </Tabs>
-          <div className="text-right">
-            <a href="#" className="btn btn-main">
-              <span className="text-uppercase">Болсон</span>
-            </a>
+                    <li>
+                      <span>Мөнгөн дүн</span>
+                      <strong>{formatter.format(ordData.payamount)}₮</strong>
+                    </li>
+                  </ul>
+                </div>
+                <div>
+                  <img
+                    alt="qr code"
+                    src={"data:image/png;base64, " + ordData.qpay.qPay_QRimage}
+                    className="qr-code img-fluid"
+                    height="200px"
+                  />
+                </div>
+              </div>
+            </div>
+            {isMobile ? (
+              <div>
+                <Divider style={{ color: "rgba(0, 0, 0, 0.5)" }}>
+                  Төлөх аргууд
+                </Divider>
+                <div className="row">{this.renderBankLogo()}</div>
+              </div>
+            ) : (
+              ""
+            )}
+
+            <div className="text-center" style={{ marginTop: "10px" }}>
+              <a
+                href="#"
+                className="btn btn-main"
+                style={{ marginRight: "10px" }}
+              >
+                <span className="text-uppercase">Төлбөр шалгах</span>
+              </a>
+              <a
+                onClick={e => readyBtn(e, chosenBank, ordData, type)}
+                className="btn btn-main"
+              >
+                <span className="text-uppercase">Болсон</span>
+              </a>
+            </div>
           </div>
         </div>
       );

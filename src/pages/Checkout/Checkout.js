@@ -54,9 +54,21 @@ class Checkout extends React.Component {
       cardNoInput: "",
       regNoInput: "",
       chosenDeliveryAddrName: [],
-      deliveryId: 1
+      deliveryId: 1,
+      dateString: ""
     };
   }
+
+  curday = sp => {
+    let today = new Date();
+    let dd = today.getDate();
+    let mm = today.getMonth() + 1; //As January is 0.
+    let yyyy = today.getFullYear();
+
+    if (dd < 10) dd = "0" + dd;
+    if (mm < 10) mm = "0" + mm;
+    return yyyy + sp + mm + sp + dd;
+  };
 
   errorMsg = txt => {
     MySwal.hideLoading();
@@ -67,6 +79,10 @@ class Checkout extends React.Component {
       width: "25rem",
       confirmButtonColor: "#feb415"
     });
+  };
+
+  dateStringChange = (date, dateString) => {
+    this.setState({ dateString: dateString });
   };
 
   successMsg = txt => {
@@ -150,6 +166,8 @@ class Checkout extends React.Component {
   componentWillMount() {
     const { deliveryTypes, paymentTypes, bankInfo } = this.props.container;
     const { cart, auth } = this.props;
+    let type = "qpay";
+    /* this.openLastModal(type, [], []); */
     if (cart.products.length == 0) {
       this.errorMsg(
         "Уучлаарай таны сагс хоосон байна. Сагсандаа бараа нэмнэ үү ?"
@@ -162,6 +180,7 @@ class Checkout extends React.Component {
     }
     this.getMainLocation();
     this.setState({
+      dateString: this.curday("-"),
       products: cart,
       delivery: deliveryTypes[0],
       chosenPayment: paymentTypes[0],
@@ -394,7 +413,7 @@ class Checkout extends React.Component {
       epointUsedPoint,
       chosenPlusRadio
     } = this.state;
-    if (e.target.id == 2) {
+    if (e.target.value == 2) {
       if (useEpoint) {
         this.errorMsg(
           "Байгууллагаар баримт авах үед Ипойнт оноо ашиглах боломжгүй тул таны ашиглахаар тохируулсан оноо төлбөрөөс хасагдахгүйг анхаарна уу."
@@ -411,7 +430,7 @@ class Checkout extends React.Component {
       this.setState({ paymentButton: false, companyInfo: [] });
     }
 
-    this.setState({ chosenPlusRadio: e.target.id });
+    this.setState({ chosenPlusRadio: e.target.value });
   };
 
   onSubmit = (e, form) => {
@@ -483,7 +502,6 @@ class Checkout extends React.Component {
 
   setUser = async adrs => {
     const res = await this.props.saveUserAddress(adrs);
-    console.log(res);
     if (res.success) {
       let tmp = this.state.chosenInfo;
       tmp.address = res.data;
@@ -616,12 +634,15 @@ class Checkout extends React.Component {
         if (chosenPayment.id == 2) {
           type = "msgBank";
           data = this.props.container.bankInfo;
+          this.openLastModal(type, data, res.data);
         } else if (chosenPayment.id == 3) {
           type = "qpay";
+          this.openLastModal(type, [], res.data);
         } else if (chosenPayment.id == 1) {
-          type = "emarchant";
+          window.open(res.data.url);
+          //type = "emarchant";
         }
-        MySwal.fire({
+        /*  MySwal.fire({
           html: (
             <SwalModals
               type={type}
@@ -640,10 +661,33 @@ class Checkout extends React.Component {
           showCloseButton: true,
           allowOutsideClick: false,
           closeOnEsc: false
-        });
+        }); */
       } else {
         this.errorMsg(res.message);
       }
+    });
+  };
+
+  openLastModal = (type, data, ordData) => {
+    MySwal.fire({
+      html: (
+        <SwalModals
+          type={type}
+          data={data}
+          ordData={ordData}
+          readyBtn={this.handlePayment}
+        />
+      ),
+      width: type == "qpay" ? "30em" : "40em",
+      animation: false,
+      button: false,
+      showCloseButton: false,
+      showCancelButton: false,
+      showConfirmButton: false,
+      focusConfirm: false,
+      showCloseButton: true,
+      allowOutsideClick: false,
+      closeOnEsc: false
     });
   };
 
@@ -660,6 +704,7 @@ class Checkout extends React.Component {
     tmp.phone2 = this.state.chosenInfo.phone2;
     tmp.paymentType = this.state.chosenPayment.id;
     tmp.addPoint = 0;
+    tmp.deliveryDate = this.state.dateString;
     //tmp.cardNo = epointcard.cardno;
     tmp.usedPoint = epointUsedPoint;
     tmp.items = [];
@@ -683,7 +728,7 @@ class Checkout extends React.Component {
     this.sentPaymentF(tmp);
   };
 
-  handlePayment = (e, item, ordData) => {
+  handlePayment = (e, item, ordData, type) => {
     e.preventDefault();
     const {
       userInfo,
@@ -699,7 +744,7 @@ class Checkout extends React.Component {
           type={"paymentSucess"}
           changePage={this.changePage}
           chosenPayment={chosenPayment}
-          readyBtn={this.handlePayment}
+          paymentType={type}
           userInfo={userInfo}
           delivery={delivery}
           products={products}
@@ -755,7 +800,6 @@ class Checkout extends React.Component {
 
   changePage = (e, item) => {
     MySwal.close();
-    console.log(item, "wfdgkaj");
     this.handleClear();
     this.props.history.push(item);
   };
@@ -836,6 +880,8 @@ class Checkout extends React.Component {
                             onChangeSubLoc={this.onChangeSubLoc}
                             getFieldDecorator={getFieldDecorator}
                             deliveryId={deliveryId}
+                            dateString={this.state.dateString}
+                            dateStringChange={this.dateStringChange}
                             key="2"
                             mainLocation={mainLocation}
                             subLocation={subLocation}

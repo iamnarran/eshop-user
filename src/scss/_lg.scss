@@ -3178,7 +3178,7 @@ form .e-input-group .count-text {
 
 .checkout-container .content-container .hand-pay .form-check {
   position: relative;
-  padding: 10px 20px 10px 40px;
+  padding: 10px 5px 10px 20px;
   -webkit-box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
   -moz-box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
   -ms-box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
@@ -3195,14 +3195,14 @@ form .e-input-group .count-text {
   font-weight: 500;
 }
 
-.checkout-container .content-container .hand-pay label:before,
+/* .checkout-container .content-container .hand-pay label:before,
 .checkout-container .content-container .hand-pay label:after {
   content: "";
   position: absolute;
   top: 13px;
   left: 18px;
   border-radius: 50%;
-}
+} */
 
 .checkout-container .content-container .hand-pay label:before {
   height: 14px;
