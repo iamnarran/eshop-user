@@ -646,10 +646,12 @@ class Checkout extends React.Component {
           type = "qpay";
           this.openLastModal(type, [], res.data);
         } else if (chosenPayment.id == 1) {
+          MySwal.hideLoading();
           window.open(res.data.url);
           //type = "emarchant";
         }
       } else {
+        MySwal.hideLoading();
         this.errorMsg(res.message);
       }
     });
@@ -682,6 +684,7 @@ class Checkout extends React.Component {
     e.preventDefault();
     const { chosenPayment } = this.state;
     const { products, epointcard, epointUsedPoint, companyInfo } = this.state;
+    MySwal.showLoading();
     let tmp = {};
     tmp.custId = this.state.userInfo.id;
     tmp.deliveryTypeId = this.state.delivery.id;
@@ -739,6 +742,7 @@ class Checkout extends React.Component {
           userAddress={userAddress}
           bankInfo={item}
           ordData={ordData}
+          chosenDeliveryAddrName={this.state.chosenDeliveryAddrName}
         />
       ),
       width: "40em",

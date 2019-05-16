@@ -124,7 +124,8 @@ class SwalModals extends React.Component {
         chosenPayment,
         bankInfo,
         ordData,
-        paymentType
+        paymentType,
+        chosenDeliveryAddrName
       } = this.props;
       let addrs;
       if (userAddress.length !== 0) {
@@ -136,7 +137,6 @@ class SwalModals extends React.Component {
           });
         }
       }
-      console.log(userInfo);
       return (
         <div className="wrap">
           <div className="success-message-container">
@@ -208,7 +208,11 @@ class SwalModals extends React.Component {
                         </span>
                       </h5>
                       <p className="text flex-this">
-                        <i className="fa fa-user" aria-hidden="true" />
+                        <i
+                          className="fa fa-user"
+                          aria-hidden="true"
+                          style={{ color: "#feb415" }}
+                        />
                         <span>
                           {" "}
                           {userInfo.length == 0
@@ -217,7 +221,11 @@ class SwalModals extends React.Component {
                         </span>
                       </p>
                       <p className="text flex-this">
-                        <i className="fa fa-phone" aria-hidden="true" />
+                        <i
+                          className="fa fa-phone "
+                          aria-hidden="true"
+                          style={{ color: "#feb415" }}
+                        />
                         <span>
                           {" "}
                           {chosenInfo.length != 0
@@ -226,21 +234,29 @@ class SwalModals extends React.Component {
                         </span>
                       </p>
                       <p className="text flex-this">
-                        <i className="fa fa-map-marker" aria-hidden="true" />
+                        <i
+                          className="fa fa-map-marker "
+                          aria-hidden="true"
+                          style={{ color: "#feb415" }}
+                        />
                         <span>
                           {chosenInfo.length != 0
-                            ? chosenInfo.mainLocation +
+                            ? chosenDeliveryAddrName.mainLocation +
                               ", " +
-                              chosenInfo.subLocation +
+                              chosenDeliveryAddrName.subLocation +
                               ", " +
-                              chosenInfo.commiteLocation +
+                              chosenDeliveryAddrName.commiteLocation +
                               ", " +
                               addrs
                             : ""}
                         </span>
                       </p>
                       <p className="text flex-this">
-                        <i className="fa fa-calendar" aria-hidden="true" />
+                        <i
+                          className="fa fa-calendar"
+                          aria-hidden="true"
+                          style={{ color: "#feb415" }}
+                        />
                         <span>{this.getOrderDate()}</span>
                       </p>
                     </div>
