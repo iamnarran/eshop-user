@@ -8,7 +8,7 @@ class OrderDetail extends React.Component {
   render() {
     let orderList = this.props.container.data[0].items;
     const formatter = new Intl.NumberFormat("en-US");
-    let firstName = this.props.auth.user.firstname;
+    let firstName = this.props.container.data[0].info.custname;
     let lastName = this.props.auth.user.lastname;
     let phone = this.props.auth.user.phonE1;
     let phone2 = this.props.auth.user.phonE2;

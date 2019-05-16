@@ -6,6 +6,7 @@ import withReactContent from "sweetalert2-react-content";
 import withCart from "../../components/HOC/withCart";
 import { IMAGE } from "../../utils/consts";
 import { isMobile } from "react-device-detect";
+import api from "../../api";
 const MySwal = withReactContent(Swal);
 const formatter = new Intl.NumberFormat("en-US");
 const Panel = Collapse.Panel;
@@ -17,6 +18,29 @@ class SwalModals extends React.Component {
       chosenBank: []
     };
   }
+
+  errorMsg = txt => {
+    // MySwal.hideLoading();
+    MySwal.insertQueueStep({
+      type: "error",
+      text: txt,
+      animation: false,
+      width: "25rem",
+      confirmButtonColor: "#feb415"
+    });
+  };
+
+  successMsg = txt => {
+    //MySwal.hideLoading();
+    MySwal.insertQueueStep({
+      type: "success",
+      title: "Амжилттай",
+      text: txt,
+      animation: false,
+      width: "25rem",
+      confirmButtonColor: "#feb415"
+    });
+  };
 
   componentWillMount() {
     const { type } = this.props;
@@ -47,10 +71,25 @@ class SwalModals extends React.Component {
     }
   };
 
+  checkPayment = e => {
+    e.preventDefault();
+    const { ordData } = this.props;
+    api.checkout
+      .checkPayment({
+        id: ordData.id
+      })
+      .then(res => {
+        if (res.success) {
+          this.successMsg(res.message);
+        } else {
+          this.errorMsg(res.message);
+        }
+      });
+  };
+
   renderBankLogo = () => {
     const { ordData } = this.props;
     let tmp;
-    console.log(ordData.qpay);
     if (ordData.qpay.qPay_deeplink.lenght != 0) {
       tmp = ordData.qpay.qPay_deeplink.map((item, i) => {
         return (
@@ -97,6 +136,7 @@ class SwalModals extends React.Component {
           });
         }
       }
+      console.log(userInfo);
       return (
         <div className="wrap">
           <div className="success-message-container">
@@ -108,6 +148,7 @@ class SwalModals extends React.Component {
                       <img
                         alt="image"
                         src={require("../../scss/assets/images/demo/4.png")}
+                        width="80px"
                       />
                       <h4 className="title">
                         <span className="text-uppercase">
@@ -370,7 +411,7 @@ class SwalModals extends React.Component {
 
             <div className="text-center" style={{ marginTop: "10px" }}>
               <a
-                href="#"
+                onClick={this.checkPayment}
                 className="btn btn-main"
                 style={{ marginRight: "10px" }}
               >

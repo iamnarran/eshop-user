@@ -152,6 +152,10 @@ class DeliveryPanel extends React.Component {
     }
   };
 
+  disabledDate = current => {
+    return current && current < moment().endOf("day");
+  };
+
   getLocs = async id => {
     await api.checkout.getlocs({ locid: id }).then(res => {
       if (res.success == true) {
@@ -194,6 +198,7 @@ class DeliveryPanel extends React.Component {
     const style = {
       color: "#feb415"
     };
+
     return (
       <Tabs onChange={e => changeTab(e, this.props.form)} defaultActiveKey="1">
         {deliveryTypes.map((item, i) => {
@@ -265,18 +270,29 @@ class DeliveryPanel extends React.Component {
                                 onSelect={(value, event) =>
                                   addAddress(value, event, this.props.form)
                                 }
+                                showSearch
+                                optionFilterProp="children"
                                 placeholder="Хаягаа сонгоно уу ?"
                               >
-                                {this.renderAddrsOption()}
                                 <Option value={null}>
                                   <div
                                     style={{
-                                      cursor: "pointer"
+                                      cursor: "pointer",
+                                      backgroundColor: "#feb415",
+                                      width: "8em",
+                                      borderRadius: "2px"
                                     }}
                                   >
-                                    <Icon type="plus" /> Хаяг нэмэх
+                                    <span
+                                      style={{
+                                        padding: "10px"
+                                      }}
+                                    >
+                                      <Icon type="plus" /> Хаяг нэмэх
+                                    </span>
                                   </div>
                                 </Option>
+                                {this.renderAddrsOption()}
                               </Select>
                             )}
                           </Form.Item>
@@ -297,6 +313,8 @@ class DeliveryPanel extends React.Component {
                         })(
                           <Select
                             placeholder="Хот/аймаг *"
+                            showSearch
+                            optionFilterProp="children"
                             className="col-md-12"
                             onChange={e => onChangeMainLoc(e, this.props.form)}
                           >
@@ -316,6 +334,8 @@ class DeliveryPanel extends React.Component {
                           ]
                         })(
                           <Select
+                            showSearch
+                            optionFilterProp="children"
                             placeholder="Дүүрэг/Сум*"
                             onChange={e =>
                               onChangeSubLoc(e, this.props.form.validateFields)
@@ -336,7 +356,11 @@ class DeliveryPanel extends React.Component {
                             }
                           ]
                         })(
-                          <Select placeholder="Хороо*">
+                          <Select
+                            placeholder="Хороо*"
+                            showSearch
+                            optionFilterProp="children"
+                          >
                             {this.renderCommiteLocation()}
                           </Select>
                         )}
@@ -421,8 +445,8 @@ class DeliveryPanel extends React.Component {
                       onChange={(date, dateString) =>
                         dateStringChange(date, dateString)
                       }
-                      /*  disabledDate={disabledDate}
-                      disabledTime={disabledDateTime} */
+                      disabledDate={this.disabledDate}
+                      /*disabledTime={disabledDateTime} */
                     />
                   </div>
                   <hr />

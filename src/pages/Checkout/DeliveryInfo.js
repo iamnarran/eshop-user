@@ -49,6 +49,8 @@ class DeliveryInfo extends React.Component {
       } else {
         addrs = chosenInfo.addressnm;
       }
+    } else {
+      addrs = chosenInfo.addressnm;
     }
     return (
       <div className="col-lg-4 pad10">
@@ -155,7 +157,7 @@ class DeliveryInfo extends React.Component {
             <Checkbox onChange={this.handleAgreement}>
               {" "}
               <a>
-                <span>Үйлчилгээний нөхцөл</span>
+                <span style={{ fontWeight: "bold" }}>Үйлчилгээний нөхцөл</span>
               </a>
             </Checkbox>
             <button

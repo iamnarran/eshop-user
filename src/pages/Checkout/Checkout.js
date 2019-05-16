@@ -61,7 +61,7 @@ class Checkout extends React.Component {
 
   curday = sp => {
     let today = new Date();
-    let dd = today.getDate();
+    let dd = today.getDate() + 1;
     let mm = today.getMonth() + 1; //As January is 0.
     let yyyy = today.getFullYear();
 
@@ -442,12 +442,6 @@ class Checkout extends React.Component {
     if (e.target.name == "delivery") {
       form.validateFields((err, values) => {
         if (!err) {
-          if (values.address == undefined) {
-            chosenInfo.address = values.addresstype;
-          } else {
-            chosenInfo.address = values.address;
-          }
-
           chosenInfo.lastName = values.lastName;
           chosenInfo.mainLocation = values.mainLocation;
           chosenInfo.subLocation = values.subLocation;
@@ -455,6 +449,11 @@ class Checkout extends React.Component {
           chosenInfo.phone2 = values.phone2;
           chosenInfo.commiteLocation = values.commiteLocation;
           chosenInfo.isNew = false;
+          if (values.address == undefined) {
+            chosenInfo.address = values.addresstype;
+          } else {
+            chosenInfo.address = values.address;
+          }
           let chosenDeliveryAddrName = {
             mainLocation: this.getMainLocationName(values.mainLocation),
             subLocation: this.getSubLocationName(values.subLocation),
@@ -465,6 +464,7 @@ class Checkout extends React.Component {
           if (values.address == defaultAddress.address) {
             values.address = defaultAddress.id;
           }
+
           try {
             if (addresstype == "new") {
               let adrs = {};
@@ -477,7 +477,9 @@ class Checkout extends React.Component {
               chosenInfo.isNew = true;
               this.setUser(adrs);
             }
-            this.setState({ chosenInfo: chosenInfo });
+            let userInfo = this.state.userInfo;
+            userInfo.firstname = values.lastName;
+            this.setState({ chosenInfo: chosenInfo, userInfo: userInfo });
             this.setState({ chosenDeliveryAddrName: chosenDeliveryAddrName });
           } catch (err) {
             console.log(err);
@@ -501,12 +503,16 @@ class Checkout extends React.Component {
   };
 
   setUser = async adrs => {
-    const res = await this.props.saveUserAddress(adrs);
-    if (res.success) {
-      let tmp = this.state.chosenInfo;
-      tmp.address = res.data;
-      this.setState({ chosenInfo: tmp });
-    }
+    await this.props.saveUserAddress(adrs).then(res => {
+      if (res.success) {
+        let tmp = this.state.chosenInfo;
+        tmp.address = res.data;
+        if (this.props.isLoggedIn == true) {
+          this.getUserInfo(this.props.user);
+        }
+        this.setState({ chosenInfo: tmp, addresstype: "edit" });
+      }
+    });
   };
 
   changeTab = (e, form) => {
@@ -572,7 +578,7 @@ class Checkout extends React.Component {
           if (res.success == true) {
             let tmp = epointcard;
             if (
-              (delivery.price + products.totalPriceInCart) / 2 >=
+              (delivery.price + products.totalPrice) / 2 >=
               epointcard.point
             ) {
               tmp.point = parseFloat(point - parseInt(point));
@@ -582,10 +588,9 @@ class Checkout extends React.Component {
               });
             } else {
               tmp.point =
-                tmp.point - (delivery.price + products.totalPriceInCart) / 2;
+                tmp.point - (delivery.price + products.totalPrice) / 2;
               this.setState({
-                epointUsedPoint:
-                  (delivery.price + products.totalPriceInCart) / 2,
+                epointUsedPoint: (delivery.price + products.totalPrice) / 2,
                 epointcard: tmp
               });
             }
@@ -619,6 +624,8 @@ class Checkout extends React.Component {
       } else {
         addrs = chosenInfo.addressnm;
       }
+    } else {
+      addrs = chosenInfo.addressnm;
     }
     tmp.custAddress =
       chosenDeliveryAddrName.mainLocation +
@@ -642,26 +649,6 @@ class Checkout extends React.Component {
           window.open(res.data.url);
           //type = "emarchant";
         }
-        /*  MySwal.fire({
-          html: (
-            <SwalModals
-              type={type}
-              data={data}
-              ordData={res.data}
-              readyBtn={this.handlePayment}
-            />
-          ),
-          width: "40em",
-          animation: false,
-          button: false,
-          showCloseButton: false,
-          showCancelButton: false,
-          showConfirmButton: false,
-          focusConfirm: false,
-          showCloseButton: true,
-          allowOutsideClick: false,
-          closeOnEsc: false
-        }); */
       } else {
         this.errorMsg(res.message);
       }
@@ -680,12 +667,12 @@ class Checkout extends React.Component {
       ),
       width: type == "qpay" ? "30em" : "40em",
       animation: false,
+
       button: false,
       showCloseButton: false,
       showCancelButton: false,
       showConfirmButton: false,
       focusConfirm: false,
-      showCloseButton: true,
       allowOutsideClick: false,
       closeOnEsc: false
     });
