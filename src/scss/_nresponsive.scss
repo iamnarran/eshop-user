@@ -52,32 +52,36 @@
 
     .top-main {
         .search {
-            position: absolute;
-            padding: 0;
-            width: 300px;
-            margin: auto;
-            z-index: 0;
-
             .search-mobile {
-                position: relative;
-                width: 300px;
-                padding: 0;
-                margin: 0;
-                left: 0;
+                top: 98px;
             }
 
-            .search-form {
-                width: 100%;
+            // position: absolute;
+            // padding: 0;
+            // width: 300px;
+            // margin: auto;
+            // z-index: 0;
 
-                input {
-                    outline: 0;
+            // .search-mobile {
+            //     position: relative;
+            //     width: 300px;
+            //     padding: 0;
+            //     margin: 0;
+            //     left: 0;
+            // }
 
-                    &:focus {
-                        box-shadow: none;
-                        outline: 0;
-                    }
-                }
-            }
+            // .search-form {
+            //     width: 100%;
+
+            //     input {
+            //         outline: 0;
+
+            //         &:focus {
+            //             box-shadow: none;
+            //             outline: 0;
+            //         }
+            //     }
+            // }
         }
     }
 
