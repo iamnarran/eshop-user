@@ -19,6 +19,7 @@ import Cart from "./Cart";
 import Checkout from "./Checkout";
 import ProductList from "./ProductList";
 import OrderDetail from "./OrderDetail";
+import DeliveryAddress from "./UsrProfDeliveryAddress";
 export {
   Footer,
   Header,
@@ -39,6 +40,6 @@ export {
   Cart,
   Checkout,
   ProductList,
-  OrderDetail,
+  OrderDetail
   // DeliveryAddress
 };
