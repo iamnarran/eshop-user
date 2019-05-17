@@ -71,7 +71,7 @@ class Card extends React.Component {
 
   handleAddToCart = item => e => {
     e.preventDefault();
-    console.log('cart click');
+    console.log("cart click");
     let products = [];
     if (item.recipeid) {
       // Хоолны жор
@@ -81,7 +81,7 @@ class Card extends React.Component {
           if (products.length) {
             products.reduce((acc, next) => {
               return acc.then(() => {
-                return this.props.onAddToCart(next);
+                return this.props.onUpdateCart(next);
               });
             }, Promise.resolve());
           }
@@ -97,7 +97,7 @@ class Card extends React.Component {
           if (products.length) {
             products.reduce((acc, next) => {
               return acc.then(() => {
-                return this.props.onAddToCart(next);
+                return this.props.onUpdateCart(next);
               });
             }, Promise.resolve());
           }
