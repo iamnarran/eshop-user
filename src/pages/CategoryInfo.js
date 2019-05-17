@@ -41,7 +41,8 @@ class CategoryInfo extends React.Component {
       maxPrice: max,
       sort: "price_asc",
       checkedList: [],
-      products: this.props.container.products || []
+      products: this.props.container.products || [],
+      isLeftPanel: false
     };
   }
 
@@ -168,10 +169,16 @@ class CategoryInfo extends React.Component {
     this.setState({ isListViewOn: false });
   };
 
+  showLeftPanel = e => {
+    this.setState({ isLeftPanel: !this.state.isLeftPanel });
+    console.log(this.state.isLeftPanel);
+  };
+
   render() {
     const { id, parentCats, subCats, attributes } = this.props.container;
     const { products } = this.state;
     const Option = Select.Option;
+    const leftPanel = `left-panel${this.state.isLeftPanel ? " show" : ""}`;
 
     let selectedCat = null;
     let cats = <div className="block">Ангилал байхгүй байна</div>;
@@ -286,12 +293,15 @@ class CategoryInfo extends React.Component {
             <div className="row row10">
               <div className="col-xl-3 pad10">
                 <div className="text-right d-block d-md-none">
-                  <a href=" " className="btn btn-gray btn-filter">
+                  <a
+                    className="btn btn-gray btn-filter"
+                    onClick={this.showLeftPanel}
+                  >
                     <i className="fa fa-filter" aria-hidden="true" />
                     <span className="text-uppercase">Шүүлтүүр</span>
                   </a>
                 </div>
-                <div className="left-panel">
+                <div className={leftPanel}>
                   <h5 className="title">
                     <strong>Хайлтын үр дүн</strong>
                   </h5>
