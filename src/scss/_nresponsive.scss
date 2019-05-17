@@ -52,32 +52,36 @@
 
     .top-main {
         .search {
-            position: absolute;
-            padding: 0;
-            width: 300px;
-            margin: auto;
-            z-index: 0;
-
             .search-mobile {
-                position: relative;
-                width: 300px;
-                padding: 0;
-                margin: 0;
-                left: 0;
+                top: 98px;
             }
 
-            .search-form {
-                width: 100%;
+            // position: absolute;
+            // padding: 0;
+            // width: 300px;
+            // margin: auto;
+            // z-index: 0;
 
-                input {
-                    outline: 0;
+            // .search-mobile {
+            //     position: relative;
+            //     width: 300px;
+            //     padding: 0;
+            //     margin: 0;
+            //     left: 0;
+            // }
 
-                    &:focus {
-                        box-shadow: none;
-                        outline: 0;
-                    }
-                }
-            }
+            // .search-form {
+            //     width: 100%;
+
+            //     input {
+            //         outline: 0;
+
+            //         &:focus {
+            //             box-shadow: none;
+            //             outline: 0;
+            //         }
+            //     }
+            // }
         }
     }
 
@@ -663,9 +667,39 @@
         height: 100%;
         overflow: hidden;
         overflow-y: auto;
-        transform: translateX(0px);
         transform: translateX(-280px);
         opacity: 1;
+
+        &.show {
+            transform: translateX(0px);
+        }
+    }
+
+    .table-sm {
+        display: flex;
+        padding: 15px;
+
+        thead {
+            width: 50%;
+        }
+
+        tr>* {
+            display: block;
+        }
+
+        th {
+            width: 100%;
+            text-align: left !important;
+        }
+
+        td {
+            width: 100%;
+            text-align: left !important;
+
+            span {
+                font-size: 10px;
+            }
+        }
     }
 
     .list-product {
@@ -751,6 +785,13 @@
 }
 
 @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
+    .top-main .search {
+        position: relative;
+        width: 100%;
+        left: 30px;
+        // margin-left: 10px;
+    }
+
     .top-main .action li a.flex-this {
         display: none !important;
     }

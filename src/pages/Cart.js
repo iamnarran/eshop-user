@@ -147,6 +147,8 @@ class Cart extends React.Component {
     const { deliveryInfo } = this.props.container;
     const { products } = this.state;
 
+    console.log({ products });
+
     let content = (
       <div style={{ textAlign: "center" }}>
         <FontAwesomeIcon icon={["fas", "shopping-basket"]} /> Таны сагс хоосон
@@ -197,7 +199,7 @@ class Cart extends React.Component {
                           style={{ color: "#6c757d" }}
                         >
                           <strong>{prod.name}</strong>
-                          <span>{prod.featuretxt}</span>
+                          <span>{prod.featuretxt || ""}</span>
                         </Link>
                       </div>
                     </div>
