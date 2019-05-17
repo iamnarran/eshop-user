@@ -107,7 +107,8 @@ class Card extends React.Component {
       });
     } else {
       // Бараа
-      this.props.onAddToCart(item);
+      this.props.onIncrement(item);
+      this.props.onUpdateCart(item);
     }
   };
 
@@ -190,7 +191,12 @@ class Card extends React.Component {
     }
 
     let isDisabled = true;
-    if (item.id || item.recipeid || item.availableqty > 0) {
+    if (
+      item.id ||
+      item.recipeid ||
+      item.availableqty > 0 ||
+      item.isgift !== 0
+    ) {
       isDisabled = false;
     }
 

@@ -7,6 +7,7 @@ import MainMenu from "../../components/Menu";
 import UserButton from "../../components/UserButton";
 import CartButton from "../../components/CartButton";
 import LoginModal from "../../components/LoginModal";
+import RegisterModal from "../../components/RegisterModal";
 import { IMAGE } from "../../utils/consts";
 import api from "../../api";
 import searchImage from "../../scss/assets/svg/001-search.svg";
@@ -149,7 +150,7 @@ class AppHeader extends Component {
                           </select>
                         </form>
                       </li>
-                      <UserButton onUserButtonClick={this.showLoginModal} />
+                      <UserButton />
                     </ul>
                   </div>
                 </div>
@@ -340,6 +341,7 @@ class AppHeader extends Component {
           </div>
         </div>
         <LoginModal />
+        <RegisterModal />
       </div>
     );
   }

@@ -5,10 +5,10 @@ import { Link } from "react-router-dom";
 
 import cartImage from "../scss/assets/svg/002-shopping-cart.svg";
 
+const formatter = new Intl.NumberFormat("en-US");
+
 class CartButton extends Component {
   render() {
-    const formatter = new Intl.NumberFormat("en-US");
-
     return (
       <Link to="/cart" className="row10">
         <NotificationBadge

@@ -13,50 +13,43 @@ import { updateCart } from "../actions/cart";
 const formatter = new Intl.NumberFormat("en-US");
 
 class Cart extends React.Component {
-  state = { products: [], abstractProducts: [] };
+  state = { products: [] };
 
   componentDidMount() {
     if (this.props.isLoggedIn && this.props.user) {
       api.cart.findAllProducts({ custid: this.props.user.id }).then(res => {
         if (res.success) {
-          this.setState({
-            products: clonedeep(res.data),
-            abstractProducts: clonedeep(res.data)
-          });
+          this.setState({ products: res.data });
         } else {
-          this.setState({
-            products: clonedeep(this.props.cart.products),
-            abstractProducts: clonedeep(this.props.cart.products)
-          });
+          this.setState({ products: this.props.cart.products });
         }
       });
     } else {
-      this.setState({
-        products: clonedeep(this.props.cart.products),
-        abstractProducts: clonedeep(this.props.cart.products)
-      });
+      this.setState({ products: this.props.cart.products });
     }
   }
 
-  findAndReplace = product => {
-    let tempProducts = clonedeep(this.state.products);
-
-    const i = tempProducts.map(tempProd => tempProd.cd).indexOf(product.cd);
-
-    if (i !== -1) {
-      tempProducts.splice(i, 1, product);
-    }
-
-    this.setState({ products: tempProducts });
+  handleIncrementClick = product => {
+    console.log({ product });
+    this.props.onIncrement(product);
+    this.props.onUpdateCart(product, true);
   };
 
-  handleRemoveClick = product => e => {
-    e.preventDefault();
-    this.props.onRemove(product);
+  handleDecrementClick = product => {
+    this.props.onDecrement(product);
+    this.props.onUpdateCart(product, true);
   };
 
   handleQtyChange = product => e => {
-    product.qty = parseInt(e.target.value || 1);
+    if (isNaN(e.target.value)) {
+      product.qty = 1;
+    } else {
+      if (e.target.value < 1) {
+        product.qty = 1;
+      } else {
+        product.qty = e.target.value;
+      }
+    }
     this.findAndReplace(product);
   };
 
@@ -72,28 +65,26 @@ class Cart extends React.Component {
   };
 
   changeQty = product => {
-    const abstractProduct = this.state.abstractProducts.find(
-      abstractProd => abstractProd.cd === product.cd
-    );
+    this.props.onQtyChange(product);
+    this.props.onUpdateCart(product, true);
+    this.findAndReplace(product);
+  };
 
-    if (abstractProduct) {
-      const updatedProduct = this.props.onQtyChange(
-        abstractProduct,
-        product.qty
-      );
-      this.props.onUpdateCart(updatedProduct, true);
-      this.findAndReplace(updatedProduct);
+  handleRemoveClick = product => e => {
+    e.preventDefault();
+    this.props.onRemove(product);
+  };
+
+  findAndReplace = product => {
+    let tempProducts = clonedeep(this.state.products);
+
+    const i = tempProducts.map(tempProd => tempProd.cd).indexOf(product.cd);
+
+    if (i !== -1) {
+      tempProducts.splice(i, 1, product);
     }
-  };
 
-  handleIncrementClick = product => {
-    const updated = this.props.onIncrement(product);
-    // this.props.onUpdateCart(product, updated, true);
-  };
-
-  handleDecrementClick = product => {
-    product = this.props.onDecrement(product);
-    // this.props.onUpdateCart(product, true);
+    this.setState({ products: tempProducts });
   };
 
   renderUnitPrice = product => {
@@ -153,9 +144,7 @@ class Cart extends React.Component {
   };
 
   render() {
-    const { wishlistProducts, deliveryInfo } = this.props.container;
-    const { isLoggedIn, user, cart } = this.props;
-    const { totalPrice, totalQty } = cart;
+    const { deliveryInfo } = this.props.container;
     const { products } = this.state;
 
     let content = (
@@ -208,7 +197,7 @@ class Cart extends React.Component {
                           style={{ color: "#6c757d" }}
                         >
                           <strong>{prod.name}</strong>
-                          <span>{prod.shortnm}</span>
+                          <span>{prod.featuretxt}</span>
                         </Link>
                       </div>
                     </div>
@@ -281,6 +270,62 @@ class Cart extends React.Component {
       );
     }
 
+    let wishlistInfo = null;
+    if (this.props.isLoggedIn && this.props.user) {
+      const { wishlistProducts } = this.props.container;
+
+      wishlistInfo = (
+        <div className="block fav-products">
+          <p className="title">
+            <strong>Хадгалсан бараа</strong>
+          </p>
+          <ul className="list-unstyled">
+            {!!wishlistProducts &&
+              !!wishlistProducts.length &&
+              wishlistProducts.map((wishlistProd, index) => (
+                <li className="flex-this" key={index}>
+                  <div className="image-container default">
+                    <a href="#">
+                      <span
+                        className="image"
+                        style={{
+                          backgroundImage: `url(${IMAGE}${wishlistProd.img})`
+                        }}
+                      />
+                    </a>
+                  </div>
+                  <div className="info-container">
+                    <div className="flex-space">
+                      <a href="#">
+                        <div className="text">
+                          <span>{wishlistProd.skunm}</span>
+                          <strong>
+                            {wishlistProd.sprice
+                              ? wishlistProd.sprice
+                              : wishlistProd.price
+                              ? wishlistProd.price
+                              : 0}
+                            ₮
+                          </strong>
+                        </div>
+                      </a>
+                      <a href="#">
+                        <div className="action">
+                          <i className="fa fa-cart-plus" aria-hidden="true" />
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+                </li>
+              ))}
+          </ul>
+          <a href="#" className="btn btn-gray btn-block">
+            <span className="text-uppercase">Бүх барааг үзэх</span>
+          </a>
+        </div>
+      );
+    }
+
     return (
       <div className="section">
         <div className="container pad10">
@@ -307,7 +352,7 @@ class Cart extends React.Component {
                   <div className="block cart-info-container">
                     <p className="count">
                       <span>Нийт бараа: </span>
-                      <span>{totalQty}ш</span>
+                      <span>{this.props.cart.totalQty}ш</span>
                     </p>
                     {deliveryInfo && (
                       <p className="delivery">
@@ -317,7 +362,9 @@ class Cart extends React.Component {
                     )}
                     <p className="total flex-space">
                       <span>Нийт дүн:</span>
-                      <strong>{formatter.format(totalPrice)}₮</strong>
+                      <strong>
+                        {formatter.format(this.props.cart.totalPrice)}₮
+                      </strong>
                     </p>
                     <Link
                       to="/checkout"
@@ -328,60 +375,7 @@ class Cart extends React.Component {
                       <span className="text-uppercase">Баталгаажуулах</span>
                     </Link>
                   </div>
-
-                  {isLoggedIn && user && !!wishlistProducts.length && (
-                    <div className="block fav-products">
-                      <p className="title">
-                        <strong>Хадгалсан бараа</strong>
-                      </p>
-                      <ul className="list-unstyled">
-                        {wishlistProducts.map((wishlistProd, index) => (
-                          <li className="flex-this" key={index}>
-                            <div className="image-container default">
-                              <a href="#">
-                                <span
-                                  className="image"
-                                  style={{
-                                    backgroundImage: `url(${IMAGE}${
-                                      wishlistProd.img
-                                    })`
-                                  }}
-                                />
-                              </a>
-                            </div>
-                            <div className="info-container">
-                              <div className="flex-space">
-                                <a href="#">
-                                  <div className="text">
-                                    <span>{wishlistProd.skunm}</span>
-                                    <strong>
-                                      {wishlistProd.sprice
-                                        ? wishlistProd.sprice
-                                        : wishlistProd.price
-                                        ? wishlistProd.price
-                                        : 0}
-                                      ₮
-                                    </strong>
-                                  </div>
-                                </a>
-                                <a href="#">
-                                  <div className="action">
-                                    <i
-                                      className="fa fa-cart-plus"
-                                      aria-hidden="true"
-                                    />
-                                  </div>
-                                </a>
-                              </div>
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
-                      <a href="#" className="btn btn-gray btn-block">
-                        <span className="text-uppercase">Бүх барааг үзэх</span>
-                      </a>
-                    </div>
-                  )}
+                  {wishlistInfo}
                 </div>
               </div>
             </div>

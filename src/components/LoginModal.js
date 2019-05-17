@@ -1,8 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Modal, Button, message } from "antd";
+import { Modal, Button } from "antd";
 import { Link, Redirect } from "react-router-dom";
 import { createForm } from "rc-form";
+import { css } from "glamor";
+import { toast } from "react-toastify";
 
 import FacebookLogin from "./FacebookLogin";
 import GoogleLogin from "./GoogleLogin";
@@ -11,17 +13,26 @@ import actions, {
   showLoginModal,
   hideLoginModal
 } from "../actions/login";
-import RegisterModal from "./RegisterModal";
-import storage from "../utils/storage";
+import { showRegisterModal } from "../actions/register";
+import { updateCart } from "../actions/cart";
 import withCart from "./HOC/withCart";
+import storage from "../utils/storage";
 import api from "../api";
 
 class LoginModal extends React.Component {
   state = {
     shouldRedirect: false,
-    isLoading: false,
-    isRegisterModalVisible: false
+    isLoading: false
   };
+
+  handleNotify = message =>
+    toast(message, {
+      position: "top-center",
+      autoClose: 5000,
+      progressClassName: css({
+        background: "#feb415"
+      })
+    });
 
   renderRedirect = () => {
     if (this.state.shouldRedirect) {
@@ -46,78 +57,121 @@ class LoginModal extends React.Component {
     this.setRedirect();
   };
 
-  toggleRegisterModal = () => {
-    this.setState({
-      isRegisterModalVisible: !this.state.isRegisterModalVisible
-    });
-  };
-
-  showRegisterModal = () => {
-    this.setState({ isRegisterModalVisible: true });
-  };
-
-  hideRegisterModal = () => {
-    this.setState({ isRegisterModalVisible: false });
-  };
-
   _submit = e => {
     e.preventDefault();
+
     this.props.form.validateFields(async (error, form) => {
       if (!error) {
         this.setState({ isLoading: true });
+
         try {
           const res = await this.props.login(form);
+
+          console.log({ res });
+
           if (res.success) {
             storage.set("access_token", res.data[0].info.access_token);
 
-            const customer = res.data[0].info.customerInfo;
+            let customer = res.data[0].info.customerInfo;
+            customer.token = res.data[0].info.access_token;
             this.props.setUser(customer);
 
-            let { products } = this.props.cart;
-            if (products.length) {
-              products.forEach(prod => {
-                this.props.onUpdateCart(prod);
-              });
+            let productsInCart = this.props.cart.products;
 
-              api.cart.findAllProducts({ custid: customer.id }).then(res => {
-                if (res.success) {
-                  products = res.data;
-                }
+            if (productsInCart.length) {
+              productsInCart.forEach(prodInCart => {
+                this.props.onUpdateCart(prodInCart, true);
               });
-            } else {
-              products = res.data[0].basket;
             }
 
-            const qties = products.map(prod => prod.qty);
-            const totalQty = qties.reduce((acc, cur) => acc + cur);
+            api.cart.findAllProducts({ custid: customer.id }).then(res => {
+              if (res.success) {
+                const products = res.data;
 
-            const prices = products.map(prod => {
-              const price =
-                this.props.getUnitPrice(prod).sprice ||
-                this.props.getUnitPrice(prod).price;
+                let totalQty = 0;
+                let totalPrice = 0;
+                if (products.length) {
+                  const qties = products.map(prod => prod.qty);
+                  totalQty = qties.reduce((acc, cur) => acc + cur);
 
-              return price * prod.qty;
+                  const prices = products.map(prod => {
+                    const price =
+                      this.props.getUnitPrice(prod).sprice ||
+                      this.props.getUnitPrice(prod).price;
+
+                    return price * prod.qty;
+                  });
+                  totalPrice = prices.reduce((acc, cur) => acc + cur);
+                }
+
+                this.props.updateCart({
+                  products,
+                  totalQty,
+                  totalPrice
+                });
+              } else {
+                console.log("failure", res);
+              }
             });
-            const totalPrice = prices.reduce((acc, cur) => acc + cur);
 
-            this.props.updateCart({
-              products,
-              totalQty,
-              totalPrice
-            });
-
-            this.props.cart.totalQty = this.setState({ isLoading: false });
             this.handleOk();
-            this.setRedirect();
-          } else {
-            message.error("Таны нэвтрэх нэр эсвэл нууц үг буруу байна");
-            this.setState({ isLoading: false });
+
+            //   if (products.length) {
+            //     products.forEach(prod => {
+            //       const found = savedProducts.find(
+            //         savedProd => savedProd.cd === prod.cd
+            //       );
+
+            //       if (found) {
+            //         found.qty += prod.qty;
+            //         this.props.onUpdateCart(found, true);
+            //       } else {
+            //         this.props.onUpdateCart(prod, true);
+            //       }
+            //     });
+
+            //     api.cart.findAllProducts({ custid: customer.id }).then(res => {
+            //       if (res.success) {
+            //         console.log("success", res);
+            //       } else {
+            //         console.log("failure", res);
+            //       }
+            //     });
+            //   } else {
+            //     products = res.data[0].basket;
+            //   }
+
+            //   const qties = products.map(prod => prod.qty);
+            //   const totalQty = qties.reduce((acc, cur) => acc + cur);
+
+            //   const prices = products.map(prod => {
+            //     const price =
+            //       this.props.getUnitPrice(prod).sprice ||
+            //       this.props.getUnitPrice(prod).price;
+
+            //     return price * prod.qty;
+            //   });
+            //   const totalPrice = prices.reduce((acc, cur) => acc + cur);
+
+            //   this.props.updateCart({
+            //     products,
+            //     totalQty,
+            //     totalPrice
+            //   });
+
+            //   this.props.cart.totalQty = this.setState({ isLoading: false });
+            //   this.handleOk();
+            //   this.setRedirect();
+            // } else {
+            //   this.handleNotify("Таны нэвтрэх нэр эсвэл нууц үг буруу байна");
           }
         } catch (err) {
           console.log(err);
-          message.error(err.message);
+          this.handleNotify(err.message);
           this.setState({ isLoading: false });
         }
+
+        this.setState({ isLoading: false });
       }
     });
   };
@@ -133,6 +187,8 @@ class LoginModal extends React.Component {
           visible={this.props.isVisible}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
+          maskClosable={false}
+          footer={[]}
         >
           <form onSubmit={this._submit}>
             <div className="form-group">
@@ -224,16 +280,12 @@ class LoginModal extends React.Component {
             <Link
               to=""
               className="btn btn-link"
-              onClick={this.showRegisterModal}
+              onClick={this.props.showRegisterModal}
             >
               Та шинээр бүртгүүлэх бол ЭНД ДАРЖ бүртгүүлнэ үү
             </Link>
           </div>
         </Modal>
-        <RegisterModal
-          onVisibilityChange={this.toggleRegisterModal}
-          visible={this.state.isRegisterModalVisible}
-        />
       </div>
     );
   }
@@ -254,7 +306,9 @@ export default withCart(
         login: actions.login,
         setUser,
         showLoginModal,
-        hideLoginModal
+        hideLoginModal,
+        showRegisterModal,
+        updateCart
       }
     )(LoginModal)
   )

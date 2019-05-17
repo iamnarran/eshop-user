@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { toast } from "react-toastify";
-import { css, target } from "glamor";
+import { css } from "glamor";
 import clonedeep from "lodash.clonedeep";
 
 import api from "../../api";
@@ -46,8 +46,6 @@ const withCart = WrappedComponent => {
         return;
       }
 
-      let clonedProduct = clonedeep(product);
-
       const {
         name,
         qty,
@@ -56,41 +54,34 @@ const withCart = WrappedComponent => {
         saleminqty,
         salemaxqty,
         isgift
-      } = clonedProduct;
+      } = product;
 
-      let targetQty = Math.round(
-        qty + addminqty + ((qty + addminqty) % addminqty)
-      );
+      let targetQty = qty + addminqty;
 
-      if (targetQty > 0 && targetQty <= availableqty) {
-        if (targetQty <= saleminqty) {
-          targetQty = saleminqty;
-        } else {
-          if (targetQty > salemaxqty) {
-            targetQty = Math.floor(
-              qty + addminqty + ((qty + addminqty) % addminqty)
-            );
-
-            if (targetQty > salemaxqty) {
-              this.handleNotify(
-                `"${name}" барааг хамгийн ихдээ "${salemaxqty}" ширхэгээр худалдан авах боломжтой байна`
-              );
-            }
-          }
-        }
-
-        if (targetQty <= salemaxqty || salemaxqty === 0 || isgift !== 0) {
-          clonedProduct.qty = targetQty;
-        } else {
-          this.handleNotify(
-            `"${name}" барааг хамгийн ихдээ "${salemaxqty}" ширхэгээр худалдан авах боломжтой байна`
-          );
-        }
+      if (targetQty < saleminqty) {
+        product.qty = saleminqty;
+        this.handleNotify(
+          `"${name}" барааг хамгийн багадаа "${saleminqty}" ширхэгээр худалдан авах боломжтой байнаaa`
+        );
       } else {
-        this.handleNotify(`"${name}" барааны нөөц хүрэлцэхгүй байна`);
-      }
+        targetQty = Math.ceil(targetQty / addminqty) * addminqty;
 
-      return clonedProduct;
+        if (targetQty > salemaxqty && salemaxqty !== 0 && isgift !== 0) {
+          targetQty = Math.floor(targetQty / addminqty) * addminqty;
+
+          if (targetQty > availableqty) {
+            this.handleNotify(`"${name}" барааны нөөц хүрэлцэхгүй байна`);
+          } else if (targetQty > salemaxqty && salemaxqty !== 0) {
+            this.handleNotify(
+              `"${name}" барааг хамгийн ихдээ "${salemaxqty}" ширхэгээр худалдан авах боломжтой байна`
+            );
+          } else {
+            product.qty = targetQty;
+          }
+        } else {
+          product.qty = targetQty;
+        }
+      }
     };
 
     handleDecrement = product => {
@@ -99,7 +90,34 @@ const withCart = WrappedComponent => {
         return;
       }
 
-      let clonedProduct = clonedeep(product);
+      const { name, qty, addminqty, saleminqty } = product;
+
+      let targetQty = qty - addminqty;
+
+      if (targetQty <= saleminqty) {
+        product.qty = saleminqty;
+        this.handleNotify(
+          `"${name}" барааг хамгийн багадаа "${saleminqty}" ширхэгээр худалдан авах боломжтой байнаdfsaf`
+        );
+      } else {
+        targetQty = Math.floor(targetQty / addminqty) * addminqty;
+
+        if (targetQty <= saleminqty) {
+          product.qty = saleminqty;
+          this.handleNotify(
+            `"${name}" барааг хамгийн багадаа "${saleminqty}" ширхэгээр худалдан авах боломжтой байна`
+          );
+        } else {
+          product.qty = targetQty;
+        }
+      }
+    };
+
+    handleQtyChange = product => {
+      if (!product) {
+        this.handleNotify("Бараа олдсонгүй");
+        return;
+      }
 
       const {
         name,
@@ -109,215 +127,137 @@ const withCart = WrappedComponent => {
         saleminqty,
         salemaxqty,
         isgift
-      } = clonedProduct;
+      } = product;
 
-      let targetQty = Math.round(
-        qty - addminqty + ((qty - addminqty) % addminqty)
-      );
+      const targetQty = Math.round(qty / addminqty) * addminqty;
 
-      if (targetQty > 0 && targetQty <= availableqty) {
-        if (targetQty <= saleminqty) {
-          targetQty = saleminqty;
-        }
-
-        clonedProduct.qty = targetQty;
-      } else {
-        this.handleNotify(`"${name}" барааны нөөц хүрэлцэхгүй байна`);
-      }
-
-      return clonedProduct;
-    };
-
-    handleQtyChange = (product, targetQty) => {
-      let localProduct = clonedeep(product);
-
-      if (!localProduct) {
-        this.handleNotify("Бараа олдсонгүй");
-        return;
-      }
-
-      let { qty } = localProduct;
+      console.log({ targetQty });
 
       if (qty === targetQty) {
         return;
       }
 
-      const {
-        name,
-        addminqty,
-        availableqty,
-        saleminqty,
-        salemaxqty,
-        isgift
-      } = product;
-      const minQty = addminqty || 1;
-
-      // Олон ширхэгээр нэмэгддэг барааны ширхэгийн тооцоолол
-      targetQty = Math.round(targetQty / minQty) * minQty;
-
-      if (targetQty > qty) {
-        if (availableqty >= targetQty) {
-          if (salemaxqty >= targetQty || salemaxqty === 0 || isgift !== 0) {
-            if (minQty !== 1) {
-              this.handleNotify(
-                `Та "${name}" бараанаас сагсандаа "${minQty}" ширхэгээр нэмэх боломжтой байна`
-              );
-            }
-
-            localProduct.qty = targetQty;
-          } else {
-            this.handleNotify(
-              `"${name}" барааг хамгийн ихдээ "${salemaxqty}" ширхэгээр худалдан авах боломжтой байна`
-            );
-          }
-        } else {
+      if (targetQty <= saleminqty) {
+        product.qty = saleminqty;
+        this.handleNotify(
+          `"${name}" барааг хамгийн багадаа "${saleminqty}" ширхэгээр худалдан авах боломжтой байна`
+        );
+      } else if (targetQty > salemaxqty && salemaxqty !== 0 && isgift !== 0) {
+        if (targetQty > availableqty) {
+          product.qty = salemaxqty;
           this.handleNotify(`"${name}" барааны нөөц хүрэлцэхгүй байна`);
+        } else {
+          console.log({ product });
+          console.log({ salemaxqty });
+          product.qty = salemaxqty;
+          this.handleNotify(
+            `"${name}" барааг хамгийн ихдээ "${salemaxqty}" ширхэгээр худалдан авах боломжтой байна`
+          );
         }
       } else {
-        if (saleminqty > 0 && targetQty >= saleminqty) {
-          if (minQty !== 1) {
-            this.handleNotify(
-              `Та "${name}" бараанаас сагсандаа "${minQty}" ширхэгээр нэмэх боломжтой байна`
-            );
-          }
+        product.qty = targetQty;
+      }
+    };
 
-          localProduct.qty = targetQty;
+    handleUpdateCart = (product, shouldOverride = false) => {
+      if (!product) {
+        this.handleNotify("Бараа олдсонгүй");
+        return;
+      }
+
+      const {
+        cd,
+        name,
+        saleminqty,
+        salemaxqty,
+        addminqty,
+        availableqty,
+        isgift
+      } = product;
+      let { qty } = product;
+
+      let { cart } = this.props;
+      if (!cart) {
+        cart = { products: [], totalQty: 0, totalPrice: 0 };
+      }
+
+      let found = cart.products.find(prod => prod.cd === cd);
+      const qtyInCart = found ? found.qty : 0;
+
+      if (isNaN(qty)) {
+        if (qtyInCart > 0) {
+          if (qtyInCart > saleminqty) {
+            qty = addminqty;
+          } else {
+            qty = saleminqty;
+          }
         } else {
-          this.handleNotify(
-            `"${name}" барааг хамгийн багадаа "${saleminqty}" ширхэгээр худалдан авах боломжтой байна`
-          );
+          qty = saleminqty;
         }
       }
 
-      return localProduct;
+      let targetQty = shouldOverride
+        ? Math.round(qty / addminqty) * addminqty
+        : Math.round((qty + qtyInCart) / addminqty) * addminqty;
+
+      if (targetQty < saleminqty) {
+        this.handleNotify(
+          `"${name}" барааг хамгийн багадаа "${saleminqty}" ширхэгээр худалдан авах боломжтой байна`
+        );
+        return;
+      } else if (targetQty > salemaxqty && salemaxqty !== 0 && isgift !== 0) {
+        if (targetQty > availableqty) {
+          this.handleNotify(`"${name}" барааны нөөц хүрэлцэхгүй байна`);
+        } else {
+          this.handleNotify(
+            `"${name}" барааг хамгийн ихдээ "${salemaxqty}" ширхэгээр худалдан авах боломжтой байнаaaa`
+          );
+        }
+        return;
+      }
+
+      api.product
+        .isAvailable({
+          custid:
+            this.props.isLoggedIn && this.props.user ? this.props.user.id : 0,
+          skucd: cd,
+          qty: targetQty,
+          iscart: shouldOverride ? 1 : 0
+        })
+        .then(res => {
+          if (res.success) {
+            if (found) {
+              found.qty = targetQty;
+              const i = cart.products.map(prod => prod.cd).indexOf(found.cd);
+              if (i !== -1) {
+                cart.products.splice(i, 1, found);
+              }
+            } else {
+              product.qty = targetQty;
+              cart.products.push(product);
+            }
+
+            const qties = cart.products.map(prod => prod.qty);
+            cart.totalQty = qties.reduce((acc, cur) => acc + cur);
+            const prices = cart.products.map(prod => {
+              const price =
+                this.getUnitPrice(prod).sprice || this.getUnitPrice(prod).price;
+              return price * prod.qty;
+            });
+            cart.totalPrice = prices.reduce((acc, cur) => acc + cur);
+
+            this.props.updateCart({
+              products: cart.products,
+              totalQty: cart.totalQty,
+              totalPrice: cart.totalPrice
+            });
+
+            this.handleNotify(`Таны сагсанд "${name}" бараа ${qty}ш нэмэгдлээ`);
+          } else {
+            this.handleNotify(res.message);
+          }
+        });
     };
-
-    // handleUpdateCart = (
-    //   oldProduct,
-    //   newProduct = null,
-    //   shouldOverride = false
-    // ) => {
-    //   if (!oldProduct) {
-    //     this.handleNotify("Бараа олдсонгүй");
-    //     return;
-    //   }
-
-    //   if (newProduct === null) {
-    //     newProduct = clonedeep(oldProduct);
-    //   }
-
-    //   let { cart } = this.props;
-    //   if (!cart) {
-    //     cart = { products: [], totalQty: 0, totalPrice: 0 };
-    //   }
-
-    //   const found = cart.products.find(prod => prod.cd === newProduct.cd);
-    //   const qtyInCart = found ? found.qty : 0;
-
-    //   // if (qtyInCart > 0) {
-
-    //   // } else {
-    //   //   if (oldProduct.qty === newProduct.qty) {
-
-    //   //   } else {
-    //   //     if (oldProduct.qty < newProduct.qty) {
-
-    //   //     } else {
-
-    //   //     }
-    //   //   }
-    //   // }
-
-    //   // let qtyToChange = addminqty;
-    //   // if (qtyInCart > 0) {
-    //   //   const totalQty = qtyInCart + addminqty;
-    //   //   if (totalQty < saleminqty) {
-    //   //     qtyToChange = saleminqty;
-    //   //   } else {
-    //   //     if (totalQty >= salemaxqty) {
-    //   //       qtyToChange = salemaxqty - qtyInCart;
-    //   //     }
-    //   //   }
-    //   // } else if (qtyInCart === 0) {
-    //   //   if (oldProduct.qty < qty) {
-    //   //     if () {
-
-    //   //     }
-    //   //   }
-    //   //   qtyToChange = saleminqty;
-    //   // } else {
-    //   //   // Error
-    //   // }
-
-    //   if (qty > 0) {
-    //     if (qty < saleminqty) {
-    //       this.handleNotify(
-    //         `"${name}" барааг хамгийн багадаа "${saleminqty}" ширхэгээр худалдан авах боломжтой байна`
-    //       );
-    //       return oldProduct;
-    //     } else if (salemaxqty > 0 && qty > salemaxqty) {
-    //       this.handleNotify(
-    //         `"${name}" барааг хамгийн ихдээ "${salemaxqty}" ширхэгээр худалдан авах боломжтой байна`
-    //       );
-    //       return oldProduct;
-    //     }
-
-    //     api.product
-    //       .isAvailable({
-    //         custid:
-    //           this.props.isLoggedIn && this.props.user ? this.props.user.id : 0,
-    //         skucd: cd,
-    //         qty,
-    //         iscart: shouldOverride ? 1 : 0
-    //       })
-    //       .then(res => {
-    //         if (res.success) {
-    //           const found = cart.products.find(prod => prod.cd === cd);
-
-    //           let qtyInCart = qty;
-    //           if (!shouldOverride && found) {
-    //             qtyInCart = found.qty + qty;
-    //           }
-
-    //           if (found) {
-    //             found.qty = qtyInCart;
-    //             const i = cart.products.map(prod => prod.cd).indexOf(found.cd);
-    //             if (i !== -1) {
-    //               cart.products.splice(i, 1, found);
-    //             }
-    //           } else {
-    //             product.qty = qtyInCart;
-    //             cart.products.push(product);
-    //           }
-
-    //           const qties = cart.products.map(prod => prod.qty);
-    //           cart.totalQty = qties.reduce((acc, cur) => acc + cur);
-
-    //           const prices = cart.products.map(prod => {
-    //             const price =
-    //               this.getUnitPrice(prod).sprice ||
-    //               this.getUnitPrice(prod).price;
-
-    //             return price * prod.qty;
-    //           });
-    //           cart.totalPrice = prices.reduce((acc, cur) => acc + cur);
-
-    //           // TODO: stop page refreshing
-    //           this.props.updateCart({
-    //             products: cart.products,
-    //             totalQty: cart.totalQty,
-    //             totalPrice: cart.totalPrice
-    //           });
-
-    //           this.handleNotify(
-    //             `Таны сагсанд "${name}" бараа ${qty}ш нэмэгдлээ`
-    //           );
-    //         } else {
-    //           this.handleNotify(res.message);
-    //         }
-    //       });
-    //   }
-    // };
 
     // handleAddToCart = (product, shouldOverride = false) => {
     //   if (!product) {
