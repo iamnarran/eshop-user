@@ -71,7 +71,7 @@ class Card extends React.Component {
 
   handleAddToCart = item => e => {
     e.preventDefault();
-
+    console.log('cart click');
     let products = [];
     if (item.recipeid) {
       // Хоолны жор
