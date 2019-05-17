@@ -3,27 +3,29 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
 import withCart from "./HOC/withCart";
-import storage from "../utils/storage";
+import { updateCart } from "../actions/cart";
 import { signOut, showLoginModal } from "../actions/login";
 import p1 from "../scss/assets/images/demo/1.jpg";
 
 class UserButton extends React.Component {
-  showLoginModal = e => {
+  handleLoginClick = e => {
     e.preventDefault();
     this.props.showLoginModal();
-    // this.props.onUserButtonClick(e);
   };
 
   handleLogout = () => {
-    this.props.onClear();
-    storage.remove("access_token");
+    this.props.updateCart({
+      products: [],
+      totalQty: 0,
+      totalPrice: 0
+    });
     this.props.signOut();
   };
 
   render() {
     let content = (
       <li className="list-inline-item">
-        <Link to="" onClick={this.showLoginModal}>
+        <Link to="" onClick={this.handleLoginClick}>
           <span className="text-uppercase">Нэвтрэх</span>
         </Link>
       </li>
@@ -177,6 +179,6 @@ const mapStateToProps = state => {
 export default withCart(
   connect(
     mapStateToProps,
-    { signOut, showLoginModal }
+    { updateCart, signOut, showLoginModal }
   )(UserButton)
 );

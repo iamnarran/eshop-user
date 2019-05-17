@@ -17,11 +17,12 @@ const options = {
 
 const fetch = async (props, onData) => {
   try {
-    const { isLoggedIn, user } = props;
     let wishlistProducts = [];
-    if (isLoggedIn && user) {
-      wishlistProducts = await api.customer.getWishList({ custid: user.id });
-    }
+    // if (this.props.isLoggedIn && this.props.user) {
+    //   wishlistProducts = await api.customer.getWishList({
+    //     custid: this.props.user.id
+    //   });
+    // }
 
     const staticInfo = await api.staticInfo.findAll();
 

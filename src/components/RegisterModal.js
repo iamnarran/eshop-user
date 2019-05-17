@@ -5,47 +5,37 @@ import { EXPAND_LEFT } from "react-ladda";
 import { createForm } from "rc-form";
 import { Redirect } from "react-router-dom";
 
-import FacebookLogin from "./FacebookLogin";
-import actions from "../actions/register";
+import actions, {
+  showRegisterModal,
+  hideRegisterModal
+} from "../actions/register";
 
-@connect(
-  null,
-  {
-    register: actions.register
-  }
-)
 class RegisterModal extends React.Component {
   state = {
-    loading: false
+    isLoading: false
   };
 
-  componentDidUpdate(prevProps, prevState) {
-    if (this.props.visible !== prevProps.visible) {
-      this.setState({ visible: this.props.visible });
-    }
-  }
-
-  handleOk = e => {
-    this.props.onVisibleChange(e);
+  handleOk = () => {
+    this.props.hideRegisterModal();
   };
 
-  handleCancel = e => {
-    this.props.onVisibleChange(e);
+  handleCancel = () => {
+    this.props.hideRegisterModal();
   };
 
   _submit = e => {
     e.preventDefault();
+
     this.props.form.validateFields(async (error, form) => {
       if (!error) {
-        this.setState({ loading: true });
+        this.setState({ isLoading: true });
         let res = null;
         try {
           res = await this.props.register(form);
-          console.log(res);
 
           if (res.status === "failed") {
             message.error(res.message);
-            this.setState({ loading: false });
+            this.setState({ isLoading: false });
           } else {
             this.handleOk();
             return <Redirect to="/" />;
@@ -53,7 +43,7 @@ class RegisterModal extends React.Component {
         } catch (err) {
           console.log(err);
           message.error(err.message);
-          this.setState({ loading: false });
+          this.setState({ isLoading: false });
         }
       }
     });
@@ -65,9 +55,10 @@ class RegisterModal extends React.Component {
     return (
       <Modal
         title="Бүртгүүлэх"
-        visible={this.props.visible}
+        visible={this.props.isVisible}
         onOk={this.handleOk}
         onCancel={this.handleCancel}
+        maskClosable={false}
         footer={[]}
       >
         <div className="modal-body">
@@ -198,7 +189,7 @@ class RegisterModal extends React.Component {
             <Button
               type="primary"
               className="btn btn-block btn-login text-uppercase"
-              loading={this.state.loading}
+              isLoading={this.state.isLoading}
               data-style={EXPAND_LEFT}
               htmlType="submit"
             >
@@ -224,4 +215,15 @@ class RegisterModal extends React.Component {
   }
 }
 
-export default createForm()(RegisterModal);
+const mapStateToProps = state => {
+  return {
+    isVisible: state.auth.isRegisterModalVisible
+  };
+};
+
+export default createForm()(
+  connect(
+    mapStateToProps,
+    { register: actions.register, showRegisterModal, hideRegisterModal }
+  )(RegisterModal)
+);
