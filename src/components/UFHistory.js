@@ -22,6 +22,7 @@ class Component extends React.Component {
   };
 
   onDelete = (e, item) => {
+    console.log(item.cd);
     e.preventDefault();
     api.customer
       .deleteSeenList({ custId: this.props.user.id, skucd: item.cd })
@@ -38,9 +39,8 @@ class Component extends React.Component {
 
   render() {
     let tableList = null;
-    const list = this.state.deliveryList;
     const formatter = new Intl.NumberFormat("en-US");
-    tableList = list.map((item, index) => {
+    tableList = this.state.deliveryList.map((item, index) => {
       return (
         <div className="single flex-space" key={index}>
           <div className="product">

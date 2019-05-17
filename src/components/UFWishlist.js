@@ -41,10 +41,10 @@ class Component extends React.Component {
   };
 
   render() {
+    console.log(this.state.wishlist);
     let tableList = null;
-    const list = this.state.wishlist;
     const formatter = new Intl.NumberFormat("en-US");
-    tableList = list.map((item, index) => {
+    /* tableList = this.state.wishlist.map((item, index) => {
       return (
         <div className="single flex-space" key={index}>
           <div className="product">
@@ -91,7 +91,7 @@ class Component extends React.Component {
           </div>
         </div>
       );
-    });
+    }); */
 
     return (
       <div className="col-md-8 pad10">
