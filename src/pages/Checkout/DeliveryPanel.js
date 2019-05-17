@@ -2,6 +2,10 @@ import React from "react";
 import { connect } from "react-redux";
 import { Icon, Tabs, Input, Form, Select } from "antd";
 import api from "../../api";
+import moment from "moment";
+import { DatePicker } from "antd";
+
+const { MonthPicker, RangePicker } = DatePicker;
 const Option = Select.Option;
 const TabPane = Tabs.TabPane;
 const formatter = new Intl.NumberFormat("en-US");
@@ -148,6 +152,10 @@ class DeliveryPanel extends React.Component {
     }
   };
 
+  disabledDate = current => {
+    return current && current < moment().endOf("day");
+  };
+
   getLocs = async id => {
     await api.checkout.getlocs({ locid: id }).then(res => {
       if (res.success == true) {
@@ -183,11 +191,14 @@ class DeliveryPanel extends React.Component {
       addAddress,
       deliveryId,
       key,
+      dateString,
+      dateStringChange,
       addresstype
     } = this.props;
     const style = {
       color: "#feb415"
     };
+
     return (
       <Tabs onChange={e => changeTab(e, this.props.form)} defaultActiveKey="1">
         {deliveryTypes.map((item, i) => {
@@ -259,18 +270,29 @@ class DeliveryPanel extends React.Component {
                                 onSelect={(value, event) =>
                                   addAddress(value, event, this.props.form)
                                 }
+                                showSearch
+                                optionFilterProp="children"
                                 placeholder="Хаягаа сонгоно уу ?"
                               >
-                                {this.renderAddrsOption()}
                                 <Option value={null}>
                                   <div
                                     style={{
-                                      cursor: "pointer"
+                                      cursor: "pointer",
+                                      backgroundColor: "#feb415",
+                                      width: "8em",
+                                      borderRadius: "2px"
                                     }}
                                   >
-                                    <Icon type="plus" /> Хаяг нэмэх
+                                    <span
+                                      style={{
+                                        padding: "10px"
+                                      }}
+                                    >
+                                      <Icon type="plus" /> Хаяг нэмэх
+                                    </span>
                                   </div>
                                 </Option>
+                                {this.renderAddrsOption()}
                               </Select>
                             )}
                           </Form.Item>
@@ -291,6 +313,8 @@ class DeliveryPanel extends React.Component {
                         })(
                           <Select
                             placeholder="Хот/аймаг *"
+                            showSearch
+                            optionFilterProp="children"
                             className="col-md-12"
                             onChange={e => onChangeMainLoc(e, this.props.form)}
                           >
@@ -310,6 +334,8 @@ class DeliveryPanel extends React.Component {
                           ]
                         })(
                           <Select
+                            showSearch
+                            optionFilterProp="children"
                             placeholder="Дүүрэг/Сум*"
                             onChange={e =>
                               onChangeSubLoc(e, this.props.form.validateFields)
@@ -330,7 +356,11 @@ class DeliveryPanel extends React.Component {
                             }
                           ]
                         })(
-                          <Select placeholder="Хороо*">
+                          <Select
+                            placeholder="Хороо*"
+                            showSearch
+                            optionFilterProp="children"
+                          >
                             {this.renderCommiteLocation()}
                           </Select>
                         )}
@@ -392,6 +422,32 @@ class DeliveryPanel extends React.Component {
                         )}
                       </Form.Item>
                     </div>
+                  </div>
+                  <hr />
+                  <div className="text-left">
+                    <span
+                      style={{
+                        marginLeft: "10px",
+                        color: "rgba(0, 0, 0, 0.5)",
+                        fontWeight: "bold"
+                      }}
+                    >
+                      Хүргэлтээр авах өдрөө сонгоно уу
+                    </span>
+
+                    <DatePicker
+                      style={{ marginLeft: "10px" }}
+                      format="YYYY-MM-DD"
+                      showTime={false}
+                      placeholder="Огноо сонгох"
+                      defaultValue={moment(dateString, "YYYY-MM-DD")}
+                      allowClear={false}
+                      onChange={(date, dateString) =>
+                        dateStringChange(date, dateString)
+                      }
+                      disabledDate={this.disabledDate}
+                      /*disabledTime={disabledDateTime} */
+                    />
                   </div>
                   <hr />
 

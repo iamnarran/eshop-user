@@ -73,5 +73,12 @@ export default [
     URL: `${API}/api/customer/address/loc/:locid`,
     REPLACE: "locid",
     TOKEN: true
+  },
+  {
+    NAME: "checkPayment",
+    METHOD: "GET",
+    URL: `${API}/api/order/qpay/:id`,
+    REPLACE: "id",
+    TOKEN: true
   }
 ];
