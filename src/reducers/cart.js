@@ -4,7 +4,8 @@ import { UPDATE_CART } from "../actions/types";
 
 const initialState = {
   totalQty: 0,
-  totalPrice: 0
+  totalPrice: 0,
+  products: []
 };
 
 export default typeToReducer(

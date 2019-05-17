@@ -49,6 +49,8 @@ class DeliveryInfo extends React.Component {
       } else {
         addrs = chosenInfo.addressnm;
       }
+    } else {
+      addrs = chosenInfo.addressnm;
     }
     return (
       <div className="col-lg-4 pad10">
@@ -119,8 +121,8 @@ class DeliveryInfo extends React.Component {
               <strong>Төлөх дүн</strong>
             </p>
             <p className="text flex-space">
-              <span>Бараа ({products.products.length}):</span>
-              <strong>{formatter.format(products.totalPriceInCart)}₮</strong>
+              <span>Бараа ({products.totalQty}):</span>
+              <strong>{formatter.format(products.totalPrice)}₮</strong>
             </p>
             <p className="text flex-space">
               <span>Хүргэлтийн үнэ:</span>
@@ -140,21 +142,14 @@ class DeliveryInfo extends React.Component {
             <p className="text flex-space">
               <span>Нийт дүн:</span>
               <strong>
-                {formatter.format(
-                  products.totalPriceInCart + deliver1 - usedpoint
-                )}
-                ₮
+                {formatter.format(products.totalPrice + deliver1 - usedpoint)}₮
               </strong>
             </p>
             <p className="text flex-space">
               <span>НӨАТ:</span>
               <strong>
                 {formatter.format(
-                  this.generateNoat(
-                    products.totalPriceInCart,
-                    deliver1,
-                    usedpoint
-                  )
+                  this.generateNoat(products.totalPrice, deliver1, usedpoint)
                 )}
                 ₮
               </strong>
@@ -162,7 +157,7 @@ class DeliveryInfo extends React.Component {
             <Checkbox onChange={this.handleAgreement}>
               {" "}
               <a>
-                <span>Үйлчилгээний нөхцөл</span>
+                <span style={{ fontWeight: "bold" }}>Үйлчилгээний нөхцөл</span>
               </a>
             </Checkbox>
             <button
