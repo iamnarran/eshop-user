@@ -119,9 +119,9 @@ class UserButton extends React.Component {
                     </Link>
                   </li>
                   <li>
-                    <Link to="/userprofile" className="flex-this">
+                    <Link to="/userprofile/deliveryhistory" className="flex-this">
                       <i className="fa fa-history" aria-hidden="true" />
-                      <span>Худалдан авалтын түүх</span>
+                      <span>Захиалгын түүх</span>
                     </Link>
                   </li>
                   <li>
@@ -138,7 +138,7 @@ class UserButton extends React.Component {
                   </li>
                   <li>
                     <Link
-                      to="/userprofile/deliveryAddress"
+                      to="/userprofile/delivery"
                       className="flex-this"
                     >
                       <i className="fa fa-compass" aria-hidden="true" />

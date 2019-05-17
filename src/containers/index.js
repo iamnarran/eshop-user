@@ -12,6 +12,7 @@ import Season from "./Season";
 import PackageDetail from "./Package/detail";
 import WishList from "./WishList";
 import UserProfile from "./UserProfile";
+// import DeliveryAddress from './UsrProfDeliveryAddress/index';
 import StaticPage from "./StaticPage";
 import CategoryInfo from "./CategoryInfo";
 import Cart from "./Cart";
@@ -38,5 +39,6 @@ export {
   Cart,
   Checkout,
   ProductList,
-  OrderDetail
+  OrderDetail,
+  // DeliveryAddress
 };
