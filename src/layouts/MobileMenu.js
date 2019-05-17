@@ -79,16 +79,18 @@ class MobileMenu extends React.Component {
         <SubMenu
           key={index}
           title={
-            <span>
+            <Link to={item.route} style={{ color: "#999" }}>
               <span>{item.name}</span>
-            </span>
+            </Link>
           }
         >
           {item.children &&
             item.children.map(function(it, ind) {
               return (
                 <Menu.Item key={ind} style={{ color: "white" }}>
-                  <a href=" ">{it.name}</a>
+                  <Link to={it.route} onClick={() => this.togglePopup}>
+                    {it.name}
+                  </Link>
                 </Menu.Item>
               );
             })}
@@ -114,10 +116,10 @@ class MobileMenu extends React.Component {
                   </select>
                 </form>
               </li>
-              <li className="list-inline-item" onClick={this.togglePopup}>
+              <li className="list-inline-item">
                 <button className="button buttonBlack">
                   {/* <i className="fa fa-times" aria-hidden="true" /> */}
-                  <img src={crossImage} alt="cross" height="25px" />
+                  <img src={crossImage} alt="cross" height="25px" aria-hidden="true" />
                 </button>
               </li>
             </ul>

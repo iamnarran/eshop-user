@@ -25,7 +25,7 @@ class ProductDetail extends Component {
     isShowMoreClicked: false
   };
 
-  componentDidMount() {
+  addView() {
     if (this.props.isLoggedIn) {
       api.customer
         .addViewList({
@@ -38,6 +38,9 @@ class ProductDetail extends Component {
           }
         });
     }
+  }
+  componentDidMount() {
+    this.addView();
   }
 
   handleShowMoreClick = () => {
@@ -386,7 +389,7 @@ class ProductDetail extends Component {
     };
 
     return (
-      <div className="col-md-12 col-lg-12 col-sm-12 col-xl-12">
+      <div className="col-md-12 col-lg-12 col-sm-12 col-xl-12 ck-editor">
         {!!attributes && !!attributes.length && (
           <div style={{ marginTop: "80px", marginBottom: "0" }}>
             <h1 className="title">

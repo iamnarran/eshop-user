@@ -71,7 +71,7 @@ class Card extends React.Component {
 
   handleAddToCart = item => e => {
     e.preventDefault();
-
+    console.log("cart click");
     let products = [];
     if (item.recipeid) {
       // Хоолны жор
@@ -81,7 +81,7 @@ class Card extends React.Component {
           if (products.length) {
             products.reduce((acc, next) => {
               return acc.then(() => {
-                return this.props.onAddToCart(next);
+                return this.props.onUpdateCart(next);
               });
             }, Promise.resolve());
           }
@@ -97,7 +97,7 @@ class Card extends React.Component {
           if (products.length) {
             products.reduce((acc, next) => {
               return acc.then(() => {
-                return this.props.onAddToCart(next);
+                return this.props.onUpdateCart(next);
               });
             }, Promise.resolve());
           }
@@ -107,7 +107,8 @@ class Card extends React.Component {
       });
     } else {
       // Бараа
-      this.props.onAddToCart(item);
+      this.props.onIncrement(item);
+      this.props.onUpdateCart(item);
     }
   };
 
@@ -190,7 +191,12 @@ class Card extends React.Component {
     }
 
     let isDisabled = true;
-    if (item.id || item.recipeid || item.availableqty > 0) {
+    if (
+      item.id ||
+      item.recipeid ||
+      item.availableqty > 0 ||
+      item.isgift !== 0
+    ) {
       isDisabled = false;
     }
 

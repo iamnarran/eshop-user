@@ -27,6 +27,65 @@
 }
 
 @media (max-width: 1100px) {
+    .top-nav {
+        .d-none {
+            &:last-child {
+                display: block !important;
+
+                .text-right>ul {
+                    display: flex;
+                    justify-content: space-between;
+                }
+            }
+        }
+
+        .right-panel {
+            .user {
+                z-index: 5;
+
+                .dropdown {
+                    z-index: 5;
+                }
+            }
+        }
+    }
+
+    .top-main {
+        .search {
+            .search-mobile {
+                top: 98px;
+            }
+
+            // position: absolute;
+            // padding: 0;
+            // width: 300px;
+            // margin: auto;
+            // z-index: 0;
+
+            // .search-mobile {
+            //     position: relative;
+            //     width: 300px;
+            //     padding: 0;
+            //     margin: 0;
+            //     left: 0;
+            // }
+
+            // .search-form {
+            //     width: 100%;
+
+            //     input {
+            //         outline: 0;
+
+            //         &:focus {
+            //             box-shadow: none;
+            //             outline: 0;
+            //         }
+            //     }
+            // }
+        }
+    }
+
+
     .homerenderblocks {
         .container.pad10 {
             .row.row10 {
@@ -41,6 +100,25 @@
         opacity: 1 !important;
         visibility: visible !important;
         bottom: 0 !important;
+        z-index: 1;
+
+        a {
+            z-index: 10;
+            position: relative;
+            pointer-events: inherit !important;
+            padding: 0px !important;
+            margin-left: 10px;
+            width: 40px;
+            height: 40px;
+            line-height: 40px !important;
+            text-align: center;
+            background: #feb413;
+            border-radius: 50%;
+
+            i {
+                color: #FFF;
+            }
+        }
     }
 
     .top-main {
@@ -48,6 +126,7 @@
         // position: fixed;
         background: #FFF;
         top: 0;
+        z-index: 0;
 
         .search {
             li:last-child {
@@ -65,6 +144,7 @@
 
             li:first-child {
                 width: 30%;
+                display: none;
 
                 .btn {
                     white-space: inherit;
@@ -93,6 +173,9 @@
         }
 
         .logo {
+            position: relative;
+            z-index: 1;
+
             img {
                 max-width: 70px;
             }
@@ -101,6 +184,8 @@
         .buttonGrey {
             background: #FFF;
             border: solid 1px #ededed;
+            position: relative;
+            z-index: 1;
         }
 
         .action {
@@ -302,7 +387,8 @@
 
             .text {
                 font-weight: 100;
-                padding: 10px 20px;
+                padding: 0px 20px;
+                margin: 5px;
                 font-size: 14px;
                 color: #797878;
             }
@@ -440,7 +526,34 @@
         }
     }
 
+    .single.flex-this {
+        .action {
+            button {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background: #feb413;
+
+                i {
+                    color: #FFF;
+                }
+            }
+        }
+    }
+
     .product-detail-page {
+        z-index: 5;
+
+        .swiper-button-next.swiper-button-disabled,
+        .swiper-button-prev.swiper-button-disabled {
+            opacity: 1;
+            cursor: auto;
+            pointer-events: none;
+            border: solid 1px #e8e8e8;
+            background-color: #f3f3f3;
+            color: #FFF;
+        }
+
         .col-sm-9 {
             padding: 0;
             margin: 0;
@@ -458,6 +571,22 @@
 
         .image {
             border: solid 1px #ededed;
+        }
+
+        .ck-editor {
+            text-align: justify;
+            line-height: 24px;
+
+            img {
+                width: 100% !important;
+                max-width: 100% !important;
+                height: inherit !important;
+            }
+
+            table {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
         }
 
         .product-info {
@@ -489,11 +618,21 @@
     }
 
     .product-bottom-info {
+        display: flex;
+        flex-wrap: wrap;
+
         .row.row10 {
-            display: flex;
+            width: 50%;
+            margin-bottom: 20px;
+
+            // display: flex;
+            .col-sm-3 {
+                max-width: 100% !important;
+                color: #000;
+            }
 
             .col-sm-6 {
-                max-width: 85%;
+                // max-width: 85%;
             }
         }
     }
@@ -506,9 +645,153 @@
             margin-left: 0 !important;
         }
     }
+
+    .list-filter {
+        .flex-this.end {
+            display: block;
+            // justify-content: initial;
+            // align-items: initial;
+        }
+
+        .form-group.flex-this {
+            justify-content: flex-end;
+        }
+
+        label {
+            display: block;
+        }
+    }
+
+    .left-panel {
+        visibility: visible;
+        height: 100%;
+        overflow: hidden;
+        overflow-y: auto;
+        transform: translateX(-280px);
+        opacity: 1;
+
+        &.show {
+            transform: translateX(0px);
+        }
+    }
+
+    .table-sm {
+        display: flex;
+        padding: 15px;
+
+        thead {
+            width: 50%;
+        }
+
+        tr>* {
+            display: block;
+        }
+
+        th {
+            width: 100%;
+            text-align: left !important;
+        }
+
+        td {
+            width: 100%;
+            text-align: left !important;
+
+            span {
+                font-size: 10px;
+            }
+        }
+    }
+
+    .list-product {
+        position: relative;
+        display: flex;
+
+        .image-container {
+            overflow: hidden;
+
+            a {
+                // width: 150px;
+                height: 100%;
+
+                span {
+                    background-position: center !important;
+                }
+            }
+
+            img {
+                height: 100%;
+                width: auto !important;
+            }
+        }
+
+        .info-container {
+            padding: 20px 15px;
+
+            a {
+                position: relative;
+                display: block !important;
+                top: initial !important;
+                right: initial !important;
+                bottom: initial !important;
+                left: initial !important;
+                text-align: left !important;
+            }
+
+            .price {
+                margin: 10px !important;
+
+                .col-md-12 {
+                    padding: 0 !important;
+                    padding-left: 5px !important;
+                }
+            }
+
+            .cart-container {
+                display: flex !important;
+                justify-content: flex-end;
+                position: relative;
+                width: 100%;
+                top: initial !important;
+                right: initial !important;
+                bottom: initial !important;
+                left: initial !important;
+                text-align: center !important;
+                // border: solid 1px #ededed;
+
+                a {
+                    font-size: 20px;
+                    width: 40px;
+                    height: 40px;
+                    line-height: 40px;
+                    border-radius: 50%;
+                    background: #feb413;
+                    font-size: 20px;
+                    text-align: center !important;
+
+                    i {
+                        color: #FFF;
+                    }
+                }
+            }
+        }
+
+        .label {
+            display: none !important;
+            top: 0 !important;
+            right: 0 !important;
+            left: initial !important;
+        }
+    }
 }
 
 @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
+    .top-main .search {
+        position: relative;
+        width: 100%;
+        left: 30px;
+        // margin-left: 10px;
+    }
+
     .top-main .action li a.flex-this {
         display: none !important;
     }

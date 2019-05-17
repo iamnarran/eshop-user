@@ -12,12 +12,14 @@ import Season from "./Season";
 import PackageDetail from "./Package/detail";
 import WishList from "./WishList";
 import UserProfile from "./UserProfile";
+// import DeliveryAddress from './UsrProfDeliveryAddress/index';
 import StaticPage from "./StaticPage";
 import CategoryInfo from "./CategoryInfo";
 import Cart from "./Cart";
 import Checkout from "./Checkout";
 import ProductList from "./ProductList";
 import OrderDetail from "./OrderDetail";
+import DeliveryAddress from "./UsrProfDeliveryAddress";
 export {
   Footer,
   Header,
@@ -39,4 +41,5 @@ export {
   Checkout,
   ProductList,
   OrderDetail
+  // DeliveryAddress
 };
