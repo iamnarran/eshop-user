@@ -2,7 +2,8 @@ import React from "react";
 import { Form } from "antd";
 import { connect } from "react-redux";
 import api from "../api";
-
+import arrow from "../scss/assets/images/demo/arrow.png";
+import { Avatar } from "antd";
 class Component extends React.Component {
   state = {
     deliveryList: []
@@ -74,8 +75,18 @@ class Component extends React.Component {
                 color: "#595959"
               }}
               href={"/order/" + item.id}
+              className="d-none d-lg-block d-xl-block"
             >
               Цааш үзэх
+            </a>
+            <a
+              style={{
+                color: "#595959"
+              }}
+              href={"/order/" + item.id}
+              className="d-lg-none d-xl-none"
+            >
+              <Avatar size="small" src={arrow} />
             </a>
           </td>
         </tr>

@@ -44,5 +44,11 @@ export default [
     METHOD: "DELETE",
     URL: `${API}/api/customer/seenList/:custid/:skucd`,
     REPLACE: "custid, skucd"
+  },
+  {
+    NAME: "passreset",
+    METHOD: "PUT",
+    URL: `${API}/api/customer/passreset`,
+    TOKEN: true
   }
 ];
