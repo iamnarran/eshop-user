@@ -527,27 +527,35 @@ class Checkout extends React.Component {
   onChangeMainLoc = (e, form) => {
     api.location.findLocationWidthId({ id: e }).then(res => {
       if (res.success == true) {
-        form.setFieldsInitialValue({
+        /*  form.setFieldsInitialValue({
           subLocation: "",
           commiteLocation: ""
-        });
+        }); */
         this.setState({ subLocation: res.data });
       }
     });
   };
 
-  onChangeSubLoc = (e, validateFields) => {
-    validateFields((err, values) => {
-      if (values.mainLocation != "") {
-        api.location
-          .findCommiteLocation({ provid: values.mainLocation, distid: e })
-          .then(res => {
-            if (res.success == true) {
-              this.setState({ commiteLocation: res.data });
-            }
-          });
-      }
-    });
+  onChangeSubLoc = (e, validateFields, e1) => {
+    if (e1 == undefined) {
+      validateFields((err, values) => {
+        if (values.mainLocation != "") {
+          api.location
+            .findCommiteLocation({ provid: values.mainLocation, distid: e })
+            .then(res => {
+              if (res.success == true) {
+                this.setState({ commiteLocation: res.data });
+              }
+            });
+        }
+      });
+    } else {
+      api.location.findCommiteLocation({ provid: e1, distid: e }).then(res => {
+        if (res.success == true) {
+          this.setState({ commiteLocation: res.data });
+        }
+      });
+    }
   };
 
   handleUserEpoint = async e => {
@@ -695,7 +703,7 @@ class Checkout extends React.Component {
     tmp.paymentType = this.state.chosenPayment.id;
     tmp.addPoint = 0;
     tmp.deliveryDate = this.state.dateString;
-    //tmp.cardNo = epointcard.cardno;
+    tmp.cardNo = epointcard.cardno;
     tmp.usedPoint = epointUsedPoint;
     tmp.items = [];
     if (isNaN(this.state.chosenInfo.commiteLocation)) {
