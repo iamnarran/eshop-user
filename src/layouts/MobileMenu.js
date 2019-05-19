@@ -116,7 +116,7 @@ class MobileMenu extends React.Component {
                   </select>
                 </form>
               </li>
-              <li className="list-inline-item">
+              <li className="list-inline-item" onClick={this.togglePopup}>
                 <button className="button buttonBlack">
                   {/* <i className="fa fa-times" aria-hidden="true" /> */}
                   <img src={crossImage} alt="cross" height="25px" aria-hidden="true" />

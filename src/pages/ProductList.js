@@ -6,6 +6,7 @@ import api from "../api";
 import { CARD_LIST_TYPES, CARD_TYPES } from "../utils/consts";
 import CardList from "../components/CardList";
 import FilterSet from "../components/FilterSet";
+import crossImage from "../scss/assets/svg/error.svg";
 
 class ProductList extends React.Component {
   constructor(props) {
@@ -38,9 +39,15 @@ class ProductList extends React.Component {
       searchedProd: [],
       promotId: null,
       searchProdItem: [],
-      searched: false
+      searched: false,
+      isLeftPanel: false
     };
   }
+
+  showLeftPanel = e => {
+    this.setState({ isLeftPanel: !this.state.isLeftPanel });
+    console.log(this.state.isLeftPanel);
+  };
 
   notify = message => toast(message, { autoClose: 5000 });
 
@@ -208,6 +215,7 @@ class ProductList extends React.Component {
     } = this.props.container;
     const products = this.state.products;
     const Option = Select.Option;
+    const leftPanel = `left-panel${this.state.isLeftPanel ? " show" : ""}`;
 
     let cats = <div className="block">Ангилал байхгүй байна</div>;
 
@@ -273,13 +281,18 @@ class ProductList extends React.Component {
             </div>
             <div className="row row10">
               <div className="col-xl-3 col-lg-3 col-md-3 pad10">
-                <div className="text-right d-block d-md-none">
-                  <a href=" " className="btn btn-gray btn-filter">
-                    <i className="fa fa-filter" aria-hidden="true" />
-                    <span className="text-uppercase">Шүүлтүүр</span>
-                  </a>
-                </div>
-                <div className="left-panel">
+                <div className={leftPanel}>
+                  <button
+                    className="button buttonBlack filter-cross"
+                    onClick={this.showLeftPanel}
+                  >
+                    <img
+                      src={crossImage}
+                      alt="cross"
+                      height="25px"
+                      aria-hidden="true"
+                    />
+                  </button>
                   <h5 className="title">
                     <strong>Хайлтын үр дүн</strong>
                   </h5>
@@ -330,6 +343,12 @@ class ProductList extends React.Component {
                     </div>
                     <div className="col-lg-6 pad10">
                       <form className="flex-this end">
+                        <div className="text-right d-block d-md-none">
+                          <a href=" " className="btn btn-gray btn-filter">
+                            <i className="fa fa-filter" aria-hidden="true" />
+                            <span className="text-uppercase">Шүүлтүүр</span>
+                          </a>
+                        </div>
                         <div
                           className="form-group my-select flex-this"
                           style={{ marginRight: "10px" }}

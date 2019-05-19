@@ -269,6 +269,23 @@ class AppHeader extends Component {
                                 Хайх
                               </span>
                             </Link>
+                            <Link
+                              to=""
+                              className="btn mobile-search-cross"
+                              onClick={this.toggleSearch}
+                              style={{background: 'red'}}
+                            >
+                              <i
+                                className="fa fa-remove d-block d-sm-none"
+                                style={{ fontSize: "20px", margin: "5px" }}
+                              />
+                              <span
+                                className="text-uppercase d-none d-sm-block"
+                                style={{ color: "black" }}
+                              >
+                                Хаах
+                              </span>
+                            </Link>
                           </li>
                         </ul>
                       </form>

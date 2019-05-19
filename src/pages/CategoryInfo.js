@@ -11,6 +11,7 @@ import {
 } from "../utils/consts";
 import CardList from "../components/CardList";
 import FilterSet from "../components/FilterSet";
+import crossImage from "../scss/assets/svg/error.svg";
 
 class CategoryInfo extends React.Component {
   constructor(props) {
@@ -292,16 +293,18 @@ class CategoryInfo extends React.Component {
             </div>
             <div className="row row10">
               <div className="col-xl-3 pad10">
-                <div className="text-right d-block d-md-none">
-                  <a
-                    className="btn btn-gray btn-filter"
+                <div className={leftPanel}>
+                  <button
+                    className="button buttonBlack filter-cross"
                     onClick={this.showLeftPanel}
                   >
-                    <i className="fa fa-filter" aria-hidden="true" />
-                    <span className="text-uppercase">Шүүлтүүр</span>
-                  </a>
-                </div>
-                <div className={leftPanel}>
+                    <img
+                      src={crossImage}
+                      alt="cross"
+                      height="25px"
+                      aria-hidden="true"
+                    />
+                  </button>
                   <h5 className="title">
                     <strong>Хайлтын үр дүн</strong>
                   </h5>
@@ -325,6 +328,15 @@ class CategoryInfo extends React.Component {
                     </div>
                     <div className="col-lg-6 pad10">
                       <form className="flex-this end">
+                        <div className="text-right d-block d-md-none">
+                          <a
+                            className="btn btn-gray btn-filter"
+                            onClick={this.showLeftPanel}
+                          >
+                            <i className="fa fa-filter" aria-hidden="true" />
+                            <span className="text-uppercase">Шүүлтүүр</span>
+                          </a>
+                        </div>
                         <div className="form-group my-select flex-this">
                           <label
                             htmlFor="inputState"
