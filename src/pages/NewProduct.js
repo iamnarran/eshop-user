@@ -3,11 +3,7 @@ import React from "react";
 import CardList from "../components/CardList";
 import Banner from "../components/Banner";
 import PageHeader from "../components/PageHeader";
-import {
-  CARD_TYPES,
-  CARD_LIST_TYPES,
-  CARD_NUMS_IN_ROW
-} from "../utils/consts";
+import { CARD_TYPES, CARD_LIST_TYPES, CARD_NUMS_IN_ROW } from "../utils/consts";
 
 class NewProduct extends React.Component {
   // constructor(props) {

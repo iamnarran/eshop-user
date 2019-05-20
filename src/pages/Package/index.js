@@ -1,7 +1,9 @@
 import React from "react";
+
 import CardList from "../../components/CardList";
 import { IMAGE, CARD_LIST_TYPES } from "../../utils/consts";
 import Banner from "../../components/Banner";
+
 class Package extends React.Component {
   state = {
     ...this.props.container

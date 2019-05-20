@@ -25,7 +25,7 @@ const fetch = async (props, onData) => {
       maxprice: 0,
       ordercol: "price_asc"
     });
-    console.log("info", info);
+
     onData(null, {
       container: {
         id: props.match.params.id || null,
