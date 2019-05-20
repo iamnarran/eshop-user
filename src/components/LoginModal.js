@@ -60,17 +60,15 @@ class LoginModal extends React.Component {
     console.log("reset");
   };
 
-  handleOkReset = () => {
-    this.setState({ isVisibleReset: !this.state.isVisibleReset });
-  };
-
   handleCancelReset = () => {
     this.setState({ isVisibleReset: !this.state.isVisibleReset });
   };
 
   handleSubmit = () => {
     console.log("handle email", this.state.mail);
-    this.handleNotify("Таны оруулсан мэйл буруу байна");
+    /* this.handleNotify("Таны оруулсан мэйл буруу байна"); */
+    this.handleNotify("Та мэйл хаягаа шалгана уу");
+    this.timer = setTimeout(() => this.handleCancelReset(), 1000);
   };
 
   onChangeMail = e => {
@@ -321,17 +319,8 @@ class LoginModal extends React.Component {
         <Modal
           title="Нууц үг сэргээх"
           visible={this.state.isVisibleReset}
-          onOk={this.handleOkReset}
           onCancel={this.handleCancelReset}
-          footer={[
-            <a
-              className="btn btn-dark"
-              style={{ width: "100%" }}
-              onClick={this.handleSubmit}
-            >
-              <span className="text-uppercase">Цааш</span>
-            </a>
-          ]}
+          footer={[]}
         >
           <form>
             <div>
@@ -340,6 +329,13 @@ class LoginModal extends React.Component {
                 onChange={this.onChangeMail}
               />
             </div>
+            <a
+              className="btn btn-dark"
+              style={{ width: "100%", marginTop: "20px" }}
+              onClick={this.handleSubmit}
+            >
+              <span className="text-uppercase">Цааш</span>
+            </a>
           </form>
         </Modal>
       </div>

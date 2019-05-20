@@ -2,6 +2,8 @@ import React from "react";
 import api from "../api";
 import { Form, Icon, Input, Button, Checkbox } from "antd";
 import { IMAGE } from "../utils/consts";
+import { toast } from "react-toastify";
+import { css } from "glamor";
 class ResetPassword extends React.Component {
   constructor(props) {
     super(props);
@@ -11,17 +13,26 @@ class ResetPassword extends React.Component {
     };
   }
 
-  componentDidMount() {}
+  handleNotify = message =>
+    toast(message, {
+      position: "top-center",
+      autoClose: 5000,
+      progressClassName: css({
+        background: "#feb415"
+      })
+    });
 
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log("Received values of form: ", values);
+        this.handleNotify("Таны нууц үг амжиллтай солигдлоо.");
+        this.props.history.push("/");
       }
     });
   };
   render() {
+    console.log("props", this.props);
     const { staticInfo } = this.props.container;
     const { getFieldDecorator } = this.props.form;
     return (
@@ -76,13 +87,12 @@ class ResetPassword extends React.Component {
                   </Form.Item>
                 </Form>
                 <div>
-                  <button className="btn btn-dark" style={{ width: "100%" }}>
-                    <span
-                      className="text-uppercase"
-                      onClick={this.handleSubmit}
-                    >
-                      Хадгалах
-                    </span>
+                  <button
+                    className="btn btn-dark"
+                    style={{ width: "100%" }}
+                    onClick={this.handleSubmit}
+                  >
+                    <span className="text-uppercase">Хадгалах</span>
                   </button>
                 </div>
               </div>
