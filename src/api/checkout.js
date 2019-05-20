@@ -15,7 +15,8 @@ export default [
     NAME: "findUserData",
     METHOD: "GET",
     URL: `${API}/api/customer/:id`,
-    REPLACE: "id"
+    REPLACE: "id",
+    TOKEN: true
   },
   {
     NAME: "findPaymentTypes",
