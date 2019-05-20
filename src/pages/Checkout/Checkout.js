@@ -261,6 +261,7 @@ class Checkout extends React.Component {
   };
 
   getUserInfo = async user => {
+    console.log(user);
     await api.checkout.findUserData({ id: user.id }).then(res => {
       if (res.success == true) {
         if (res.data.addrs.length != 0) {
@@ -475,7 +476,8 @@ class Checkout extends React.Component {
               chosenInfo.address = values.addresstype;
               chosenInfo.addressnm = values.addresstype;
               chosenInfo.isNew = true;
-              this.setUser(adrs);
+              console.log(adrs);
+              // this.setUser(adrs);
             }
             let userInfo = this.state.userInfo;
             userInfo.firstname = values.lastName;
@@ -654,8 +656,57 @@ class Checkout extends React.Component {
           type = "qpay";
           this.openLastModal(type, [], res.data);
         } else if (chosenPayment.id == 1) {
+          var mapForm = document.createElement("form");
+          mapForm.target = "Map";
+          mapForm.method = "POST"; // or "post" if appropriate
+          mapForm.action = res.data.url.url;
+
+          var keyNumber = document.createElement("input");
+          keyNumber.type = "text";
+          keyNumber.name = "key_number";
+          keyNumber.value = res.data.url.key_number;
+
+          var transNumber = document.createElement("input");
+          transNumber.type = "text";
+          transNumber.name = "trans_number";
+          transNumber.value = res.data.url.trans_number;
+
+          var trans_amount = document.createElement("input");
+          trans_amount.type = "text";
+          trans_amount.name = "trans_amount";
+          trans_amount.value = res.data.url.trans_amount;
+
+          var time = document.createElement("input");
+          time.type = "text";
+          time.name = "time";
+          time.value = res.data.url.time;
+
+          var lang_ind = document.createElement("input");
+          lang_ind.type = "text";
+          lang_ind.name = "lang_ind";
+          lang_ind.value = res.data.url.lang_ind;
+
+          mapForm.appendChild(keyNumber);
+          mapForm.appendChild(transNumber);
+          mapForm.appendChild(trans_amount);
+          mapForm.appendChild(time);
+          mapForm.appendChild(lang_ind);
+
+          document.body.appendChild(mapForm);
+
+          let map = window.open(
+            "",
+            "Map",
+            "status=0,title=0,height=600,width=800,scrollbars=1"
+          );
+
+          if (map) {
+            mapForm.submit();
+          } else {
+            alert("You must allow popups for this map to work.");
+          }
           MySwal.hideLoading();
-          window.open(res.data.url);
+          // window.open(res.data.url);
           //type = "emarchant";
         }
       } else {
@@ -703,7 +754,8 @@ class Checkout extends React.Component {
     tmp.paymentType = this.state.chosenPayment.id;
     tmp.addPoint = 0;
     tmp.deliveryDate = this.state.dateString;
-    tmp.cardNo = epointcard.cardno;
+
+    //tmp.cardNo = epointcard.cardno;
     tmp.usedPoint = epointUsedPoint;
     tmp.items = [];
     if (isNaN(this.state.chosenInfo.commiteLocation)) {

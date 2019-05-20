@@ -17,7 +17,8 @@ export default [
     NAME: "getWishList",
     METHOD: "GET",
     URL: `${API}/api/customer/wishList/:custId`,
-    REPLACE: "custId"
+    REPLACE: "custId",
+    TOKEN: true
   },
   {
     NAME: "deleteWishList",
