@@ -1,146 +1,48 @@
 import React from "react";
-import { TextField, Select } from "../";
-import { Form, message } from "antd";
-
-class Component extends React.Component {
-  state = {
-    oldpass: null,
-    newpass: null,
-    renewpass: null
-  };
-
-  handleSubmit = e => {
-    e.preventDefault();
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        message.success("Нууц үг амжиллтаЙ солигдлоо");
-      }
-    });
-  };
-
-  handleOldPass = e => {
-    this.setState({ oldpass: e.target.value });
-  };
-  handleNewPass = e => {
-    this.setState({ newpass: e.target.value });
-  };
-  handleReNewPass = e => {
-    this.setState({ renewpass: e.target.value });
-  };
-
-  render() {
-    const { getFieldDecorator } = this.props.form;
-    /* const { oldpass, newpass, renewpass} = this.state */
-    return (
-      <div className="col-md-8 pad10">
-        <div className="user-menu-content">
-          <p className="title">
-            <span>Нууц үг солих</span>
-          </p>
-          {/* <div className="user-profile-contain">                  
-            <form>
-              <div className="row row10">
-                <div className="col-xl-12 pad10">
-                  <div className="e-mart-input">                            
-                    <Form.Item>
-                      {getFieldDecorator('name', {
-                        rules: [{ required: true, message: 'Хуучин нууц үгээ заавал оруулна уу!' }],
-                      })(
-                        <TextField label="Хуучин нууц үг" onChange={this.handleOldPass} value={oldpass} type={"password"}/>
-                      )}
-                    </Form.Item>
-                  </div>
-                </div>
-                <div className="col-xl-12 pad10">
-                  <div className="form-group">
-                    <Form.Item>
-                      {getFieldDecorator('phone', {
-                        rules: [{ required: true, message: 'Шинэ нууц үгээ заавал оруулна уу!' }],
-                      })(
-                        <TextField label="Шинэ нууц үг" onChange={this.handleNewPass} value={newpass} type={"password"}/>
-                      )}
-                    </Form.Item>                            
-                  </div>
-                </div> 
-                <div className="col-xl-12 pad10">
-                  <div className="form-group">
-                    <Form.Item>
-                      {getFieldDecorator('phone', {
-                        rules: [{ required: true, message: 'Баталгаажуулах нууц үгээ заавал оруулна уу!' }],
-                      })(
-                        <TextField label="Нууц үг баталгаажуулах" onChange={this.handleReNewPass} value={renewpass} type={"password"}/>
-                      )}
-                    </Form.Item>                            
-                  </div>
-                </div>
-
-              </div>
-            </form>
-            <div className="text-right">
-              <button className="btn btn-dark">
-                <span className="text-uppercase" onClick={this.handleSubmit}>Хадгалах</span>
-              </button>
-            </div>
-          </div> */}
-        </div>
-      </div>
-    );
-  }
-}
-
-const App = Form.create({ name: "delivery" })(Component);
-export default App;
-/* import React from "react";
+import { connect } from "react-redux";
 import { Form, Input, Select, Button, AutoComplete } from "antd";
+import api from "../api";
+import { toast } from "react-toastify";
+import { css } from "glamor";
 const { Option } = Select;
 const AutoCompleteOption = AutoComplete.Option;
 
-const residences = [
-  {
-    value: "zhejiang",
-    label: "Zhejiang",
-    children: [
-      {
-        value: "hangzhou",
-        label: "Hangzhou",
-        children: [
-          {
-            value: "xihu",
-            label: "West Lake"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    value: "jiangsu",
-    label: "Jiangsu",
-    children: [
-      {
-        value: "nanjing",
-        label: "Nanjing",
-        children: [
-          {
-            value: "zhonghuamen",
-            label: "Zhong Hua Men"
-          }
-        ]
-      }
-    ]
-  }
-];
-
+@connect(
+  mapStateToProps,
+  {}
+)
 class Component extends React.Component {
   state = {
     confirmDirty: false,
     autoCompleteResult: []
   };
+  handleNotify = message =>
+    toast(message, {
+      autoClose: 5000,
+      progressClassName: css({
+        background: "#feb415"
+      })
+    });
+  changePass = async user => {
+    const params = {
+      email: this.props.user.email,
+      oldPass: user.oldPassword,
+      NewPass: user.password
+    };
 
+    await api.customer.passreset(params).then(res => {
+      if (res.success) {
+        this.handleNotify(res.message);
+      } else {
+        this.handleNotify(res.message);
+      }
+    });
+  };
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        console.log("Received values of form: ", values);
+        this.changePass(values);
       }
     });
   };
@@ -169,31 +71,7 @@ class Component extends React.Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
-
-    const formItemLayout = {
-      labelCol: {
-        xs: { span: 24 },
-        sm: { span: 8 }
-      },
-      wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 16 }
-      }
-    };
-    const tailFormItemLayout = {
-      wrapperCol: {
-        xs: {
-          span: 24,
-          offset: 0
-        },
-        sm: {
-          span: 16,
-          offset: 8
-        }
-      }
-    };
-
-    const { oldpass, newpass, renewpass } = this.state;
+    console.log("props", this.props);
     return (
       <div className="col-md-8 pad10">
         <div className="user-menu-content">
@@ -201,45 +79,50 @@ class Component extends React.Component {
             <span>Нууц үг солих</span>
           </p>
           <div className="user-profile-contain">
-            <Form {...formItemLayout}>
-              <Form.Item label="Password" hasFeedback>
-                {getFieldDecorator("password", {
+            <Form>
+              <Form.Item hasFeedback>
+                {getFieldDecorator("oldPassword", {
                   rules: [
                     {
                       required: true,
-                      message: "Please input your password!"
+                      message: "Хуучин нууц үг!"
                     },
                     {
                       validator: this.validateToNextPassword
                     }
                   ]
-                })(<Input.Password />)}
+                })(<Input.Password placeholder="Хуучин нууц үг" />)}
               </Form.Item>
-              <Form.Item label="Password" hasFeedback>
+              <Form.Item hasFeedback>
                 {getFieldDecorator("password", {
                   rules: [
                     {
                       required: true,
-                      message: "Please input your password!"
+                      message: "Шинэ нууц үг!"
                     },
                     {
                       validator: this.validateToNextPassword
                     }
                   ]
-                })(<Input.Password />)}
+                })(<Input.Password placeholder="Шинэ нууц үг" />)}
               </Form.Item>
-              <Form.Item label="Confirm Password" hasFeedback>
+              <Form.Item hasFeedback>
                 {getFieldDecorator("confirm", {
                   rules: [
                     {
                       required: true,
-                      message: "Please confirm your password!"
+                      message: "Шинэ нууц үгээ дахин давтах!"
                     },
                     {
                       validator: this.compareToFirstPassword
                     }
                   ]
-                })(<Input.Password onBlur={this.handleConfirmBlur} />)}
+                })(
+                  <Input.Password
+                    onBlur={this.handleConfirmBlur}
+                    placeholder="Шинэ нууц үгээ дахин давтах"
+                  />
+                )}
               </Form.Item>
               <div className="text-right">
                 <button className="btn btn-dark">
@@ -256,5 +139,11 @@ class Component extends React.Component {
   }
 }
 
+function mapStateToProps(state) {
+  return {
+    isLoggedIn: state.auth.isLoggedIn,
+    user: state.auth.user
+  };
+}
+
 export default Form.create({ name: "delivery" })(Component);
- */

@@ -35,6 +35,12 @@ class DeliveryPanel extends React.Component {
         if (res.data.addrs.length != 0) {
           res.data.addrs.map((item, i) => {
             if (item.ismain == 1) {
+              this.props.onChangeMainLoc(item.provinceid, this.props.form);
+              this.props.onChangeSubLoc(
+                item.districtid,
+                this.props.form.validateFields,
+                item.provinceid
+              );
               this.setState({ defaultAddress: item });
             }
           });
@@ -46,7 +52,6 @@ class DeliveryPanel extends React.Component {
             commiteLocation: this.state.defaultAddress.committeenm
           });
         }
-
         this.props.form.setFieldsInitialValue({
           lastName: res.data.info.firstname,
           phone1: res.data.info.phone1,
@@ -338,7 +343,11 @@ class DeliveryPanel extends React.Component {
                             optionFilterProp="children"
                             placeholder="Дүүрэг/Сум*"
                             onChange={e =>
-                              onChangeSubLoc(e, this.props.form.validateFields)
+                              onChangeSubLoc(
+                                e,
+                                this.props.form.validateFields,
+                                undefined
+                              )
                             }
                           >
                             {this.renderSubLocation()}

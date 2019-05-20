@@ -4,26 +4,26 @@ export default [
   {
     NAME: "getViewList",
     METHOD: "GET",
-    URL: `${API}/api/customer/viewlist/:custid`,
-    REPLACE: "custid"
+    URL: `${API}/api/customer/viewList/:custId`,
+    REPLACE: "custId"
   },
   {
     NAME: "addViewList",
     METHOD: "POST",
-    URL: `${API}/api/customer/viewList/:custid/:skucd`,
-    REPLACE: "custid, skucd"
+    URL: `${API}/api/customer/viewList/:custId/:skucd`,
+    REPLACE: "custId, skucd"
   },
   {
     NAME: "getWishList",
     METHOD: "GET",
-    URL: `${API}/api/customer/wishlist/:custid`,
-    REPLACE: "custid"
+    URL: `${API}/api/customer/wishList/:custId`,
+    REPLACE: "custId"
   },
   {
     NAME: "deleteWishList",
     METHOD: "DELETE",
-    URL: `${API}/api/customer/wishlist/:custid/:skucd`,
-    REPLACE: "custid, skucd"
+    URL: `${API}/api/customer/wishList/:custId/:skucd`,
+    REPLACE: "custId, skucd"
   },
   {
     NAME: "getOrderList",
@@ -44,5 +44,11 @@ export default [
     METHOD: "DELETE",
     URL: `${API}/api/customer/seenList/:custid/:skucd`,
     REPLACE: "custid, skucd"
+  },
+  {
+    NAME: "passreset",
+    METHOD: "PUT",
+    URL: `${API}/api/customer/passreset`,
+    TOKEN: true
   }
 ];

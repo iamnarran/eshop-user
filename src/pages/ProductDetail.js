@@ -24,7 +24,7 @@ class ProductDetail extends Component {
     isShowMoreClicked: false
   };
 
-  componentDidMount() {
+  addView() {
     if (this.props.isLoggedIn) {
       api.customer
         .addViewList({
@@ -37,6 +37,9 @@ class ProductDetail extends Component {
           }
         });
     }
+  }
+  componentDidMount() {
+    this.addView();
   }
 
   handleShowMoreClick = () => {

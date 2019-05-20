@@ -13,6 +13,7 @@ class Component extends React.Component {
   getData() {
     api.customer.getWishList({ custId: this.props.user.id }).then(res => {
       if (res.success) {
+        console.log(res);
         this.setState({
           wishlist: res.data
         });
@@ -41,57 +42,57 @@ class Component extends React.Component {
   };
 
   render() {
-    let tableList = null;
-    const list = this.state.wishlist;
     const formatter = new Intl.NumberFormat("en-US");
-    tableList = list.map((item, index) => {
-      return (
-        <div className="single flex-space" key={index}>
-          <div className="product">
-            <div className="flex-this">
-              <div className="image-container default">
-                <a href={item.route ? item.route : " "}>
-                  <span
-                    className="image"
-                    style={{
-                      backgroundImage: `url(${IMAGE + item.img})`
-                    }}
-                  />
-                </a>
-              </div>
-              <div className="info">
-                <a href={item.route ? item.route : " "}>
-                  <p className="name">{item.skunm}</p>
-                  <p className="text">{item.shortnm}</p>
-                </a>
-                {item.rate ? (
-                  <Rate rate={item.rate} numOfVotes={item.rateusercnt} />
-                ) : (
-                  <Rate rate={0} numOfVotes={0} />
-                )}
+    let tableList =
+      this.state.wishlist &&
+      this.state.wishlist.map((item, index) => {
+        return (
+          <div className="single flex-space" key={index}>
+            <div className="product">
+              <div className="flex-this">
+                <div className="image-container default">
+                  <a href={item.route ? item.route : " "}>
+                    <span
+                      className="image"
+                      style={{
+                        backgroundImage: `url(${IMAGE + item.img})`
+                      }}
+                    />
+                  </a>
+                </div>
+                <div className="info">
+                  <a href={item.route ? item.route : " "}>
+                    <p className="name">{item.skunm}</p>
+                    <p className="text">{item.shortnm}</p>
+                  </a>
+                  {item.rate ? (
+                    <Rate rate={item.rate} numOfVotes={item.rateusercnt} />
+                  ) : (
+                    <Rate rate={0} numOfVotes={0} />
+                  )}
+                </div>
               </div>
             </div>
+            <div className="price">
+              <strong>{formatter.format(item.price)}₮</strong>
+            </div>
+            <div className="action">
+              <ul className="list-unstyled flex-this end">
+                <li>
+                  <a>
+                    <i className="fa fa-cart-plus" aria-hidden="true" />
+                  </a>
+                </li>
+                <li>
+                  <a onClick={e => this.onDelete(e, item)}>
+                    <i className="fa fa-times" aria-hidden="true" />
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
-          <div className="price">
-            <strong>{formatter.format(item.price)}₮</strong>
-          </div>
-          <div className="action">
-            <ul className="list-unstyled flex-this end">
-              <li>
-                <a>
-                  <i className="fa fa-cart-plus" aria-hidden="true" />
-                </a>
-              </li>
-              <li>
-                <a onClick={e => this.onDelete(e, item)}>
-                  <i className="fa fa-times" aria-hidden="true" />
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      );
-    });
+        );
+      });
 
     return (
       <div className="col-md-8 pad10">

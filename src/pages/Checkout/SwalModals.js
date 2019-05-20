@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Collapse, Tabs, Divider } from "antd";
+// import withSizes from 'react-sizes'
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import withCart from "../../components/HOC/withCart";
@@ -15,7 +16,8 @@ class SwalModals extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      chosenBank: []
+      chosenBank: [],
+      mode: 'left',
     };
   }
 
@@ -114,6 +116,7 @@ class SwalModals extends React.Component {
     let p = [1, 2, 3, 4, 5, 6];
     const { chosenBank } = this.state;
     const { type, changePage, data, readyBtn } = this.props;
+    const { mode } = this.state;
     if (type == "paymentSucess") {
       const {
         delivery,
@@ -317,7 +320,7 @@ class SwalModals extends React.Component {
       return (
         <div className="checkout-container msg-bank">
           <div className="card-content">
-            <Tabs tabPosition={"left"} onChange={this.changeTab}>
+            <Tabs tabPosition={isMobile ? 'top' : mode} onChange={this.changeTab}>
               {data.map((item, i) => {
                 return (
                   <TabPane
