@@ -11,7 +11,7 @@ import {
 } from "../utils/consts";
 import CardList from "../components/CardList";
 import FilterSet from "../components/FilterSet";
-import crossImage from "../scss/assets/svg/error.svg";
+import crossImage from "../scss/assets/svg/error-black.svg";
 
 class CategoryInfo extends React.Component {
   constructor(props) {
@@ -292,7 +292,7 @@ class CategoryInfo extends React.Component {
               </ul>
             </div>
             <div className="row row10">
-              <div className="col-xl-3 pad10">
+              <div className="col-xl-3 col-md-3 pad10">
                 <div className={leftPanel}>
                   <button
                     className="button buttonBlack filter-cross"

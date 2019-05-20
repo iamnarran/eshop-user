@@ -11,7 +11,12 @@ const withCart = WrappedComponent => {
   class CartHOC extends Component {
     getUnitPrice = product => {
       if (product.sprice) {
-        if (product.issalekg && product.kgproduct[0]) {
+        if (
+          product.issalekg &&
+          product.kgproduct &&
+          product.kgproduct[0] &&
+          product.kgproduct[0].salegramprice
+        ) {
           // Хямдарсан бөгөөд кг-ын бараа
           return {
             price: product.kgproduct[0].salegramprice,
@@ -23,7 +28,12 @@ const withCart = WrappedComponent => {
         return { price: product.price, sprice: product.sprice };
       }
 
-      if (product.issalekg && product.kgproduct[0]) {
+      if (
+        product.issalekg &&
+        product.kgproduct &&
+        product.kgproduct[0] &&
+        product.kgproduct[0].salegramprice
+      ) {
         // Хямдраагүй бөгөөд кг-ын бараа
         return { price: product.kgproduct[0].salegramprice, sprice: null };
       }
@@ -130,8 +140,6 @@ const withCart = WrappedComponent => {
       } = product;
 
       const targetQty = Math.round(qty / addminqty) * addminqty;
-
-      console.log({ targetQty });
 
       if (qty === targetQty) {
         return;

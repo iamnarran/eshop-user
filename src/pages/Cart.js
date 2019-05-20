@@ -90,7 +90,7 @@ class Cart extends React.Component {
     const { getUnitPrice } = this.props;
 
     if (product.sprice) {
-      if (product.issalekg && product.kgproduct[0]) {
+      if (product.issalekg && product.kgproduct && product.kgproduct[0]) {
         return (
           <p className="price">
             <strong>{formatter.format(getUnitPrice(product).sprice)}₮</strong>
@@ -115,7 +115,7 @@ class Cart extends React.Component {
       );
     }
 
-    if (product.issalekg && product.kgproduct[0]) {
+    if (product.issalekg && product.kgproduct && product.kgproduct[0]) {
       return (
         <p className="price">
           <strong>{formatter.format(getUnitPrice(product).price)}₮</strong>

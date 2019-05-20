@@ -2,8 +2,8 @@ import React from "react";
 import { compose } from "react-komposer";
 import { Spin } from "antd";
 
-import api from "../../api";
-import { RecipeDetail } from "../../pages";
+import api from "../api";
+import { ResetPassword } from "../pages";
 
 const options = {
   loadingHandler: () => (
@@ -15,17 +15,11 @@ const options = {
 };
 
 const fetch = async (props, onData) => {
+  const staticInfo = await api.staticInfo.findAll();
   try {
-    const recipe = await api.recipe.findOne({ id: props.match.params.id });
-    const products = await api.recipe.findAllProducts({
-      id: props.match.params.id
-    });
-
     onData(null, {
       container: {
-        recipe: recipe.data[0].recipe,
-        steps: recipe.data[0].steps,
-        productsData: products.data[0]
+        staticInfo: staticInfo.data[0]
       }
     });
   } catch (e) {
@@ -41,4 +35,4 @@ const dataLoader = (props, onData) => {
 export default compose(
   dataLoader,
   options
-)(RecipeDetail);
+)(ResetPassword);

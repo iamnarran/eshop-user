@@ -7,7 +7,7 @@ import { setUser } from "../actions/login";
 import { SOCIAL_IDS } from "../utils/consts";
 
 class FacebookLogin extends React.Component {
-  handleFbLoginResponse = res => {
+  handleResponse = res => {
     if (res && res.userID) {
       const user = {
         id: res.userID,
@@ -17,8 +17,7 @@ class FacebookLogin extends React.Component {
         picture: res.picture
       };
 
-      this.props.setUser(user);
-      this.props.onFbSuccess();
+      this.props.onSuccess(user);
     } else {
       this.notify("Холбогдох үед алдаа гарлаа");
     }
@@ -32,7 +31,7 @@ class FacebookLogin extends React.Component {
         appId={SOCIAL_IDS.facebook}
         autoLoad={true}
         fields="name,email,picture"
-        callback={this.handleFbLoginResponse}
+        callback={this.handleResponse}
         cssClass="btn btn-block btn-social btn-facebook"
         textButton="Facebook-р нэвтрэх"
       />

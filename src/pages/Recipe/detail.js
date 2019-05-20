@@ -17,12 +17,10 @@ const formatter = new Intl.NumberFormat("en-US");
 
 class RecipeDetail extends React.Component {
   handleIncrementClick = product => {
-    this.props.onIncrement(product);
     this.props.onUpdateCart(product);
   };
 
   handleAddToCartClick = products => {
-    console.log({ products });
     if (products.length) {
       products.reduce((acc, next) => {
         return acc.then(() => {

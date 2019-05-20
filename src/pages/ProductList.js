@@ -6,7 +6,7 @@ import api from "../api";
 import { CARD_LIST_TYPES, CARD_TYPES } from "../utils/consts";
 import CardList from "../components/CardList";
 import FilterSet from "../components/FilterSet";
-import crossImage from "../scss/assets/svg/error.svg";
+import crossImage from "../scss/assets/svg/error-black.svg";
 
 class ProductList extends React.Component {
   constructor(props) {
