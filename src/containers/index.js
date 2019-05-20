@@ -20,6 +20,7 @@ import Checkout from "./Checkout";
 import ProductList from "./ProductList";
 import OrderDetail from "./OrderDetail";
 import DeliveryAddress from "./UsrProfDeliveryAddress";
+import ResetPassword from "./ResetPassword";
 export {
   Footer,
   Header,
@@ -40,6 +41,7 @@ export {
   Cart,
   Checkout,
   ProductList,
-  OrderDetail
+  OrderDetail,
+  ResetPassword
   // DeliveryAddress
 };

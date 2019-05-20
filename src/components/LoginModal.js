@@ -1,10 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Modal, Button } from "antd";
+import { Modal, Button, Input } from "antd";
 import { Link, Redirect } from "react-router-dom";
 import { createForm } from "rc-form";
 import { css } from "glamor";
-import { toast } from "react-toastify";
 
 import FacebookLogin from "./FacebookLogin";
 import GoogleLogin from "./GoogleLogin";
@@ -18,11 +17,14 @@ import { updateCart } from "../actions/cart";
 import withCart from "./HOC/withCart";
 import storage from "../utils/storage";
 import api from "../api";
+import { toast } from "react-toastify";
 
 class LoginModal extends React.Component {
   state = {
     shouldRedirect: false,
-    isLoading: false
+    isLoading: false,
+    isVisibleReset: false,
+    mail: ""
   };
 
   handleNotify = message =>
@@ -50,6 +52,29 @@ class LoginModal extends React.Component {
 
   handleCancel = () => {
     this.props.hideLoginModal();
+  };
+
+  handleReset = () => {
+    this.props.hideLoginModal();
+    this.setState({ isVisibleReset: !this.state.isVisibleReset });
+    console.log("reset");
+  };
+
+  handleOkReset = () => {
+    this.setState({ isVisibleReset: !this.state.isVisibleReset });
+  };
+
+  handleCancelReset = () => {
+    this.setState({ isVisibleReset: !this.state.isVisibleReset });
+  };
+
+  handleSubmit = () => {
+    console.log("handle email", this.state.mail);
+    this.handleNotify("Таны оруулсан мэйл буруу байна");
+  };
+
+  onChangeMail = e => {
+    this.setState({ mail: e.target.value });
   };
 
   handleSocialSuccess = () => {
@@ -254,9 +279,9 @@ class LoginModal extends React.Component {
                 </div>
                 <div className="col-xl-6 pad10">
                   <div className="text-right">
-                    <Link to="" className="btn btn-link">
+                    <a className="btn btn-link" onClick={this.handleReset}>
                       Нууц үгээ мартсан
-                    </Link>
+                    </a>
                   </div>
                 </div>
               </div>
@@ -285,6 +310,30 @@ class LoginModal extends React.Component {
               Та шинээр бүртгүүлэх бол ЭНД ДАРЖ бүртгүүлнэ үү
             </Link>
           </div>
+        </Modal>
+        <Modal
+          title="Нууц үг сэргээх"
+          visible={this.state.isVisibleReset}
+          onOk={this.handleOkReset}
+          onCancel={this.handleCancelReset}
+          footer={[
+            <a
+              className="btn btn-dark"
+              style={{ width: "100%" }}
+              onClick={this.handleSubmit}
+            >
+              <span className="text-uppercase">Цааш</span>
+            </a>
+          ]}
+        >
+          <form>
+            <div>
+              <Input
+                placeholder="И-мэйл хаягаа оруулна уу"
+                onChange={this.onChangeMail}
+              />
+            </div>
+          </form>
         </Modal>
       </div>
     );
