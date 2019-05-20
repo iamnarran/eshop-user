@@ -30,7 +30,6 @@ class Cart extends React.Component {
   }
 
   handleIncrementClick = product => {
-    console.log({ product });
     this.props.onIncrement(product);
     this.props.onUpdateCart(product, true);
   };
@@ -42,12 +41,12 @@ class Cart extends React.Component {
 
   handleQtyChange = product => e => {
     if (isNaN(e.target.value)) {
-      product.qty = 1;
+      product.qty = product.addminqty;
     } else {
-      if (e.target.value < 1) {
-        product.qty = 1;
+      if (e.target.value < product.addminqty) {
+        product.qty = product.addminqty;
       } else {
-        product.qty = e.target.value;
+        product.qty = parseInt(e.target.value);
       }
     }
     this.findAndReplace(product);
@@ -91,7 +90,7 @@ class Cart extends React.Component {
     const { getUnitPrice } = this.props;
 
     if (product.sprice) {
-      if (product.issalekg && product.kgproduct[0]) {
+      if (product.issalekg && product.kgproduct && product.kgproduct[0]) {
         return (
           <p className="price">
             <strong>{formatter.format(getUnitPrice(product).sprice)}₮</strong>
@@ -116,7 +115,7 @@ class Cart extends React.Component {
       );
     }
 
-    if (product.issalekg && product.kgproduct[0]) {
+    if (product.issalekg && product.kgproduct && product.kgproduct[0]) {
       return (
         <p className="price">
           <strong>{formatter.format(getUnitPrice(product).price)}₮</strong>

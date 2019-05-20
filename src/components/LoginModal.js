@@ -57,6 +57,52 @@ class LoginModal extends React.Component {
     this.setRedirect();
   };
 
+  handleLoggedInUser = user => {
+    this.props.setUser(user);
+
+    let productsInCart = this.props.cart.products;
+
+    if (productsInCart.length) {
+      productsInCart.forEach(prodInCart => {
+        this.props.onUpdateCart(prodInCart, true);
+      });
+    }
+
+    api.cart.findAllProducts({ custid: user.id }).then(res => {
+      if (res.success) {
+        const products = res.data;
+
+        let totalQty = 0;
+        let totalPrice = 0;
+        if (products.length) {
+          const qties = products.map(prod => prod.qty);
+          totalQty = qties.reduce((acc, cur) => acc + cur);
+
+          const prices = products.map(prod => {
+            const price =
+              this.props.getUnitPrice(prod).sprice ||
+              this.props.getUnitPrice(prod).price;
+
+            return price * prod.qty;
+          });
+          totalPrice = prices.reduce((acc, cur) => acc + cur);
+        }
+
+        this.props.updateCart({
+          products,
+          totalQty,
+          totalPrice
+        });
+      } else {
+        console.log("failure", res);
+        this.handleCancel();
+        return;
+      }
+    });
+
+    this.handleOk();
+  };
+
   _submit = e => {
     e.preventDefault();
 
@@ -67,54 +113,13 @@ class LoginModal extends React.Component {
         try {
           const res = await this.props.login(form);
 
-          console.log({ res });
-
           if (res.success) {
             storage.set("access_token", res.data[0].info.access_token);
 
             let customer = res.data[0].info.customerInfo;
             customer.token = res.data[0].info.access_token;
-            this.props.setUser(customer);
 
-            let productsInCart = this.props.cart.products;
-
-            if (productsInCart.length) {
-              productsInCart.forEach(prodInCart => {
-                this.props.onUpdateCart(prodInCart, true);
-              });
-            }
-
-            api.cart.findAllProducts({ custid: customer.id }).then(res => {
-              if (res.success) {
-                const products = res.data;
-
-                let totalQty = 0;
-                let totalPrice = 0;
-                if (products.length) {
-                  const qties = products.map(prod => prod.qty);
-                  totalQty = qties.reduce((acc, cur) => acc + cur);
-
-                  const prices = products.map(prod => {
-                    const price =
-                      this.props.getUnitPrice(prod).sprice ||
-                      this.props.getUnitPrice(prod).price;
-
-                    return price * prod.qty;
-                  });
-                  totalPrice = prices.reduce((acc, cur) => acc + cur);
-                }
-
-                this.props.updateCart({
-                  products,
-                  totalQty,
-                  totalPrice
-                });
-              } else {
-                console.log("failure", res);
-              }
-            });
-
-            this.handleOk();
+            this.handleLoggedInUser(customer);
 
             //   if (products.length) {
             //     products.forEach(prod => {
@@ -164,6 +169,8 @@ class LoginModal extends React.Component {
             //   this.setRedirect();
             // } else {
             //   this.handleNotify("Таны нэвтрэх нэр эсвэл нууц үг буруу байна");
+          } else {
+            this.handleNotify(res.message);
           }
         } catch (err) {
           console.log(err);
@@ -273,7 +280,7 @@ class LoginModal extends React.Component {
 
           <span className="divide-maker">Эсвэл</span>
 
-          <FacebookLogin onFbSuccess={this.handleSocialSuccess} />
+          <FacebookLogin onSuccess={user => this.handleLoggedInUser(user)} />
           <GoogleLogin onGoogleSuccess={this.handleSocialSuccess} />
 
           <div className="text-center">

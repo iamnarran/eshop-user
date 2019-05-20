@@ -8,20 +8,19 @@ import {
   FacebookIcon,
   TwitterIcon
 } from "react-share";
+
 import { updateCart } from "../actions/cart";
-import { getFeedbacks } from "../actions/mainlogic";
 import { IMAGE } from "../utils/consts";
 import Gallery from "../components/Gallery";
-import LoginModal from "../components/LoginModal";
 import { CommentList, CardSlider, Breadcrumb } from "../components";
 import withCart from "../components/HOC/withCart";
 import api from "../api";
+
 const formatter = new Intl.NumberFormat("en-US");
 
 class ProductDetail extends Component {
   state = {
-    productQty: this.props.container.product.addminqty || 1,
-    isLoginModalVisible: false,
+    productQty: this.props.container.product.saleminqty || 1,
     isShowMoreClicked: false
   };
 
@@ -179,7 +178,7 @@ class ProductDetail extends Component {
             <div className="input-group">
               <div className="input-group-prepend" id="button-addon4">
                 <button
-                  onClick={this.handleDecrementClick}
+                  onClick={() => this.handleDecrementClick(product)}
                   className="btn"
                   type="button"
                   disabled={product.availableqty < 1}
@@ -194,15 +193,15 @@ class ProductDetail extends Component {
                 className="form-control"
                 value={productQty}
                 name="productQty"
-                onChange={this.handleQtyChange}
-                onKeyDown={this.handleQtyKeyDown}
-                onBlur={this.handleQtyBlur}
+                onChange={this.handleQtyChange(product)}
+                onKeyDown={this.handleQtyKeyDown(product)}
+                onBlur={() => this.handleQtyBlur(product)}
                 disabled={product.availableqty < 1}
               />
 
               <div className="input-group-append" id="button-addon4">
                 <button
-                  onClick={this.handleIncrementClick}
+                  onClick={() => this.handleIncrementClick(product)}
                   className="btn"
                   type="button"
                   disabled={product.availableqty < 1}
@@ -240,6 +239,7 @@ class ProductDetail extends Component {
             className="btn btn-gray text-uppercase"
             style={{ marginRight: "10px" }}
             onClick={this.handleSaveClick}
+            disabled={!(this.props.isLoggedIn && this.props.user)}
           >
             <span>Хадгалах</span>
           </button>
@@ -248,7 +248,7 @@ class ProductDetail extends Component {
             type="button"
             className="btn btn-main text-uppercase"
             disabled={product.availableqty < 1}
-            onClick={() => this.props.onUpdateCart(product, productQty)}
+            onClick={() => this.props.onUpdateCart(product)}
           >
             <i className="fa fa-shopping-cart" aria-hidden="true" />{" "}
             <span>Сагсанд нэмэх</span>
@@ -329,11 +329,10 @@ class ProductDetail extends Component {
                         <strong>{formatter.format(prod.price)}₮</strong>
                       </Link>
                       <div className="action">
-                        {console.log("prod", prod)}
                         <button
                           type="button"
                           className="btn btn-link"
-                          onClick={() => this.props.onAddToCart(prod)}
+                          onClick={() => this.handleRPIncrementClick(prod)}
                         >
                           <i
                             className="fa fa-cart-plus"
@@ -465,39 +464,48 @@ class ProductDetail extends Component {
     console.log(e);
   };
 
-  handleQtyChange = e => {
-    this.setState({ productQty: parseInt(e.target.value) });
-  };
-
-  handleQtyKeyDown = e => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      this.changeQty(parseInt(e.target.value));
+  handleQtyChange = product => e => {
+    if (isNaN(e.target.value)) {
+      this.setState({ productQty: product.addminqty });
+    } else {
+      if (e.target.value < product.addminqty) {
+        this.setState({ productQty: product.addminqty });
+      } else {
+        this.setState({ productQty: parseInt(e.target.value) });
+      }
     }
   };
 
-  handleQtyBlur = e => {
-    this.changeQty(parseInt(e.target.value));
+  handleQtyKeyDown = product => e => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      product.qty = this.state.productQty;
+      this.props.onQtyChange(product);
+      this.setState({ productQty: product.qty });
+    }
   };
 
-  changeQty = targetQty => {
-    let { product } = this.props.container;
-    product = this.props.onQtyChange(product, targetQty);
-    this.setState({ productQty: product.qty });
-  };
-
-  handleIncrementClick = () => {
-    let { product } = this.props.container;
+  handleQtyBlur = product => {
     product.qty = this.state.productQty;
-    product = this.props.onIncrement(product);
+    this.props.onQtyChange(product);
     this.setState({ productQty: product.qty });
   };
 
-  handleDecrementClick = () => {
-    let { product } = this.props.container;
+  handleIncrementClick = product => {
     product.qty = this.state.productQty;
-    product = this.props.onDecrement(product);
+    this.props.onIncrement(product);
     this.setState({ productQty: product.qty });
+  };
+
+  handleDecrementClick = product => {
+    product.qty = this.state.productQty;
+    this.props.onDecrement(product);
+    this.setState({ productQty: product.qty });
+  };
+
+  handleRPIncrementClick = relatedProduct => {
+    this.props.onIncrement(relatedProduct);
+    this.props.onUpdateCart(relatedProduct);
   };
 
   getPrice = () => {
@@ -537,16 +545,10 @@ class ProductDetail extends Component {
     }
   };
 
-  toggleLoginModal = () => {
-    this.setState({ isLoginModalVisible: !this.state.isLoginModalVisible });
-  };
-
-  showLoginModal = () => {
-    this.setState({ isLoginModalVisible: true });
-  };
-
   render() {
     const { categories, product, images } = this.props.container;
+
+    console.log({ product });
 
     if (!product) {
       return (
@@ -581,11 +583,6 @@ class ProductDetail extends Component {
             </div>
           </div>
         </div>
-
-        <LoginModal
-          onVisibilityChange={this.toggleLoginModal}
-          visible={this.state.isLoginModalVisible}
-        />
       </div>
     );
   }
