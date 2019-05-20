@@ -51,5 +51,17 @@ export default [
     METHOD: "PUT",
     URL: `${API}/api/customer/passreset`,
     TOKEN: true
+  },
+  {
+    NAME: "checkmail",
+    METHOD: "PUT",
+    URL: `${API}/api/customer/checkchangemail/:email`,
+    REPLACE: "email"
+  },
+  {
+    NAME: "putchangepass",
+    METHOD: "PUT",
+    URL: `${API}/api/customer/putchangepass/:id/:password`,
+    REPLACE: "id, password"
   }
 ];

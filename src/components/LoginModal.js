@@ -65,10 +65,14 @@ class LoginModal extends React.Component {
   };
 
   handleSubmit = () => {
-    console.log("handle email", this.state.mail);
-    /* this.handleNotify("Таны оруулсан мэйл буруу байна"); */
-    this.handleNotify("Та мэйл хаягаа шалгана уу");
-    this.timer = setTimeout(() => this.handleCancelReset(), 1000);
+    api.customer.checkmail({ email: this.state.mail }).then(res => {
+      if (res.success) {
+        this.handleNotify("Та мэйл хаягаа шалгана уу");
+        this.timer = setTimeout(() => this.handleCancelReset(), 1000);
+      } else {
+        this.handleNotify("Таны оруулсан мэйл буруу байна");
+      }
+    });
   };
 
   onChangeMail = e => {

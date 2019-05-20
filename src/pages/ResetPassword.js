@@ -26,8 +26,19 @@ class ResetPassword extends React.Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        this.handleNotify("Таны нууц үг амжиллтай солигдлоо.");
-        this.props.history.push("/");
+        api.customer
+          .putchangepass({
+            id: this.props.match.params.id,
+            password: values.password
+          })
+          .then(res => {
+            if (res.success) {
+              this.handleNotify("Амжилттай нууц үг солигдлоо.");
+              this.props.history.push("/");
+            } else {
+              this.handleNotify("Оролдлого амжилтгүй.");
+            }
+          });
       }
     });
   };
@@ -35,6 +46,7 @@ class ResetPassword extends React.Component {
     console.log("props", this.props);
     const { staticInfo } = this.props.container;
     const { getFieldDecorator } = this.props.form;
+    console.log("id", this.props.match.params.id);
     return (
       <div className="top-container">
         <div className="section">

@@ -175,7 +175,7 @@ class Localization extends Component {
       },
       {
         exact: true,
-        path: "/ResetPassword",
+        path: "/ResetPassword/:id",
         component: rest => <ResetPassword {...rest} {...this.props} />
       }
     ];
