@@ -8,6 +8,7 @@ import { CARD_LIST_TYPES, CARD_TYPES } from "../utils/consts";
 import PageHeader from "../components/PageHeader";
 import CardList from "../components/CardList";
 import FilterSet from "../components/FilterSet";
+import crossImage from "../scss/assets/svg/error-black.svg";
 
 class Season extends React.Component {
   constructor(props) {
@@ -27,9 +28,15 @@ class Season extends React.Component {
       products: this.props.container.products || [],
       promoCats: this.props.container.promoCats || [],
       selectedPromoCatId: null,
-      searchProdItem: []
+      searchProdItem: [],
+      isLeftPanel: false
     };
   }
+
+  showLeftPanel = e => {
+    this.setState({ isLeftPanel: !this.state.isLeftPanel });
+    console.log(this.state.isLeftPanel);
+  };
 
   getPrices = attributes => {
     let min = 0;
@@ -247,6 +254,7 @@ class Season extends React.Component {
     const { menu, primaryBanners } = this.props.container;
     const { attributes, products } = this.state;
     const Option = Select.Option;
+    const leftPanel = `left-panel${this.state.isLeftPanel ? " show" : ""}`;
 
     let filters =
       attributes &&
@@ -299,11 +307,11 @@ class Season extends React.Component {
           bgColor="#4286f4"
         />
 
-        <div className="section">
+        <div className="section season">
           <div className="container pad10">
-            <div className="e-breadcrumb">
+            {/* <div className="e-breadcrumb">
               <ul className="list-unstyled">
-                {/* {parentCats &&
+                {parentCats &&
                   parentCats.map(category => {
                     return (
                       <li key={category.catnm}>
@@ -312,18 +320,20 @@ class Season extends React.Component {
                         </a>
                       </li>
                     );
-                  })} */}
+                  })} 
               </ul>
-            </div>
+            </div>*/}
             <div className="row row10">
               <div className="col-xl-3 pad10">
-                <div className="text-right d-block d-md-none">
-                  <a href=" " className="btn btn-gray btn-filter">
-                    <i className="fa fa-filter" aria-hidden="true" />
-                    <span className="text-uppercase">Шүүлтүүр</span>
-                  </a>
-                </div>
-                <div className="left-panel">
+                <div className={leftPanel}>
+                  <button className="button buttonBlack filter-cross" onClick={this.showLeftPanel}>
+                    <img
+                      src={crossImage}
+                      alt="cross"
+                      height="25px"
+                      aria-hidden="true"
+                    />
+                  </button>
                   <h5 className="title">
                     <strong>Хайлтын үр дүн</strong>
                   </h5>
@@ -359,6 +369,15 @@ class Season extends React.Component {
                     </div>
                     <div className="col-lg-6 pad10">
                       <form className="flex-this end">
+                        <div className="text-right d-block d-md-none">
+                          <a
+                            className="btn btn-gray btn-filter"
+                            onClick={this.showLeftPanel}
+                          >
+                            <i className="fa fa-filter" aria-hidden="true" />
+                            <span className="text-uppercase">Шүүлтүүр</span>
+                          </a>
+                        </div>
                         <div
                           className="form-group my-select flex-this"
                           style={{ marginRight: "10px" }}

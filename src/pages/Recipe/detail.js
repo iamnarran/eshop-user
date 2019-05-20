@@ -16,19 +16,17 @@ import smile from "../../scss/assets/images/demo/smile.png";
 const formatter = new Intl.NumberFormat("en-US");
 
 class RecipeDetail extends React.Component {
-  handleAddToCartClick = product => {
-    if (product) {
-      this.props.onAddToCart(product);
-    } else {
-      const { products } = this.props.container.productsData;
+  handleIncrementClick = product => {
+    this.props.onUpdateCart(product);
+  };
 
-      if (products.length) {
-        products.reduce((acc, next) => {
-          return acc.then(() => {
-            return this.props.onAddToCart(next);
-          });
-        }, Promise.resolve());
-      }
+  handleAddToCartClick = products => {
+    if (products.length) {
+      products.reduce((acc, next) => {
+        return acc.then(() => {
+          return this.props.onUpdateCart(next);
+        });
+      }, Promise.resolve());
     }
   };
 
@@ -102,7 +100,7 @@ class RecipeDetail extends React.Component {
                         <button
                           type="button"
                           className="btn btn-link"
-                          onClick={() => this.handleAddToCartClick(product)}
+                          onClick={() => this.handleIncrementClick(product)}
                         >
                           <i
                             className="fa fa-cart-plus"
@@ -126,7 +124,7 @@ class RecipeDetail extends React.Component {
             <button
               type="button"
               className="btn btn-main"
-              onClick={() => this.handleAddToCartClick()}
+              onClick={() => this.handleAddToCartClick(products)}
             >
               <i
                 className="fa fa-cart-plus"

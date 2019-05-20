@@ -19,26 +19,25 @@ class PackageDetail extends React.Component {
   componentDidMount() {
     let tempProducts = this.state.products;
 
-    tempProducts && tempProducts.forEach(product => {
-      product.qty = product.saleminqty || 1;
-    });
+    tempProducts &&
+      tempProducts.forEach(product => {
+        product.qty = product.saleminqty || 1;
+      });
 
     this.setState({ products: tempProducts });
   }
 
-  handleAddToCartClick = product => {
-    if (product) {
-      this.props.onUpdateCart(product);
-    } else {
-      const { products } = this.state;
+  handleSingleAddToCartClick = product => {
+    this.props.onUpdateCart(product);
+  };
 
-      if (products.length) {
-        products.reduce((acc, next) => {
-          return acc.then(() => {
-            return this.props.onUpdateCart(next);
-          });
-        }, Promise.resolve());
-      }
+  handleMultiAddToCartClick = products => {
+    if (products.length) {
+      products.reduce((acc, next) => {
+        return acc.then(() => {
+          return this.props.onUpdateCart(next);
+        });
+      }, Promise.resolve());
     }
   };
 
@@ -56,12 +55,12 @@ class PackageDetail extends React.Component {
   };
 
   handleIncrementClick = product => {
-    product = this.props.onIncrement(product);
+    this.props.onIncrement(product);
     this.findAndReplace(product);
   };
 
   handleDecrementClick = product => {
-    product = this.props.onDecrement(product);
+    this.props.onDecrement(product);
     this.findAndReplace(product);
   };
 
@@ -102,40 +101,41 @@ class PackageDetail extends React.Component {
     const similarProducts = this.props.container.products.sameproducts || [];
 
     return (
-      similarProducts && !!similarProducts.length && (
+      !!similarProducts &&
+      !!similarProducts.length && (
         <div className="block product-suggest">
           <p className="title">
             <strong>Ижил бараа</strong>
           </p>
 
           <ul className="list-unstyled">
-            {similarProducts.map((product, index) => {
+            {similarProducts.map((prod, index) => {
               return (
                 <li key={index}>
                   <div className="single flex-this">
                     <div className="image-container">
-                      <Link to={product.route || ""}>
+                      <Link to={prod.route || ""}>
                         <span
                           className="image"
                           style={{
-                            backgroundImage: `url(${IMAGE}${product.url})`
+                            backgroundImage: `url(${IMAGE}${prod.url})`
                           }}
                         />
                       </Link>
                     </div>
 
                     <div className="info-container flex-space">
-                      <Link to={product.route || ""}>
-                        <span>{product.skunm}</span>
+                      <Link to={prod.route || ""}>
+                        <span>{prod.skunm}</span>
                         <strong>
-                          {formatter.format(product.sprice || product.price)}₮
+                          {formatter.format(prod.sprice || prod.price)}₮
                         </strong>
                       </Link>
                       <div className="action">
                         <button
                           type="button"
                           className="btn btn-link"
-                          onClick={() => this.handleAddToCartClick(product)}
+                          onClick={() => this.handleSingleAddToCartClick(prod)}
                         >
                           <i
                             className="fa fa-cart-plus"
@@ -160,19 +160,19 @@ class PackageDetail extends React.Component {
 
     return (
       <div className="pack-product-container" style={{ marginTop: "30px" }}>
-        {products && products.length && (
+        {!!products && !!products.length && (
           <div className="pack-list">
             <div className="row row10">
               <div className="col-xl-8 pad10">
                 <ul className="list-unstyled">
-                  {products.map((product, index) => (
+                  {products.map((prod, index) => (
                     <li className="flex-this" key={index}>
                       <div className="image-container default">
-                        <Link to={product.route || ""}>
+                        <Link to={prod.route || ""}>
                           <span
                             className="image"
                             style={{
-                              backgroundImage: `url(${IMAGE}${product.img})`
+                              backgroundImage: `url(${IMAGE}${prod.img})`
                             }}
                           />
                         </Link>
@@ -182,14 +182,14 @@ class PackageDetail extends React.Component {
                         <div className="flex-space">
                           <p className="text col-md-5 col-sm-5">
                             <Link
-                              to={product.route || ""}
+                              to={prod.route || ""}
                               style={{ color: "#666" }}
                             >
-                              <span>{product.name}</span>
+                              <span>{prod.name}</span>
                               <strong>
                                 {formatter.format(
-                                  this.props.getUnitPrice(product).sprice ||
-                                    this.props.getUnitPrice(product).price
+                                  this.props.getUnitPrice(prod).sprice ||
+                                    this.props.getUnitPrice(prod).price
                                 )}
                                 ₮
                               </strong>
@@ -214,7 +214,7 @@ class PackageDetail extends React.Component {
                                     marginRight: "5px"
                                   }}
                                   onClick={() =>
-                                    this.handleDecrementClick(product)
+                                    this.handleDecrementClick(prod)
                                   }
                                 >
                                   <i
@@ -226,12 +226,12 @@ class PackageDetail extends React.Component {
                               <input
                                 type="text"
                                 className="form-control"
-                                value={product.qty}
+                                value={prod.qty}
                                 name="productQty"
                                 maxLength={5}
-                                onChange={this.handleQtyChange(product)}
-                                onKeyDown={this.handleQtyKeyDown(product)}
-                                onBlur={this.handleQtyBlur(product)}
+                                onChange={this.handleQtyChange(prod)}
+                                onKeyDown={this.handleQtyKeyDown(prod)}
+                                onBlur={this.handleQtyBlur(prod)}
                               />
                               <div
                                 className="input-group-append"
@@ -249,7 +249,7 @@ class PackageDetail extends React.Component {
                                     marginLeft: "5px"
                                   }}
                                   onClick={() =>
-                                    this.handleIncrementClick(product)
+                                    this.handleIncrementClick(prod)
                                   }
                                 >
                                   <i
@@ -265,7 +265,9 @@ class PackageDetail extends React.Component {
                             <button
                               className="btn btn-link"
                               type="button"
-                              onClick={() => this.handleAddToCartClick(product)}
+                              onClick={() =>
+                                this.handleSingleAddToCartClick(prod)
+                              }
                             >
                               <i
                                 className="fa fa-cart-plus"
@@ -291,7 +293,7 @@ class PackageDetail extends React.Component {
                   <button
                     type="button"
                     className="btn btn-main"
-                    onClick={() => this.handleAddToCartClick()}
+                    onClick={() => this.handleMultiAddToCartClick(products)}
                   >
                     <i
                       className="fa fa-cart-plus"
