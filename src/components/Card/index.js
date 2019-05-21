@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { Rate } from "antd";
 
+import { toast } from "react-toastify";
+import { css } from "glamor";
+
 import api from "../../api";
 import Label from "../Label";
 import withCart from "../HOC/withCart";
@@ -106,34 +109,175 @@ class Card extends React.Component {
       });
     } else {
       // Бараа
-      this.props.onUpdateCart(item);
+      this.handleUpdateCart(item);
     }
   };
 
-  trimByWord(text, maxChars = 20) {
-    if (!text) {
+  handleNotify = message =>
+    toast(message, {
+      autoClose: 5000,
+      progressClassName: css({
+        background: "#feb415"
+      })
+    });
+
+  getUnitPrice = product => {
+    if (product.sprice) {
+      if (
+        product.issalekg &&
+        product.kgproduct &&
+        product.kgproduct[0] &&
+        product.kgproduct[0].salegramprice
+      ) {
+        // Хямдарсан бөгөөд кг-ын бараа
+        return {
+          price: product.kgproduct[0].salegramprice,
+          sprice: product.kgproduct[0].salegramprice
+        };
+      }
+
+      // Хямдарсан бараа
+      return { price: product.price, sprice: product.sprice };
+    }
+
+    if (
+      product.issalekg &&
+      product.kgproduct &&
+      product.kgproduct[0] &&
+      product.kgproduct[0].salegramprice
+    ) {
+      // Хямдраагүй бөгөөд кг-ын бараа
+      return { price: product.kgproduct[0].salegramprice, sprice: null };
+    }
+
+    // Хямдраагүй бараа
+    return { price: product.price, sprice: null };
+  };
+
+  handleUpdateCart = (product, shouldOverride = false) => {
+    if (!product) {
+      this.handleNotify("Бараа олдсонгүй");
       return;
     }
 
-    if (!text.length) {
-      return text;
+    const {
+      cd,
+      name,
+      saleminqty,
+      salemaxqty,
+      addminqty,
+      availableqty,
+      isgift
+    } = product;
+    let { qty } = product;
+
+    let { cart } = this.props;
+    if (!cart) {
+      cart = { products: [], totalQty: 0, totalPrice: 0 };
     }
 
-    const textWords = text.split(" ");
-    const textWordsCount = textWords.length;
+    let found = cart.products.find(prod => prod.cd === cd);
+    const qtyInCart = found ? found.qty : 0;
 
-    if (textWordsCount <= maxChars) {
-      return text;
+    if (isNaN(qty)) {
+      if (qtyInCart > 0) {
+        if (qtyInCart > saleminqty) {
+          qty = addminqty;
+        } else {
+          qty = saleminqty;
+        }
+      } else {
+        qty = saleminqty;
+      }
     }
 
-    let trimmed = text.substr(0, maxChars);
-    trimmed = trimmed.substr(
-      0,
-      Math.min(trimmed.length, trimmed.lastIndexOf(" "))
-    );
+    let targetQty = shouldOverride
+      ? Math.round(qty / addminqty) * addminqty
+      : Math.round((qty + qtyInCart) / addminqty) * addminqty;
 
-    return `${trimmed}...`;
-  }
+    if (targetQty < saleminqty) {
+      this.handleNotify(
+        `"${name}" барааг хамгийн багадаа "${saleminqty}" ширхэгээр худалдан авах боломжтой байна`
+      );
+      return;
+    } else if (targetQty > salemaxqty && salemaxqty !== 0 && isgift !== 0) {
+      if (targetQty > availableqty) {
+        this.handleNotify(`"${name}" барааны нөөц хүрэлцэхгүй байна`);
+      } else {
+        this.handleNotify(
+          `"${name}" барааг хамгийн ихдээ "${salemaxqty}" ширхэгээр худалдан авах боломжтой байнаaaa`
+        );
+      }
+      return;
+    }
+
+    api.product
+      .isAvailable({
+        custid:
+          this.props.isLoggedIn && this.props.user ? this.props.user.id : 0,
+        skucd: cd,
+        qty: targetQty,
+        iscart: shouldOverride ? 1 : 0
+      })
+      .then(res => {
+        if (res.success) {
+          if (found) {
+            found.qty = targetQty;
+            const i = cart.products.map(prod => prod.cd).indexOf(found.cd);
+            if (i !== -1) {
+              cart.products.splice(i, 1, found);
+            }
+          } else {
+            product.qty = targetQty;
+            cart.products.push(product);
+          }
+
+          const qties = cart.products.map(prod => prod.qty);
+          cart.totalQty = qties.reduce((acc, cur) => acc + cur);
+          const prices = cart.products.map(prod => {
+            const price =
+              this.getUnitPrice(prod).sprice || this.getUnitPrice(prod).price;
+            return price * prod.qty;
+          });
+          cart.totalPrice = prices.reduce((acc, cur) => acc + cur);
+
+          // this.props.updateCart({
+          //   products: cart.products,
+          //   totalQty: cart.totalQty,
+          //   totalPrice: cart.totalPrice
+          // });
+
+          this.handleNotify(`Таны сагсанд "${name}" бараа ${qty}ш нэмэгдлээ`);
+        } else {
+          this.handleNotify(res.message);
+        }
+      });
+  };
+
+  // trimByWord(text, maxChars = 20) {
+  //   if (!text) {
+  //     return;
+  //   }
+
+  //   if (!text.length) {
+  //     return text;
+  //   }
+
+  //   const textWords = text.split(" ");
+  //   const textWordsCount = textWords.length;
+
+  //   if (textWordsCount <= maxChars) {
+  //     return text;
+  //   }
+
+  //   let trimmed = text.substr(0, maxChars);
+  //   trimmed = trimmed.substr(
+  //     0,
+  //     Math.min(trimmed.length, trimmed.lastIndexOf(" "))
+  //   );
+
+  //   return `${trimmed}...`;
+  // }
 
   render() {
     const { type, item, isLastInRow, className } = this.props;
@@ -250,21 +394,43 @@ class Card extends React.Component {
               </div>
               <div className="info-container">
                 <Link to={item.route ? item.route : ""} className="name">
-                  <span>
+                  <span
+                    style={{
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis"
+                    }}
+                  >
                     {item.name
+                      ? item.name
+                      : item.packagenm
+                      ? item.packagenm
+                      : ""}
+                    {/* {item.name
                       ? this.trimByWord(item.name)
                       : item.packagenm
                       ? this.trimByWord(item.packagenm)
-                      : ""}
+                      : ""} */}
                   </span>
                 </Link>
                 <Link to={item.route ? item.route : ""} className="cat">
-                  <span>
+                  <span
+                    style={{
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis"
+                    }}
+                  >
                     {item.shortnm
+                      ? item.shortnm
+                      : item.featuretxt
+                      ? item.featuretxt
+                      : ""}
+                    {/* {item.shortnm
                       ? this.trimByWord(item.shortnm, 30)
                       : item.featuretxt
                       ? this.trimByWord(item.featuretxt, 30)
-                      : ""}
+                      : ""} */}
                   </span>
                 </Link>
 
@@ -303,20 +469,32 @@ class Card extends React.Component {
               </div>
               <div className="info-container">
                 <Link to={item.route ? item.route : ""} className="name">
-                  <span>
+                  <span
+                    style={{
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis"
+                    }}
+                  >
                     {item.name
-                      ? this.trimByWord(item.name)
+                      ? item.name
                       : item.packagenm
-                      ? this.trimByWord(item.packagenm)
+                      ? item.packagenm
                       : ""}
                   </span>
                 </Link>
                 <Link to={item.route ? item.route : ""} className="cat">
-                  <span>
+                  <span
+                    style={{
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis"
+                    }}
+                  >
                     {item.shortnm
-                      ? this.trimByWord(item.shortnm, 30)
+                      ? item.shortnm
                       : item.featuretxt
-                      ? this.trimByWord(item.featuretxt, 30)
+                      ? item.featuretxt
                       : ""}
                   </span>
                 </Link>
@@ -359,10 +537,26 @@ class Card extends React.Component {
             </div>
             <div className="info-container">
               <Link to={item.route ? item.route : ""} className="name">
-                <span>{this.trimByWord(item.recipenm)}</span>
+                <span
+                  style={{
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis"
+                  }}
+                >
+                  {item.recipenm}
+                </span>
               </Link>
               <Link to={item.route ? item.route : ""} className="cat">
-                <span>{this.trimByWord(item.featuretxt, 30)}</span>
+                <span
+                  style={{
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis"
+                  }}
+                >
+                  {item.featuretxt}
+                </span>
               </Link>
               <br />
               <Link to={item.route ? item.route : ""} className="price">
@@ -386,10 +580,10 @@ class Card extends React.Component {
             </div>
             <div className="info-container">
               <Link to={item.route ? item.route : ""} className="name">
-                <span>{this.trimByWord(item.name)}</span>
+                <span>{item.name}</span>
               </Link>
               <Link to={item.route ? item.route : ""} className="cat">
-                <span>{this.trimByWord(item.featuretxt, 30)}</span>
+                <span>{item.featuretxt}</span>
               </Link>
               <Rate allowHalf disabled defaultValue={0} value={item.rate} />
               <Link
