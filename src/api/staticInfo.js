@@ -4,6 +4,6 @@ export default [
   {
     NAME: "findAll",
     METHOD: "GET",
-    URL: `${API}/api/staticInfo`
+    URL: `${API}/api/staticinfo`
   }
 ];

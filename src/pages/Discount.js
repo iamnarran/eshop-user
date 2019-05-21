@@ -14,8 +14,6 @@ class Discount extends React.Component {
       menu
     } = this.props.container;
 
-    console.log({ products });
-
     const seq = "1,1";
     const cardTypes = seq.split(",");
 

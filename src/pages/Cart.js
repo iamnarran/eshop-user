@@ -91,9 +91,22 @@ class Cart extends React.Component {
 
     if (product.sprice) {
       if (product.issalekg && product.kgproduct && product.kgproduct[0]) {
+        console.log({ product });
         return (
           <p className="price">
             <strong>{formatter.format(getUnitPrice(product).sprice)}₮</strong>
+            {product.kgproduct[0].salegram && (
+              <div>
+                <span
+                  style={{
+                    fontSize: "0.8em",
+                    color: "#999"
+                  }}
+                >
+                  {product.kgproduct[0].salegram} гр-н үнэ
+                </span>
+              </div>
+            )}
           </p>
         );
       }
@@ -119,6 +132,18 @@ class Cart extends React.Component {
       return (
         <p className="price">
           <strong>{formatter.format(getUnitPrice(product).price)}₮</strong>
+          {product.kgproduct[0].salegram && (
+            <div>
+              <span
+                style={{
+                  fontSize: "0.8em",
+                  color: "#999"
+                }}
+              >
+                {product.kgproduct[0].salegram} гр-н үнэ
+              </span>
+            </div>
+          )}
         </p>
       );
     }
@@ -145,8 +170,6 @@ class Cart extends React.Component {
   render() {
     const { deliveryInfo } = this.props.container;
     const { products } = this.state;
-
-    console.log({ products });
 
     let content = (
       <div style={{ textAlign: "center" }}>
