@@ -17,7 +17,7 @@ class SwalModals extends React.Component {
     super(props);
     this.state = {
       chosenBank: [],
-      mode: 'left',
+      mode: "left"
     };
   }
 
@@ -320,7 +320,10 @@ class SwalModals extends React.Component {
       return (
         <div className="checkout-container msg-bank">
           <div className="card-content">
-            <Tabs tabPosition={isMobile ? 'top' : mode} onChange={this.changeTab}>
+            <Tabs
+              tabPosition={isMobile ? "top" : mode}
+              onChange={this.changeTab}
+            >
               {data.map((item, i) => {
                 return (
                   <TabPane
@@ -447,7 +450,7 @@ class SwalModals extends React.Component {
         </div>
       );
     } else if (type == "agreement") {
-      const { agreementCancel, agreementApprove } = this.props;
+      const { agreementCancel, agreementApprove, data } = this.props;
       return (
         <div className="title-container">
           <h5 className="title">
@@ -502,6 +505,18 @@ class SwalModals extends React.Component {
       );
     } else if (type == "emarchant") {
       return <div>Оронд нь Имерчант дуудна</div>;
+    } else if (type == "agreementCheck") {
+      const { data } = this.props;
+      return (
+        <div className="title-container">
+          <h5 className="title">
+            <a className="flex-this">
+              <span>Үйлчилгээний нөхцөл</span>
+            </a>
+          </h5>
+          <div dangerouslySetInnerHTML={{ __html: data.description }} />
+        </div>
+      );
     }
   }
 }

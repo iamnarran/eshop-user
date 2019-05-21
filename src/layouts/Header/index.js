@@ -273,7 +273,7 @@ class AppHeader extends Component {
                               to=""
                               className="btn mobile-search-cross"
                               onClick={this.toggleSearch}
-                              style={{background: 'red'}}
+                              style={{background: '#feb415'}}
                             >
                               <i
                                 className="fa fa-remove d-block d-sm-none"

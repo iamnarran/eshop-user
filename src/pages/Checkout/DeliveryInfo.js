@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 import Swal from "sweetalert2";
 import { Checkbox } from "antd";
 import withReactContent from "sweetalert2-react-content";
+import api from "../../api";
+import SwalModals from "./SwalModals";
 const MySwal = withReactContent(Swal);
 const formatter = new Intl.NumberFormat("en-US");
 
@@ -16,6 +18,30 @@ class DeliveryInfo extends React.Component {
 
   handleAgreement = e => {
     this.setState({ checkedAgreement: e.target.checked });
+    if (e.target.checked) {
+      this.getAgreementData();
+    }
+  };
+
+  getAgreementData = async () => {
+    await api.staticPage
+      .findPage({
+        id: 42
+      })
+      .then(res => {
+        MySwal.fire({
+          html: <SwalModals type={"agreementCheck"} data={res.data[0]} />,
+          width: "80em",
+          animation: false,
+          button: false,
+          showCloseButton: true,
+          showCancelButton: false,
+          showConfirmButton: true,
+          focusConfirm: false,
+          allowOutsideClick: false,
+          closeOnEsc: true
+        });
+      });
   };
 
   generateNoat = (total, deliver, usedpoint) => {

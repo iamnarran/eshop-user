@@ -15,6 +15,7 @@ import Cart from "./Cart";
 import Checkout from "./Checkout/Checkout";
 import ProductList from "./ProductList";
 import OrderDetail from "./OrderDetail";
+import ResetPassword from "./ResetPassword";
 
 export {
   Discount,
@@ -33,5 +34,6 @@ export {
   Cart,
   Checkout,
   ProductList,
-  OrderDetail
+  OrderDetail,
+  ResetPassword
 };

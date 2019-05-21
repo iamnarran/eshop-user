@@ -42,6 +42,10 @@ class ProductDetail extends Component {
     this.addView();
   }
 
+  componentDidUpdate() {
+    this.addView();
+  }
+
   handleShowMoreClick = () => {
     this.setState({ isShowMoreClicked: true });
   };
@@ -589,8 +593,6 @@ class ProductDetail extends Component {
 
   render() {
     const { categories, product, images } = this.props.container;
-
-    console.log({ product });
 
     if (!product) {
       return (

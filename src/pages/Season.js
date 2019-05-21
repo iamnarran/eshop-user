@@ -8,7 +8,7 @@ import { CARD_LIST_TYPES, CARD_TYPES } from "../utils/consts";
 import PageHeader from "../components/PageHeader";
 import CardList from "../components/CardList";
 import FilterSet from "../components/FilterSet";
-import crossImage from "../scss/assets/svg/error.svg";
+import crossImage from "../scss/assets/svg/error-black.svg";
 
 class Season extends React.Component {
   constructor(props) {

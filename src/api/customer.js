@@ -42,13 +42,25 @@ export default [
   {
     NAME: "deleteSeenList",
     METHOD: "DELETE",
-    URL: `${API}/api/customer/seenList/:custid/:skucd`,
-    REPLACE: "custid, skucd"
+    URL: `${API}/api/customer/seenList/:custId/:skucd`,
+    REPLACE: "custId, skucd"
   },
   {
     NAME: "passreset",
     METHOD: "PUT",
     URL: `${API}/api/customer/passreset`,
     TOKEN: true
+  },
+  {
+    NAME: "checkmail",
+    METHOD: "PUT",
+    URL: `${API}/api/customer/checkchangemail/:email`,
+    REPLACE: "email"
+  },
+  {
+    NAME: "putchangepass",
+    METHOD: "PUT",
+    URL: `${API}/api/customer/putchangepass/:id/:password`,
+    REPLACE: "id, password"
   }
 ];
