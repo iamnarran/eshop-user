@@ -173,7 +173,8 @@ import {
   ChangePass,
   History,
   WishList,
-  DeliveryHistory
+  DeliveryHistory,
+  Epoint
 } from "../components";
 
 import p1 from "../scss/assets/images/demo/1.jpg";
@@ -256,7 +257,11 @@ class UserProfilePage extends React.Component {
                           <ul className="list-unstyled">
                             <li className="">
                               <Link to={`${match.path}`} className="flex-this">
-                                <i className="fa fa-user" aria-hidden="true" />
+                                <i
+                                  className="fa fa-user"
+                                  aria-hidden="true"
+                                  style={{ color: "#feb415" }}
+                                />
                                 <span>Профайл хуудас</span>
                               </Link>
                             </li>
@@ -268,6 +273,7 @@ class UserProfilePage extends React.Component {
                                 <i
                                   className="fa fa-check-square"
                                   aria-hidden="true"
+                                  style={{ color: "#feb415" }}
                                 />
                                 <span>Таны үзсэн барааны түүх</span>
                               </Link>
@@ -277,7 +283,11 @@ class UserProfilePage extends React.Component {
                                 to={`${match.path}/wishlist`}
                                 className="flex-this"
                               >
-                                <i className="fa fa-heart" aria-hidden="true" />
+                                <i
+                                  className="fa fa-heart"
+                                  aria-hidden="true"
+                                  style={{ color: "#feb415" }}
+                                />
                                 <span>Хадгалсан бараа</span>
                               </Link>
                             </li>
@@ -286,8 +296,25 @@ class UserProfilePage extends React.Component {
                                 to={`${match.path}/deliveryhistory`}
                                 className="flex-this"
                               >
-                                <i className="fa fa-heart" aria-hidden="true" />
+                                <i
+                                  className="fa fa-heart"
+                                  aria-hidden="true"
+                                  style={{ color: "#feb415" }}
+                                />
                                 <span>Захиалгын түүх</span>
+                              </Link>
+                            </li>
+                            <li>
+                              <Link
+                                to={`${match.path}/epoint`}
+                                className="flex-this"
+                              >
+                                <i
+                                  className="fa fa-credit-card"
+                                  aria-hidden="true"
+                                  style={{ color: "#feb415" }}
+                                />
+                                <span>ePoint карт</span>
                               </Link>
                             </li>
                             <li>
@@ -298,6 +325,7 @@ class UserProfilePage extends React.Component {
                                 <i
                                   className="fa fa-compass"
                                   aria-hidden="true"
+                                  style={{ color: "#feb415" }}
                                 />
                                 <span>Хүргэлтийн хаяг</span>
                               </Link>
@@ -307,7 +335,11 @@ class UserProfilePage extends React.Component {
                                 to={`${match.path}/password`}
                                 className="flex-this"
                               >
-                                <i className="fa fa-lock" aria-hidden="true" />
+                                <i
+                                  className="fa fa-lock"
+                                  aria-hidden="true"
+                                  style={{ color: "#feb415" }}
+                                />
                                 <span>Нууц үгээ солих</span>
                               </Link>
                             </li>
@@ -352,6 +384,11 @@ class UserProfilePage extends React.Component {
                           exact
                           path={`${match.url}/deliveryhistory`}
                           component={DeliveryHistory}
+                        />
+                        <Route
+                          exact
+                          path={`${match.url}/epoint`}
+                          component={Epoint}
                         />
                       </Switch>
                     </div>

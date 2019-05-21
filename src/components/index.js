@@ -14,6 +14,7 @@ import History from "./UFHistory";
 import WishList from "./UFWishlist";
 import Breadcrumb from "./Breadcrumb";
 import DeliveryHistory from "./UFdeliveryhistory";
+import Epoint from "./UFEpoint";
 
 export {
   ProductDetail,
@@ -31,5 +32,6 @@ export {
   History,
   WishList,
   Breadcrumb,
-  DeliveryHistory
+  DeliveryHistory,
+  Epoint
 };

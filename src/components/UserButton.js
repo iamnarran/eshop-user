@@ -108,13 +108,21 @@ class UserButton extends React.Component {
                 <ul className="list-unstyled">
                   <li className="active">
                     <Link to="/userprofile" className="flex-this">
-                      <i className="fa fa-user" aria-hidden="true" />
+                      <i
+                        className="fa fa-user"
+                        aria-hidden="true"
+                        style={{ color: "#feb415" }}
+                      />
                       <span>Профайл хуудас</span>
                     </Link>
                   </li>
                   <li>
                     <Link to="/userprofile" className="flex-this">
-                      <i className="fa fa-check-square" aria-hidden="true" />
+                      <i
+                        className="fa fa-check-square"
+                        aria-hidden="true"
+                        style={{ color: "#feb415" }}
+                      />
                       <span>Таны үзсэн барааны түүх</span>
                     </Link>
                   </li>
@@ -123,31 +131,51 @@ class UserButton extends React.Component {
                       to="/userprofile/deliveryhistory"
                       className="flex-this"
                     >
-                      <i className="fa fa-history" aria-hidden="true" />
+                      <i
+                        className="fa fa-history"
+                        aria-hidden="true"
+                        style={{ color: "#feb415" }}
+                      />
                       <span>Захиалгын түүх</span>
                     </Link>
                   </li>
                   <li>
                     <Link to="/userprofile" className="flex-this">
-                      <i className="fa fa-heart" aria-hidden="true" />
+                      <i
+                        className="fa fa-heart"
+                        aria-hidden="true"
+                        style={{ color: "#feb415" }}
+                      />
                       <span>Хадгалсан бараа</span>
                     </Link>
                   </li>
                   <li>
-                    <Link to="" className="flex-this">
-                      <i className="fa fa-credit-card" aria-hidden="true" />
+                    <Link to="/userprofile" className="flex-this">
+                      <i
+                        className="fa fa-credit-card"
+                        aria-hidden="true"
+                        style={{ color: "#feb415" }}
+                      />
                       <span>ePoint карт</span>
                     </Link>
                   </li>
                   <li>
-                    <Link to="/userprofile/delivery" className="flex-this">
-                      <i className="fa fa-compass" aria-hidden="true" />
+                    <Link to="/userprofile" className="flex-this">
+                      <i
+                        className="fa fa-compass"
+                        aria-hidden="true"
+                        style={{ color: "#feb415" }}
+                      />
                       <span>Хүргэлтийн хаяг</span>
                     </Link>
                   </li>
                   <li>
                     <Link to="/userprofile" className="flex-this">
-                      <i className="fa fa-lock" aria-hidden="true" />
+                      <i
+                        className="fa fa-lock"
+                        aria-hidden="true"
+                        style={{ color: "#feb415" }}
+                      />
                       <span>Нууц үгээ солих</span>
                     </Link>
                   </li>
