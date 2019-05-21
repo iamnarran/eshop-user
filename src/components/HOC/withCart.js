@@ -307,41 +307,7 @@ const withCart = WrappedComponent => {
                 totalPrice: cart.totalPrice
               });
             } else {
-              let { cart } = this.props;
-
-              if (!cart) {
-                cart = { products: [], totalQty: 0, totalPrice: 0 };
-              }
-
-              const found = cart.products.find(prod => prod.cd === product.cd);
-              if (!found) {
-                return;
-              }
-
-              const i = cart.products.map(prod => prod.cd).indexOf(found.cd);
-              cart.products.splice(i, 1);
-
-              const qties = cart.products.map(prod => prod.qty);
-              cart.totalQty = qties.length
-                ? qties.reduce((acc, cur) => acc + cur)
-                : 0;
-
-              const prices = cart.products.map(prod => {
-                const price =
-                  this.getUnitPrice(prod).sprice ||
-                  this.getUnitPrice(prod).price;
-
-                return price * prod.qty;
-              });
-              cart.totalPrice = prices.length
-                ? prices.reduce((acc, cur) => acc + cur)
-                : 0;
-
-              this.props.updateCart({
-                products: cart.products,
-                totalQty: cart.totalQty,
-                totalPrice: cart.totalPrice
-              });
+              this.handleNotify(res.message);
             }
           });
       } else {

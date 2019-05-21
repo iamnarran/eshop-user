@@ -1,6 +1,14 @@
 body {
   font-family: "Roboto", sans-serif;
   letter-spacing: 0.1px;
+  margin-top: 135px;
+}
+#main-header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 999;
+  background-color: #fff;
 }
 .top-nav {
   background-color: $gray05;

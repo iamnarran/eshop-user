@@ -118,7 +118,7 @@ class AppHeader extends Component {
       this.state.isSearch ? " activated" : " "
     }`;
     return (
-      <div className="wrap">
+      <div className="wrap" id="main-header">
         <div className="top-container">
           <div className="top-nav">
             <div className="container container-laptop pad10">
@@ -273,7 +273,7 @@ class AppHeader extends Component {
                               to=""
                               className="btn mobile-search-cross"
                               onClick={this.toggleSearch}
-                              style={{background: '#feb415'}}
+                              style={{ background: "#feb415" }}
                             >
                               <i
                                 className="fa fa-remove d-block d-sm-none"
