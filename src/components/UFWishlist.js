@@ -13,7 +13,6 @@ class Component extends React.Component {
   getData() {
     api.customer.getWishList({ custId: this.props.user.id }).then(res => {
       if (res.success) {
-        console.log(res);
         this.setState({
           wishlist: res.data
         });
