@@ -66,7 +66,6 @@ class Component extends React.Component {
   };
 
   render() {
-    console.log("this.state", this.state);
     const { getFieldDecorator } = this.props.form;
     const { name, phone, homeaddress } = this.state;
     const { cityOrProvince, districtOrSum } = this.state;
