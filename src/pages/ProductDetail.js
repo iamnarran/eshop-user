@@ -137,37 +137,88 @@ class ProductDetail extends Component {
     const { product } = this.props.container;
     const { productQty } = this.state;
 
-    let priceTitle = "Үнэ: ";
-    let price = product.price;
+    let priceInfo = null;
 
-    if (product.issalekg && product.kgproduct[0]) {
+    let priceTitle = "Үнэ: ";
+    let kiloPrice = null;
+    if (product.issalekg && product.kgproduct && product.kgproduct[0]) {
       priceTitle = `${product.kgproduct[0].salegram} гр-н үнэ: `;
-      price = product.kgproduct[0].salegramprice;
+      kiloPrice = (
+        <p className="count-text text-right">
+          {`Кг үнэ: ${formatter.format(product.kgproduct[0].kilogramprice)}₮`}
+        </p>
+      );
     }
 
+    let price = product.price;
     if (product.spercent && product.spercent !== 100) {
       // Хямдарсан үед
-      price = (
-        <div className="price product-detail">
-          {!product.issalekg && (
+      let salePrice = product.sprice;
+
+      if (product.issalekg && product.kgproduct && product.kgproduct[0]) {
+        // Хямдарсан бөгөөд кг-н бараа
+        kiloPrice = (
+          <p className="count-text text-right">
+            Кг үнэ:
             <small
               className="sale"
-              style={{ textDecoration: "line-through", marginLeft: "5px" }}
+              style={{
+                color: "#666",
+                textDecoration: "line-through",
+                marginLeft: "5px",
+                marginRight: "5px"
+              }}
             >
               {formatter.format(price)}₮
             </small>
-          )}
-          <span className="current" style={{ marginLeft: "5px" }}>
-            {formatter.format(product.issalekg ? price : product.sprice)}₮
-          </span>
+            {formatter.format(product.kgproduct[0].kilogramprice)}₮
+          </p>
+        );
+        price = Math.round(
+          price / Math.round(1000 / product.kgproduct[0].salegram)
+        );
+        salePrice = product.kgproduct[0].salegramprice;
+      }
+
+      priceInfo = (
+        <div>
+          <div className="count-text text-right">
+            {priceTitle}
+            <div className="price product-detail">
+              <small
+                className="sale"
+                style={{
+                  color: "#666",
+                  textDecoration: "line-through",
+                  marginLeft: "5px"
+                }}
+              >
+                {formatter.format(price)}₮
+              </small>
+              <span className="current" style={{ marginLeft: "5px" }}>
+                {formatter.format(salePrice)}₮
+              </span>
+            </div>
+          </div>
+          {kiloPrice}
         </div>
       );
     } else {
       // Хямдраагүй үед
-      price = (
-        <span className="current" style={{ marginLeft: "5px" }}>
-          {formatter.format(price)}₮
-        </span>
+      if (product.issalekg && product.kgproduct && product.kgproduct[0]) {
+        price = product.kgproduct[0].salegramprice;
+      }
+
+      priceInfo = (
+        <div>
+          <div className="count-text text-right">
+            {priceTitle}
+            <span className="current" style={{ marginLeft: "5px" }}>
+              {formatter.format(price)}₮
+            </span>
+          </div>
+          {kiloPrice}
+        </div>
       );
     }
 
@@ -212,20 +263,7 @@ class ProductDetail extends Component {
             </div>
           </div>
 
-          <div className="col-xl-7">
-            <div className="count-text text-right">
-              {priceTitle}
-              {price}
-            </div>
-
-            {!!product.issalekg && !!product.kgproduct[0] && (
-              <p className="count-text text-right">
-                {`Кг үнэ: ${formatter.format(
-                  product.kgproduct[0].kilogramprice
-                )}₮`}
-              </p>
-            )}
-          </div>
+          <div className="col-xl-7">{priceInfo}</div>
         </div>
 
         <div className="total-price text-right">
@@ -347,17 +385,21 @@ class ProductDetail extends Component {
               );
             })}
           </ul>
-          <div className="more-link text-center">
-            <Button
-              className="btn btn-border"
-              onClick={this.handleShowMoreClick}
-              style={{ display: (shouldExpand || shouldButtonHide) && "none" }}
-            >
-              <span className="text text-uppercase">
-                Бүх хослох барааг үзэх
-              </span>
-            </Button>
-          </div>
+          {relatedProducts.length > limit && (
+            <div className="more-link text-center">
+              <Button
+                className="btn btn-border"
+                onClick={this.handleShowMoreClick}
+                style={{
+                  display: (shouldExpand || shouldButtonHide) && "none"
+                }}
+              >
+                <span className="text text-uppercase">
+                  Бүх хослох барааг үзэх
+                </span>
+              </Button>
+            </div>
+          )}
         </div>
       )
     );

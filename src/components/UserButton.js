@@ -13,7 +13,7 @@ class UserButton extends React.Component {
     this.props.showLoginModal();
   };
 
-  handleLogout = () => {
+  handleLogoutClick = () => {
     this.props.updateCart({
       products: [],
       totalQty: 0,
@@ -119,7 +119,10 @@ class UserButton extends React.Component {
                     </Link>
                   </li>
                   <li>
-                    <Link to="/userprofile/deliveryhistory" className="flex-this">
+                    <Link
+                      to="/userprofile/deliveryhistory"
+                      className="flex-this"
+                    >
                       <i className="fa fa-history" aria-hidden="true" />
                       <span>Захиалгын түүх</span>
                     </Link>
@@ -137,10 +140,7 @@ class UserButton extends React.Component {
                     </Link>
                   </li>
                   <li>
-                    <Link
-                      to="/userprofile/delivery"
-                      className="flex-this"
-                    >
+                    <Link to="/userprofile/delivery" className="flex-this">
                       <i className="fa fa-compass" aria-hidden="true" />
                       <span>Хүргэлтийн хаяг</span>
                     </Link>
@@ -152,7 +152,7 @@ class UserButton extends React.Component {
                     </Link>
                   </li>
                 </ul>
-                <div className="text-left" onClick={this.handleLogout}>
+                <div className="text-left" onClick={this.handleLogoutClick}>
                   <button className="btn btn-gray">
                     <i className="fa fa-chevron-left" aria-hidden="true" />
                     <span className="text-uppercase">Гарах</span>

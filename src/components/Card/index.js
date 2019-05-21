@@ -1,13 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
+import { Rate } from "antd";
+
 import api from "../../api";
-import Rate from "../Rate";
 import Label from "../Label";
-import { Avatar } from "antd";
 import withCart from "../HOC/withCart";
 import { IMAGE, CARD_TYPES, LABEL_TYPES } from "../../utils/consts";
-import productPlus from "../../scss/assets/images/demo/plusEmart.png";
 
 import "./Card.css";
 
@@ -107,7 +106,6 @@ class Card extends React.Component {
       });
     } else {
       // Бараа
-      this.props.onIncrement(item);
       this.props.onUpdateCart(item);
     }
   };
@@ -270,10 +268,8 @@ class Card extends React.Component {
                   </span>
                 </Link>
 
-                {item.rate ? (
-                  <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} />
-                ) : null}
-                {/* <br /> */}
+                <Rate allowHalf disabled defaultValue={0} value={item.rate} />
+                <br />
                 <Link to={item.route ? item.route : ""} className="price">
                   {prices}
                 </Link>
@@ -325,9 +321,7 @@ class Card extends React.Component {
                   </span>
                 </Link>
 
-                {item.rate ? (
-                  <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} />
-                ) : null}
+                <Rate allowHalf disabled defaultValue={0} value={item.rate} />
                 <br />
                 <Link to={item.route ? item.route : ""} className="price">
                   {prices}
@@ -397,9 +391,7 @@ class Card extends React.Component {
               <Link to={item.route ? item.route : ""} className="cat">
                 <span>{this.trimByWord(item.featuretxt, 30)}</span>
               </Link>
-              {item.rate ? (
-                <Rate rate={item.rate} numOfVotes={item.rate_user_cnt} />
-              ) : null}
+              <Rate allowHalf disabled defaultValue={0} value={item.rate} />
               <Link
                 to={item.route ? item.route : ""}
                 className="price"

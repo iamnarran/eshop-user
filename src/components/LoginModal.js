@@ -57,47 +57,50 @@ class LoginModal extends React.Component {
     this.setRedirect();
   };
 
-  handleLoggedInUser = user => {
-    this.props.setUser(user);
+  saveToDb = products => {
+    return products.reduce((acc, next) => {
+      return acc.then(() => {
+        return this.props.onUpdateCart(next, true);
+      });
+    }, Promise.resolve());
+  };
+
+  modifyDbAndRedux = async user => {
+    await this.props.setUser(user);
 
     let productsInCart = this.props.cart.products;
+    this.saveToDb(productsInCart).then(() => {
+      api.cart.findAllProducts({ custid: user.id }).then(res => {
+        if (res.success) {
+          const products = res.data;
 
-    if (productsInCart.length) {
-      productsInCart.forEach(prodInCart => {
-        this.props.onUpdateCart(prodInCart, true);
-      });
-    }
+          let totalQty = 0;
+          let totalPrice = 0;
+          if (products.length) {
+            const qties = products.map(prod => prod.qty);
+            totalQty = qties.reduce((acc, cur) => acc + cur);
 
-    api.cart.findAllProducts({ custid: user.id }).then(res => {
-      if (res.success) {
-        const products = res.data;
+            const prices = products.map(prod => {
+              const price =
+                this.props.getUnitPrice(prod).sprice ||
+                this.props.getUnitPrice(prod).price;
 
-        let totalQty = 0;
-        let totalPrice = 0;
-        if (products.length) {
-          const qties = products.map(prod => prod.qty);
-          totalQty = qties.reduce((acc, cur) => acc + cur);
+              return price * prod.qty;
+            });
+            totalPrice = prices.reduce((acc, cur) => acc + cur);
+          }
 
-          const prices = products.map(prod => {
-            const price =
-              this.props.getUnitPrice(prod).sprice ||
-              this.props.getUnitPrice(prod).price;
-
-            return price * prod.qty;
+          this.props.updateCart({
+            products,
+            totalQty,
+            totalPrice
           });
-          totalPrice = prices.reduce((acc, cur) => acc + cur);
+        } else {
+          console.log("failure", res);
+          this.handleCancel();
+          return;
         }
-
-        this.props.updateCart({
-          products,
-          totalQty,
-          totalPrice
-        });
-      } else {
-        console.log("failure", res);
-        this.handleCancel();
-        return;
-      }
+      });
     });
 
     this.handleOk();
@@ -119,56 +122,7 @@ class LoginModal extends React.Component {
             let customer = res.data[0].info.customerInfo;
             customer.token = res.data[0].info.access_token;
 
-            this.handleLoggedInUser(customer);
-
-            //   if (products.length) {
-            //     products.forEach(prod => {
-            //       const found = savedProducts.find(
-            //         savedProd => savedProd.cd === prod.cd
-            //       );
-
-            //       if (found) {
-            //         found.qty += prod.qty;
-            //         this.props.onUpdateCart(found, true);
-            //       } else {
-            //         this.props.onUpdateCart(prod, true);
-            //       }
-            //     });
-
-            //     api.cart.findAllProducts({ custid: customer.id }).then(res => {
-            //       if (res.success) {
-            //         console.log("success", res);
-            //       } else {
-            //         console.log("failure", res);
-            //       }
-            //     });
-            //   } else {
-            //     products = res.data[0].basket;
-            //   }
-
-            //   const qties = products.map(prod => prod.qty);
-            //   const totalQty = qties.reduce((acc, cur) => acc + cur);
-
-            //   const prices = products.map(prod => {
-            //     const price =
-            //       this.props.getUnitPrice(prod).sprice ||
-            //       this.props.getUnitPrice(prod).price;
-
-            //     return price * prod.qty;
-            //   });
-            //   const totalPrice = prices.reduce((acc, cur) => acc + cur);
-
-            //   this.props.updateCart({
-            //     products,
-            //     totalQty,
-            //     totalPrice
-            //   });
-
-            //   this.props.cart.totalQty = this.setState({ isLoading: false });
-            //   this.handleOk();
-            //   this.setRedirect();
-            // } else {
-            //   this.handleNotify("Таны нэвтрэх нэр эсвэл нууц үг буруу байна");
+            this.modifyDbAndRedux(customer);
           } else {
             this.handleNotify(res.message);
           }
@@ -280,7 +234,7 @@ class LoginModal extends React.Component {
 
           <span className="divide-maker">Эсвэл</span>
 
-          <FacebookLogin onSuccess={user => this.handleLoggedInUser(user)} />
+          <FacebookLogin onSuccess={user => this.modifyDbAndRedux(user)} />
           <GoogleLogin onGoogleSuccess={this.handleSocialSuccess} />
 
           <div className="text-center">
