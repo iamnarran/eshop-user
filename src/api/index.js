@@ -22,6 +22,7 @@ import checkout from "./checkout";
 import search from "./search";
 import storage from "../utils/storage";
 import customer from "./customer";
+import golomtMerchant from "./golomMerchant";
 
 let rest = {};
 
@@ -159,6 +160,11 @@ search.forEach(api => {
 rest["customer"] = {};
 customer.forEach(api => {
   rest.customer[api.NAME] = data => generateAPI(api, data);
+});
+
+rest["golomtMerchant"] = {};
+golomtMerchant.forEach(api => {
+  rest.golomtMerchant[api.NAME] = data => generateAPI(api, data);
 });
 
 export { rest as default, setAuthorizationHeader };
