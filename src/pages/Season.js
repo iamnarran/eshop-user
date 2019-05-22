@@ -309,24 +309,13 @@ class Season extends React.Component {
 
         <div className="section season">
           <div className="container pad10">
-            {/* <div className="e-breadcrumb">
-              <ul className="list-unstyled">
-                {parentCats &&
-                  parentCats.map(category => {
-                    return (
-                      <li key={category.catnm}>
-                        <a href={category.route ? category.route : ""}>
-                          <span>{category.catnm}</span>
-                        </a>
-                      </li>
-                    );
-                  })} 
-              </ul>
-            </div>*/}
             <div className="row row10">
               <div className="col-xl-3 pad10">
                 <div className={leftPanel}>
-                  <button className="button buttonBlack filter-cross" onClick={this.showLeftPanel}>
+                  <button
+                    className="button buttonBlack filter-cross"
+                    onClick={this.showLeftPanel}
+                  >
                     <img
                       src={crossImage}
                       alt="cross"

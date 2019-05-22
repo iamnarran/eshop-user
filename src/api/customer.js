@@ -54,7 +54,7 @@ export default [
   {
     NAME: "checkmail",
     METHOD: "PUT",
-    URL: `${API}/api/customer/checkchangemail/:email`,
+    URL: `${API}/api/customer/checkchangepass/:email`,
     REPLACE: "email"
   },
   {
