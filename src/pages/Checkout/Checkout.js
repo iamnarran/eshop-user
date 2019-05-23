@@ -476,8 +476,7 @@ class Checkout extends React.Component {
               chosenInfo.address = values.addresstype;
               chosenInfo.addressnm = values.addresstype;
               chosenInfo.isNew = true;
-              console.log(adrs);
-              // this.setUser(adrs);
+              this.setUser(adrs);
             }
             let userInfo = this.state.userInfo;
             userInfo.firstname = values.lastName;
@@ -662,27 +661,27 @@ class Checkout extends React.Component {
           mapForm.action = res.data.url.url;
 
           var keyNumber = document.createElement("input");
-          keyNumber.type = "text";
+          keyNumber.type = "hidden";
           keyNumber.name = "key_number";
           keyNumber.value = res.data.url.key_number;
 
           var transNumber = document.createElement("input");
-          transNumber.type = "text";
+          transNumber.type = "hidden";
           transNumber.name = "trans_number";
           transNumber.value = res.data.url.trans_number;
 
           var trans_amount = document.createElement("input");
-          trans_amount.type = "text";
+          trans_amount.type = "hidden";
           trans_amount.name = "trans_amount";
           trans_amount.value = res.data.url.trans_amount;
 
           var time = document.createElement("input");
-          time.type = "text";
+          time.type = "hidden";
           time.name = "time";
           time.value = res.data.url.time;
 
           var lang_ind = document.createElement("input");
-          lang_ind.type = "text";
+          lang_ind.type = "hidden";
           lang_ind.name = "lang_ind";
           lang_ind.value = res.data.url.lang_ind;
 
