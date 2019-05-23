@@ -165,9 +165,7 @@ const withCart = WrappedComponent => {
       }
     };
 
-    handleUpdateCart = (e, product, shouldOverride = false) => {
-      e.preventDefault();
-
+    handleUpdateCart = (product, shouldOverride = false) => {
       if (!product) {
         this.handleNotify("Бараа олдсонгүй");
         return;

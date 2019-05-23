@@ -8,6 +8,7 @@ import {
   FacebookIcon,
   TwitterIcon
 } from "react-share";
+import { isMobile } from "react-device-detect";
 
 import { updateCart } from "../actions/cart";
 import { IMAGE } from "../utils/consts";
@@ -412,11 +413,11 @@ class ProductDetail extends Component {
   renderMoreInfo = () => {
     let { product, attributes, similarProducts } = this.props.container;
 
-    const similarProductsLimit = 4;
+    const similarProductsLimit = isMobile ? 1 : 4;
     const shouldLoop = similarProducts.length > similarProductsLimit;
 
     const params = {
-      slidesPerView: 4,
+      slidesPerView: similarProductsLimit,
       spaceBetween: 0,
       loop: shouldLoop,
       autoplay: {

@@ -2,16 +2,20 @@ import React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { Rate } from "antd";
+import { connect } from "react-redux";
 
 import { toast } from "react-toastify";
 import { css } from "glamor";
 
+import store from "../../store";
+import { updateCart } from "../../actions/cart";
 import api from "../../api";
 import Label from "../Label";
 import withCart from "../HOC/withCart";
 import { IMAGE, CARD_TYPES, LABEL_TYPES } from "../../utils/consts";
 
 import "./Card.css";
+import { UPDATE_CART } from "../../actions/types";
 
 const formatter = new Intl.NumberFormat("en-US");
 
@@ -241,6 +245,15 @@ class Card extends React.Component {
           });
           cart.totalPrice = prices.reduce((acc, cur) => acc + cur);
 
+          store.dispatch({
+            type: UPDATE_CART,
+            payload: {
+              products: cart.products,
+              totalQty: cart.totalQty,
+              totalPrice: cart.totalPrice
+            }
+          });
+
           // this.props.updateCart({
           //   products: cart.products,
           //   totalQty: cart.totalQty,
@@ -253,31 +266,6 @@ class Card extends React.Component {
         }
       });
   };
-
-  // trimByWord(text, maxChars = 20) {
-  //   if (!text) {
-  //     return;
-  //   }
-
-  //   if (!text.length) {
-  //     return text;
-  //   }
-
-  //   const textWords = text.split(" ");
-  //   const textWordsCount = textWords.length;
-
-  //   if (textWordsCount <= maxChars) {
-  //     return text;
-  //   }
-
-  //   let trimmed = text.substr(0, maxChars);
-  //   trimmed = trimmed.substr(
-  //     0,
-  //     Math.min(trimmed.length, trimmed.lastIndexOf(" "))
-  //   );
-
-  //   return `${trimmed}...`;
-  // }
 
   render() {
     const { type, item, isLastInRow, className } = this.props;
@@ -406,11 +394,6 @@ class Card extends React.Component {
                       : item.packagenm
                       ? item.packagenm
                       : ""}
-                    {/* {item.name
-                      ? this.trimByWord(item.name)
-                      : item.packagenm
-                      ? this.trimByWord(item.packagenm)
-                      : ""} */}
                   </span>
                 </Link>
                 <Link to={item.route ? item.route : ""} className="cat">
@@ -426,15 +409,15 @@ class Card extends React.Component {
                       : item.featuretxt
                       ? item.featuretxt
                       : ""}
-                    {/* {item.shortnm
-                      ? this.trimByWord(item.shortnm, 30)
-                      : item.featuretxt
-                      ? this.trimByWord(item.featuretxt, 30)
-                      : ""} */}
                   </span>
                 </Link>
 
-                <Rate allowHalf disabled defaultValue={0} value={item.rate} />
+                <Rate
+                  allowHalf
+                  disabled
+                  defaultValue={0}
+                  value={item.rate / 2}
+                />
                 <br />
                 <Link to={item.route ? item.route : ""} className="price">
                   {prices}
@@ -499,7 +482,12 @@ class Card extends React.Component {
                   </span>
                 </Link>
 
-                <Rate allowHalf disabled defaultValue={0} value={item.rate} />
+                <Rate
+                  allowHalf
+                  disabled
+                  defaultValue={0}
+                  value={item.rate / 2}
+                />
                 <br />
                 <Link to={item.route ? item.route : ""} className="price">
                   {prices}
@@ -585,7 +573,7 @@ class Card extends React.Component {
               <Link to={item.route ? item.route : ""} className="cat">
                 <span>{item.featuretxt}</span>
               </Link>
-              <Rate allowHalf disabled defaultValue={0} value={item.rate} />
+              <Rate allowHalf disabled defaultValue={0} value={item.rate / 2} />
               <Link
                 to={item.route ? item.route : ""}
                 className="price"
@@ -644,4 +632,9 @@ Card.propTypes = {
   className: PropTypes.string
 };
 
-export default withCart(Card);
+export default withCart(
+  connect(
+    null,
+    { updateCart }
+  )(Card)
+);

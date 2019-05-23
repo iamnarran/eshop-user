@@ -96,16 +96,14 @@ class Cart extends React.Component {
           <p className="price">
             <strong>{formatter.format(getUnitPrice(product).sprice)}₮</strong>
             {product.kgproduct[0].salegram && (
-              <div>
-                <span
-                  style={{
-                    fontSize: "0.8em",
-                    color: "#999"
-                  }}
-                >
-                  {product.kgproduct[0].salegram} гр-н үнэ
-                </span>
-              </div>
+              <span
+                style={{
+                  fontSize: "0.8em",
+                  color: "#999"
+                }}
+              >
+                {product.kgproduct[0].salegram} гр-н үнэ
+              </span>
             )}
           </p>
         );
@@ -133,16 +131,14 @@ class Cart extends React.Component {
         <p className="price">
           <strong>{formatter.format(getUnitPrice(product).price)}₮</strong>
           {product.kgproduct[0].salegram && (
-            <div>
-              <span
-                style={{
-                  fontSize: "0.8em",
-                  color: "#999"
-                }}
-              >
-                {product.kgproduct[0].salegram} гр-н үнэ
-              </span>
-            </div>
+            <span
+              style={{
+                fontSize: "0.8em",
+                color: "#999"
+              }}
+            >
+              {product.kgproduct[0].salegram} гр-н үнэ
+            </span>
           )}
         </p>
       );

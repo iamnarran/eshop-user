@@ -13,7 +13,7 @@ class CardSlider extends React.Component {
       return (
         <div
           key={index}
-          className="related-product col-four pad10 col-md-3 col-6"
+          className={`related-product col-four pad10 col-md-3 col-12`}
         >
           <Card key={index} item={item} type={CARD_TYPES.slim} />
         </div>
