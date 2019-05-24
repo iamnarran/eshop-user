@@ -21,6 +21,7 @@ import ProductList from "./ProductList";
 import OrderDetail from "./OrderDetail";
 import DeliveryAddress from "./UsrProfDeliveryAddress";
 import ResetPassword from "./ResetPassword";
+import Confirm from "./Confirm";
 export {
   Footer,
   Header,
@@ -42,6 +43,7 @@ export {
   Checkout,
   ProductList,
   OrderDetail,
-  ResetPassword
+  ResetPassword,
+  Confirm
   // DeliveryAddress
 };

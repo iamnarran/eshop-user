@@ -62,5 +62,11 @@ export default [
     METHOD: "PUT",
     URL: `${API}/api/customer/putchangepass/:id/:password`,
     REPLACE: "id, password"
+  },
+  {
+    NAME: "checkkey",
+    METHOD: "PUT",
+    URL: `${API}/api/customer/checkkey/:key`,
+    REPLACE: "key"
   }
 ];

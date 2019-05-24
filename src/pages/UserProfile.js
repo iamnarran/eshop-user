@@ -250,7 +250,7 @@ class UserProfilePage extends React.Component {
                               />
                             </div>
                             <p className="text text-center">
-                              <strong>Таны мэдээлэл</strong>
+                              <strong>Таны мэдээлэл </strong>
                               <span>100% / 100%</span>
                             </p>
                           </div>

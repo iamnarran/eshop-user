@@ -44,7 +44,8 @@ import {
   Checkout,
   ProductList,
   OrderDetail,
-  ResetPassword
+  ResetPassword,
+  Confirm
 } from "./containers";
 
 import Private from "./components/Private";
@@ -177,6 +178,11 @@ class Localization extends Component {
         exact: true,
         path: "/ResetPassword/:id",
         component: rest => <ResetPassword {...rest} {...this.props} />
+      },
+      {
+        exact: true,
+        path: "/confirm/:key",
+        component: rest => <Confirm {...rest} {...this.props} />
       }
     ];
 
