@@ -22,6 +22,7 @@ import OrderDetail from "./OrderDetail";
 import DeliveryAddress from "./UsrProfDeliveryAddress";
 import ResetPassword from "./ResetPassword";
 import Confirm from "./Confirm";
+import GolomtMerchange from "./MerchantReturn/GolomtMerchant";
 export {
   Footer,
   Header,
@@ -44,6 +45,7 @@ export {
   ProductList,
   OrderDetail,
   ResetPassword,
-  Confirm
+  Confirm,
+  GolomtMerchange
   // DeliveryAddress
 };

@@ -1,16 +1,11 @@
 import React, { Component } from "react";
-import {
-  BrowserRouter as Router,
-  BrowserHistory,
-  Switch,
-  Route
-} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Provider, connect } from "react-redux";
-import { persistStore } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react";
 import { ToastContainer } from "react-toastify";
 import { addLocaleData, injectIntl } from "react-intl";
 import { IntlProvider } from "react-intl-redux";
+import { persistStore } from "redux-persist";
 import en from "react-intl/locale-data/en";
 import ScrollToTop from "react-router-scroll-top";
 
@@ -45,7 +40,8 @@ import {
   ProductList,
   OrderDetail,
   ResetPassword,
-  Confirm
+  Confirm,
+  GolomtMerchange
 } from "./containers";
 
 import Private from "./components/Private";
@@ -72,6 +68,7 @@ class Localization extends Component {
       this.state.isToggle ? " activated" : ""
     }`;
     const { auth } = this.props;
+    console.log("ooo", this.props);
     const routes = [
       {
         path: "/",
@@ -183,6 +180,11 @@ class Localization extends Component {
         exact: true,
         path: "/confirm/:key",
         component: rest => <Confirm {...rest} {...this.props} />
+      },
+      {
+        exact: true,
+        path: "/golomtPayment",
+        component: rest => <GolomtMerchange {...rest} {...this.props} />
       }
     ];
 
@@ -237,7 +239,7 @@ class App extends Component {
 
     return (
       <Provider store={store}>
-        <PersistGate persistor={persistor}>
+        <PersistGate persistor={persistor} loading={null}>
           <IntlProvider>
             <Localization />
           </IntlProvider>

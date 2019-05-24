@@ -31,12 +31,18 @@ class DeliveryInfo extends React.Component {
       .then(res => {
         MySwal.fire({
           html: <SwalModals type={"agreementCheck"} data={res.data[0]} />,
-          width: "80em",
+          width: "60em",
           animation: false,
+          /*   customClass: {
+            popup: "animated zoomInUp"
+          }, */
           button: false,
+          scrollbarPadding: false,
           showCloseButton: true,
           showCancelButton: false,
           showConfirmButton: true,
+          confirmButtonColor: "#feb415",
+          confirmButtonText: "Зөвшөөрөх",
           focusConfirm: false,
           allowOutsideClick: false,
           closeOnEsc: true

@@ -17,7 +17,7 @@ import ProductList from "./ProductList";
 import OrderDetail from "./OrderDetail";
 import ResetPassword from "./ResetPassword";
 import Confirm from "./Confirm";
-
+import GolomtMerchant from "./MerchantReturn/GolomtMerchant";
 export {
   Discount,
   Homepage,
@@ -37,5 +37,6 @@ export {
   ProductList,
   OrderDetail,
   ResetPassword,
-  Confirm
+  Confirm,
+  GolomtMerchant
 };

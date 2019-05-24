@@ -162,20 +162,20 @@ class SwalModals extends React.Component {
                     <div className="message">
                       <h5 className="title flex-this flex-space">
                         <span className="text-uppercase">
-                          Захиалга <strong>{ordData.ordernumber}</strong>
+                          Захиалга <strong>{ordData.order.ordernumber}</strong>
                         </span>
                       </h5>
                       <ul className="list-unstyled class">
                         <li className="flex-this flex-space">
                           <span>Худалдаж авсан барааны тоо:</span>
                           <strong className="big">
-                            {ordData.orderquantity}
+                            {ordData.order.orderquantity}
                           </strong>
                         </li>
                         <li className="flex-this flex-space">
                           <span>Мөнгөн дүн:</span>
                           <strong className="big">
-                            {formatter.format(ordData.totalamount)}₮
+                            {formatter.format(ordData.order.totalamount)}₮
                           </strong>
                         </li>
                         <li className="flex-this flex-space">
@@ -273,7 +273,7 @@ class SwalModals extends React.Component {
                           <div>
                             Төлбөрийг дээрх дансанд шилжүүлэх ба захиалгын
                             <b style={{ fontWeight: "bold" }}>
-                              {ordData.ordernumber}
+                              {ordData.order.ordernumber}
                             </b>{" "}
                             дугаарыг гүйлгээний утга дээр заавал бичнэ үү.
                           </div>
@@ -300,7 +300,9 @@ class SwalModals extends React.Component {
                       </a>
                       <a
                         className="btn btn-dark"
-                        onClick={e => changePage(e, "/order/" + ordData.id)}
+                        onClick={e =>
+                          changePage(e, "/order/" + ordData.order.id)
+                        }
                       >
                         <span className="text-uppercase">Захиалга харах</span>
                       </a>
@@ -508,7 +510,7 @@ class SwalModals extends React.Component {
     } else if (type == "agreementCheck") {
       const { data } = this.props;
       return (
-        <div className="title-container">
+        <div className="title-container" style={{ padding: "30px" }}>
           <h5 className="title">
             <a className="flex-this">
               <span>Үйлчилгээний нөхцөл</span>
