@@ -76,6 +76,13 @@ export default [
     TOKEN: true
   },
   {
+    NAME: "getMainLocDetail",
+    METHOD: "GET",
+    URL: `${API}/api/customer/address/:id/:custid`,
+    REPLACE: "id, custid",
+    TOKEN: true
+  },
+  {
     NAME: "checkPayment",
     METHOD: "GET",
     URL: `${API}/api/order/qpay/:id`,
