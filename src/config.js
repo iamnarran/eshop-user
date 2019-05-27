@@ -12,8 +12,8 @@ export default {
   image: {
     //production: "http://10.0.0.55:81/", //Real
     //development: "http://10.0.0.55:81/" //Real
-    production: "http://202.55.180.199:8877/", //test
-    development: "http://202.55.180.199:8877/" //test
+    production: "http://10.0.0.22:8877/", //test
+    development: "http://10.0.0.22:8877/" //test
 
     // development: 'http://10.0.10.22:8877/mn'
   }
