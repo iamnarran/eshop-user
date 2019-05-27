@@ -81,5 +81,12 @@ export default [
     METHOD: "POST",
     URL: `${API}/api/customer/address`,
     TOKEN: true
+  },
+  {
+    NAME: "getCustomer",
+    METHOD: "GET",
+    URL: `${API}/api/customer/:custid`,
+    REPLACE: "custid",
+    TOKEN: true
   }
 ];

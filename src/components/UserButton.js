@@ -127,10 +127,7 @@ class UserButton extends React.Component {
                     </Link>
                   </li>
                   <li>
-                    <Link
-                      to="/userprofile/deliveryhistory"
-                      className="flex-this"
-                    >
+                    <Link to="/userprofile" className="flex-this">
                       <i
                         className="fa fa-history"
                         aria-hidden="true"
