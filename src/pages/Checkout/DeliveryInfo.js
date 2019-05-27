@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import Swal from "sweetalert2";
-import { Checkbox } from "antd";
+import { Checkbox, Modal, Button } from "antd";
 import withReactContent from "sweetalert2-react-content";
 import api from "../../api";
 import SwalModals from "./SwalModals";
@@ -12,8 +12,14 @@ class DeliveryInfo extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      checkedAgreement: false
+      checkedAgreement: false,
+      modal2Visible: false,
+      agreementData: []
     };
+  }
+
+  setModal2Visible(modal2Visible) {
+    this.setState({ modal2Visible });
   }
 
   handleAgreement = e => {
@@ -23,30 +29,34 @@ class DeliveryInfo extends React.Component {
     }
   };
 
+  handleScroll = () => {
+    let calcBottom =
+      document.getElementById("scroll-tst").scrollHeight -
+      document.getElementById("scroll-tst").scrollTop;
+
+    let clientHeight = document.getElementById("scroll-tst").clientHeight;
+    if (calcBottom == clientHeight) {
+      this.timer = setTimeout(() => this.setModal2Visible(false), 1000);
+      document
+        .getElementById("scroll-tst")
+        .removeEventListener("scroll", this.handleScroll);
+    }
+  };
+
   getAgreementData = async () => {
     await api.staticPage
       .findPage({
         id: 42
       })
       .then(res => {
-        MySwal.fire({
-          html: <SwalModals type={"agreementCheck"} data={res.data[0]} />,
-          width: "60em",
-          animation: false,
-          /*   customClass: {
-            popup: "animated zoomInUp"
-          }, */
-          button: false,
-          scrollbarPadding: false,
-          showCloseButton: true,
-          showCancelButton: false,
-          showConfirmButton: true,
-          confirmButtonColor: "#feb415",
-          confirmButtonText: "Зөвшөөрөх",
-          focusConfirm: false,
-          allowOutsideClick: false,
-          closeOnEsc: true
-        });
+        if (res.success) {
+          this.setState({ agreementData: res.data[0] });
+          this.setModal2Visible(true);
+          document.getElementById("scroll-tst").scrollTop = 0;
+          document
+            .getElementById("scroll-tst")
+            .addEventListener("scroll", this.handleScroll);
+        }
       });
   };
 
@@ -207,6 +217,37 @@ class DeliveryInfo extends React.Component {
             </button>
           </div>
         </div>
+
+        <Modal
+          centered
+          width="1000px"
+          visible={this.state.modal2Visible}
+          wrapClassName="vertical-center-modal"
+          footer={false}
+          onCancel={e => this.setModal2Visible(false)}
+          /*  footer={
+            [
+                <button
+            style={}
+              key="submit"
+              className="btn btn-main btn-block"
+              onClick={() => this.setModal2Visible(false)}
+            >
+              Зөвшөөрөх
+            </button>
+            ]
+          } */
+        >
+          <div className="frame" id="scroll-tst">
+            <div className="scroll">
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: this.state.agreementData.description
+                }}
+              />
+            </div>
+          </div>
+        </Modal>
       </div>
     );
   }

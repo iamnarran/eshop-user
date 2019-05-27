@@ -1,10 +1,60 @@
 import React from "react";
+import { connect } from "react-redux";
+import { updateCart } from "../../actions/cart";
 const formatter = new Intl.NumberFormat("en-US");
+
+@connect(
+  mapStateToProps,
+  {
+    updateCart
+  }
+)
 class GolomtMerchant extends React.Component {
-  componentWillMount() {}
+  constructor(props) {
+    super(props);
+    this.state = {
+      isClear: false,
+      prevScrollpos: window.pageYOffset,
+      visible: true
+    };
+  }
+
+  handleScroll = () => {
+    const { prevScrollpos } = this.state;
+
+    const currentScrollPos = window.pageYOffset;
+    const visible = prevScrollpos > currentScrollPos;
+
+    this.setState({
+      prevScrollpos: currentScrollPos,
+      visible
+    });
+  };
+
+  componentWillMount() {
+    /* window.addEventListener("scroll", this.handleScroll);
+    if (
+      this.props.container.data.success == true &&
+      this.state.isClear == false
+    ) {
+      this.handleClear();
+    } */
+  }
+
+  componentWillUnmount() {
+    //window.removeEventListener("scroll", this.handleScroll);
+  }
+
+  handleClear = () => {
+    this.props.updateCart({
+      products: [],
+      totalQty: 0,
+      totalPrice: 0
+    });
+    this.setState({ isClear: true });
+  };
 
   render() {
-    console.log(this.props.container);
     if (this.props.container.data.success) {
       const { data } = this.props.container.data;
       return (
@@ -179,6 +229,14 @@ class GolomtMerchant extends React.Component {
       );
     }
   }
+}
+
+function mapStateToProps(state) {
+  return {
+    isLoggedIn: state.auth.isLoggedIn,
+    user: state.auth.user,
+    cart: state.cart
+  };
 }
 
 export default GolomtMerchant;

@@ -141,6 +141,25 @@ class DeliveryPanel extends React.Component {
     return tmp;
   };
 
+  onChangeLoc = async e => {
+    await api.checkout
+      .getMainLocDetail({ id: e, custid: this.state.userInfo.id })
+      .then(res => {
+        if (res.success) {
+          if (res.data != null) {
+            this.props.form.setFieldsValue({
+              mainLocation: res.data.provincenm,
+              subLocation: res.data.districtnm,
+              commiteLocation: res.data.committeenm,
+              lastName: res.data.name,
+              phone1: res.data.phone1,
+              phone2: res.data.phone2
+            });
+          }
+        }
+      });
+  };
+
   addAddress = (value, event) => {
     const { addAddress } = this.props;
     this.props.form.validateFields((err, values) => {
@@ -148,13 +167,18 @@ class DeliveryPanel extends React.Component {
         addAddress(value, event, this.props.form);
       }
     });
-    //changeAddressType("new");
     if (value == null) {
       this.props.form.resetFields();
       this.setState({ addresstype: "new" });
     } else {
       this.getLocs(value);
     }
+  };
+
+  handleAddAddress = e => {
+    e.preventDefault();
+    const { addAddress } = this.props;
+    addAddress(null, null, this.props.form);
   };
 
   disabledDate = current => {
@@ -203,7 +227,6 @@ class DeliveryPanel extends React.Component {
     const style = {
       color: "#feb415"
     };
-
     return (
       <Tabs onChange={e => changeTab(e, this.props.form)} defaultActiveKey="1">
         {deliveryTypes.map((item, i) => {
@@ -211,14 +234,12 @@ class DeliveryPanel extends React.Component {
           if (deliveryId == item.id) {
             k = item.logo.split(".")[0] + "color." + item.logo.split(".")[1];
           }
-          // k = item.logo.split(".")[0] + "color." + item.logo.split(".")[1];
           return (
             <TabPane
               tab={
                 <div className="flex-this center">
                   <img
                     alt="icon"
-                    //className={deliveryId == item.id ? "filteredImg" : ""}
                     width="40px"
                     height="40px"
                     src={require("../../scss/assets/images/demo/" + k)}
@@ -244,64 +265,57 @@ class DeliveryPanel extends React.Component {
                 >
                   <div className="row row10">
                     {item.id != 3 ? (
-                      <div className="col-xl-12 col-md-12">
-                        {addresstype == "new" ? (
-                          <Form.Item>
-                            {getFieldDecorator("addresstype", {
-                              rules: [
-                                {
-                                  required: true,
-                                  message: "Хаяг оруулна уу1"
-                                }
-                              ]
-                            })(
-                              <Input
-                                type="text"
-                                placeholder="Хаягаа сонгоно уу ?*"
-                              />
-                            )}
-                          </Form.Item>
-                        ) : (
-                          <Form.Item>
-                            {getFieldDecorator("address", {
-                              rules: [
-                                {
-                                  required: true,
-                                  message: "Хаяг оруулна уу"
-                                }
-                              ]
-                            })(
-                              <Select
-                                onSelect={(value, event) =>
-                                  addAddress(value, event, this.props.form)
-                                }
-                                showSearch
-                                optionFilterProp="children"
-                                placeholder="Хаягаа сонгоно уу ?"
-                              >
-                                <Option value={null}>
-                                  <div
-                                    style={{
-                                      cursor: "pointer",
-                                      backgroundColor: "#feb415",
-                                      width: "8em",
-                                      borderRadius: "2px"
-                                    }}
-                                  >
-                                    <span
-                                      style={{
-                                        padding: "10px"
-                                      }}
-                                    >
-                                      <Icon type="plus" /> Хаяг нэмэх
-                                    </span>
-                                  </div>
-                                </Option>
-                                {this.renderAddrsOption()}
-                              </Select>
-                            )}
-                          </Form.Item>
-                        )}
+                      <div
+                        className="col-xl-12 col-md-12"
+                        style={{ display: "flex" }}
+                      >
+                        <div className="col-xl-8 col-md-8">
+                          {addresstype == "new" ? (
+                            <Form.Item>
+                              {getFieldDecorator("addresstype", {
+                                rules: [
+                                  {
+                                    required: true,
+                                    message: "Хаяг оруулна уу ?"
+                                  }
+                                ]
+                              })(
+                                <Input
+                                  type="text"
+                                  placeholder="Хаягаа сонгоно уу ?*"
+                                />
+                              )}
+                            </Form.Item>
+                          ) : (
+                            <Form.Item>
+                              {getFieldDecorator("address", {
+                                rules: [
+                                  {
+                                    required: true,
+                                    message: "Хаяг оруулна уу"
+                                  }
+                                ]
+                              })(
+                                <Select
+                                  onChange={e => this.onChangeLoc(e)}
+                                  showSearch
+                                  optionFilterProp="children"
+                                  placeholder="Хаягаа сонгоно уу ?"
+                                >
+                                  {this.renderAddrsOption()}
+                                </Select>
+                              )}
+                            </Form.Item>
+                          )}
+                        </div>
+                        <div className="col-xl-4 col-md-4">
+                          <button
+                            className="btn btn-main"
+                            onClick={this.handleAddAddress}
+                          >
+                            Хаяг нэмэх
+                          </button>
+                        </div>
                       </div>
                     ) : (
                       ""

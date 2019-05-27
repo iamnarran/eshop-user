@@ -32,7 +32,7 @@ class Checkout extends React.Component {
     this.state = {
       addresstype: "edit",
       collapseType: null,
-      activeKey: ["1"],
+      activeKey: this.props.isLoggedIn ? ["2"] : ["1"],
       userInfo: [],
       userAddress: [],
       delivery: [],
@@ -261,7 +261,6 @@ class Checkout extends React.Component {
   };
 
   getUserInfo = async user => {
-    console.log(user);
     await api.checkout.findUserData({ id: user.id }).then(res => {
       if (res.success == true) {
         if (res.data.addrs.length != 0) {
@@ -374,16 +373,6 @@ class Checkout extends React.Component {
             <span>Хэрэглэгчээр бүртгүүлэх</span>
           </a>
         </h5>
-        <div className="title-button text-right">
-          <p className="text">Бүртгэлтэй бол:</p>
-          <Button
-            onClick={this.showLoginModal}
-            className="btn btn-login text-uppercase"
-            size={"large"}
-          >
-            Нэвтрэх
-          </Button>
-        </div>
       </div>
     );
   };
