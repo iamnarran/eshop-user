@@ -1,74 +1,159 @@
 import React from "react";
+import { connect } from "react-redux";
 import { Form, message, Input, Select } from "antd";
 import api from "../api";
 const Option = Select.Option;
+
+@connect(
+  mapStateToProps,
+  {}
+)
 class Component extends React.Component {
   state = {
-    cityOrProvince: [],
-    districtOrSum: [],
+    province: [],
     city: false,
     name: null,
     phone: null,
-    homeaddress: null
+    homeaddress: [],
+    districtOrSum: [],
+    street: [],
+    provid: null,
+    distid: null,
+    locid: null
+  };
+
+  getAddress = async () => {
+    await api.customer.address({ custid: this.props.user.id }).then(res => {
+      if (res.success) {
+        this.setState({ homeaddress: res.data });
+      } else {
+        console.log("else");
+      }
+    });
+  };
+
+  getProvince = async () => {
+    await api.location.findAll().then(res => {
+      if (res.success) {
+        this.setState({ province: res.data });
+      } else {
+        console.log("else");
+      }
+    });
+  };
+
+  getDistrict = async id => {
+    await api.location.findLocationWidthId({ id: id }).then(res => {
+      if (res.success) {
+        console.log(res.data);
+        this.setState({ districtOrSum: res.data });
+      }
+    });
+  };
+
+  getLocid = async () => {
+    await api.location
+      .findCommiteLocation({
+        provid: this.state.provid,
+        distid: this.state.distid
+      })
+      .then(res => {
+        if (res.success) {
+          this.setState({ street: res.data });
+          console.log(res);
+        }
+      });
+  };
+
+  saveAddress = async data => {
+    api.customer.saveAddress(data).then(res => {
+      if (res.success) {
+        this.getAddress();
+      }
+    });
   };
 
   componentDidMount() {
-    api.location.findAll().then(res => {
-      if (res.success) {
-        const cityOrProvince = [];
-        const map = new Map();
-        res.data.map(index => {
-          if (!map.has(index.provinceid)) {
-            map.set(index.provinceid, true);
-            cityOrProvince.push(index);
-          }
-          return "";
-        });
-        this.setState({
-          cityOrProvince: cityOrProvince,
-          districtOrSum: res.data
-        });
-        this.onChangeCity("11"); //defualt UB
-      }
-    });
+    this.getProvince();
+    this.getAddress();
   }
-
-  onChangeCity = e => {
-    const { districtOrSum } = this.state;
-    let tmp = [];
-
-    districtOrSum.map(i => {
-      if (i.provinceid === e) {
-        tmp.push(i);
-      }
-      return "";
-    });
-    this.setState({ districtOrSum: tmp });
-  };
 
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
+        const data = {
+          custid: this.props.user.id,
+          locid: this.state.locid,
+          address: values.homeaddress,
+          name: values.name,
+          phonE1: values.phone
+        };
+        this.saveAddress(data);
         message.success("Хүргэлтийн хаяг амжилттай бүртгэгдлээ");
       }
     });
   };
 
-  handleName = e => {
-    this.setState({ name: e.target.value });
+  renderProvince() {
+    const options = this.state.province.map((item, index) => {
+      return (
+        <Option key={index} value={item.provinceid}>
+          {item.provincenm}
+        </Option>
+      );
+    });
+    return options;
+  }
+
+  renderDistrict() {
+    const options = this.state.districtOrSum.map((item, index) => {
+      return (
+        <Option key={index} value={item.districtid}>
+          {item.districtnm}
+        </Option>
+      );
+    });
+    return options;
+  }
+
+  renderStreet() {
+    const options = this.state.street.map((item, index) => {
+      return (
+        <Option key={index} value={item.id}>
+          {item.committeenm}
+        </Option>
+      );
+    });
+    return options;
+  }
+
+  onChangeCity = async e => {
+    await this.setState({ provid: e });
+    this.getDistrict(e);
   };
-  handlePhone = e => {
-    this.setState({ phone: e.target.value });
+
+  onChangeDistrict = async e => {
+    await api.location
+      .findCommiteLocation({
+        provid: this.state.provid,
+        distid: e
+      })
+      .then(res => {
+        if (res.success) {
+          this.setState({ street: res.data });
+          console.log(res);
+        }
+      });
   };
-  handleHomeAddress = e => {
-    this.setState({ homeaddress: e.target.value });
+  onStreet = async e => {
+    this.setState({ locid: e });
+    console.log(e);
   };
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { name, phone, homeaddress } = this.state;
-    const { cityOrProvince, districtOrSum } = this.state;
+
     return (
       <div className="col-md-8 pad10">
         <div className="user-menu-content">
@@ -76,131 +161,115 @@ class Component extends React.Component {
             <span>Профайл хуудас</span>
           </p>
           <div className="user-profile-contain">
-            <form>
+            <Form>
               <div className="row row10">
-                <div className="col-xl-6 pad10">
-                  <div className="form-group">
+                <div className="col-xl-4 pad10">
+                  <div className="e-mart-input">
                     <Form.Item>
-                      {getFieldDecorator("fname", {
+                      {getFieldDecorator("fName", {
                         rules: [
                           {
                             required: true,
-                            message: "Овогоо заавал оруулна уу!"
+                            message: "Овог заавал оруулна уу!"
                           }
                         ]
-                      })(
-                        <Input
-                          label="Овог"
-                          onChange={this.handleName}
-                          value={name}
-                        />
-                      )}
+                      })(<Input placeholder="Овог" />)}
                     </Form.Item>
                   </div>
                 </div>
-
-                <div className="col-xl-6 pad10">
-                  <div className="form-group">
+                <div className="col-xl-4 pad10">
+                  <div className="e-mart-input">
                     <Form.Item>
-                      {getFieldDecorator("lname", {
+                      {getFieldDecorator("lName", {
                         rules: [
                           {
                             required: true,
                             message: "Нэрээ заавал оруулна уу!"
                           }
                         ]
-                      })(
-                        <Input
-                          label="Нэр"
-                          onChange={this.handleName}
-                          value={name}
-                        />
-                      )}
+                      })(<Input placeholder="Нэр" />)}
                     </Form.Item>
                   </div>
                 </div>
-
-                <div className="col-xl-6 pad10">
-                  <div className="form-group">
-                    <Form.Item>
-                      {getFieldDecorator("phone", {
-                        rules: [
-                          {
-                            required: true,
-                            message: "Утасаа заавал оруулна уу!"
-                          }
-                        ]
-                      })(
-                        <Input
-                          label="Утас"
-                          onChange={this.handleName}
-                          value={phone}
-                        />
-                      )}
-                    </Form.Item>
-                  </div>
-                </div>
-
-                <div className="col-xl-6 pad10">
+                <div className="col-xl-4 pad10">
                   <div className="form-group">
                     <Form.Item>
                       {getFieldDecorator("email", {
                         rules: [
                           {
                             required: true,
-                            message: "Имейл хаягаа заавал оруулна уу!"
+                            message: "Имэйл заавал оруулна уу!"
                           }
                         ]
-                      })(
-                        <Input
-                          label="Имейл"
-                          onChange={this.handleName}
-                          value={name}
-                        />
-                      )}
+                      })(<Input placeholder="Имэйл" />)}
                     </Form.Item>
                   </div>
                 </div>
-
-                <div className="col-xl-12 pad10">
-                  <div className="form-group">
+              </div>
+              <div className="row row10">
+                <div className="col-xl-4 pad10">
+                  <div className="e-mart-input">
                     <Form.Item>
-                      {getFieldDecorator("password", {
+                      {getFieldDecorator("phone1", {
                         rules: [
                           {
                             required: true,
-                            message: "Нууц үгээ заавал оруулна уу!"
+                            message: "Утас заавал оруулна уу!"
                           }
                         ]
-                      })(
-                        <Input
-                          label="Нууц үг"
-                          onChange={this.handleHomeAddress}
-                          value={homeaddress}
-                          type={"password"}
-                        />
-                      )}
+                      })(<Input placeholder="Утас 1" />)}
                     </Form.Item>
                   </div>
                 </div>
-
-                <div className="col-xl-6 pad10">
+                <div className="col-xl-4 pad10">
+                  <div className="e-mart-input">
+                    <Form.Item>
+                      {getFieldDecorator("phone2", {
+                        rules: [
+                          {
+                            required: true,
+                            message: "Нэрээ заавал оруулна уу!"
+                          }
+                        ]
+                      })(<Input placeholder="Утас 2" />)}
+                    </Form.Item>
+                  </div>
+                </div>
+              </div>
+              <div className="row row10">
+                <div className="col-xl-4 pad10">
                   <div className="form-group">
                     <Select
-                      label="Хот/Аймаг"
-                      option={cityOrProvince}
-                      city
+                      defaultValue="Хот/Аймаг"
                       onChange={this.onChangeCity}
-                    />
+                      placeholder="Хот/Аймаг"
+                    >
+                      {this.renderProvince()}
+                    </Select>
                   </div>
                 </div>
-
-                <div className="col-xl-6 pad10">
+                <div className="col-xl-4 pad10">
                   <div className="form-group">
-                    <Select label="Сум/Дүүрэг" option={districtOrSum} />
+                    <Select
+                      defaultValue="Сум/Дүүрэг"
+                      placeholder="Сум/Дүүрэг"
+                      onChange={this.onChangeDistrict}
+                    >
+                      {this.renderDistrict()}
+                    </Select>
                   </div>
                 </div>
-
+                <div className="col-xl-4 pad10">
+                  <div className="form-group">
+                    <Select
+                      defaultValue="Баг/Хороо"
+                      placeholder="Баг/Хороо"
+                      onChange={this.onStreet}
+                    >
+                      {this.renderStreet()}
+                    </Select>
+                  </div>
+                </div>
                 <div className="col-xl-12 pad10">
                   <div className="form-group">
                     <Form.Item>
@@ -211,65 +280,47 @@ class Component extends React.Component {
                             message: "Гэрийн хаягаа заавал оруулна уу!"
                           }
                         ]
-                      })(
-                        <Input
-                          label="Гэрийн хаяг"
-                          onChange={this.handleHomeAddress}
-                          value={homeaddress}
-                        />
-                      )}
-                    </Form.Item>
-                  </div>
-                </div>
-
-                <div className="col-xl-12 pad10">
-                  <b>И-март карт холбох</b>
-                </div>
-                <div className="col-xl-6 pad10">
-                  <div className="form-group">
-                    <Form.Item>
-                      {getFieldDecorator("emart-card-number", {
-                        rules: [
-                          {
-                            required: true,
-                            message: "И-март картын дугаараа заавал оруулна уу!"
-                          }
-                        ]
-                      })(
-                        <Input
-                          label="И-март картын дугаар"
-                          onChange={this.handleName}
-                          value={name}
-                        />
-                      )}
-                    </Form.Item>
-                  </div>
-                </div>
-
-                <div className="col-xl-6 pad10">
-                  <div className="form-group">
-                    <Form.Item>
-                      {getFieldDecorator("emart-card-pass", {
-                        rules: [
-                          {
-                            required: true,
-                            message:
-                              "И-март картын нууц үгээ заавал оруулна уу!"
-                          }
-                        ]
-                      })(
-                        <Input
-                          label="И-март картын нууц үг"
-                          onChange={this.handleName}
-                          value={name}
-                          type={"password"}
-                        />
-                      )}
+                      })(<Input placeholder="Гэрийн хаяг" />)}
                     </Form.Item>
                   </div>
                 </div>
               </div>
-            </form>
+              <div className="row row10">
+                <div className="col=xl-12 pad10">
+                  <p>И-март карт холбох</p>
+                </div>
+              </div>
+              <div className="row row10">
+                <div className="col-xl-4 pad10">
+                  <div className="e-mart-input">
+                    <Form.Item>
+                      {getFieldDecorator("kartNo", {
+                        rules: [
+                          {
+                            required: true,
+                            message: "Имарт картын дугаар заавал оруулна уу!"
+                          }
+                        ]
+                      })(<Input placeholder="Имарт картын дугаар" />)}
+                    </Form.Item>
+                  </div>
+                </div>
+                <div className="col-xl-4 pad10">
+                  <div className="e-mart-input">
+                    <Form.Item>
+                      {getFieldDecorator("password", {
+                        rules: [
+                          {
+                            required: true,
+                            message: "Нууц үгээ заавал оруулна уу!"
+                          }
+                        ]
+                      })(<Input placeholder="Нууц үг" />)}
+                    </Form.Item>
+                  </div>
+                </div>
+              </div>
+            </Form>
             <div className="text-right">
               <button className="btn btn-dark">
                 <span className="text-uppercase" onClick={this.handleSubmit}>
@@ -284,5 +335,11 @@ class Component extends React.Component {
   }
 }
 
-const App = Form.create({ name: "profile" })(Component);
-export default App;
+function mapStateToProps(state) {
+  return {
+    isLoggedIn: state.auth.isLoggedIn,
+    user: state.auth.user
+  };
+}
+
+export default Form.create({ name: "delivery" })(Component);

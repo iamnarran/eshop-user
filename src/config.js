@@ -2,7 +2,7 @@ export default {
   api: {
     version: "v1",
     production: "http://202.55.180.199:8876/mn", //Test Api
-    development: "http://202.55.180.199:8876/mn" // Test Api
+    development: "http://10.0.0.22:8876/mn" // Test Api
     //production: "http://10.0.0.53:80/mn", //Real Api
     //development: "http://10.0.0.53:80/mn" // Real Api
 

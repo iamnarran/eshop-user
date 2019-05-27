@@ -4,6 +4,7 @@ import { Modal, Button, message } from "antd";
 import { EXPAND_LEFT } from "react-ladda";
 import { createForm } from "rc-form";
 import { Redirect } from "react-router-dom";
+import api from "../api";
 
 import actions, {
   showRegisterModal,
@@ -28,10 +29,20 @@ class RegisterModal extends React.Component {
 
     this.props.form.validateFields(async (error, form) => {
       if (!error) {
+        const data = {
+          firstname: form.firstname.toString(),
+          lastname: form.lastname.toString(),
+          email: form.email.toString(),
+          password: form.password.toString(),
+          phonE1: form.phoneE1.toString()
+        };
         this.setState({ isLoading: true });
         let res = null;
+
         try {
-          res = await this.props.register(form);
+          console.log(data);
+
+          res = await this.props.register(data);
 
           if (res.status === "failed") {
             message.error(res.message);
@@ -128,7 +139,7 @@ class RegisterModal extends React.Component {
               <label htmlFor="phone" className="sr-only">
                 Утасны дугаар
               </label>
-              {getFieldDecorator("phone", {
+              {getFieldDecorator("phoneE1", {
                 rule: [
                   {
                     required: true,

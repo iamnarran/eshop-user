@@ -68,5 +68,18 @@ export default [
     METHOD: "PUT",
     URL: `${API}/api/customer/checkkey/:key`,
     REPLACE: "key"
+  },
+  {
+    NAME: "address",
+    METHOD: "GET",
+    URL: `${API}/api/customer/address/:custid`,
+    REPLACE: "custid",
+    TOKEN: true
+  },
+  {
+    NAME: "saveAddress",
+    METHOD: "POST",
+    URL: `${API}/api/customer/address`,
+    TOKEN: true
   }
 ];
