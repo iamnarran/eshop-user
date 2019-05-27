@@ -1,73 +1,187 @@
 import React from "react";
+import { connect } from "react-redux";
 import { Form, message, Input, Select } from "antd";
 import api from "../api";
 const Option = Select.Option;
+
+@connect(
+  mapStateToProps,
+  {}
+)
 class Component extends React.Component {
   state = {
-    cityOrProvince: [],
-    districtOrSums: [],
-    districtOrSum: [],
+    province: [],
     city: false,
     name: null,
     phone: null,
-    homeaddress: null
+    homeaddress: [],
+    districtOrSum: [],
+    street: [],
+    provid: null,
+    distid: null,
+    locid: null
+  };
+
+  getAddress = async () => {
+    await api.customer.address({ custid: this.props.user.id }).then(res => {
+      if (res.success) {
+        this.setState({ homeaddress: res.data });
+      } else {
+        console.log("else");
+      }
+    });
+  };
+
+  getProvince = async () => {
+    await api.location.findAll().then(res => {
+      if (res.success) {
+        this.setState({ province: res.data });
+      } else {
+        console.log("else");
+      }
+    });
+  };
+
+  getDistrict = async id => {
+    await api.location.findLocationWidthId({ id: id }).then(res => {
+      if (res.success) {
+        console.log(res.data);
+        this.setState({ districtOrSum: res.data });
+      }
+    });
+  };
+
+  getLocid = async () => {
+    await api.location
+      .findCommiteLocation({
+        provid: this.state.provid,
+        distid: this.state.distid
+      })
+      .then(res => {
+        if (res.success) {
+          this.setState({ street: res.data });
+          console.log(res);
+        }
+      });
+  };
+
+  saveAddress = async data => {
+    api.customer.saveAddress(data).then(res => {
+      if (res.success) {
+        this.getAddress();
+      }
+    });
   };
 
   componentDidMount() {
-    api.location.findAll().then(res => {
-      if (res.success) {
-        const cityOrProvince = [];
-        const map = new Map();
-        res.data.map(index => {
-          if (!map.has(index.provinceid)) {
-            map.set(index.provinceid, true);
-            cityOrProvince.push(index);
-          }
-          return "";
-        });
-        this.setState({
-          cityOrProvince: cityOrProvince,
-          districtOrSum: res.data,
-          districtOrSums: res.data
-        });
-      }
-    });
+    this.getProvince();
+    this.getAddress();
   }
 
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
+        const data = {
+          custid: this.props.user.id,
+          locid: this.state.locid,
+          address: values.homeaddress,
+          name: values.name,
+          phonE1: values.phone
+        };
+        this.saveAddress(data);
         message.success("Хүргэлтийн хаяг амжилттай бүртгэгдлээ");
       }
     });
   };
 
-  onChangeCity = e => {
-    let tmp = [];
-    this.state.districtOrSums.map(i => {
-      if (i.provinceid === e) {
-        tmp.push(i);
-      }
-      return "";
+  renderProvince() {
+    const options = this.state.province.map((item, index) => {
+      return (
+        <Option key={index} value={item.provinceid}>
+          {item.provincenm}
+        </Option>
+      );
     });
-    this.setState({ districtOrSum: tmp });
+    return options;
+  }
+
+  renderDistrict() {
+    const options = this.state.districtOrSum.map((item, index) => {
+      return (
+        <Option key={index} value={item.districtid}>
+          {item.districtnm}
+        </Option>
+      );
+    });
+    return options;
+  }
+
+  renderStreet() {
+    const options = this.state.street.map((item, index) => {
+      return (
+        <Option key={index} value={item.id}>
+          {item.committeenm}
+        </Option>
+      );
+    });
+    return options;
+  }
+
+  onChangeCity = async e => {
+    await this.setState({ provid: e });
+    this.getDistrict(e);
   };
 
-  handleName = e => {
-    this.setState({ name: e.target.value });
+  onChangeDistrict = async e => {
+    await api.location
+      .findCommiteLocation({
+        provid: this.state.provid,
+        distid: e
+      })
+      .then(res => {
+        if (res.success) {
+          this.setState({ street: res.data });
+          console.log(res);
+        }
+      });
   };
-  handlePhone = e => {
-    this.setState({ phone: e.target.value });
+  onStreet = async e => {
+    this.setState({ locid: e });
+    console.log(e);
   };
-  handleHomeAddress = e => {
-    this.setState({ homeaddress: e.target.value });
+
+  onDelete = (e, item) => {
+    console.log(item);
   };
 
   render() {
-    console.log(this.props);
     const { getFieldDecorator } = this.props.form;
     const { name, phone, homeaddress } = this.state;
+    let tableList = null;
+    tableList = this.state.homeaddress.map((item, index) => {
+      return (
+        <tr key={index} style={{ padding: "70px" }}>
+          <td>{item.name}</td>
+          <td>{item.phone1}</td>
+          <td>{item.provincenm}</td>
+          <td>{item.districtnm}</td>
+          <td>{item.address}</td>
+          <td>
+            <div className="action">
+              <ul className="list-unstyled flex-this end">
+                <li>
+                  <a onClick={e => this.onDelete(e, item)}>
+                    <i className="fa fa-times" aria-hidden="true" />
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+      );
+    });
+
     return (
       <div className="col-md-8 pad10">
         <div className="user-menu-content">
@@ -107,29 +221,36 @@ class Component extends React.Component {
                 </div>
               </div>
               <div className="row row10">
-                <div className="col-xl-6 pad10">
+                <div className="col-xl-4 pad10">
                   <div className="form-group">
                     <Select
                       defaultValue="Хот/Аймаг"
                       onChange={this.onChangeCity}
                       placeholder="Хот/Аймаг"
                     >
-                      {this.state.cityOrProvince.map((item, index) => {
-                        return (
-                          <Option key={index} value={item.provinceid}>
-                            {item.provincenm}
-                          </Option>
-                        );
-                      })}
+                      {this.renderProvince()}
                     </Select>
                   </div>
                 </div>
-                <div className="col-xl-6 pad10">
+                <div className="col-xl-4 pad10">
                   <div className="form-group">
-                    <Select defaultValue="Хот/Аймаг" placeholder="Хот/Аймаг">
-                      {this.state.districtOrSum.map((item, index) => {
-                        return <Option value={index}>{item.districtnm}</Option>;
-                      })}
+                    <Select
+                      defaultValue="Сум/Дүүрэг"
+                      placeholder="Сум/Дүүрэг"
+                      onChange={this.onChangeDistrict}
+                    >
+                      {this.renderDistrict()}
+                    </Select>
+                  </div>
+                </div>
+                <div className="col-xl-4 pad10">
+                  <div className="form-group">
+                    <Select
+                      defaultValue="Баг/Хороо"
+                      placeholder="Баг/Хороо"
+                      onChange={this.onStreet}
+                    >
+                      {this.renderStreet()}
                     </Select>
                   </div>
                 </div>
@@ -160,6 +281,9 @@ class Component extends React.Component {
               <p className="title">
                 <span>Бүртгэлтэй хаягууд</span>
               </p>
+              <table style={{ width: "100%" }} className="table bordered">
+                <tbody>{tableList}</tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -168,5 +292,11 @@ class Component extends React.Component {
   }
 }
 
-const App = Form.create({ name: "delivery" })(Component);
-export default App;
+function mapStateToProps(state) {
+  return {
+    isLoggedIn: state.auth.isLoggedIn,
+    user: state.auth.user
+  };
+}
+
+export default Form.create({ name: "delivery" })(Component);
