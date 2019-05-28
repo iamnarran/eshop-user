@@ -112,7 +112,6 @@ class Component extends React.Component {
   getDistrict = async id => {
     await api.location.findLocationWidthId({ id: id }).then(res => {
       if (res.success) {
-        console.log(res.data);
         this.setState({ districtOrSum: res.data });
       }
     });
@@ -127,7 +126,6 @@ class Component extends React.Component {
       .then(res => {
         if (res.success) {
           this.setState({ street: res.data });
-          console.log(res);
         }
       });
   };
@@ -145,7 +143,7 @@ class Component extends React.Component {
       ? this.state.locid
       : this.state.mainAddress.locid;
     const data = {
-      id: 0,
+      id: this.props.user.id,
       username: this.state.userInfo.username,
       firstname: this.state.userInfo.firstname,
       imgnm: this.state.userInfo.imgnm,
@@ -155,13 +153,15 @@ class Component extends React.Component {
       phonE2: this.state.userInfo.phone2,
       adrsid: this.state.mainAddress.id,
       locid: loc,
-      address: this.state.realAddress,
-      ismain: 1
+      address: this.state.realAddress
     };
-    console.log(data);
-    /* api.customer.updateMainAddress(data).then(res => {
-      console.log(res);
-    }); */
+    api.customer.updateMainAddress(data).then(res => {
+      if (res.success) {
+        message.success("Амжилттай хадгаллаа.");
+      } else {
+        message.success("Амжилтгүй хадгаллаа.");
+      }
+    });
   };
 
   renderProvince() {
@@ -224,13 +224,12 @@ class Component extends React.Component {
       .then(res => {
         if (res.success) {
           this.setState({ street: res.data });
-          console.log(res);
         }
       });
   };
+
   onStreet = async e => {
     this.setState({ locid: e });
-    console.log(e);
   };
 
   onChangeLastname = e => {
@@ -319,7 +318,7 @@ class Component extends React.Component {
   };
 
   onChangeAddress = e => {
-    this.setState({ realAddres: e.target.value });
+    this.setState({ realAddress: e.target.value });
   };
 
   cardNoChange = e => {
@@ -334,7 +333,6 @@ class Component extends React.Component {
 
     let cardpass = refs.cardpass.value;
     let cardno = refs.cardno.value;
-    console.log(cardpass, cardno);
     if (cardpass != "" && cardno != "") {
       let tmp = {
         custid: this.state.userInfo.id,
@@ -356,7 +354,7 @@ class Component extends React.Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    console.log(this.state);
+
     return (
       <div className="col-md-8 pad10">
         <div className="user-menu-content">
