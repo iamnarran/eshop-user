@@ -74,11 +74,6 @@ class OrderDetail extends React.Component {
         <div className="top-container">
           <div className="container pad10">
             <div className="cart-container after-order">
-              <div className="btn btn-gray">
-                <Link to="/">
-                  <span className="text-uppercase">Буцах</span>
-                </Link>
-              </div>
               <h1 className="title">
                 <span className="text-uppercase">Захиалга #{ordernumber}</span>
               </h1>

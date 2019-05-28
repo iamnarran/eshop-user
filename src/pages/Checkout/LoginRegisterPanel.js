@@ -188,7 +188,7 @@ class LoginRegisterPanel extends React.Component {
     return (
       <Tabs
         onChange={this.changeTab}
-        defaultActiveKey={1}
+        defaultActiveKey={"1"}
         activeKey={this.state.defaultActiveKey.toString()}
         className="checkout-reg-tab"
       >
@@ -292,15 +292,6 @@ class LoginRegisterPanel extends React.Component {
           key={2}
         >
           <div className="content-container">
-            <div className="socials flex-this flex-wrap">
-              <button type="submit" className="btn btn-social btn-facebook">
-                <span>Facebook-р бүртгүүлэх</span>
-              </button>
-              <button type="submit" className="btn btn-social btn-gmail">
-                <span>Gmail-р бүртгүүлэх</span>
-              </button>
-            </div>
-            <span className="divide-maker">Эсвэл</span>
             <Form onSubmit={this.onSubmit}>
               <div className="row row10">
                 <div className="col-xl-6 pad10">
@@ -412,15 +403,18 @@ class LoginRegisterPanel extends React.Component {
                   </Form.Item>
                 </div>
               </div>
-              <Button
-                className="btn btn-login text-uppercase"
-                loading={this.state.loading}
-                size={"large"}
-                data-style={EXPAND_LEFT}
-                htmlType="submit"
-              >
-                Бүртгүүлэх
-              </Button>
+              <div className="row row10">
+                <Button
+                  className="btn btn-login text-uppercase"
+                  loading={this.state.loading}
+                  size={"large"}
+                  data-style={EXPAND_LEFT}
+                  htmlType="submit"
+                  style={{ padding: "5px 50px", marginLeft: "17em" }}
+                >
+                  Бүртгүүлэх
+                </Button>
+              </div>
             </Form>
           </div>
         </TabPane>

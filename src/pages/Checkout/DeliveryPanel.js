@@ -4,7 +4,7 @@ import { Icon, Tabs, Input, Form, Select } from "antd";
 import api from "../../api";
 import moment from "moment";
 import { DatePicker } from "antd";
-
+import { FormInput } from "../../components/masked-input";
 const { MonthPicker, RangePicker } = DatePicker;
 const Option = Select.Option;
 const TabPane = Tabs.TabPane;
@@ -269,7 +269,10 @@ class DeliveryPanel extends React.Component {
                         className="col-xl-12 col-md-12"
                         style={{ display: "flex" }}
                       >
-                        <div className="col-xl-8 col-md-8">
+                        <div
+                          className="col-xl-8 col-md-8"
+                          style={{ paddingLeft: "0px", paddingRight: "11px" }}
+                        >
                           {addresstype == "new" ? (
                             <Form.Item>
                               {getFieldDecorator("addresstype", {
@@ -282,7 +285,7 @@ class DeliveryPanel extends React.Component {
                               })(
                                 <Input
                                   type="text"
-                                  placeholder="Хаягаа сонгоно уу ?*"
+                                  placeholder="Хаягаа оруулна уу ?*"
                                 />
                               )}
                             </Form.Item>
@@ -312,6 +315,7 @@ class DeliveryPanel extends React.Component {
                           <button
                             className="btn btn-main"
                             onClick={this.handleAddAddress}
+                            style={{ padding: "2px 65px", marginTop: "4px" }}
                           >
                             Хаяг нэмэх
                           </button>
@@ -320,130 +324,130 @@ class DeliveryPanel extends React.Component {
                     ) : (
                       ""
                     )}
+                    {item.id != 3 ? (
+                      <div className="col-xl-4 col-md-4">
+                        <Form.Item>
+                          {getFieldDecorator("mainLocation", {
+                            rules: [
+                              {
+                                required: true,
+                                message: "Хот/Аймаг сонгоно уу?"
+                              }
+                            ]
+                          })(
+                            <Select
+                              placeholder="Хот/аймаг *"
+                              showSearch
+                              optionFilterProp="children"
+                              className="col-md-12"
+                              onChange={e =>
+                                onChangeMainLoc(e, this.props.form)
+                              }
+                            >
+                              {this.renderMainLocation()}
+                            </Select>
+                          )}
+                        </Form.Item>
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                    {item.id != 3 ? (
+                      <div className="col-xl-4 col-md-4">
+                        <Form.Item>
+                          {getFieldDecorator("subLocation", {
+                            rules: [
+                              {
+                                required: true,
+                                message: "Дүүрэг/Сум сонгоно уу?"
+                              }
+                            ]
+                          })(
+                            <Select
+                              showSearch
+                              optionFilterProp="children"
+                              placeholder="Дүүрэг/Сум*"
+                              onChange={e =>
+                                onChangeSubLoc(
+                                  e,
+                                  this.props.form.validateFields,
+                                  undefined
+                                )
+                              }
+                            >
+                              {this.renderSubLocation()}
+                            </Select>
+                          )}
+                        </Form.Item>
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                    {item.id != 3 ? (
+                      <div className="col-xl-4 col-md-4">
+                        <Form.Item>
+                          {getFieldDecorator("commiteLocation", {
+                            rules: [
+                              {
+                                required: true,
+                                message: "Хороо сонгоно уу?"
+                              }
+                            ]
+                          })(
+                            <Select
+                              placeholder="Хороо*"
+                              showSearch
+                              optionFilterProp="children"
+                            >
+                              {this.renderCommiteLocation()}
+                            </Select>
+                          )}
+                        </Form.Item>
+                      </div>
+                    ) : (
+                      ""
+                    )}
                     <div className="col-xl-4 col-md-4">
-                      <Form.Item>
-                        {getFieldDecorator("mainLocation", {
-                          rules: [
-                            {
-                              required: true,
-                              message: "Хот/Аймаг сонгоно уу?"
-                            }
-                          ]
-                        })(
-                          <Select
-                            placeholder="Хот/аймаг *"
-                            showSearch
-                            optionFilterProp="children"
-                            className="col-md-12"
-                            onChange={e => onChangeMainLoc(e, this.props.form)}
-                          >
-                            {this.renderMainLocation()}
-                          </Select>
-                        )}
-                      </Form.Item>
+                      <FormInput
+                        form={this.props.form}
+                        placeholder=""
+                        name={"lastName"}
+                        rules={[
+                          {
+                            required: true,
+                            message: "Нэр оруулна уу"
+                          }
+                        ]}
+                      />
                     </div>
                     <div className="col-xl-4 col-md-4">
-                      <Form.Item>
-                        {getFieldDecorator("subLocation", {
-                          rules: [
-                            {
-                              required: true,
-                              message: "Дүүрэг/Сум сонгоно уу?"
-                            }
-                          ]
-                        })(
-                          <Select
-                            showSearch
-                            optionFilterProp="children"
-                            placeholder="Дүүрэг/Сум*"
-                            onChange={e =>
-                              onChangeSubLoc(
-                                e,
-                                this.props.form.validateFields,
-                                undefined
-                              )
-                            }
-                          >
-                            {this.renderSubLocation()}
-                          </Select>
-                        )}
-                      </Form.Item>
+                      <FormInput
+                        form={this.props.form}
+                        mask={"11111111"}
+                        placeholder=""
+                        name={"phone1"}
+                        rules={[
+                          {
+                            required: true,
+                            message: "Утас оруулна уу"
+                          }
+                        ]}
+                      />
                     </div>
                     <div className="col-xl-4 col-md-4">
-                      <Form.Item>
-                        {getFieldDecorator("commiteLocation", {
-                          rules: [
-                            {
-                              required: true,
-                              message: "Хороо сонгоно уу?"
-                            }
-                          ]
-                        })(
-                          <Select
-                            placeholder="Хороо*"
-                            showSearch
-                            optionFilterProp="children"
-                          >
-                            {this.renderCommiteLocation()}
-                          </Select>
-                        )}
-                      </Form.Item>
-                    </div>
-                    <div className="col-xl-4 col-md-4">
-                      <Form.Item>
-                        {getFieldDecorator("lastName", {
-                          rules: [
-                            {
-                              required: true,
-                              message: "Нэр оруулна уу?"
-                            }
-                          ]
-                        })(
-                          <Input
-                            type="text"
-                            placeholder="Нэр*"
-                            className="col-md-12"
-                          />
-                        )}
-                      </Form.Item>
-                    </div>
-                    <div className="col-xl-4 col-md-4">
-                      <Form.Item>
-                        {getFieldDecorator("phone1", {
-                          rules: [
-                            {
-                              required: true,
-                              pattern: new RegExp("^[0-9]*$"),
-                              message: "Утас оруулна уу"
-                            }
-                          ]
-                        })(
-                          <Input
-                            type="text"
-                            placeholder="Утас*"
-                            className="col-md-12"
-                          />
-                        )}
-                      </Form.Item>
-                    </div>
-                    <div className="col-xl-4 col-md-4">
-                      <Form.Item>
-                        {getFieldDecorator("phone2", {
-                          rules: [
-                            {
-                              required: true,
-                              pattern: new RegExp("^[0-9]*$"),
-                              message: "Утас оруулна уу"
-                            }
-                          ]
-                        })(
-                          <Input
-                            type="text"
-                            placeholder="Утас*"
-                            className="col-md-12"
-                          />
-                        )}
-                      </Form.Item>
+                      <FormInput
+                        form={this.props.form}
+                        mask={"11111111"}
+                        placeholder=""
+                        name={"phone2"}
+                        maxLength={8}
+                        rules={[
+                          {
+                            required: true,
+                            message: "Утас оруулна уу"
+                          }
+                        ]}
+                      />
                     </div>
                   </div>
                   <hr />
