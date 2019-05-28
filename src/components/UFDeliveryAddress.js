@@ -66,9 +66,12 @@ class Component extends React.Component {
   };
 
   saveAddress = async data => {
-    api.customer.saveAddress(data).then(res => {
+    await api.customer.saveAddress(data).then(res => {
       if (res.success) {
         this.getAddress();
+        message.success("Хүргэлтийн хаяг амжилттай бүртгэгдлээ");
+      } else {
+        message.success(res.success);
       }
     });
   };
@@ -90,7 +93,6 @@ class Component extends React.Component {
           phonE1: values.phone
         };
         this.saveAddress(data);
-        message.success("Хүргэлтийн хаяг амжилттай бүртгэгдлээ");
       }
     });
   };
@@ -151,13 +153,25 @@ class Component extends React.Component {
     console.log(e);
   };
 
-  onDelete = (e, item) => {
+  onDelete = async (e, item) => {
+    await api.customer
+      .deleteAddress({ id: item.id, custid: this.props.user.id })
+      .then(res => {
+        if (res.success) {
+          this.getAddress();
+          message.success("Хүргэлтийн хаяг амжилттай устлаа.");
+        } else {
+          message.error(res.data);
+        }
+      });
     console.log(item);
+    console.log(e);
   };
 
   render() {
     const { getFieldDecorator } = this.props.form;
     const { name, phone, homeaddress } = this.state;
+    console.log(this.state);
     let tableList = null;
     tableList = this.state.homeaddress.map((item, index) => {
       return (
@@ -274,10 +288,8 @@ class Component extends React.Component {
               </div>
             </Form>
             <div className="text-right">
-              <button className="btn btn-dark">
-                <span className="text-uppercase" onClick={this.handleSubmit}>
-                  Хадгалах
-                </span>
+              <button className="btn btn-dark" onClick={this.handleSubmit}>
+                <span className="text-uppercase">Хадгалах</span>
               </button>
             </div>
             <div className="delivery-address">

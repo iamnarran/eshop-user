@@ -4623,6 +4623,7 @@ inline-style-prefixer@^3.0.6, inline-style-prefixer@^3.0.8:
 inputmask-core@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/inputmask-core/-/inputmask-core-2.2.0.tgz#79a75f7f3a4d3312ae95fd2b55a2366a7c91dfba"
+  integrity sha1-eadffzpNMxKulf0rVaI2anyR37o=
 
 inquirer@3.3.0, inquirer@^3.0.6:
   version "3.3.0"

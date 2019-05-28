@@ -95,5 +95,11 @@ export default [
     URL: `${API}/api/customer/:id`,
     REPLACE: "id",
     TOKEN: true
+  },
+  {
+    NAME: "deleteAddress",
+    METHOD: "DELETE",
+    URL: `${API}/api/customer/address/:id/:custid`,
+    REPLACE: "id, custid"
   }
 ];
