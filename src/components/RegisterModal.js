@@ -4,6 +4,8 @@ import { Modal, Button, message } from "antd";
 import { EXPAND_LEFT } from "react-ladda";
 import { createForm } from "rc-form";
 import { Redirect } from "react-router-dom";
+import { toast } from "react-toastify";
+import { css } from "glamor";
 import api from "../api";
 
 import actions, {
@@ -15,6 +17,15 @@ class RegisterModal extends React.Component {
   state = {
     isLoading: false
   };
+
+  handleNotify = message =>
+    toast(message, {
+      position: "top-center",
+      autoClose: 5000,
+      progressClassName: css({
+        background: "#feb415"
+      })
+    });
 
   handleOk = () => {
     this.props.hideRegisterModal();
@@ -41,14 +52,13 @@ class RegisterModal extends React.Component {
 
         try {
           console.log(data);
-
           res = await this.props.register(data);
-
           if (res.status === "failed") {
             message.error(res.message);
             this.setState({ isLoading: false });
           } else {
             this.handleOk();
+            this.handleNotify("Амжилттай бүртгүүллээ. Имэйлээ шалгана уу");
             return <Redirect to="/" />;
           }
         } catch (err) {

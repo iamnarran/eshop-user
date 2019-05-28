@@ -191,8 +191,8 @@ class Component extends React.Component {
           <div className="user-profile-contain">
             <Form>
               <div className="row row10">
-                <div className="col-xl-6 pad10">
-                  <div className="e-mart-input">
+                <div className="col-xl-6" style={{ marginBottom: "-9px" }}>
+                  <div className="form-group">
                     <Form.Item>
                       {getFieldDecorator("name", {
                         rules: [
@@ -205,7 +205,8 @@ class Component extends React.Component {
                     </Form.Item>
                   </div>
                 </div>
-                <div className="col-xl-6 pad10">
+
+                <div className="col-xl-6" style={{ marginBottom: "-9px" }}>
                   <div className="form-group">
                     <Form.Item>
                       {getFieldDecorator("phone", {
@@ -219,9 +220,8 @@ class Component extends React.Component {
                     </Form.Item>
                   </div>
                 </div>
-              </div>
-              <div className="row row10">
-                <div className="col-xl-4 pad10">
+
+                <div className="col-xl-4">
                   <div className="form-group">
                     <Select
                       defaultValue="Хот/Аймаг"
@@ -232,7 +232,8 @@ class Component extends React.Component {
                     </Select>
                   </div>
                 </div>
-                <div className="col-xl-4 pad10">
+
+                <div className="col-xl-4">
                   <div className="form-group">
                     <Select
                       defaultValue="Сум/Дүүрэг"
@@ -243,7 +244,8 @@ class Component extends React.Component {
                     </Select>
                   </div>
                 </div>
-                <div className="col-xl-4 pad10">
+
+                <div className="col-xl-4">
                   <div className="form-group">
                     <Select
                       defaultValue="Баг/Хороо"
@@ -254,7 +256,8 @@ class Component extends React.Component {
                     </Select>
                   </div>
                 </div>
-                <div className="col-xl-12 pad10">
+
+                <div className="col-xl-12">
                   <div className="form-group">
                     <Form.Item>
                       {getFieldDecorator("homeaddress", {
@@ -282,7 +285,9 @@ class Component extends React.Component {
                 <span>Бүртгэлтэй хаягууд</span>
               </p>
               <table style={{ width: "100%" }} className="table bordered">
-                <tbody>{tableList}</tbody>
+                <div style={{ maxHeight: "300px", overflow: "scroll" }}>
+                  <tbody>{tableList}</tbody>
+                </div>
               </table>
             </div>
           </div>

@@ -88,5 +88,12 @@ export default [
     URL: `${API}/api/customer/:custid`,
     REPLACE: "custid",
     TOKEN: true
+  },
+  {
+    NAME: "findUserData",
+    METHOD: "GET",
+    URL: `${API}/api/customer/:id`,
+    REPLACE: "id",
+    TOKEN: true
   }
 ];

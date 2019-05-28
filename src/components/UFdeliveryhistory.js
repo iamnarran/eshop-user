@@ -98,28 +98,36 @@ class Component extends React.Component {
           <p className="title">
             <span>Захиалгын түүх</span>
           </p>
-          <table className="table-hover table-sm">
-            <thead>
-              <tr style={{ height: "70px" }}>
-                <th width="5%" style={{ textAlign: "center" }}>
-                  №
-                </th>
-                <th width="25%" style={{ textAlign: "center" }}>
-                  Он сар өдөр
-                </th>
-                <th width="25%" style={{ textAlign: "center" }}>
-                  Төлөв
-                </th>
-                <th width="10%" style={{ textAlign: "center" }}>
-                  Үнийн дүн
-                </th>
-                <th width="15%" style={{ textAlign: "center" }}>
-                  Дэлгэрэнгүй
-                </th>
-              </tr>
-            </thead>
-            <tbody>{tableList}</tbody>
-          </table>
+          <div
+            style={{
+              width: "100%",
+              maxHeight: "600px",
+              overflow: "scroll"
+            }}
+          >
+            <table className="table-hover table-sm">
+              <thead>
+                <tr style={{ height: "70px" }}>
+                  <th width="5%" style={{ textAlign: "center" }}>
+                    №
+                  </th>
+                  <th width="25%" style={{ textAlign: "center" }}>
+                    Он сар өдөр
+                  </th>
+                  <th width="25%" style={{ textAlign: "center" }}>
+                    Төлөв
+                  </th>
+                  <th width="10%" style={{ textAlign: "center" }}>
+                    Үнийн дүн
+                  </th>
+                  <th width="15%" style={{ textAlign: "center" }}>
+                    Дэлгэрэнгүй
+                  </th>
+                </tr>
+              </thead>
+              <tbody>{tableList}</tbody>
+            </table>
+          </div>
         </div>
       </div>
     );

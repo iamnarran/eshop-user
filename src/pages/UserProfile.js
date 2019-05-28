@@ -304,7 +304,7 @@ class UserProfilePage extends React.Component {
                                 <span>Захиалгын түүх</span>
                               </Link>
                             </li>
-                            <li>
+                            {/* <li>
                               <Link
                                 to={`${match.path}/epoint`}
                                 className="flex-this"
@@ -316,7 +316,7 @@ class UserProfilePage extends React.Component {
                                 />
                                 <span>ePoint карт</span>
                               </Link>
-                            </li>
+                            </li> */}
                             <li>
                               <Link
                                 to={`${match.path}/delivery`}

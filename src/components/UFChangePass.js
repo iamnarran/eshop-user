@@ -2,8 +2,11 @@ import React from "react";
 import { connect } from "react-redux";
 import { Form, Input, Select, Button, AutoComplete } from "antd";
 import api from "../api";
-import { toast } from "react-toastify";
-import { css } from "glamor";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const MySwal = withReactContent(Swal);
+
 const { Option } = Select;
 const AutoCompleteOption = AutoComplete.Option;
 
@@ -16,13 +19,34 @@ class Component extends React.Component {
     confirmDirty: false,
     autoCompleteResult: []
   };
-  handleNotify = message =>
-    toast(message, {
-      autoClose: 5000,
-      progressClassName: css({
-        background: "#feb415"
-      })
+
+  errorMsg = txt => {
+    /* MySwal.hideLoading(); */
+    MySwal.fire({
+      timer: 1500,
+      type: "error",
+      text: txt,
+      animation: false,
+      width: "25rem",
+      showConfirmButton: false,
+      confirmButtonColor: "#feb415"
     });
+  };
+
+  successMsg = txt => {
+    /* MySwal.hideLoading(); */
+    MySwal.fire({
+      timer: 1500,
+      type: "success",
+      title: "Амжилттай",
+      text: txt,
+      animation: false,
+      width: "25rem",
+      showConfirmButton: false,
+      confirmButtonColor: "#feb415"
+    });
+  };
+
   changePass = async user => {
     const params = {
       email: this.props.user.email,
@@ -32,14 +56,16 @@ class Component extends React.Component {
 
     await api.customer.passreset(params).then(res => {
       if (res.success) {
-        this.handleNotify(res.message);
+        this.successMsg("Нууц үг амжилттай солигдлоо.");
+        this.props.history.push("/userprofile");
       } else {
-        this.handleNotify(res.message);
+        this.errorMsg(res.message);
       }
     });
   };
   handleSubmit = e => {
     e.preventDefault();
+    let temp = [];
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         this.changePass(values);
@@ -125,10 +151,8 @@ class Component extends React.Component {
                 )}
               </Form.Item>
               <div className="text-right">
-                <button className="btn btn-dark">
-                  <span className="text-uppercase" onClick={this.handleSubmit}>
-                    Хадгалах
-                  </span>
+                <button className="btn btn-dark" onClick={this.handleSubmit}>
+                  <span className="text-uppercase">Хадгалах</span>
                 </button>
               </div>
             </Form>

@@ -106,7 +106,7 @@ class UserButton extends React.Component {
                   </p>
                 </div>
                 <ul className="list-unstyled">
-                  <li className="active">
+                  <li /* className="active" */>
                     <Link to="/userprofile" className="flex-this">
                       <i
                         className="fa fa-user"
@@ -146,7 +146,7 @@ class UserButton extends React.Component {
                       <span>Хадгалсан бараа</span>
                     </Link>
                   </li>
-                  <li>
+                  {/* <li>
                     <Link to="/userprofile" className="flex-this">
                       <i
                         className="fa fa-credit-card"
@@ -155,7 +155,7 @@ class UserButton extends React.Component {
                       />
                       <span>ePoint карт</span>
                     </Link>
-                  </li>
+                  </li> */}
                   <li>
                     <Link to="/userprofile" className="flex-this">
                       <i

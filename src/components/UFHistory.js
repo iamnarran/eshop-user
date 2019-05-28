@@ -100,7 +100,12 @@ class Component extends React.Component {
           <p className="title">
             <span>Үзсэн барааны түүх</span>
           </p>
-          <div className="product-list-history">{tableList}</div>
+          <div
+            className="product-list-history"
+            style={{ maxHeight: "500px", overflow: "scroll" }}
+          >
+            {tableList}
+          </div>
         </div>
       </div>
     );

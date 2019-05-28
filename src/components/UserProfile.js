@@ -1,7 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Form, message, Input, Select } from "antd";
+import "./userprofile.css";
 import api from "../api";
+
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const MySwal = withReactContent(Swal);
 const Option = Select.Option;
 
 @connect(
@@ -19,7 +25,52 @@ class Component extends React.Component {
     street: [],
     provid: null,
     distid: null,
-    locid: null
+    locid: null,
+    userInfo: [],
+    card: [],
+    cardNoInput: ""
+  };
+
+  errorMsg = txt => {
+    /* MySwal.hideLoading(); */
+    MySwal.fire({
+      timer: 1500,
+      type: "error",
+      text: txt,
+      animation: false,
+      width: "25rem",
+      showConfirmButton: false,
+      confirmButtonColor: "#feb415"
+    });
+  };
+
+  successMsg = txt => {
+    /* MySwal.hideLoading(); */
+    MySwal.fire({
+      timer: 1500,
+      type: "success",
+      title: "Амжилттай",
+      text: txt,
+      animation: false,
+      width: "25rem",
+      showConfirmButton: false,
+      confirmButtonColor: "#feb415"
+    });
+  };
+
+  componentDidMount() {
+    this.getProvince();
+    this.getAddress();
+    this.getUserInfo();
+    this.getUserData();
+  }
+
+  getUserData = async () => {
+    await api.customer.findUserData({ id: this.props.user.id }).then(res => {
+      if (res.success) {
+        this.setState({ card: res.data.card });
+      }
+    });
   };
 
   getAddress = async () => {
@@ -64,44 +115,34 @@ class Component extends React.Component {
         }
       });
   };
-
-  saveAddress = async data => {
-    api.customer.saveAddress(data).then(res => {
+  getUserInfo = async () => {
+    api.customer.getCustomer({ custid: this.props.user.id }).then(res => {
       if (res.success) {
-        this.getAddress();
+        this.setState({ userInfo: res.data.info });
       }
     });
   };
 
-  componentDidMount() {
-    this.getProvince();
-    this.getAddress();
-  }
-
   handleSubmit = e => {
     e.preventDefault();
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        const data = {
-          custid: this.props.user.id,
-          locid: this.state.locid,
-          address: values.homeaddress,
-          name: values.name,
-          phonE1: values.phone
-        };
-        this.saveAddress(data);
-        message.success("Хүргэлтийн хаяг амжилттай бүртгэгдлээ");
-      }
-    });
+    console.log(this.state.userInfo);
   };
 
   renderProvince() {
     const options = this.state.province.map((item, index) => {
-      return (
-        <Option key={index} value={item.provinceid}>
-          {item.provincenm}
-        </Option>
-      );
+      if (item.provinceid == "11") {
+        return (
+          <Option key={index} value={item.provinceid}>
+            {item.provincenm}
+          </Option>
+        );
+      } else {
+        return (
+          <Option key={index} value={item.provinceid}>
+            {item.provincenm}
+          </Option>
+        );
+      }
     });
     return options;
   }
@@ -151,9 +192,125 @@ class Component extends React.Component {
     console.log(e);
   };
 
+  onChangeLastname = e => {
+    const data = {
+      conymd: this.state.userInfo.conymd,
+      email: this.state.userInfo.email,
+      firstname: this.state.userInfo.firstname,
+      id: this.state.userInfo.id,
+      imgnm: this.state.userInfo.imgnm,
+      insymd: this.state.userInfo.insymd,
+      lastname: e.target.value,
+      phone1: this.state.userInfo.phone1,
+      phone2: this.state.userInfo.phone2,
+      updymd: this.state.userInfo.updymd,
+      username: this.state.userInfo.username
+    };
+    this.setState({ userInfo: data });
+  };
+
+  onChangeFirstname = e => {
+    const data = {
+      conymd: this.state.userInfo.conymd,
+      email: this.state.userInfo.email,
+      firstname: e.target.value,
+      id: this.state.userInfo.id,
+      imgnm: this.state.userInfo.imgnm,
+      insymd: this.state.userInfo.insymd,
+      lastname: this.state.userInfo.lastname,
+      phone1: this.state.userInfo.phone1,
+      phone2: this.state.userInfo.phone2,
+      updymd: this.state.userInfo.updymd,
+      username: this.state.userInfo.username
+    };
+    this.setState({ userInfo: data });
+  };
+
+  onChangeEmail = e => {
+    const data = {
+      conymd: this.state.userInfo.conymd,
+      email: e.target.value,
+      firstname: this.state.userInfo.firstname,
+      id: this.state.userInfo.id,
+      imgnm: this.state.userInfo.imgnm,
+      insymd: this.state.userInfo.insymd,
+      lastname: this.state.userInfo.lastname,
+      phone1: this.state.userInfo.phone1,
+      phone2: this.state.userInfo.phone2,
+      updymd: this.state.userInfo.updymd,
+      username: this.state.userInfo.username
+    };
+    this.setState({ userInfo: data });
+  };
+
+  onChangePhone1 = e => {
+    const data = {
+      conymd: this.state.userInfo.conymd,
+      email: this.state.userInfo.email,
+      firstname: this.state.userInfo.firstname,
+      id: this.state.userInfo.id,
+      imgnm: this.state.userInfo.imgnm,
+      insymd: this.state.userInfo.insymd,
+      lastname: this.state.userInfo.lastname,
+      phone1: e.target.value,
+      phone2: this.state.userInfo.phone2,
+      updymd: this.state.userInfo.updymd,
+      username: this.state.userInfo.username
+    };
+    this.setState({ userInfo: data });
+  };
+
+  onChangePhone2 = e => {
+    const data = {
+      conymd: this.state.userInfo.conymd,
+      email: this.state.userInfo.email,
+      firstname: this.state.userInfo.firstname,
+      id: this.state.userInfo.id,
+      imgnm: this.state.userInfo.imgnm,
+      insymd: this.state.userInfo.insymd,
+      lastname: this.state.userInfo.lastname,
+      phone1: this.state.userInfo.phone1,
+      phone2: e.target.value,
+      updymd: this.state.userInfo.updymd,
+      username: this.state.userInfo.username
+    };
+    this.setState({ userInfo: data });
+  };
+
+  cardNoChange = e => {
+    const { cardNoInput } = this.state;
+    if (e.target.value.length <= 14) {
+      this.setState({ cardNoInput: e.target.value });
+    }
+  };
+
+  saveCustomerCard = async (e, refs) => {
+    e.preventDefault();
+
+    let cardpass = refs.cardpass.value;
+    let cardno = refs.cardno.value;
+    console.log(cardpass, cardno);
+    if (cardpass != "" && cardno != "") {
+      let tmp = {
+        custid: this.state.userInfo.id,
+        cardno: cardno,
+        pincode: cardpass
+      };
+      await api.checkout.saveCustomerCard(tmp).then(res => {
+        if (res.success == true) {
+          this.setState({ card: res.data });
+          this.successMsg("Таны бүртгэлийг Ипойнт карттай амжилттай холболоо");
+        } else {
+          this.errorMsg(res.data);
+        }
+      });
+    } else {
+      this.errorMsg("Картын дугаар нууц үг оруулна уу ?");
+    }
+  };
+
   render() {
     const { getFieldDecorator } = this.props.form;
-
     return (
       <div className="col-md-8 pad10">
         <div className="user-menu-content">
@@ -163,164 +320,93 @@ class Component extends React.Component {
           <div className="user-profile-contain">
             <Form>
               <div className="row row10">
-                <div className="col-xl-4 pad10">
-                  <div className="e-mart-input">
-                    <Form.Item>
-                      {getFieldDecorator("fName", {
-                        rules: [
-                          {
-                            required: true,
-                            message: "Овог заавал оруулна уу!"
-                          }
-                        ]
-                      })(<Input placeholder="Овог" />)}
-                    </Form.Item>
-                  </div>
+                <div className="col-xl-4">
+                  <input
+                    placeholder="Овог"
+                    defaultValue={this.state.userInfo.lastname}
+                    className="inputButton"
+                    onChange={this.onChangeLastname}
+                  />
                 </div>
-                <div className="col-xl-4 pad10">
-                  <div className="e-mart-input">
-                    <Form.Item>
-                      {getFieldDecorator("lName", {
-                        rules: [
-                          {
-                            required: true,
-                            message: "Нэрээ заавал оруулна уу!"
-                          }
-                        ]
-                      })(<Input placeholder="Нэр" />)}
-                    </Form.Item>
-                  </div>
+
+                <div className="col-xl-4">
+                  <input
+                    placeholder="Нэр"
+                    defaultValue={this.state.userInfo.firstname}
+                    className="e-mart-input inputButton"
+                    onChange={this.onChangeFirstname}
+                  />
                 </div>
-                <div className="col-xl-4 pad10">
-                  <div className="form-group">
-                    <Form.Item>
-                      {getFieldDecorator("email", {
-                        rules: [
-                          {
-                            required: true,
-                            message: "Имэйл заавал оруулна уу!"
-                          }
-                        ]
-                      })(<Input placeholder="Имэйл" />)}
-                    </Form.Item>
-                  </div>
+
+                <div className="col-xl-4">
+                  <input
+                    placeholder="И-мэйл"
+                    defaultValue={this.state.userInfo.email}
+                    className="e-mart-input inputButton"
+                    onChange={this.onChangeEmail}
+                  />
                 </div>
-              </div>
-              <div className="row row10">
-                <div className="col-xl-4 pad10">
-                  <div className="e-mart-input">
-                    <Form.Item>
-                      {getFieldDecorator("phone1", {
-                        rules: [
-                          {
-                            required: true,
-                            message: "Утас заавал оруулна уу!"
-                          }
-                        ]
-                      })(<Input placeholder="Утас 1" />)}
-                    </Form.Item>
-                  </div>
+
+                <div className="col-xl-4">
+                  <input
+                    placeholder="Утас 1"
+                    defaultValue={this.state.userInfo.phone1}
+                    className="e-mart-input inputButton"
+                    onChange={this.onChangePhone2}
+                  />
                 </div>
-                <div className="col-xl-4 pad10">
-                  <div className="e-mart-input">
-                    <Form.Item>
-                      {getFieldDecorator("phone2", {
-                        rules: [
-                          {
-                            required: true,
-                            message: "Нэрээ заавал оруулна уу!"
-                          }
-                        ]
-                      })(<Input placeholder="Утас 2" />)}
-                    </Form.Item>
-                  </div>
+
+                <div className="col-xl-4">
+                  <input
+                    placeholder="Утас 2"
+                    defaultValue={this.state.userInfo.phone2}
+                    className="e-mart-input inputButton"
+                    onChange={this.onChangePhone2}
+                  />
                 </div>
-              </div>
-              <div className="row row10">
-                <div className="col-xl-4 pad10">
-                  <div className="form-group">
-                    <Select
-                      defaultValue="Хот/Аймаг"
-                      onChange={this.onChangeCity}
-                      placeholder="Хот/Аймаг"
-                    >
-                      {this.renderProvince()}
-                    </Select>
-                  </div>
+
+                <div className="col-xl-4" />
+
+                <div className="col-xl-4 marginBottom">
+                  <Select
+                    defaultValue="Улаанбаатар хот"
+                    onChange={this.onChangeCity}
+                    placeholder="Хот/Аймаг"
+                  >
+                    {this.renderProvince()}
+                  </Select>
                 </div>
-                <div className="col-xl-4 pad10">
-                  <div className="form-group">
-                    <Select
-                      defaultValue="Сум/Дүүрэг"
-                      placeholder="Сум/Дүүрэг"
-                      onChange={this.onChangeDistrict}
-                    >
-                      {this.renderDistrict()}
-                    </Select>
-                  </div>
+
+                <div className="col-xl-4 marginBottom">
+                  <Select
+                    placeholder="Сум/Дүүрэг"
+                    defaultValue="Баянгол дүүрэг"
+                    onChange={this.onChangeDistrict}
+                  >
+                    {this.renderDistrict()}
+                  </Select>
                 </div>
-                <div className="col-xl-4 pad10">
-                  <div className="form-group">
-                    <Select
-                      defaultValue="Баг/Хороо"
-                      placeholder="Баг/Хороо"
-                      onChange={this.onStreet}
-                    >
-                      {this.renderStreet()}
-                    </Select>
-                  </div>
+
+                <div className="col-xl-4 marginBottom">
+                  <Select
+                    defaultValue="4-р хороо"
+                    placeholder="Баг/Хороо"
+                    onChange={this.onStreet}
+                  >
+                    {this.renderStreet()}
+                  </Select>
                 </div>
-                <div className="col-xl-12 pad10">
-                  <div className="form-group">
-                    <Form.Item>
-                      {getFieldDecorator("homeaddress", {
-                        rules: [
-                          {
-                            required: true,
-                            message: "Гэрийн хаягаа заавал оруулна уу!"
-                          }
-                        ]
-                      })(<Input placeholder="Гэрийн хаяг" />)}
-                    </Form.Item>
-                  </div>
-                </div>
-              </div>
-              <div className="row row10">
-                <div className="col=xl-12 pad10">
-                  <p>И-март карт холбох</p>
-                </div>
-              </div>
-              <div className="row row10">
-                <div className="col-xl-4 pad10">
-                  <div className="e-mart-input">
-                    <Form.Item>
-                      {getFieldDecorator("kartNo", {
-                        rules: [
-                          {
-                            required: true,
-                            message: "Имарт картын дугаар заавал оруулна уу!"
-                          }
-                        ]
-                      })(<Input placeholder="Имарт картын дугаар" />)}
-                    </Form.Item>
-                  </div>
-                </div>
-                <div className="col-xl-4 pad10">
-                  <div className="e-mart-input">
-                    <Form.Item>
-                      {getFieldDecorator("password", {
-                        rules: [
-                          {
-                            required: true,
-                            message: "Нууц үгээ заавал оруулна уу!"
-                          }
-                        ]
-                      })(<Input placeholder="Нууц үг" />)}
-                    </Form.Item>
-                  </div>
+
+                <div className="col-xl-12">
+                  <input
+                    placeholder="Гэрийн хаяг"
+                    defaultValue="102-25"
+                    className="e-mart-input inputButton"
+                  />
                 </div>
               </div>
             </Form>
+
             <div className="text-right">
               <button className="btn btn-dark">
                 <span className="text-uppercase" onClick={this.handleSubmit}>
@@ -328,6 +414,63 @@ class Component extends React.Component {
                 </span>
               </button>
             </div>
+            <div className="row row10">
+              <div className="col-xl-12 pad10">
+                <p>И-март карт холбох</p>
+              </div>
+            </div>
+
+            {this.state.card.status == 1 ? (
+              <div className="row row10">
+                <div className="col-xl-4 pad10">
+                  <input
+                    value={this.state.card.cardno}
+                    className="inputButton"
+                    disabled
+                  />
+                </div>
+                <div className="col-xl-4 pad10">
+                  <input value="****" className="inputButton" disabled />
+                </div>
+              </div>
+            ) : (
+              <div className="row row10">
+                <div className="col-xl-4 pad10">
+                  <input
+                    className="e-mart-input inputButton"
+                    type="text"
+                    id="exampleInputEmail1"
+                    name="cardno"
+                    ref="cardno"
+                    value={this.state.cardNoInput}
+                    aria-describedby="emailHelp"
+                    placeholder="Картын дугаар"
+                    onChange={e => this.cardNoChange(e)}
+                  />
+                </div>
+
+                <div className="col-xl-4 pad10">
+                  <input
+                    className="e-mart-input inputButton"
+                    type="password"
+                    ref="cardpass"
+                    name="cardpass"
+                    id="exampleInputEmail1"
+                    aria-describedby="emailHelp"
+                    placeholder="Нууц үг"
+                  />
+                </div>
+
+                <div className="col-xl-4 pad10">
+                  <button
+                    className="btn"
+                    onClick={e => this.saveCustomerCard(e, this.refs)}
+                  >
+                    <span className="text-uppercase">Холбох</span>
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
