@@ -125,7 +125,11 @@ class Checkout extends React.Component {
           }
         });
       } else {
-        tmp = id;
+        commiteLocation.map((item, i) => {
+          if (item.committeenm == id) {
+            tmp = item.id;
+          }
+        });
       }
     } else {
       tmp = id;
@@ -270,7 +274,7 @@ class Checkout extends React.Component {
             }
           });
         }
-
+        console.log(res, "aaa");
         this.setState({
           addresstype: res.data.addrs.length === 0 ? "new" : "edit",
           userInfo: res.data.info,
@@ -459,7 +463,7 @@ class Checkout extends React.Component {
             if (addresstype == "new") {
               let adrs = {};
               adrs.custid = this.state.userInfo.id;
-              adrs.locid = values.commiteLocation;
+              adrs.locid = this.getCommiteLocationName(values.commiteLocation);
               adrs.address = values.addresstype;
               adrs.isenable = "Идэвхтэй";
               chosenInfo.address = values.addresstype;
@@ -494,6 +498,8 @@ class Checkout extends React.Component {
 
   setUser = async adrs => {
     await this.props.saveUserAddress(adrs).then(res => {
+      console.log(res);
+      console.log(adrs);
       if (res.success) {
         let tmp = this.state.chosenInfo;
         tmp.address = res.data;
@@ -501,6 +507,8 @@ class Checkout extends React.Component {
           this.getUserInfo(this.props.user);
         }
         this.setState({ chosenInfo: tmp, addresstype: "edit" });
+      } else {
+        this.errorMsg(res.message);
       }
     });
   };
@@ -740,8 +748,6 @@ class Checkout extends React.Component {
     //tmp.cardNo = epointcard.cardno;
     tmp.usedPoint = epointUsedPoint;
     tmp.items = [];
-    console.log(this.state.chosenInfo);
-    console.log(this.state.userAddress);
     if (isNaN(this.state.chosenInfo.commiteLocation)) {
       tmp.locId = this.state.userAddress[0].locid;
     } else {
@@ -806,7 +812,10 @@ class Checkout extends React.Component {
       form.setFieldsInitialValue({
         mainLocation: this.state.mainLocation[0].provincenm,
         subLocation: this.state.subLocation[0].districtnm,
-        commiteLocation: this.state.commiteLocation[0].committeenm
+        commiteLocation: this.state.commiteLocation[0].committeenm,
+        lastName: "",
+        phone1: "",
+        phone2: ""
       });
       this.setState({ addresstype: "new" });
     } else {

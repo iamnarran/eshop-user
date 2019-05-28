@@ -36,7 +36,7 @@ class DeliveryInfo extends React.Component {
 
     let clientHeight = document.getElementById("scroll-tst").clientHeight;
     if (calcBottom == clientHeight) {
-      this.timer = setTimeout(() => this.setModal2Visible(false), 1000);
+      this.timer = setTimeout(() => this.setModal2Visible(false), 200);
       document
         .getElementById("scroll-tst")
         .removeEventListener("scroll", this.handleScroll);

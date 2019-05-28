@@ -273,43 +273,25 @@ class DeliveryPanel extends React.Component {
                           className="col-xl-8 col-md-8"
                           style={{ paddingLeft: "0px", paddingRight: "11px" }}
                         >
-                          {addresstype == "new" ? (
-                            <Form.Item>
-                              {getFieldDecorator("addresstype", {
-                                rules: [
-                                  {
-                                    required: true,
-                                    message: "Хаяг оруулна уу ?"
-                                  }
-                                ]
-                              })(
-                                <Input
-                                  type="text"
-                                  placeholder="Хаягаа оруулна уу ?*"
-                                />
-                              )}
-                            </Form.Item>
-                          ) : (
-                            <Form.Item>
-                              {getFieldDecorator("address", {
-                                rules: [
-                                  {
-                                    required: true,
-                                    message: "Хаяг оруулна уу"
-                                  }
-                                ]
-                              })(
-                                <Select
-                                  onChange={e => this.onChangeLoc(e)}
-                                  showSearch
-                                  optionFilterProp="children"
-                                  placeholder="Хаягаа сонгоно уу ?"
-                                >
-                                  {this.renderAddrsOption()}
-                                </Select>
-                              )}
-                            </Form.Item>
-                          )}
+                          <Form.Item>
+                            {getFieldDecorator("address", {
+                              rules: [
+                                {
+                                  required: true,
+                                  message: "Хаяг оруулна уу"
+                                }
+                              ]
+                            })(
+                              <Select
+                                onChange={e => this.onChangeLoc(e)}
+                                showSearch
+                                optionFilterProp="children"
+                                placeholder="Хаягаа сонгоно уу ?"
+                              >
+                                {this.renderAddrsOption()}
+                              </Select>
+                            )}
+                          </Form.Item>
                         </div>
                         <div className="col-xl-4 col-md-4">
                           <button
@@ -407,6 +389,32 @@ class DeliveryPanel extends React.Component {
                     ) : (
                       ""
                     )}
+
+                    {item.id != 3 ? (
+                      <div className="col-xl-12 col-md-12">
+                        {addresstype == "new" ? (
+                          <Form.Item>
+                            {getFieldDecorator("addresstype", {
+                              rules: [
+                                {
+                                  required: true,
+                                  message: "Хаяг оруулна уу ?"
+                                }
+                              ]
+                            })(
+                              <Input
+                                type="text"
+                                placeholder="Хаягаа оруулна уу ?*"
+                              />
+                            )}
+                          </Form.Item>
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                    ) : (
+                      ""
+                    )}
                     <div className="col-xl-4 col-md-4">
                       <FormInput
                         form={this.props.form}
@@ -424,7 +432,6 @@ class DeliveryPanel extends React.Component {
                       <FormInput
                         form={this.props.form}
                         mask={"11111111"}
-                        placeholder=""
                         name={"phone1"}
                         rules={[
                           {
