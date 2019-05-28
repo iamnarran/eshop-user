@@ -145,7 +145,7 @@ class Component extends React.Component {
       ? this.state.locid
       : this.state.mainAddress.locid;
     const data = {
-      id: 0,
+      id: this.props.user.id,
       username: this.state.userInfo.username,
       firstname: this.state.userInfo.firstname,
       imgnm: this.state.userInfo.imgnm,
@@ -155,13 +155,16 @@ class Component extends React.Component {
       phonE2: this.state.userInfo.phone2,
       adrsid: this.state.mainAddress.id,
       locid: loc,
-      address: this.state.realAddress,
-      ismain: 1
+      address: this.state.realAddress
     };
     console.log(data);
-    /* api.customer.updateMainAddress(data).then(res => {
-      console.log(res);
-    }); */
+    api.customer.updateMainAddress(data).then(res => {
+      if (res.success) {
+        message.success("Амжилттай хадгаллаа.");
+      } else {
+        message.success("Амжилтгүй хадгаллаа.");
+      }
+    });
   };
 
   renderProvince() {
@@ -228,6 +231,7 @@ class Component extends React.Component {
         }
       });
   };
+
   onStreet = async e => {
     this.setState({ locid: e });
     console.log(e);
@@ -319,7 +323,7 @@ class Component extends React.Component {
   };
 
   onChangeAddress = e => {
-    this.setState({ realAddres: e.target.value });
+    this.setState({ realAddress: e.target.value });
   };
 
   cardNoChange = e => {
