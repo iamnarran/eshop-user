@@ -740,6 +740,8 @@ class Checkout extends React.Component {
     //tmp.cardNo = epointcard.cardno;
     tmp.usedPoint = epointUsedPoint;
     tmp.items = [];
+    console.log(this.state.chosenInfo);
+    console.log(this.state.userAddress);
     if (isNaN(this.state.chosenInfo.commiteLocation)) {
       tmp.locId = this.state.userAddress[0].locid;
     } else {
