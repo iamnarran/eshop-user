@@ -43,10 +43,9 @@ class ResetPassword extends React.Component {
     });
   };
   render() {
-    console.log("props", this.props);
     const { staticInfo } = this.props.container;
     const { getFieldDecorator } = this.props.form;
-    console.log("id", this.props.match.params.id);
+
     return (
       <div className="top-container">
         <div className="section">
@@ -64,7 +63,7 @@ class ResetPassword extends React.Component {
               </div>
               <h2>Нууц үг сэргээх</h2>
               <p>Та нууц үгээ оруулна уу!</p>
-              <div className="col-md-4">
+              <div className="col-md-3">
                 <Form onSubmit={this.handleSubmit} className="login-form">
                   <Form.Item hasFeedback>
                     {getFieldDecorator("password", {

@@ -112,7 +112,6 @@ class Component extends React.Component {
   getDistrict = async id => {
     await api.location.findLocationWidthId({ id: id }).then(res => {
       if (res.success) {
-        console.log(res.data);
         this.setState({ districtOrSum: res.data });
       }
     });
@@ -127,7 +126,6 @@ class Component extends React.Component {
       .then(res => {
         if (res.success) {
           this.setState({ street: res.data });
-          console.log(res);
         }
       });
   };
@@ -157,7 +155,6 @@ class Component extends React.Component {
       locid: loc,
       address: this.state.realAddress
     };
-    console.log(data);
     api.customer.updateMainAddress(data).then(res => {
       if (res.success) {
         message.success("Амжилттай хадгаллаа.");
@@ -227,14 +224,12 @@ class Component extends React.Component {
       .then(res => {
         if (res.success) {
           this.setState({ street: res.data });
-          console.log(res);
         }
       });
   };
 
   onStreet = async e => {
     this.setState({ locid: e });
-    console.log(e);
   };
 
   onChangeLastname = e => {
@@ -338,7 +333,6 @@ class Component extends React.Component {
 
     let cardpass = refs.cardpass.value;
     let cardno = refs.cardno.value;
-    console.log(cardpass, cardno);
     if (cardpass != "" && cardno != "") {
       let tmp = {
         custid: this.state.userInfo.id,
@@ -360,7 +354,7 @@ class Component extends React.Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    console.log(this.state);
+
     return (
       <div className="col-md-8 pad10">
         <div className="user-menu-content">
