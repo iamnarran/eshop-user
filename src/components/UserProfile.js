@@ -28,7 +28,11 @@ class Component extends React.Component {
     locid: null,
     userInfo: [],
     card: [],
-    cardNoInput: ""
+    cardNoInput: "",
+    mainAddress: [],
+    provincenm: "",
+    districtnm: "",
+    committeenm: ""
   };
 
   errorMsg = txt => {
@@ -76,6 +80,16 @@ class Component extends React.Component {
   getAddress = async () => {
     await api.customer.address({ custid: this.props.user.id }).then(res => {
       if (res.success) {
+        res.data.map((item, index) => {
+          if (item.ismain) {
+            this.setState({
+              mainAddress: item,
+              provincenm: item.provincenm,
+              districtnm: item.districtnm,
+              committeenm: item.committeenm
+            });
+          }
+        });
         this.setState({ homeaddress: res.data });
       } else {
         console.log("else");
@@ -170,6 +184,8 @@ class Component extends React.Component {
   }
 
   onChangeCity = async e => {
+    console.log(e);
+    this.setState({ provincenm: e });
     await this.setState({ provid: e });
     this.getDistrict(e);
   };
@@ -311,6 +327,7 @@ class Component extends React.Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
+    console.log(this.state);
     return (
       <div className="col-md-8 pad10">
         <div className="user-menu-content">
@@ -369,7 +386,7 @@ class Component extends React.Component {
 
                 <div className="col-xl-4 marginBottom">
                   <Select
-                    defaultValue="Улаанбаатар хот"
+                    value={this.state.mainAddress.provincenm}
                     onChange={this.onChangeCity}
                     placeholder="Хот/Аймаг"
                   >
@@ -380,7 +397,7 @@ class Component extends React.Component {
                 <div className="col-xl-4 marginBottom">
                   <Select
                     placeholder="Сум/Дүүрэг"
-                    defaultValue="Баянгол дүүрэг"
+                    value={this.state.districtnm}
                     onChange={this.onChangeDistrict}
                   >
                     {this.renderDistrict()}
@@ -389,7 +406,7 @@ class Component extends React.Component {
 
                 <div className="col-xl-4 marginBottom">
                   <Select
-                    defaultValue="4-р хороо"
+                    value={this.state.committeenm}
                     placeholder="Баг/Хороо"
                     onChange={this.onStreet}
                   >
@@ -400,7 +417,7 @@ class Component extends React.Component {
                 <div className="col-xl-12">
                   <input
                     placeholder="Гэрийн хаяг"
-                    defaultValue="102-25"
+                    defaultValue={this.state.mainAddress.address}
                     className="e-mart-input inputButton"
                   />
                 </div>
@@ -420,7 +437,7 @@ class Component extends React.Component {
               </div>
             </div>
 
-            {this.state.card.status == 1 ? (
+            {this.state.card ? (
               <div className="row row10">
                 <div className="col-xl-4 pad10">
                   <input
@@ -429,9 +446,9 @@ class Component extends React.Component {
                     disabled
                   />
                 </div>
-                <div className="col-xl-4 pad10">
+                {/* <div className="col-xl-4 pad10">
                   <input value="****" className="inputButton" disabled />
-                </div>
+                </div> */}
               </div>
             ) : (
               <div className="row row10">
@@ -455,7 +472,6 @@ class Component extends React.Component {
                     type="password"
                     ref="cardpass"
                     name="cardpass"
-                    id="exampleInputEmail1"
                     aria-describedby="emailHelp"
                     placeholder="Нууц үг"
                   />
