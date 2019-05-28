@@ -644,9 +644,10 @@ class Checkout extends React.Component {
           type = "qpay";
           this.openLastModal(type, [], res.data);
         } else if (chosenPayment.id == 1) {
+          MySwal.hideLoading();
           var mapForm = document.createElement("form");
-          mapForm.target = "Map";
-          mapForm.method = "POST"; // or "post" if appropriate
+          mapForm.target = "_self";
+          mapForm.method = "POST";
           mapForm.action = res.data.url.url;
 
           var keyNumber = document.createElement("input");
@@ -682,20 +683,13 @@ class Checkout extends React.Component {
 
           document.body.appendChild(mapForm);
 
-          let map = window.open(
-            "",
-            "Map",
-            "status=0,title=0,height=600,width=800,scrollbars=1"
-          );
+          let map = window.open(res.data.url.url, "_self", "");
 
           if (map) {
             mapForm.submit();
           } else {
-            alert("You must allow popups for this map to work.");
+            alert("Error");
           }
-          MySwal.hideLoading();
-          // window.open(res.data.url);
-          //type = "emarchant";
         }
       } else {
         MySwal.hideLoading();
@@ -808,9 +802,9 @@ class Checkout extends React.Component {
   addAddress = (value, event, form) => {
     if (value == null) {
       form.setFieldsInitialValue({
-        mainLocation: "",
-        subLocation: "",
-        commiteLocation: ""
+        mainLocation: this.state.mainLocation[0].provincenm,
+        subLocation: this.state.subLocation[0].districtnm,
+        commiteLocation: this.state.commiteLocation[0].committeenm
       });
       this.setState({ addresstype: "new" });
     } else {
@@ -870,7 +864,7 @@ class Checkout extends React.Component {
       <div className="section section-gray">
         <div className="container pad10">
           <div className="checkout-container">
-            <div className="btn btn-gray">
+            {/* <div className="btn btn-gray">
               <i
                 className="fa fa-chevron-left"
                 aria-hidden="true"
@@ -881,7 +875,7 @@ class Checkout extends React.Component {
               <Link to="/cart">
                 <span className="text-uppercase">Сагс руу буцах</span>
               </Link>
-            </div>
+            </div> */}
             <div className="row row10">
               <div className="col-lg-8 pad10">
                 <div className="accordion" id="accordionExample">

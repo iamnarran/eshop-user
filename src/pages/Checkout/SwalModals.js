@@ -360,7 +360,7 @@ class SwalModals extends React.Component {
                           </li>
                           <li>
                             <span>Гүйлгээний утга</span>
-                            <strong>{ordData.ordernumber}</strong>
+                            <strong>{ordData.order.ordernumber}</strong>
                           </li>
                           <li>
                             <span>Хүлээн авагчийн нэр</span>
@@ -369,7 +369,7 @@ class SwalModals extends React.Component {
                           <li>
                             <span>Мөнгөн дүн</span>
                             <strong>
-                              {formatter.format(ordData.totalamount)}₮
+                              {formatter.format(ordData.order.totalamount)}₮
                             </strong>
                           </li>
                         </ul>
@@ -404,11 +404,13 @@ class SwalModals extends React.Component {
                   <ul className="list-unstyled">
                     <li>
                       <span>Гүйлгээний утга</span>
-                      <strong>{ordData.ordernumber}</strong>
+                      <strong>{ordData.order.ordernumber}</strong>
                     </li>
                     <li>
                       <span>Мөнгөн дүн</span>
-                      <strong>{formatter.format(ordData.payamount)}₮</strong>
+                      <strong>
+                        {formatter.format(ordData.order.payamount)}₮
+                      </strong>
                     </li>
                   </ul>
                 </div>
@@ -434,13 +436,13 @@ class SwalModals extends React.Component {
             )}
 
             <div className="text-center" style={{ marginTop: "10px" }}>
-              <a
+              {/*  <a
                 onClick={this.checkPayment}
                 className="btn btn-main"
                 style={{ marginRight: "10px" }}
               >
                 <span className="text-uppercase">Төлбөр шалгах</span>
-              </a>
+              </a> */}
               <a
                 onClick={e => readyBtn(e, chosenBank, ordData, type)}
                 className="btn btn-main"
