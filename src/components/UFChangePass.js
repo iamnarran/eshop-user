@@ -128,6 +128,9 @@ class Component extends React.Component {
                     },
                     {
                       validator: this.validateToNextPassword
+                    },
+                    {
+                      min: 4
                     }
                   ]
                 })(<Input.Password placeholder="Шинэ нууц үг" />)}
@@ -141,6 +144,9 @@ class Component extends React.Component {
                     },
                     {
                       validator: this.compareToFirstPassword
+                    },
+                    {
+                      min: 4
                     }
                   ]
                 })(
