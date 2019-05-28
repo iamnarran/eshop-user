@@ -92,7 +92,11 @@ class Component extends React.Component {
           name: values.name,
           phonE1: values.phone
         };
-        this.saveAddress(data);
+        if (data.locid == null) {
+          message.success("Хүргэлтийн хаягаа сонгоно уу");
+        } else {
+          this.saveAddress(data);
+        }
       }
     });
   };

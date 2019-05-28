@@ -204,11 +204,6 @@ class UserProfilePage extends React.Component {
             <div>
               <div className="container pad10">
                 <div className="user-section">
-                  <div className="btn btn-gray">
-                    <Link to="/">
-                      <span className="text-uppercase">Нүүр хуудас</span>
-                    </Link>
-                  </div>
                   <div className="user-section-container">
                     <div className="row row10">
                       <div className="col-md-4 d-none d-md-block pad10">

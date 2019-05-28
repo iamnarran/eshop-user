@@ -101,5 +101,11 @@ export default [
     METHOD: "DELETE",
     URL: `${API}/api/customer/address/:id/:custid`,
     REPLACE: "id, custid"
+  },
+  {
+    NAME: "updateMainAddress",
+    METHOD: "PUT",
+    URL: `${API}/api/customer/changeuserimf`,
+    TOKEN: true
   }
 ];

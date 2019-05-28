@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Form, Input, Select, Button, AutoComplete } from "antd";
+import { Form, Input, Select, Button, AutoComplete, message } from "antd";
 import api from "../api";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -59,7 +59,7 @@ class Component extends React.Component {
         this.successMsg("Нууц үг амжилттай солигдлоо.");
         this.props.history.push("/userprofile");
       } else {
-        this.errorMsg(res.message);
+        message.success(res.message);
       }
     });
   };

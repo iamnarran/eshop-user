@@ -32,7 +32,8 @@ class Component extends React.Component {
     mainAddress: [],
     provincenm: "",
     districtnm: "",
-    committeenm: ""
+    committeenm: "",
+    realAddress: ""
   };
 
   errorMsg = txt => {
@@ -84,6 +85,7 @@ class Component extends React.Component {
           if (item.ismain) {
             this.setState({
               mainAddress: item,
+              realAddress: item.address,
               provincenm: item.provincenm,
               districtnm: item.districtnm,
               committeenm: item.committeenm
@@ -139,7 +141,27 @@ class Component extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    console.log(this.state.userInfo);
+    let loc = this.state.locid
+      ? this.state.locid
+      : this.state.mainAddress.locid;
+    const data = {
+      id: 0,
+      username: this.state.userInfo.username,
+      firstname: this.state.userInfo.firstname,
+      imgnm: this.state.userInfo.imgnm,
+      lastname: this.state.userInfo.lastname,
+      email: this.state.userInfo.email,
+      phonE1: this.state.userInfo.phone1,
+      phonE2: this.state.userInfo.phone2,
+      adrsid: this.state.mainAddress.id,
+      locid: loc,
+      address: this.state.realAddress,
+      ismain: 1
+    };
+    console.log(data);
+    /* api.customer.updateMainAddress(data).then(res => {
+      console.log(res);
+    }); */
   };
 
   renderProvince() {
@@ -184,8 +206,11 @@ class Component extends React.Component {
   }
 
   onChangeCity = async e => {
-    console.log(e);
-    this.setState({ provincenm: e });
+    this.state.province.map((item, index) => {
+      if (item.provinceid == e) {
+        this.setState({ provincenm: item.provincenm });
+      }
+    });
     await this.setState({ provid: e });
     this.getDistrict(e);
   };
@@ -293,6 +318,10 @@ class Component extends React.Component {
     this.setState({ userInfo: data });
   };
 
+  onChangeAddress = e => {
+    this.setState({ realAddres: e.target.value });
+  };
+
   cardNoChange = e => {
     const { cardNoInput } = this.state;
     if (e.target.value.length <= 14) {
@@ -386,9 +415,8 @@ class Component extends React.Component {
 
                 <div className="col-xl-4 marginBottom">
                   <Select
-                    value={this.state.mainAddress.provincenm}
                     onChange={this.onChangeCity}
-                    placeholder="Хот/Аймаг"
+                    placeholder={this.state.mainAddress.provincenm}
                   >
                     {this.renderProvince()}
                   </Select>
@@ -396,8 +424,7 @@ class Component extends React.Component {
 
                 <div className="col-xl-4 marginBottom">
                   <Select
-                    placeholder="Сум/Дүүрэг"
-                    value={this.state.districtnm}
+                    placeholder={this.state.mainAddress.districtnm}
                     onChange={this.onChangeDistrict}
                   >
                     {this.renderDistrict()}
@@ -406,8 +433,7 @@ class Component extends React.Component {
 
                 <div className="col-xl-4 marginBottom">
                   <Select
-                    value={this.state.committeenm}
-                    placeholder="Баг/Хороо"
+                    placeholder={this.state.mainAddress.committeenm}
                     onChange={this.onStreet}
                   >
                     {this.renderStreet()}
@@ -417,7 +443,8 @@ class Component extends React.Component {
                 <div className="col-xl-12">
                   <input
                     placeholder="Гэрийн хаяг"
-                    defaultValue={this.state.mainAddress.address}
+                    defaultValue={this.state.realAddress}
+                    onChange={this.onChangeAddress}
                     className="e-mart-input inputButton"
                   />
                 </div>
@@ -425,10 +452,8 @@ class Component extends React.Component {
             </Form>
 
             <div className="text-right">
-              <button className="btn btn-dark">
-                <span className="text-uppercase" onClick={this.handleSubmit}>
-                  Хадгалах
-                </span>
+              <button className="btn btn-dark" onClick={this.handleSubmit}>
+                <span className="text-uppercase">Хадгалах</span>
               </button>
             </div>
             <div className="row row10">
