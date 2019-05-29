@@ -15,8 +15,8 @@ class UserButton extends React.Component {
   };
 
   componentDidMount() {
-    this.getUserData();
     this.setState({ ...this.props.container });
+    this.getUserData();
   }
 
   handleLoginClick = e => {
@@ -35,21 +35,27 @@ class UserButton extends React.Component {
 
   getUserData = async () => {
     let progress = 25;
-    await api.customer.findUserData({ id: this.props.user.id }).then(res => {
-      if (res.success) {
-        if (res.data.info.imgnm) {
-          progress = parseInt(progress) + 25;
+    if (this.props.user) {
+      await api.customer.findUserData({ id: this.props.user.id }).then(res => {
+        if (res.success) {
+          console.log(res.data);
+          if (res.data.info.imgnm) {
+            progress = parseInt(progress) + 25;
+          }
+          if (res.data.addrs.length > 0) {
+            progress = parseInt(progress) + 25;
+          }
+          if (res.data.card) {
+            progress = parseInt(progress) + 25;
+          }
+          this.setState({ progress: progress });
         }
-        if (res.data.addrs.length > 0) {
-          progress = parseInt(progress) + 25;
-        }
-        if (res.data.card) {
-          progress = parseInt(progress) + 25;
-        }
-        this.setState({ progress: progress });
-      }
-    });
+      });
+    } else {
+      this.setState({ progress: 25 });
+    }
   };
+
   render() {
     let content = (
       <li className="list-inline-item">
