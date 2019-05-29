@@ -65,10 +65,21 @@ class Component extends React.Component {
 
   componentDidMount() {
     this.getProvince();
-    this.getAddress();
     this.getUserInfo();
+    this.getAddress();
     this.getUserData();
   }
+
+  getValues = () => {
+    this.props.form.setFieldsValue({
+      lastname: this.state.userInfo.lastname,
+      firstname: this.state.userInfo.firstname,
+      email: this.state.userInfo.email,
+      phone1: this.state.userInfo.phone1,
+      phone2: this.state.userInfo.phone2,
+      address: this.state.realAddress
+    });
+  };
 
   getUserData = async () => {
     await api.customer.findUserData({ id: this.props.user.id }).then(res => {
@@ -89,6 +100,9 @@ class Component extends React.Component {
               provincenm: item.provincenm,
               districtnm: item.districtnm,
               committeenm: item.committeenm
+            });
+            this.props.form.setFieldsValue({
+              address: item.address
             });
           }
         });
@@ -133,6 +147,7 @@ class Component extends React.Component {
     api.customer.getCustomer({ custid: this.props.user.id }).then(res => {
       if (res.success) {
         this.setState({ userInfo: res.data.info });
+        this.getValues();
       }
     });
   };
@@ -155,11 +170,15 @@ class Component extends React.Component {
       locid: loc,
       address: this.state.realAddress
     };
-    api.customer.updateMainAddress(data).then(res => {
-      if (res.success) {
-        message.success("Амжилттай хадгаллаа.");
-      } else {
-        message.error("Амжилтгүй хадгаллаа.");
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        api.customer.updateMainAddress(data).then(res => {
+          if (res.success) {
+            message.success("Амжилттай хадгаллаа.");
+          } else {
+            message.error("Амжилтгүй хадгаллаа.");
+          }
+        });
       }
     });
   };
@@ -353,7 +372,7 @@ class Component extends React.Component {
   };
 
   render() {
-    const { getFieldDecorator } = this.props.form;
+    const { getFieldDecorator, setFieldsInitialValue } = this.props.form;
 
     return (
       <div className="col-md-8 pad10">
@@ -365,86 +384,151 @@ class Component extends React.Component {
             <Form>
               <div className="row row10">
                 <div className="col-xl-4">
-                  <input
-                    placeholder="Овог"
-                    defaultValue={this.state.userInfo.lastname}
-                    className="inputButton"
-                    onChange={this.onChangeLastname}
-                  />
+                  <Form.Item>
+                    {getFieldDecorator("lastname", {
+                      rules: [
+                        {
+                          required: true,
+                          message: "Овогоо оруулна уу"
+                        }
+                      ]
+                    })(
+                      <Input
+                        placeholder="Овог"
+                        onChange={this.onChangeLastname}
+                        name={"lastname"}
+                      />
+                    )}
+                  </Form.Item>
                 </div>
 
                 <div className="col-xl-4">
-                  <input
-                    placeholder="Нэр"
-                    defaultValue={this.state.userInfo.firstname}
-                    className="e-mart-input inputButton"
-                    onChange={this.onChangeFirstname}
-                  />
+                  <Form.Item>
+                    {getFieldDecorator("firstname", {
+                      rules: [
+                        {
+                          required: true,
+                          message: "Нэрээ оруулна уу"
+                        }
+                      ]
+                    })(
+                      <Input
+                        placeholder="Нэр"
+                        onChange={this.onChangeFirstname}
+                        name={"firstname"}
+                      />
+                    )}
+                  </Form.Item>
                 </div>
 
                 <div className="col-xl-4">
-                  <input
-                    placeholder="И-мэйл"
-                    defaultValue={this.state.userInfo.email}
-                    className="e-mart-input inputButton"
-                    onChange={this.onChangeEmail}
-                  />
+                  <Form.Item>
+                    {getFieldDecorator("email", {
+                      rules: [
+                        {
+                          required: true,
+                          message: "Имэйл оруулна оруулна уу"
+                        },
+                        {
+                          type: "email",
+                          message: "Зөв имэйл оруулна уу"
+                        }
+                      ]
+                    })(
+                      <Input
+                        placeholder="Имэйл"
+                        onChange={this.onChangeEmail}
+                        name={"email"}
+                      />
+                    )}
+                  </Form.Item>
                 </div>
 
                 <div className="col-xl-4">
-                  <input
-                    placeholder="Утас 1"
-                    defaultValue={this.state.userInfo.phone1}
-                    className="e-mart-input inputButton"
-                    onChange={this.onChangePhone1}
-                  />
+                  <Form.Item>
+                    {getFieldDecorator("phone1", {
+                      rules: [
+                        {
+                          required: true,
+                          message: "Нэрээ оруулна уу"
+                        }
+                      ]
+                    })(
+                      <Input
+                        placeholder="Утас 1"
+                        onChange={this.onChangePhone1}
+                        name={"phone1"}
+                      />
+                    )}
+                  </Form.Item>
                 </div>
 
                 <div className="col-xl-4">
-                  <input
-                    placeholder="Утас 2"
-                    defaultValue={this.state.userInfo.phone2}
-                    className="e-mart-input inputButton"
-                    onChange={this.onChangePhone2}
-                  />
+                  <Form.Item>
+                    {getFieldDecorator("phone2", {
+                      rules: []
+                    })(
+                      <Input
+                        placeholder="Утас 2"
+                        onChange={this.onChangePhone2}
+                        name={"phone2"}
+                      />
+                    )}
+                  </Form.Item>
                 </div>
 
                 <div className="col-xl-4" />
 
-                <div className="col-xl-4 marginBottom">
-                  <Select
-                    onChange={this.onChangeCity}
-                    placeholder={this.state.mainAddress.provincenm}
-                  >
-                    {this.renderProvince()}
-                  </Select>
+                <div className="col-xl-4">
+                  <Form.Item>
+                    <Select
+                      onChange={this.onChangeCity}
+                      placeholder={this.state.mainAddress.provincenm}
+                    >
+                      {this.renderProvince()}
+                    </Select>
+                  </Form.Item>
                 </div>
 
-                <div className="col-xl-4 marginBottom">
-                  <Select
-                    placeholder={this.state.mainAddress.districtnm}
-                    onChange={this.onChangeDistrict}
-                  >
-                    {this.renderDistrict()}
-                  </Select>
+                <div className="col-xl-4">
+                  <Form.Item>
+                    <Select
+                      placeholder={this.state.mainAddress.districtnm}
+                      onChange={this.onChangeDistrict}
+                    >
+                      {this.renderDistrict()}
+                    </Select>
+                  </Form.Item>
                 </div>
 
-                <div className="col-xl-4 marginBottom">
-                  <Select
-                    placeholder={this.state.mainAddress.committeenm}
-                    onChange={this.onStreet}
-                  >
-                    {this.renderStreet()}
-                  </Select>
+                <div className="col-xl-4">
+                  <Form.Item>
+                    <Select
+                      placeholder={this.state.mainAddress.committeenm}
+                      onChange={this.onStreet}
+                    >
+                      {this.renderStreet()}
+                    </Select>
+                  </Form.Item>
                 </div>
 
                 <div className="col-xl-12">
-                  <input
-                    placeholder="Гэрийн хаяг"
-                    defaultValue={this.state.realAddress}
-                    onChange={this.onChangeAddress}
-                    className="e-mart-input inputButton"
-                  />
+                  <Form.Item>
+                    {getFieldDecorator("address", {
+                      rules: [
+                        {
+                          required: true,
+                          message: "Гэрийн хаягaa оруулна уу"
+                        }
+                      ]
+                    })(
+                      <Input
+                        placeholder="Гэрийн хаяг"
+                        onChange={this.onChangeAddress}
+                        name={"address"}
+                      />
+                    )}
+                  </Form.Item>
                 </div>
               </div>
               <div className="col-xl-12">

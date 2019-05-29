@@ -314,7 +314,11 @@ class Component extends React.Component {
               <table style={{ width: "100%" }} className="table bordered">
                 <div
                   className="frame frameMargin"
-                  style={{ maxHeight: "300px", overflow: "auto" }}
+                  style={{
+                    maxHeight: "300px",
+                    overflow: "auto",
+                    minHeight: "auto"
+                  }}
                 >
                   <tbody style={{ width: "100%" }}>{tableList}</tbody>
                 </div>
