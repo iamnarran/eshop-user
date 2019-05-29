@@ -578,7 +578,7 @@ class Component extends React.Component {
                 <div className="row row10">
                   <div className="col-xl-6">
                     <input
-                      className="inputButton"
+                      className="inputButton marginBottom"
                       type="text"
                       id="exampleInputEmail1"
                       name="cardno"
@@ -590,7 +590,7 @@ class Component extends React.Component {
                     />
                   </div>
 
-                  <div className="col-xl-6">
+                  <div className="col-xl-6 marginBottom">
                     <input
                       className="inputButton"
                       type="password"

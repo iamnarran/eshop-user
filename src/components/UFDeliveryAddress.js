@@ -45,7 +45,6 @@ class Component extends React.Component {
   getDistrict = async id => {
     await api.location.findLocationWidthId({ id: id }).then(res => {
       if (res.success) {
-        console.log(res.data);
         this.setState({ districtOrSum: res.data });
       }
     });
@@ -60,7 +59,6 @@ class Component extends React.Component {
       .then(res => {
         if (res.success) {
           this.setState({ street: res.data });
-          console.log(res);
         }
       });
   };
@@ -149,13 +147,11 @@ class Component extends React.Component {
       .then(res => {
         if (res.success) {
           this.setState({ street: res.data });
-          console.log(res);
         }
       });
   };
   onStreet = async e => {
     this.setState({ locid: e });
-    console.log(e);
   };
 
   onDelete = async (e, item) => {
@@ -169,14 +165,11 @@ class Component extends React.Component {
           message.error(res.data);
         }
       });
-    console.log(item);
-    console.log(e);
   };
 
   render() {
     const { getFieldDecorator } = this.props.form;
     const { name, phone, homeaddress } = this.state;
-    console.log(this.state);
     let tableList = null;
     tableList = this.state.homeaddress.map((item, index) => {
       return (

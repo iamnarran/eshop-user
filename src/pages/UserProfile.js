@@ -166,7 +166,7 @@ export default Component;
 import React from "react";
 import { connect } from "react-redux";
 import { Route, Link, Switch, BrowserRouter as Router } from "react-router-dom";
-
+import { Upload, Button, Icon, message, Progress } from "antd";
 import {
   UserProfile,
   DeliveryAddress,
@@ -178,6 +178,24 @@ import {
 } from "../components";
 
 import p1 from "../scss/assets/images/demo/1.jpg";
+
+function getBase64(img, callback) {
+  const reader = new FileReader();
+  reader.addEventListener("load", () => callback(reader.result));
+  reader.readAsDataURL(img);
+}
+
+function beforeUpload(file) {
+  const isJPG = file.type === "image/jpeg";
+  if (!isJPG) {
+    message.error("You can only upload JPG file!");
+  }
+  const isLt2M = file.size / 1024 / 1024 < 2;
+  if (!isLt2M) {
+    message.error("Image must smaller than 2MB!");
+  }
+  return isJPG && isLt2M;
+}
 
 class UserProfilePage extends React.Component {
   state = {
@@ -211,18 +229,31 @@ class UserProfilePage extends React.Component {
                           <div className="menu-header">
                             <div className="flex-this">
                               <div className="image-container default">
-                                <span
-                                  className="image"
-                                  style={{
-                                    backgroundImage: `url(${
-                                      user.picture
-                                        ? user.picture.data
-                                          ? user.picture.data.url
-                                          : user.picture
-                                        : p1
-                                    })`
-                                  }}
-                                />
+                                <Upload
+                                  name="avatar"
+                                  listType="picture-card"
+                                  className="avatar-uploader"
+                                  showUploadList={false}
+                                  action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                                  beforeUpload={beforeUpload}
+                                  onChange={this.handleChange}
+                                >
+                                  <button>
+                                    <span
+                                      className="image"
+                                      type="upload"
+                                      style={{
+                                        backgroundImage: `url(${
+                                          user.picture
+                                            ? user.picture.data
+                                              ? user.picture.data.url
+                                              : user.picture
+                                            : p1
+                                        })`
+                                      }}
+                                    />
+                                  </button>
+                                </Upload>
                               </div>
                               <p className="name">
                                 {user.firstname
@@ -234,20 +265,11 @@ class UserProfilePage extends React.Component {
                                   : ""}
                               </p>
                             </div>
-                            <div className="progress">
-                              <div
-                                className="progress-bar"
-                                role="progressbar"
-                                style={{ width: "100%" }}
-                                aria-valuenow="100"
-                                aria-valuemin="0"
-                                aria-valuemax="100"
-                              />
-                            </div>
-                            <p className="text text-center">
-                              <strong>Таны мэдээлэл </strong>
-                              <span>100% / 100%</span>
+                            <p className="text text-right">
+                              <strong>Таны мэдээлэл</strong>
+                              <Progress percent={75} strokeColor="#feb415" />
                             </p>
+                            <div />
                           </div>
                           <ul className="list-unstyled">
                             <li className="">
