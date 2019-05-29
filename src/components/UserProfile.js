@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Form, message, Input, Select } from "antd";
+import { Form, message, Input, Select, Divider } from "antd";
 import "./userprofile.css";
 import api from "../api";
 
@@ -159,7 +159,7 @@ class Component extends React.Component {
       if (res.success) {
         message.success("Амжилттай хадгаллаа.");
       } else {
-        message.success("Амжилтгүй хадгаллаа.");
+        message.error("Амжилтгүй хадгаллаа.");
       }
     });
   };
@@ -447,68 +447,88 @@ class Component extends React.Component {
                   />
                 </div>
               </div>
+              <div className="col-xl-12">
+                <div
+                  className="text-right marginBottom"
+                  style={{ marginRight: "-9px" }}
+                >
+                  <button className="btn btn-dark" onClick={this.handleSubmit}>
+                    <span className="text-uppercase">Хадгалах</span>
+                  </button>
+                </div>
+              </div>
             </Form>
 
-            <div className="text-right">
-              <button className="btn btn-dark" onClick={this.handleSubmit}>
-                <span className="text-uppercase">Хадгалах</span>
-              </button>
-            </div>
+            <Divider />
+
             <div className="row row10">
-              <div className="col-xl-12 pad10">
-                <p>И-март карт холбох</p>
+              <div className="col-md-12">
+                <p>Имарт карт</p>
               </div>
             </div>
 
             {this.state.card ? (
-              <div className="row row10">
-                <div className="col-xl-4 pad10">
-                  <input
-                    value={this.state.card.cardno}
-                    className="inputButton"
-                    disabled
-                  />
+              <Form>
+                <div className="row row10">
+                  <div className="col-xl-6">
+                    <input
+                      value={this.state.card.cardno}
+                      className="inputButton"
+                      disabled
+                      style={{ backgroundColor: "rgb(235, 235, 228)" }}
+                    />
+                  </div>
+
+                  <div className="col-xl-6">
+                    <input
+                      className="inputButton"
+                      type="password"
+                      disabled
+                      style={{ backgroundColor: "rgb(235, 235, 228)" }}
+                    />
+                  </div>
                 </div>
-                {/* <div className="col-xl-4 pad10">
-                  <input value="****" className="inputButton" disabled />
-                </div> */}
-              </div>
+              </Form>
             ) : (
-              <div className="row row10">
-                <div className="col-xl-4 pad10">
-                  <input
-                    className="e-mart-input inputButton"
-                    type="text"
-                    id="exampleInputEmail1"
-                    name="cardno"
-                    ref="cardno"
-                    value={this.state.cardNoInput}
-                    aria-describedby="emailHelp"
-                    placeholder="Картын дугаар"
-                    onChange={e => this.cardNoChange(e)}
-                  />
-                </div>
+              <Form>
+                <div className="row row10">
+                  <div className="col-xl-6">
+                    <input
+                      className="inputButton"
+                      type="text"
+                      id="exampleInputEmail1"
+                      name="cardno"
+                      ref="cardno"
+                      value={this.state.cardNoInput}
+                      aria-describedby="emailHelp"
+                      placeholder="Картын дугаар"
+                      onChange={e => this.cardNoChange(e)}
+                    />
+                  </div>
 
-                <div className="col-xl-4 pad10">
-                  <input
-                    className="e-mart-input inputButton"
-                    type="password"
-                    ref="cardpass"
-                    name="cardpass"
-                    aria-describedby="emailHelp"
-                    placeholder="Нууц үг"
-                  />
-                </div>
+                  <div className="col-xl-6">
+                    <input
+                      className="inputButton"
+                      type="password"
+                      ref="cardpass"
+                      name="cardpass"
+                      aria-describedby="emailHelp"
+                      placeholder="Нууц үг"
+                    />
+                  </div>
 
-                <div className="col-xl-4 pad10">
-                  <button
-                    className="btn"
-                    onClick={e => this.saveCustomerCard(e, this.refs)}
-                  >
-                    <span className="text-uppercase">Холбох</span>
-                  </button>
+                  <div className="col-xl-12">
+                    <div className="text-right">
+                      <button
+                        className="btn btn-dark marginBottom"
+                        onClick={e => this.saveCustomerCard(e, this.refs)}
+                      >
+                        <span className="text-uppercase">Холбох</span>
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </Form>
             )}
           </div>
         </div>

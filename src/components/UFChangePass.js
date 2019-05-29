@@ -63,6 +63,7 @@ class Component extends React.Component {
       }
     });
   };
+
   handleSubmit = e => {
     e.preventDefault();
     let temp = [];
@@ -81,7 +82,7 @@ class Component extends React.Component {
   compareToFirstPassword = (rule, value, callback) => {
     const form = this.props.form;
     if (value && value !== form.getFieldValue("password")) {
-      callback("Two passwords that you enter is inconsistent!");
+      callback("Шинэ нууц үгээ зөв давтана уу");
     } else {
       callback();
     }
@@ -130,7 +131,8 @@ class Component extends React.Component {
                       validator: this.validateToNextPassword
                     },
                     {
-                      min: 4
+                      min: 4,
+                      message: "Нууц үг хамгийн багадаа 4 оронтой байна."
                     }
                   ]
                 })(<Input.Password placeholder="Шинэ нууц үг" />)}
@@ -146,7 +148,8 @@ class Component extends React.Component {
                       validator: this.compareToFirstPassword
                     },
                     {
-                      min: 4
+                      min: 4,
+                      message: "Нууц үг хамгийн багадаа 4 оронтой байна."
                     }
                   ]
                 })(

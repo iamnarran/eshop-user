@@ -90,7 +90,8 @@ class Component extends React.Component {
           locid: this.state.locid,
           address: values.homeaddress,
           name: values.name,
-          phonE1: values.phone
+          phonE1: values.phone1,
+          phonE2: values.phone2
         };
         if (data.locid == null) {
           message.success("Хүргэлтийн хаягаа сонгоно уу");
@@ -179,13 +180,13 @@ class Component extends React.Component {
     let tableList = null;
     tableList = this.state.homeaddress.map((item, index) => {
       return (
-        <tr key={index} style={{ padding: "70px" }}>
-          <td>{item.name}</td>
-          <td>{item.phone1}</td>
-          <td>{item.provincenm}</td>
-          <td>{item.districtnm}</td>
-          <td>{item.address}</td>
-          <td>
+        <tr key={index} style={{ width: "100%", padding: "70px" }}>
+          <td style={{ width: "5%" }}>{item.name}</td>
+          <td style={{ width: "5%" }}>{item.phone1}</td>
+          <td style={{ width: "15%" }}>{item.provincenm}</td>
+          <td style={{ width: "10%" }}>{item.districtnm}</td>
+          <td style={{ width: "10%" }}>{item.address}</td>
+          <td style={{ width: "5%" }}>
             <div className="action">
               <ul className="list-unstyled flex-this end">
                 <li>
@@ -209,7 +210,7 @@ class Component extends React.Component {
           <div className="user-profile-contain">
             <Form>
               <div className="row row10">
-                <div className="col-xl-6" style={{ marginBottom: "-9px" }}>
+                <div className="col-xl-4" style={{ marginBottom: "-9px" }}>
                   <div className="form-group">
                     <Form.Item>
                       {getFieldDecorator("name", {
@@ -224,17 +225,27 @@ class Component extends React.Component {
                   </div>
                 </div>
 
-                <div className="col-xl-6" style={{ marginBottom: "-9px" }}>
+                <div className="col-xl-4" style={{ marginBottom: "-9px" }}>
                   <div className="form-group">
                     <Form.Item>
-                      {getFieldDecorator("phone", {
+                      {getFieldDecorator("phone1", {
                         rules: [
                           {
                             required: true,
                             message: "Утасаа заавал оруулна уу!"
                           }
                         ]
-                      })(<Input placeholder="Утас" />)}
+                      })(<Input placeholder="Утас 1" />)}
+                    </Form.Item>
+                  </div>
+                </div>
+
+                <div className="col-xl-4" style={{ marginBottom: "-9px" }}>
+                  <div className="form-group">
+                    <Form.Item>
+                      {getFieldDecorator("phone2", {})(
+                        <Input placeholder="Утас 2" />
+                      )}
                     </Form.Item>
                   </div>
                 </div>
@@ -302,7 +313,7 @@ class Component extends React.Component {
               </p>
               <table style={{ width: "100%" }} className="table bordered">
                 <div style={{ maxHeight: "300px", overflow: "scroll" }}>
-                  <tbody>{tableList}</tbody>
+                  <tbody style={{ width: "100%" }}>{tableList}</tbody>
                 </div>
               </table>
             </div>

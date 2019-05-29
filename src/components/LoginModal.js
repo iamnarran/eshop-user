@@ -188,8 +188,8 @@ class LoginModal extends React.Component {
                     required: true,
                     message: "Имэйл хаяг оруулна уу"
                   }
-                ],
-                initialValue: "tulgaa@datacare.mn"
+                ]
+                /* initialValue: "tulgaa@datacare.mn" */
               })(
                 <input
                   type="email"
@@ -210,8 +210,8 @@ class LoginModal extends React.Component {
                     required: true,
                     message: "Нууц үг оруулна уу"
                   }
-                ],
-                initialValue: "123123"
+                ]
+                /* initialValue: "123123" */
               })(
                 <input
                   type="password"
