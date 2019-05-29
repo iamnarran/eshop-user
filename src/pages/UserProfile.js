@@ -166,7 +166,7 @@ export default Component;
 import React from "react";
 import { connect } from "react-redux";
 import { Route, Link, Switch, BrowserRouter as Router } from "react-router-dom";
-import { Upload, Button, Icon, message, Progress } from "antd";
+import { Upload, Button, Icon, message, Progress, Avatar } from "antd";
 import {
   UserProfile,
   DeliveryAddress,
@@ -176,7 +176,7 @@ import {
   DeliveryHistory,
   Epoint
 } from "../components";
-
+import api from "../api";
 import p1 from "../scss/assets/images/demo/1.jpg";
 
 function getBase64(img, callback) {
@@ -201,15 +201,37 @@ class UserProfilePage extends React.Component {
   state = {
     cityOrProvince: [],
     districtOrSum: [],
-    active: "userprofile"
+    active: "userprofile",
+    progress: ""
   };
 
   componentDidMount() {
+    this.getUserData();
     this.setState({ ...this.props.container });
   }
 
   toggleMenu = () => {
     this.setState({ isToggle: !this.state.isToggle });
+  };
+
+  getUserData = async () => {
+    let progress = 25;
+    await api.customer.findUserData({ id: this.props.user.id }).then(res => {
+      if (res.success) {
+        console.log(res.data);
+
+        if (res.data.info.imgnm) {
+          progress = parseInt(progress) + 25;
+        }
+        if (res.data.addrs.length > 0) {
+          progress = parseInt(progress) + 25;
+        }
+        if (res.data.card) {
+          progress = parseInt(progress) + 25;
+        }
+        this.setState({ progress: progress });
+      }
+    });
   };
 
   renderProfileInfo = () => {
@@ -228,33 +250,7 @@ class UserProfilePage extends React.Component {
                         <div className="profile-menu">
                           <div className="menu-header">
                             <div className="flex-this">
-                              <div className="image-container default">
-                                <Upload
-                                  name="avatar"
-                                  listType="picture-card"
-                                  className="avatar-uploader"
-                                  showUploadList={false}
-                                  action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                                  beforeUpload={beforeUpload}
-                                  onChange={this.handleChange}
-                                >
-                                  <button>
-                                    <span
-                                      className="image"
-                                      type="upload"
-                                      style={{
-                                        backgroundImage: `url(${
-                                          user.picture
-                                            ? user.picture.data
-                                              ? user.picture.data.url
-                                              : user.picture
-                                            : p1
-                                        })`
-                                      }}
-                                    />
-                                  </button>
-                                </Upload>
-                              </div>
+                              <Avatar size={64} src={p1} />
                               <p className="name">
                                 {user.firstname
                                   ? user.lastname
@@ -267,7 +263,10 @@ class UserProfilePage extends React.Component {
                             </div>
                             <p className="text text-right">
                               <strong>Таны мэдээлэл</strong>
-                              <Progress percent={75} strokeColor="#feb415" />
+                              <Progress
+                                percent={parseInt(this.state.progress)}
+                                strokeColor="#feb415"
+                              />
                             </p>
                             <div />
                           </div>

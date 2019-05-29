@@ -5,9 +5,20 @@ import { Link } from "react-router-dom";
 import withCart from "./HOC/withCart";
 import { updateCart } from "../actions/cart";
 import { signOut, showLoginModal } from "../actions/login";
+import { Progress } from "antd";
 import p1 from "../scss/assets/images/demo/1.jpg";
+import api from "../api";
 
 class UserButton extends React.Component {
+  state = {
+    progress: ""
+  };
+
+  componentDidMount() {
+    this.getUserData();
+    this.setState({ ...this.props.container });
+  }
+
   handleLoginClick = e => {
     e.preventDefault();
     this.props.showLoginModal();
@@ -22,6 +33,23 @@ class UserButton extends React.Component {
     this.props.signOut();
   };
 
+  getUserData = async () => {
+    let progress = 25;
+    await api.customer.findUserData({ id: this.props.user.id }).then(res => {
+      if (res.success) {
+        if (res.data.info.imgnm) {
+          progress = parseInt(progress) + 25;
+        }
+        if (res.data.addrs.length > 0) {
+          progress = parseInt(progress) + 25;
+        }
+        if (res.data.card) {
+          progress = parseInt(progress) + 25;
+        }
+        this.setState({ progress: progress });
+      }
+    });
+  };
   render() {
     let content = (
       <li className="list-inline-item">
@@ -90,19 +118,14 @@ class UserButton extends React.Component {
                         : ""}
                     </p>
                   </div>
-                  <div className="progress">
-                    <div
-                      className="progress-bar"
-                      role="progressbar"
-                      style={{ width: "100%" }}
-                      aria-valuenow="100"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                    />
-                  </div>
+                  <Progress
+                    percent={parseInt(this.state.progress)}
+                    strokeColor="#feb415"
+                    showInfo={false}
+                  />
                   <p className="text text-center">
                     <strong>Таны мэдээлэл</strong>
-                    <span>100% / 100%</span>
+                    <span>{parseInt(this.state.progress)}%</span>
                   </p>
                 </div>
                 <ul className="list-unstyled">

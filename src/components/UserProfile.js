@@ -37,7 +37,6 @@ class Component extends React.Component {
   };
 
   errorMsg = txt => {
-    /* MySwal.hideLoading(); */
     MySwal.fire({
       timer: 1500,
       type: "error",
@@ -50,7 +49,6 @@ class Component extends React.Component {
   };
 
   successMsg = txt => {
-    /* MySwal.hideLoading(); */
     MySwal.fire({
       timer: 1500,
       type: "success",
@@ -84,6 +82,7 @@ class Component extends React.Component {
   getUserData = async () => {
     await api.customer.findUserData({ id: this.props.user.id }).then(res => {
       if (res.success) {
+        console.log(res.data);
         this.setState({ card: res.data.card });
       }
     });
