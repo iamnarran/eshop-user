@@ -205,19 +205,6 @@ class GolomtMerchant extends React.Component {
                       </div>
                       <div className="bottom-text text-center">
                         <p>{this.props.container.data.message}</p>
-                        <strong className="text-uppercase">
-                          Лавлах утас: 7611 0101
-                        </strong>
-                      </div>
-                      <div className="btn-container text-center">
-                        <a
-                          className="btn btn-main"
-                          onClick={() => this.props.history.push("/")}
-                        >
-                          <span className="text-uppercase">
-                            Нүүр хуудасруу буцах
-                          </span>
-                        </a>
                       </div>
                     </div>
                   </div>

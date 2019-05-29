@@ -124,12 +124,6 @@ class Checkout extends React.Component {
             tmp = item.committeenm;
           }
         });
-      } else {
-        commiteLocation.map((item, i) => {
-          if (item.committeenm == id) {
-            tmp = item.id;
-          }
-        });
       }
     } else {
       tmp = id;
@@ -158,13 +152,11 @@ class Checkout extends React.Component {
 
   handleClear = () => {
     let { cart } = this.props;
-    //if (cart) {
     this.props.updateCart({
       products: [],
       totalQty: 0,
       totalPrice: 0
     });
-    // }
   };
 
   componentWillMount() {
@@ -274,7 +266,6 @@ class Checkout extends React.Component {
             }
           });
         }
-        console.log(res, "aaa");
         this.setState({
           addresstype: res.data.addrs.length === 0 ? "new" : "edit",
           userInfo: res.data.info,
@@ -430,7 +421,12 @@ class Checkout extends React.Component {
   onSubmit = (e, form) => {
     e.preventDefault();
 
-    const { defaultAddress, userAddress, addresstype } = this.state;
+    const {
+      defaultAddress,
+      userAddress,
+      addresstype,
+      commiteLocation
+    } = this.state;
     let tmp = [];
     let chosenInfo = {};
     if (e.target.name == "delivery") {
@@ -453,17 +449,26 @@ class Checkout extends React.Component {
             subLocation: this.getSubLocationName(values.subLocation),
             commiteLocation: this.getCommiteLocationName(values.commiteLocation)
           };
-
           tmp.push("3");
           if (values.address == defaultAddress.address) {
             values.address = defaultAddress.id;
           }
-
           try {
             if (addresstype == "new") {
               let adrs = {};
               adrs.custid = this.state.userInfo.id;
-              adrs.locid = this.getCommiteLocationName(values.commiteLocation);
+              if (isNaN(values.commiteLocation)) {
+                commiteLocation.map((item, i) => {
+                  if (item.committeenm == values.commiteLocation) {
+                    adrs.locid = item.id;
+                  }
+                });
+              } else {
+                adrs.locid = values.commiteLocation;
+              }
+              adrs.name = values.lastName;
+              adrs.phone1 = values.phone1;
+              adrs.phone2 = values.phone2;
               adrs.address = values.addresstype;
               adrs.isenable = "Идэвхтэй";
               chosenInfo.address = values.addresstype;
@@ -498,8 +503,6 @@ class Checkout extends React.Component {
 
   setUser = async adrs => {
     await this.props.saveUserAddress(adrs).then(res => {
-      console.log(res);
-      console.log(adrs);
       if (res.success) {
         let tmp = this.state.chosenInfo;
         tmp.address = res.data;
@@ -809,7 +812,7 @@ class Checkout extends React.Component {
 
   addAddress = (value, event, form) => {
     if (value == null) {
-      form.setFieldsInitialValue({
+      form.setFieldsValue({
         mainLocation: this.state.mainLocation[0].provincenm,
         subLocation: this.state.subLocation[0].districtnm,
         commiteLocation: this.state.commiteLocation[0].committeenm,
@@ -826,7 +829,7 @@ class Checkout extends React.Component {
   getLocs = async id => {
     await api.checkout.getlocs({ locid: id }).then(res => {
       if (res.success == true) {
-        this.props.form.setFieldsInitialValue({
+        this.props.form.setFieldsValue({
           address: res.data.address,
           mainLocation: res.data.provincenm,
           subLocation: res.data.districtnm,
@@ -875,18 +878,6 @@ class Checkout extends React.Component {
       <div className="section section-gray">
         <div className="container pad10">
           <div className="checkout-container">
-            {/* <div className="btn btn-gray">
-              <i
-                className="fa fa-chevron-left"
-                aria-hidden="true"
-                style={{ color: "#feb415" }}
-              >
-                {" "}
-              </i>
-              <Link to="/cart">
-                <span className="text-uppercase">Сагс руу буцах</span>
-              </Link>
-            </div> */}
             <div className="row row10">
               <div className="col-lg-8 pad10">
                 <div className="accordion" id="accordionExample">
