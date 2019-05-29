@@ -9,9 +9,10 @@ class StaticPage extends React.Component {
     const description = this.state.staticPages.description;
     console.log("static", this.state.staticPages);
     return (
-      <div className="section section-gray">
+      <div className="section section-gray static">
         <div className="container pad10">
           <div
+            className="ck-editor"
             style={{
               minHeight: "700px",
               backgroundColor: "white",

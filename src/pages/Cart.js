@@ -350,7 +350,7 @@ class Cart extends React.Component {
       <div className="section">
         <div className="container pad10">
           <div className="cart-container">
-            <Link to="/" className="btn btn-gray">
+            <Link to="/" className="btn btn-gray back-to-home">
               <span className="text-uppercase">Нүүр хуудас руу буцах</span>
             </Link>
             <h1 className="title">
