@@ -101,8 +101,8 @@ class Component extends React.Component {
             <span>Үзсэн барааны түүх</span>
           </p>
           <div
-            className="product-list-history"
-            style={{ maxHeight: "500px", overflow: "scroll" }}
+            className="product-list-history frame frameMargin"
+            style={{ maxHeight: "500px", overflow: "auto" }}
           >
             {tableList}
           </div>

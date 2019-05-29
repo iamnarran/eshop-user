@@ -312,7 +312,10 @@ class Component extends React.Component {
                 <span>Бүртгэлтэй хаягууд</span>
               </p>
               <table style={{ width: "100%" }} className="table bordered">
-                <div style={{ maxHeight: "300px", overflow: "scroll" }}>
+                <div
+                  className="frame frameMargin"
+                  style={{ maxHeight: "300px", overflow: "auto" }}
+                >
                   <tbody style={{ width: "100%" }}>{tableList}</tbody>
                 </div>
               </table>

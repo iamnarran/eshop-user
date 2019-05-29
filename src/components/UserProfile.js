@@ -396,7 +396,7 @@ class Component extends React.Component {
                     placeholder="Утас 1"
                     defaultValue={this.state.userInfo.phone1}
                     className="e-mart-input inputButton"
-                    onChange={this.onChangePhone2}
+                    onChange={this.onChangePhone1}
                   />
                 </div>
 

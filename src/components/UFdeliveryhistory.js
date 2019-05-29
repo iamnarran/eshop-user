@@ -99,10 +99,11 @@ class Component extends React.Component {
             <span>Захиалгын түүх</span>
           </p>
           <div
+            className="frame frameMargin"
             style={{
               width: "100%",
               maxHeight: "600px",
-              overflow: "scroll"
+              overflow: "auto"
             }}
           >
             <table className="table-hover table-sm">
