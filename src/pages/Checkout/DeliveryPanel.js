@@ -295,9 +295,13 @@ class DeliveryPanel extends React.Component {
                         </div>
                         <div className="col-xl-4 col-md-4">
                           <button
-                            className="btn btn-main"
+                            className="btn btn-dark"
                             onClick={this.handleAddAddress}
-                            style={{ padding: "2px 65px", marginTop: "4px" }}
+                            style={{
+                              padding: "2px 64px",
+                              marginTop: "4px",
+                              marginLeft: "3px"
+                            }}
                           >
                             Хаяг нэмэх
                           </button>
@@ -392,25 +396,21 @@ class DeliveryPanel extends React.Component {
 
                     {item.id != 3 ? (
                       <div className="col-xl-12 col-md-12">
-                        {addresstype == "new" ? (
-                          <Form.Item>
-                            {getFieldDecorator("addresstype", {
-                              rules: [
-                                {
-                                  required: true,
-                                  message: "Хаяг оруулна уу ?"
-                                }
-                              ]
-                            })(
-                              <Input
-                                type="text"
-                                placeholder="Хаягаа оруулна уу ?*"
-                              />
-                            )}
-                          </Form.Item>
-                        ) : (
-                          ""
-                        )}
+                        <Form.Item>
+                          {getFieldDecorator("addresstype", {
+                            rules: [
+                              {
+                                required: addresstype == "new" ? true : false,
+                                message: "Хаяг оруулна уу ?"
+                              }
+                            ]
+                          })(
+                            <Input
+                              type="text"
+                              placeholder="Хаягаа оруулна уу ?*"
+                            />
+                          )}
+                        </Form.Item>
                       </div>
                     ) : (
                       ""
@@ -429,32 +429,56 @@ class DeliveryPanel extends React.Component {
                       />
                     </div>
                     <div className="col-xl-4 col-md-4">
-                      <FormInput
-                        form={this.props.form}
-                        mask={"11111111"}
-                        name={"phone1"}
-                        rules={[
-                          {
-                            required: true,
-                            message: "Утас оруулна уу"
-                          }
-                        ]}
-                      />
+                      <Form.Item>
+                        {getFieldDecorator("phone1", {
+                          rules: [
+                            {
+                              required: true,
+                              message: "Утас оруулна уу"
+                            },
+                            {
+                              pattern: new RegExp("^[0-9]*$"),
+                              message: "Утас зөв оруулна уу"
+                            },
+                            {
+                              len: 8,
+                              message: "8 оронтой байх ёстой."
+                            }
+                          ]
+                        })(
+                          <Input
+                            type="text"
+                            placeholder="Утас*"
+                            className="col-md-12"
+                          />
+                        )}
+                      </Form.Item>
                     </div>
                     <div className="col-xl-4 col-md-4">
-                      <FormInput
-                        form={this.props.form}
-                        mask={"11111111"}
-                        placeholder=""
-                        name={"phone2"}
-                        maxLength={8}
-                        rules={[
-                          {
-                            required: true,
-                            message: "Утас оруулна уу"
-                          }
-                        ]}
-                      />
+                      <Form.Item>
+                        {getFieldDecorator("phone2", {
+                          rules: [
+                            {
+                              required: true,
+                              message: "Утас оруулна уу"
+                            },
+                            {
+                              pattern: new RegExp("^[0-9]*$"),
+                              message: "Утас зөв оруулна уу"
+                            },
+                            {
+                              len: 8,
+                              message: "8 оронтой байх ёстой."
+                            }
+                          ]
+                        })(
+                          <Input
+                            type="text"
+                            placeholder="Утас*"
+                            className="col-md-12"
+                          />
+                        )}
+                      </Form.Item>
                     </div>
                   </div>
                   <hr />

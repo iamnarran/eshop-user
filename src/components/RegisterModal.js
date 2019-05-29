@@ -51,7 +51,6 @@ class RegisterModal extends React.Component {
         let res = null;
 
         try {
-          console.log(data);
           res = await this.props.register(data);
           if (res.status === "failed") {
             message.error(res.message);
