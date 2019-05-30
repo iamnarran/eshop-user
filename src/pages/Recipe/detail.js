@@ -253,7 +253,7 @@ class RecipeDetail extends React.Component {
                   </div>
                   <hr />
                 </div>
-                <div>
+                <div className="ck-editor">
                   <h4 className="title" style={{ textTransform: "uppercase" }}>
                     <span>
                       <a>Зөвлөгөө</a>
