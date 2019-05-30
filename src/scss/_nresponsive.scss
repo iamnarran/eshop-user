@@ -1049,7 +1049,9 @@
                 text-align: center !important;
 
                 // border: solid 1px #ededed;
-
+                // h5.title {
+                //     display: none !important;
+                // }
                 a {
                     font-size: 20px;
                     width: 40px;
@@ -1194,6 +1196,10 @@
 
     .top-main .search .search-mobile ul li a i {
         display: block !important;
+    }
+
+    .title.mobile {
+        display: none;
     }
 }
 
