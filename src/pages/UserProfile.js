@@ -177,7 +177,7 @@ import {
   Epoint
 } from "../components";
 import api from "../api";
-import p1 from "../scss/assets/images/demo/1.jpg";
+import avatar from "../scss/assets/images/demo/defaultAvatar.png";
 
 function getBase64(img, callback) {
   const reader = new FileReader();
@@ -250,7 +250,7 @@ class UserProfilePage extends React.Component {
                         <div className="profile-menu">
                           <div className="menu-header">
                             <div className="flex-this">
-                              <Avatar size={64} src={p1} />
+                              <Avatar size={64} src={avatar} />
                               <p className="name">
                                 {user.firstname
                                   ? user.lastname

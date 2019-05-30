@@ -6,7 +6,7 @@ import withCart from "./HOC/withCart";
 import { updateCart } from "../actions/cart";
 import { signOut, showLoginModal } from "../actions/login";
 import { Progress } from "antd";
-import p1 from "../scss/assets/images/demo/1.jpg";
+import avatar from "../scss/assets/images/demo/defaultAvatar.png";
 import api from "../api";
 
 class UserButton extends React.Component {
@@ -80,7 +80,7 @@ class UserButton extends React.Component {
                       ? user.picture.data
                         ? user.picture.data.url
                         : user.picture
-                      : p1
+                      : avatar
                   })`
                 }}
               />
@@ -109,7 +109,7 @@ class UserButton extends React.Component {
                               ? user.picture.data
                                 ? user.picture.data.url
                                 : user.picture
-                              : p1
+                              : avatar
                           })`
                         }}
                       />
