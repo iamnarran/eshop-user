@@ -255,6 +255,7 @@ class Season extends React.Component {
     const { attributes, products } = this.state;
     const Option = Select.Option;
     const leftPanel = `left-panel${this.state.isLeftPanel ? " show" : ""}`;
+    const leftPanel1 = `${this.state.isLeftPanel ? " show" : ""}`;
 
     let filters =
       attributes &&
@@ -311,7 +312,8 @@ class Season extends React.Component {
           <div className="container pad10">
             <div className="row row10">
               <div className="col-xl-3 pad10">
-                <div className={leftPanel}>
+                <div className={`left-panel-container ${leftPanel1}`} onClick={this.showLeftPanel}>
+                  <div className={leftPanel}>
                   <button
                     className="button buttonBlack filter-cross"
                     onClick={this.showLeftPanel}
@@ -344,6 +346,7 @@ class Season extends React.Component {
                     </div>
                   </div>
                   {filters}
+                </div>
                 </div>
               </div>
               <div className="col-xl-9 col-lg-9 col-md-8 pad10">

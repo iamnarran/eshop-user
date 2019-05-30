@@ -5,9 +5,20 @@ import { Link } from "react-router-dom";
 import withCart from "./HOC/withCart";
 import { updateCart } from "../actions/cart";
 import { signOut, showLoginModal } from "../actions/login";
-import p1 from "../scss/assets/images/demo/1.jpg";
+import { Progress } from "antd";
+import avatar from "../scss/assets/images/demo/defaultAvatar.png";
+import api from "../api";
 
 class UserButton extends React.Component {
+  state = {
+    progress: ""
+  };
+
+  componentDidMount() {
+    this.setState({ ...this.props.container });
+    this.getUserData();
+  }
+
   handleLoginClick = e => {
     e.preventDefault();
     this.props.showLoginModal();
@@ -20,6 +31,29 @@ class UserButton extends React.Component {
       totalPrice: 0
     });
     this.props.signOut();
+  };
+
+  getUserData = async () => {
+    let progress = 25;
+    if (this.props.user) {
+      await api.customer.findUserData({ id: this.props.user.id }).then(res => {
+        if (res.success) {
+          console.log(res.data);
+          if (res.data.info.imgnm) {
+            progress = parseInt(progress) + 25;
+          }
+          if (res.data.addrs.length > 0) {
+            progress = parseInt(progress) + 25;
+          }
+          if (res.data.card) {
+            progress = parseInt(progress) + 25;
+          }
+          this.setState({ progress: progress });
+        }
+      });
+    } else {
+      this.setState({ progress: 25 });
+    }
   };
 
   render() {
@@ -46,7 +80,7 @@ class UserButton extends React.Component {
                       ? user.picture.data
                         ? user.picture.data.url
                         : user.picture
-                      : p1
+                      : avatar
                   })`
                 }}
               />
@@ -75,7 +109,7 @@ class UserButton extends React.Component {
                               ? user.picture.data
                                 ? user.picture.data.url
                                 : user.picture
-                              : p1
+                              : avatar
                           })`
                         }}
                       />
@@ -90,19 +124,14 @@ class UserButton extends React.Component {
                         : ""}
                     </p>
                   </div>
-                  <div className="progress">
-                    <div
-                      className="progress-bar"
-                      role="progressbar"
-                      style={{ width: "100%" }}
-                      aria-valuenow="100"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                    />
-                  </div>
+                  <Progress
+                    percent={parseInt(this.state.progress)}
+                    strokeColor="#feb415"
+                    showInfo={false}
+                  />
                   <p className="text text-center">
                     <strong>Таны мэдээлэл</strong>
-                    <span>100% / 100%</span>
+                    <span>{parseInt(this.state.progress)}%</span>
                   </p>
                 </div>
                 <ul className="list-unstyled">

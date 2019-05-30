@@ -46,7 +46,7 @@ class MobileMenu extends React.Component {
     }
   };
   render() {
-    const { popupClass } = this.props;
+    const { popupClass, popupClass1 } = this.props;
     const { staticInfo } = this.props.container;
     const { menus } = this.props.container;
     const { categories } = this.props.container;
@@ -98,7 +98,7 @@ class MobileMenu extends React.Component {
       );
     });
     return (
-      <div>
+      <div className={`mobile-menu-container ${popupClass1}`} onClick={this.togglePopup}>
         <div className={popupClass}>
           <div className="single">
             <ul className="list-unstyled flex-this flex-space top-1">

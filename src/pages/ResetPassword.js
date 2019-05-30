@@ -51,19 +51,20 @@ class ResetPassword extends React.Component {
         <div className="section">
           <div className="col-md-12">
             <center>
-              <div
-                className="logo"
-                style={{ width: "15%", marginBottom: "5%" }}
-              >
-                <img
-                  style={{ width: "100%" }}
-                  alt="logo"
-                  src={IMAGE + staticInfo.logopath}
-                />
+              <div className="content">
+                <div className="text-center">
+                  <img
+                    alt="image"
+                    src={IMAGE + staticInfo.logopath}
+                    width="150px"
+                  />
+                  <h4 className="title">
+                    <span className="text-uppercase">НУУЦ ҮГ СЭРГЭЭХ</span>
+                  </h4>
+                  <p>Та нууц үгээ оруулна уу!</p>
+                </div>
               </div>
-              <h2>Нууц үг сэргээх</h2>
-              <p>Та нууц үгээ оруулна уу!</p>
-              <div className="col-md-3">
+              <div className="col-xl-2">
                 <Form onSubmit={this.handleSubmit} className="login-form">
                   <Form.Item hasFeedback>
                     {getFieldDecorator("password", {

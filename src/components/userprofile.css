@@ -1,6 +1,6 @@
 .inputButton {
   box-sizing: border-box;
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
   font-variant: tabular-nums;
   list-style: none;
   font-feature-settings: tnum;

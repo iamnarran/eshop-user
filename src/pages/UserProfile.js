@@ -166,7 +166,7 @@ export default Component;
 import React from "react";
 import { connect } from "react-redux";
 import { Route, Link, Switch, BrowserRouter as Router } from "react-router-dom";
-
+import { Upload, Button, Icon, message, Progress, Avatar } from "antd";
 import {
   UserProfile,
   DeliveryAddress,
@@ -176,22 +176,62 @@ import {
   DeliveryHistory,
   Epoint
 } from "../components";
+import api from "../api";
+import avatar from "../scss/assets/images/demo/defaultAvatar.png";
 
-import p1 from "../scss/assets/images/demo/1.jpg";
+function getBase64(img, callback) {
+  const reader = new FileReader();
+  reader.addEventListener("load", () => callback(reader.result));
+  reader.readAsDataURL(img);
+}
+
+function beforeUpload(file) {
+  const isJPG = file.type === "image/jpeg";
+  if (!isJPG) {
+    message.error("You can only upload JPG file!");
+  }
+  const isLt2M = file.size / 1024 / 1024 < 2;
+  if (!isLt2M) {
+    message.error("Image must smaller than 2MB!");
+  }
+  return isJPG && isLt2M;
+}
 
 class UserProfilePage extends React.Component {
   state = {
     cityOrProvince: [],
     districtOrSum: [],
-    active: "userprofile"
+    active: "userprofile",
+    progress: ""
   };
 
   componentDidMount() {
+    this.getUserData();
     this.setState({ ...this.props.container });
   }
 
   toggleMenu = () => {
     this.setState({ isToggle: !this.state.isToggle });
+  };
+
+  getUserData = async () => {
+    let progress = 25;
+    await api.customer.findUserData({ id: this.props.user.id }).then(res => {
+      if (res.success) {
+        console.log(res.data);
+
+        if (res.data.info.imgnm) {
+          progress = parseInt(progress) + 25;
+        }
+        if (res.data.addrs.length > 0) {
+          progress = parseInt(progress) + 25;
+        }
+        if (res.data.card) {
+          progress = parseInt(progress) + 25;
+        }
+        this.setState({ progress: progress });
+      }
+    });
   };
 
   renderProfileInfo = () => {
@@ -210,20 +250,7 @@ class UserProfilePage extends React.Component {
                         <div className="profile-menu">
                           <div className="menu-header">
                             <div className="flex-this">
-                              <div className="image-container default">
-                                <span
-                                  className="image"
-                                  style={{
-                                    backgroundImage: `url(${
-                                      user.picture
-                                        ? user.picture.data
-                                          ? user.picture.data.url
-                                          : user.picture
-                                        : p1
-                                    })`
-                                  }}
-                                />
-                              </div>
+                              <Avatar size={64} src={avatar} />
                               <p className="name">
                                 {user.firstname
                                   ? user.lastname
@@ -234,20 +261,14 @@ class UserProfilePage extends React.Component {
                                   : ""}
                               </p>
                             </div>
-                            <div className="progress">
-                              <div
-                                className="progress-bar"
-                                role="progressbar"
-                                style={{ width: "100%" }}
-                                aria-valuenow="100"
-                                aria-valuemin="0"
-                                aria-valuemax="100"
+                            <p className="text text-right">
+                              <strong>Таны мэдээлэл</strong>
+                              <Progress
+                                percent={parseInt(this.state.progress)}
+                                strokeColor="#feb415"
                               />
-                            </div>
-                            <p className="text text-center">
-                              <strong>Таны мэдээлэл </strong>
-                              <span>100% / 100%</span>
                             </p>
+                            <div />
                           </div>
                           <ul className="list-unstyled">
                             <li className="">

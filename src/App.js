@@ -67,6 +67,9 @@ class Localization extends Component {
     const popupClass = `fixed-mobile-menu${
       this.state.isToggle ? " activated" : ""
     }`;
+    const popupClass1 = `${
+      this.state.isToggle ? " activated" : ""
+    }`;
     const { auth } = this.props;
     console.log("ooo", this.props);
     const routes = [
@@ -199,6 +202,7 @@ class Localization extends Component {
               />
               <MobileMenu
                 popupClass={popupClass}
+                popupClass1={popupClass1}
                 isToggle={this.state.isToggle}
                 onChange={this.toggleMenu}
               />
