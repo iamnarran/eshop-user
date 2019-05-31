@@ -227,6 +227,7 @@ class DeliveryPanel extends React.Component {
     const style = {
       color: "#feb415"
     };
+    console.log(dateString);
     return (
       <Tabs onChange={e => changeTab(e, this.props.form)} defaultActiveKey="1">
         {deliveryTypes.map((item, i) => {

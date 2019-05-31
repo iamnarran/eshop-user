@@ -61,7 +61,7 @@ class Checkout extends React.Component {
 
   curday = sp => {
     let today = new Date();
-    let dd = today.getDate() + 1;
+    let dd = today.getDate();
     let mm = today.getMonth() + 1; //As January is 0.
     let yyyy = today.getFullYear();
 
@@ -124,9 +124,9 @@ class Checkout extends React.Component {
             tmp = item.committeenm;
           }
         });
+      } else {
+        tmp = id;
       }
-    } else {
-      tmp = id;
     }
     return tmp;
   };
@@ -444,6 +444,7 @@ class Checkout extends React.Component {
           } else {
             chosenInfo.address = values.address;
           }
+          console.log(values);
           let chosenDeliveryAddrName = {
             mainLocation: this.getMainLocationName(values.mainLocation),
             subLocation: this.getSubLocationName(values.subLocation),
