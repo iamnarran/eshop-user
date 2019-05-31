@@ -153,7 +153,8 @@ class DeliveryPanel extends React.Component {
               commiteLocation: res.data.committeenm,
               lastName: res.data.name,
               phone1: res.data.phone1,
-              phone2: res.data.phone2
+              phone2: res.data.phone2,
+              addresstype: res.data.address
             });
           }
         }
@@ -227,7 +228,6 @@ class DeliveryPanel extends React.Component {
     const style = {
       color: "#feb415"
     };
-    console.log(dateString);
     return (
       <Tabs onChange={e => changeTab(e, this.props.form)} defaultActiveKey="1">
         {deliveryTypes.map((item, i) => {
@@ -286,6 +286,7 @@ class DeliveryPanel extends React.Component {
                               <Select
                                 onChange={e => this.onChangeLoc(e)}
                                 showSearch
+                                className="addr"
                                 optionFilterProp="children"
                                 placeholder="Хаягаа сонгоно уу ?"
                               >
