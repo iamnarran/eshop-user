@@ -72,8 +72,8 @@ class UserButton extends React.Component {
     );
 
     if (this.props.isLoggedIn && this.props.user) {
-      // let user = this.props.user;
-      const { match, user } = this.props;
+      let user = this.props.user;
+      // const { match, user } = this.props;
 
       content = (
         <li className="list-inline-item user" onClick={this.showpro}>
@@ -143,7 +143,7 @@ class UserButton extends React.Component {
                 </div>
                 <ul className="list-unstyled">
                   <li /* className="active" */>
-                    <Link to={`${match.path}`} className="flex-this">
+                    <Link to="/userprofile" className="flex-this">
                       <i
                         className="fa fa-user"
                         aria-hidden="true"
