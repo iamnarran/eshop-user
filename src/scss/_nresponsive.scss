@@ -56,6 +56,14 @@
 
                 .dropdown {
                     z-index: 5;
+                    visibility: hidden !important;
+                    opacity: 0 !important;
+
+                    &.open {
+                        top: 100%;
+                        opacity: 1 !important;
+                        visibility: visible !important;
+                    }
                 }
             }
         }

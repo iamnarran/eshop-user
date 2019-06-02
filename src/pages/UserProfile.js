@@ -237,7 +237,7 @@ class UserProfilePage extends React.Component {
   renderProfileInfo = () => {
     if (this.props.isLoggedIn && this.props.user) {
       const { match, user } = this.props;
-
+      
       return (
         <div className="section section-gray">
           <Router>
