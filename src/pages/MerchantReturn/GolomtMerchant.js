@@ -19,32 +19,6 @@ class GolomtMerchant extends React.Component {
     };
   }
 
-  handleScroll = () => {
-    const { prevScrollpos } = this.state;
-
-    const currentScrollPos = window.pageYOffset;
-    const visible = prevScrollpos > currentScrollPos;
-
-    this.setState({
-      prevScrollpos: currentScrollPos,
-      visible
-    });
-  };
-
-  componentWillMount() {
-    /* window.addEventListener("scroll", this.handleScroll);
-    if (
-      this.props.container.data.success == true &&
-      this.state.isClear == false
-    ) {
-      this.handleClear();
-    } */
-  }
-
-  componentWillUnmount() {
-    //window.removeEventListener("scroll", this.handleScroll);
-  }
-
   handleClear = () => {
     this.props.updateCart({
       products: [],
