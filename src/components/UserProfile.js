@@ -33,7 +33,9 @@ class Component extends React.Component {
     provincenm: "",
     districtnm: "",
     committeenm: "",
-    realAddress: ""
+    realAddress: "",
+    fakepassword: "123456",
+    fakepassword1: null
   };
 
   errorMsg = txt => {
@@ -82,7 +84,6 @@ class Component extends React.Component {
   getUserData = async () => {
     await api.customer.findUserData({ id: this.props.user.id }).then(res => {
       if (res.success) {
-        console.log(res.data);
         this.setState({ card: res.data.card });
       }
     });
@@ -169,7 +170,7 @@ class Component extends React.Component {
       locid: loc,
       address: this.state.realAddress
     };
-    this.props.form.validateFieldsAndScroll((err, values) => {
+    this.props.form.validateFieldsAndScroll(err => {
       if (!err) {
         api.customer.updateMainAddress(data).then(res => {
           if (res.success) {
@@ -346,6 +347,11 @@ class Component extends React.Component {
     }
   };
 
+  passwordChange = e => {
+    console.log(e.target.value);
+    /* this.setState({ fakepassword1: e }); */
+  };
+
   saveCustomerCard = async (e, refs) => {
     e.preventDefault();
 
@@ -395,7 +401,6 @@ class Component extends React.Component {
                       <Input
                         placeholder="Овог"
                         onChange={this.onChangeLastname}
-                        name={"lastname"}
                       />
                     )}
                   </Form.Item>
@@ -414,7 +419,6 @@ class Component extends React.Component {
                       <Input
                         placeholder="Нэр"
                         onChange={this.onChangeFirstname}
-                        name={"firstname"}
                       />
                     )}
                   </Form.Item>
@@ -437,7 +441,6 @@ class Component extends React.Component {
                       <Input
                         placeholder="Имэйл"
                         onChange={this.onChangeEmail}
-                        name={"email"}
                       />
                     )}
                   </Form.Item>
@@ -456,7 +459,6 @@ class Component extends React.Component {
                       <Input
                         placeholder="Утас 1"
                         onChange={this.onChangePhone1}
-                        name={"phone1"}
                       />
                     )}
                   </Form.Item>
@@ -470,7 +472,6 @@ class Component extends React.Component {
                       <Input
                         placeholder="Утас 2"
                         onChange={this.onChangePhone2}
-                        name={"phone2"}
                       />
                     )}
                   </Form.Item>
@@ -524,7 +525,6 @@ class Component extends React.Component {
                       <Input
                         placeholder="Гэрийн хаяг"
                         onChange={this.onChangeAddress}
-                        name={"address"}
                       />
                     )}
                   </Form.Item>
@@ -566,6 +566,7 @@ class Component extends React.Component {
                     <input
                       className="inputButton"
                       type="password"
+                      value={this.state.fakepassword}
                       disabled
                       style={{ backgroundColor: "rgb(235, 235, 228)" }}
                     />
@@ -575,6 +576,21 @@ class Component extends React.Component {
             ) : (
               <Form>
                 <div className="row row10">
+                  {/*<div className="col-xl-6">
+                     <Form.Item>
+                      {getFieldDecorator("cardNoInput", {})(
+                        <Input placeholder="Картын дугаар" value="123456789" />
+                      )}
+                    </Form.Item>
+                  </div>
+                  <div className="col-xl-6">
+                    <Form.Item>
+                      {getFieldDecorator("cardpass", {})(
+                        <Input.Password placeholder="Нууц үг" />
+                      )}
+                    </Form.Item>
+                  </div> */}
+
                   <div className="col-xl-6">
                     <input
                       className="inputButton marginBottom"
@@ -595,7 +611,6 @@ class Component extends React.Component {
                       type="password"
                       ref="cardpass"
                       name="cardpass"
-                      aria-describedby="emailHelp"
                       placeholder="Нууц үг"
                     />
                   </div>
@@ -604,6 +619,7 @@ class Component extends React.Component {
                     <div className="text-right">
                       <button
                         className="btn btn-dark marginBottom"
+                        style={{ width: "108.28px" }}
                         onClick={e => this.saveCustomerCard(e, this.refs)}
                       >
                         <span className="text-uppercase">Холбох</span>

@@ -38,7 +38,6 @@ class UserButton extends React.Component {
     if (this.props.user) {
       await api.customer.findUserData({ id: this.props.user.id }).then(res => {
         if (res.success) {
-          console.log(res.data);
           if (res.data.info.imgnm) {
             progress = parseInt(progress) + 25;
           }

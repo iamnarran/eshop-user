@@ -122,7 +122,7 @@
   },
   "scripts": {
     "start": "node scripts/start.js",
-    "build": "node scripts/build.js",
+    "build": "node scripts/build.js GENERATE_SOURCEMAP=false",
     "test": "node scripts/test.js --env=jsdom",
     "pro": "NODE_ENV=production yarn start"
   },

@@ -12,7 +12,7 @@ class Component extends React.Component {
   state = {
     province: [],
     city: false,
-    name: null,
+    /* name: null, */
     phone: null,
     homeaddress: [],
     districtOrSum: [],
@@ -169,7 +169,7 @@ class Component extends React.Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { name, phone, homeaddress } = this.state;
+    /* const { name, phone, homeaddress } = this.state; */
     let tableList = null;
     tableList = this.state.homeaddress.map((item, index) => {
       return (

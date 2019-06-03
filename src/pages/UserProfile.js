@@ -178,7 +178,12 @@ import {
 } from "../components";
 import api from "../api";
 import avatar from "../scss/assets/images/demo/defaultAvatar.png";
-
+import profile from "../scss/assets/images/demo/profile.png";
+import history from "../scss/assets/images/demo/history.png";
+import wishlist from "../scss/assets/images/demo/wishlist.png";
+import location from "../scss/assets/images/demo/location.png";
+import password from "../scss/assets/images/demo/password.png";
+import store from "../scss/assets/images/demo/store.png";
 function getBase64(img, callback) {
   const reader = new FileReader();
   reader.addEventListener("load", () => callback(reader.result));
@@ -218,7 +223,7 @@ class UserProfilePage extends React.Component {
     let progress = 25;
     await api.customer.findUserData({ id: this.props.user.id }).then(res => {
       if (res.success) {
-        console.log(res.data);
+        console.log("userprofile", res.data);
 
         if (res.data.info.imgnm) {
           progress = parseInt(progress) + 25;
@@ -250,7 +255,7 @@ class UserProfilePage extends React.Component {
                         <div className="profile-menu">
                           <div className="menu-header">
                             <div className="flex-this">
-                              <Avatar size={64} src={avatar} />
+                              <Avatar size="large" src={avatar} />
                               <p className="name">
                                 {user.firstname
                                   ? user.lastname
@@ -273,11 +278,13 @@ class UserProfilePage extends React.Component {
                           <ul className="list-unstyled">
                             <li className="">
                               <Link to={`${match.path}`} className="flex-this">
-                                <i
-                                  className="fa fa-user"
-                                  aria-hidden="true"
-                                  style={{ color: "#feb415" }}
-                                />
+                                <Avatar
+                                  size="small"
+                                  src={profile}
+                                  style={{
+                                    color: "#f56a00"
+                                  }}
+                                />{" "}
                                 <span>Профайл хуудас</span>
                               </Link>
                             </li>
@@ -286,12 +293,21 @@ class UserProfilePage extends React.Component {
                                 to={`${match.path}/history`}
                                 className="flex-this"
                               >
-                                <i
-                                  className="fa fa-check-square"
-                                  aria-hidden="true"
-                                  style={{ color: "#feb415" }}
-                                />
-                                <span>Таны үзсэн барааны түүх</span>
+                                <Avatar
+                                  size="small"
+                                  src={history}
+                                  style={{
+                                    color: "#f56a00"
+                                  }}
+                                />{" "}
+                                <span
+                                  style={{
+                                    verticalAling: "super",
+                                    marginTop: "20px"
+                                  }}
+                                >
+                                  Таны үзсэн барааны түүх
+                                </span>
                               </Link>
                             </li>
                             <li>
@@ -299,11 +315,13 @@ class UserProfilePage extends React.Component {
                                 to={`${match.path}/wishlist`}
                                 className="flex-this"
                               >
-                                <i
-                                  className="fa fa-heart"
-                                  aria-hidden="true"
-                                  style={{ color: "#feb415" }}
-                                />
+                                <Avatar
+                                  size="small"
+                                  src={wishlist}
+                                  style={{
+                                    color: "#f56a00"
+                                  }}
+                                />{" "}
                                 <span>Хадгалсан бараа</span>
                               </Link>
                             </li>
@@ -312,11 +330,13 @@ class UserProfilePage extends React.Component {
                                 to={`${match.path}/deliveryhistory`}
                                 className="flex-this"
                               >
-                                <i
-                                  className="fa fa-heart"
-                                  aria-hidden="true"
-                                  style={{ color: "#feb415" }}
-                                />
+                                <Avatar
+                                  size="small"
+                                  src={store}
+                                  style={{
+                                    color: "#f56a00"
+                                  }}
+                                />{" "}
                                 <span>Захиалгын түүх</span>
                               </Link>
                             </li>
@@ -338,11 +358,13 @@ class UserProfilePage extends React.Component {
                                 to={`${match.path}/delivery`}
                                 className="flex-this"
                               >
-                                <i
-                                  className="fa fa-compass"
-                                  aria-hidden="true"
-                                  style={{ color: "#feb415" }}
-                                />
+                                <Avatar
+                                  size="small"
+                                  src={location}
+                                  style={{
+                                    color: "#f56a00"
+                                  }}
+                                />{" "}
                                 <span>Хүргэлтийн хаяг</span>
                               </Link>
                             </li>
@@ -351,11 +373,13 @@ class UserProfilePage extends React.Component {
                                 to={`${match.path}/password`}
                                 className="flex-this"
                               >
-                                <i
-                                  className="fa fa-lock"
-                                  aria-hidden="true"
-                                  style={{ color: "#feb415" }}
-                                />
+                                <Avatar
+                                  size="small"
+                                  src={password}
+                                  style={{
+                                    color: "#f56a00"
+                                  }}
+                                />{" "}
                                 <span>Нууц үгээ солих</span>
                               </Link>
                             </li>
