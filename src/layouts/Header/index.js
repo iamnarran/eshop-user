@@ -28,7 +28,8 @@ class AppHeader extends Component {
       suggestion: [],
       word: "",
       k: [],
-      isSearch: false
+      isSearch: false,
+      pro: false
     };
   }
 

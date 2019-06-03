@@ -180,6 +180,7 @@ class CategoryInfo extends React.Component {
     const { products } = this.state;
     const Option = Select.Option;
     const leftPanel = `left-panel${this.state.isLeftPanel ? " show" : ""}`;
+    const leftPanel1 = `${this.state.isLeftPanel ? " show" : ""}`;
 
     let selectedCat = null;
     let cats = <div className="block">Ангилал байхгүй байна</div>;
@@ -293,6 +294,7 @@ class CategoryInfo extends React.Component {
             </div>
             <div className="row row10">
               <div className="col-xl-3 col-md-3 pad10">
+              <div className={`left-panel-container ${leftPanel1}`} onClick={this.showLeftPanel}>
                 <div className={leftPanel}>
                   <button
                     className="button buttonBlack filter-cross"
@@ -313,6 +315,7 @@ class CategoryInfo extends React.Component {
                   </p>
                   {cats}
                   {filters}
+                </div>
                 </div>
               </div>
               <div className="col-xl-9 col-lg-9 col-md-8 pad10">

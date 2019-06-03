@@ -6,8 +6,8 @@ export default {
     //production: "http://10.0.0.53:80/mn", //Real Api
     //development: "http://10.0.0.53:80/mn" // Real Api
 
-    //production: "http://10.0.0.22:8876/mn", //Test Api
-    //development: "http://10.0.0.22:8876/mn", // Test Api
+    // production: "http://10.0.0.22:8876/mn", //Test Api
+    // development: "http://10.0.0.22:8876/mn" // Test Api
     production: "http://userapi.emartmall.mn/mn/",
     development: "http://userapi.emartmall.mn/mn/"
 

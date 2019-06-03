@@ -11,7 +11,12 @@ import api from "../api";
 
 class UserButton extends React.Component {
   state = {
-    progress: ""
+    progress: "",
+    pro: false
+  };
+
+  showpro = e => {
+    this.setState({ pro: !this.state.pro });
   };
 
   componentDidMount() {
@@ -56,6 +61,7 @@ class UserButton extends React.Component {
   };
 
   render() {
+    const profilemenu = `${this.state.pro ? " open" : ""}`;
     let content = (
       <li className="list-inline-item">
         <Link to="" onClick={this.handleLoginClick}>
@@ -66,9 +72,10 @@ class UserButton extends React.Component {
 
     if (this.props.isLoggedIn && this.props.user) {
       let user = this.props.user;
+      // const { match, user } = this.props;
 
       content = (
-        <li className="list-inline-item user">
+        <li className="list-inline-item user" onClick={this.showpro}>
           <Link to="" className="flex-this">
             <div className="image-container default">
               <span
@@ -94,7 +101,7 @@ class UserButton extends React.Component {
                 : ""}
             </span>
           </Link>
-          <div className="dropdown">
+          <div className={`dropdown ${profilemenu}`}>
             <div className="drop-content">
               <div className="profile-menu">
                 <div className="menu-header">

@@ -358,7 +358,7 @@ class Cart extends React.Component {
             </h1>
             <div className="row row10">
               <div className="col-xl-8 col-lg-8 pad10">
-                <h5 className="title">
+                <h5 className="title back-to-home">
                   <span>Сагсан дахь бараанууд</span>
                 </h5>
                 <div className="cart-table table-responsive">{content}</div>
