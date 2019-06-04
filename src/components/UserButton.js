@@ -142,38 +142,38 @@ class UserButton extends React.Component {
                 </div>
                 <ul className="list-unstyled">
                   <li /* className="active" */>
-                    <Link to="/userprofile" className="flex-this">
+                    <a href="/userprofile" className="flex-this">
                       <i
                         className="fa fa-user"
                         aria-hidden="true"
                         style={{ color: "#feb415" }}
                       />
                       <span>Профайл хуудас</span>
-                    </Link>
+                    </a>
                   </li>
                   <li>
-                    <Link to="/userprofile/history" className="flex-this">
+                    <a href="/userprofile/history" className="flex-this">
                       <i
                         className="fa fa-check-square"
                         aria-hidden="true"
                         style={{ color: "#feb415" }}
                       />
                       <span>Таны үзсэн барааны түүх</span>
-                    </Link>
+                    </a>
                   </li>
                   <li>
-                    <Link to="/userprofile/wishlist" className="flex-this">
+                    <a href="/userprofile/wishlist" className="flex-this">
                       <i
                         className="fa fa-heart"
                         aria-hidden="true"
                         style={{ color: "#feb415" }}
                       />
                       <span>Хадгалсан бараа</span>
-                    </Link>
+                    </a>
                   </li>
                   <li>
-                    <Link
-                      to="/userprofile/deliveryhistory"
+                    <a
+                      href="/userprofile/deliveryhistory"
                       className="flex-this"
                     >
                       <i
@@ -182,7 +182,7 @@ class UserButton extends React.Component {
                         style={{ color: "#feb415" }}
                       />
                       <span>Захиалгын түүх</span>
-                    </Link>
+                    </a>
                   </li>
 
                   {/* <li>
@@ -196,24 +196,24 @@ class UserButton extends React.Component {
                     </Link>
                   </li> */}
                   <li>
-                    <Link to="/userprofile/delivery" className="flex-this">
+                    <a href="/userprofile/delivery" className="flex-this">
                       <i
                         className="fa fa-compass"
                         aria-hidden="true"
                         style={{ color: "#feb415" }}
                       />
                       <span>Хүргэлтийн хаяг</span>
-                    </Link>
+                    </a>
                   </li>
                   <li>
-                    <Link to="/userprofile/password" className="flex-this">
+                    <a href="/userprofile/password" className="flex-this">
                       <i
                         className="fa fa-lock"
                         aria-hidden="true"
                         style={{ color: "#feb415" }}
                       />
                       <span>Нууц үгээ солих</span>
-                    </Link>
+                    </a>
                   </li>
                 </ul>
                 <div className="text-left" onClick={this.handleLogoutClick}>
