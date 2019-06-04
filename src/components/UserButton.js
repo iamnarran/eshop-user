@@ -8,7 +8,13 @@ import { signOut, showLoginModal } from "../actions/login";
 import { Progress } from "antd";
 import avatar from "../scss/assets/images/demo/defaultAvatar.png";
 import api from "../api";
-
+import { Avatar } from "antd";
+import profile from "../scss/assets/images/demo/profile.png";
+import history from "../scss/assets/images/demo/history.png";
+import wishlist from "../scss/assets/images/demo/wishlist.png";
+import location from "../scss/assets/images/demo/location.png";
+import password from "../scss/assets/images/demo/password.png";
+import store from "../scss/assets/images/demo/store.png";
 class UserButton extends React.Component {
   state = {
     progress: "",
@@ -141,33 +147,42 @@ class UserButton extends React.Component {
                   </p>
                 </div>
                 <ul className="list-unstyled">
-                  <li /* className="active" */>
+                  <li>
                     <Link to="/userprofile" className="flex-this">
-                      <i
-                        className="fa fa-user"
-                        aria-hidden="true"
-                        style={{ color: "#feb415" }}
-                      />
+                      <Avatar
+                        size="small"
+                        src={profile}
+                        shape="square"
+                        style={{
+                          color: "#f56a00"
+                        }}
+                      />{" "}
                       <span>Профайл хуудас</span>
                     </Link>
                   </li>
                   <li>
                     <a href="/userprofile/history" className="flex-this">
-                      <i
-                        className="fa fa-check-square"
-                        aria-hidden="true"
-                        style={{ color: "#feb415" }}
-                      />
+                      <Avatar
+                        size="small"
+                        src={history}
+                        shape="square"
+                        style={{
+                          color: "#f56a00"
+                        }}
+                      />{" "}
                       <span>Таны үзсэн барааны түүх</span>
                     </a>
                   </li>
                   <li>
                     <a href="/userprofile/wishlist" className="flex-this">
-                      <i
-                        className="fa fa-heart"
-                        aria-hidden="true"
-                        style={{ color: "#feb415" }}
-                      />
+                      <Avatar
+                        size="small"
+                        shape="square"
+                        src={wishlist}
+                        style={{
+                          color: "#f56a00"
+                        }}
+                      />{" "}
                       <span>Хадгалсан бараа</span>
                     </a>
                   </li>
@@ -176,15 +191,17 @@ class UserButton extends React.Component {
                       href="/userprofile/deliveryhistory"
                       className="flex-this"
                     >
-                      <i
-                        className="fa fa-history"
-                        aria-hidden="true"
-                        style={{ color: "#feb415" }}
-                      />
+                      <Avatar
+                        size="small"
+                        shape="square"
+                        src={store}
+                        style={{
+                          color: "#f56a00"
+                        }}
+                      />{" "}
                       <span>Захиалгын түүх</span>
                     </a>
                   </li>
-
                   {/* <li>
                     <Link to="/userprofile" className="flex-this">
                       <i
@@ -197,21 +214,27 @@ class UserButton extends React.Component {
                   </li> */}
                   <li>
                     <a href="/userprofile/delivery" className="flex-this">
-                      <i
-                        className="fa fa-compass"
-                        aria-hidden="true"
-                        style={{ color: "#feb415" }}
-                      />
+                      <Avatar
+                        size="small"
+                        shape="square"
+                        src={location}
+                        style={{
+                          color: "#f56a00"
+                        }}
+                      />{" "}
                       <span>Хүргэлтийн хаяг</span>
                     </a>
                   </li>
                   <li>
                     <a href="/userprofile/password" className="flex-this">
-                      <i
-                        className="fa fa-lock"
-                        aria-hidden="true"
-                        style={{ color: "#feb415" }}
-                      />
+                      <Avatar
+                        size="small"
+                        src={password}
+                        shape="square"
+                        style={{
+                          color: "#f56a00"
+                        }}
+                      />{" "}
                       <span>Нууц үгээ солих</span>
                     </a>
                   </li>

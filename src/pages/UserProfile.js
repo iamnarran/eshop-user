@@ -223,8 +223,8 @@ class UserProfilePage extends React.Component {
   };
 
   handleChangeImage = async info => {
-    console.log("hah");
-    console.log(info.fileList[0].originFileObj);
+    /* console.log("hah");
+    console.log(info.fileList[0].originFileObj); */
     var data = new FormData();
 
     data.append("data", info.fileList[0].originFileObj);
@@ -270,7 +270,7 @@ class UserProfilePage extends React.Component {
 
   async submit(e) {
     e.preventDefault();
-    console.log(this.state.file);
+    /* console.log(this.state.file); */
 
     const url = `http://10.0.10.37:8876/mn/api/customer/userprofile/699`;
     const formData = new FormData();
@@ -291,7 +291,7 @@ class UserProfilePage extends React.Component {
     let progress = 25;
     await api.customer.findUserData({ id: this.props.user.id }).then(res => {
       if (res.success) {
-        console.log("userprofile", res.data);
+        /* console.log("userprofile", res.data); */
 
         if (res.data.info.imgnm) {
           progress = parseInt(progress) + 25;
@@ -315,7 +315,7 @@ class UserProfilePage extends React.Component {
       </div>
     );
     const imageUrl = this.state.imageUrl;
-    console.log(this.props);
+    /* console.log(this.props); */
     if (this.props.isLoggedIn && this.props.user) {
       const { match, user } = this.props;
       match.path = "/userprofile";
@@ -371,10 +371,9 @@ class UserProfilePage extends React.Component {
                               >
                                 <Avatar
                                   size="small"
+                                  shape="square"
                                   src={profile}
-                                  style={{
-                                    color: "#f56a00"
-                                  }}
+                                  className="marginRight10"
                                 />{" "}
                                 <span>Профайл хуудас</span>
                               </Link>
@@ -386,19 +385,11 @@ class UserProfilePage extends React.Component {
                               >
                                 <Avatar
                                   size="small"
+                                  shape="square"
                                   src={history}
-                                  style={{
-                                    color: "#f56a00"
-                                  }}
+                                  className="marginRight10"
                                 />{" "}
-                                <span
-                                  style={{
-                                    verticalAling: "super",
-                                    marginTop: "20px"
-                                  }}
-                                >
-                                  Таны үзсэн барааны түүх
-                                </span>
+                                <span>Таны үзсэн барааны түүх</span>
                               </Link>
                             </li>
                             <li>
@@ -408,10 +399,9 @@ class UserProfilePage extends React.Component {
                               >
                                 <Avatar
                                   size="small"
+                                  shape="square"
                                   src={wishlist}
-                                  style={{
-                                    color: "#f56a00"
-                                  }}
+                                  className="marginRight10"
                                 />{" "}
                                 <span>Хадгалсан бараа</span>
                               </Link>
@@ -423,10 +413,9 @@ class UserProfilePage extends React.Component {
                               >
                                 <Avatar
                                   size="small"
+                                  shape="square"
                                   src={store}
-                                  style={{
-                                    color: "#f56a00"
-                                  }}
+                                  className="marginRight10"
                                 />{" "}
                                 <span>Захиалгын түүх</span>
                               </Link>
@@ -451,10 +440,9 @@ class UserProfilePage extends React.Component {
                               >
                                 <Avatar
                                   size="small"
+                                  shape="square"
                                   src={location}
-                                  style={{
-                                    color: "#f56a00"
-                                  }}
+                                  className="marginRight10"
                                 />{" "}
                                 <span>Хүргэлтийн хаяг</span>
                               </Link>
@@ -466,10 +454,9 @@ class UserProfilePage extends React.Component {
                               >
                                 <Avatar
                                   size="small"
+                                  shape="square"
                                   src={password}
-                                  style={{
-                                    color: "#f56a00"
-                                  }}
+                                  className="marginRight10"
                                 />{" "}
                                 <span>Нууц үгээ солих</span>
                               </Link>

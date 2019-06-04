@@ -347,11 +347,6 @@ class Component extends React.Component {
     }
   };
 
-  passwordChange = e => {
-    console.log(e.target.value);
-    /* this.setState({ fakepassword1: e }); */
-  };
-
   saveCustomerCard = async (e, refs) => {
     e.preventDefault();
 

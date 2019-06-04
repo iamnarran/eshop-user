@@ -192,6 +192,7 @@ class LoginModal extends React.Component {
                 /* initialValue: "tulgaa@datacare.mn" */
               })(
                 <input
+                  autoComplete="off"
                   type="email"
                   className="form-control"
                   id="email"
