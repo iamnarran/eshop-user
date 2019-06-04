@@ -318,6 +318,7 @@ class UserProfilePage extends React.Component {
     console.log(this.props);
     if (this.props.isLoggedIn && this.props.user) {
       const { match, user } = this.props;
+      match.path = "/userprofile";
 
       return (
         <div className="section section-gray">
