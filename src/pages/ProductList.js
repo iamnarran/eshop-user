@@ -216,6 +216,8 @@ class ProductList extends React.Component {
     const products = this.state.products;
     const Option = Select.Option;
     const leftPanel = `left-panel${this.state.isLeftPanel ? " show" : ""}`;
+    const leftPanel1 = `${this.state.isLeftPanel ? " show" : ""}`;
+    // const leftPanel = `left-panel${this.state.isLeftPanel ? " show" : ""}`;
 
     let cats = <div className="block">Ангилал байхгүй байна</div>;
 
@@ -281,7 +283,8 @@ class ProductList extends React.Component {
             </div>
             <div className="row row10">
               <div className="col-xl-3 col-lg-3 col-md-3 pad10">
-                <div className={leftPanel}>
+                <div className={`left-panel-container ${leftPanel1}`} onClick={this.showLeftPanel}>
+                  <div className={leftPanel}>
                   <button
                     className="button buttonBlack filter-cross"
                     onClick={this.showLeftPanel}
@@ -330,6 +333,7 @@ class ProductList extends React.Component {
                   </div>
                   {filters}
                 </div>
+                </div>
               </div>
               <div className="col-xl-9 col-lg-9 col-md-9 pad10">
                 <div className="list-filter">
@@ -344,7 +348,7 @@ class ProductList extends React.Component {
                     <div className="col-lg-6 pad10">
                       <form className="flex-this end">
                         <div className="text-right d-block d-md-none">
-                          <a href=" " className="btn btn-gray btn-filter">
+                          <a className="btn btn-gray btn-filter" onClick={this.showLeftPanel}>
                             <i className="fa fa-filter" aria-hidden="true" />
                             <span className="text-uppercase">Шүүлтүүр</span>
                           </a>

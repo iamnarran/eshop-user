@@ -7,9 +7,9 @@ export default {
     //development: "http://10.0.0.53:80/mn" // Real Api
 
     // production: "http://10.0.0.22:8876/mn", //Test Api
-    development: "http://10.0.0.22:8876/mn", // Test Api
-    production: "http://userapi.emartmall.mn/mn/"
-    // development: "http://userapi.emartmall.mn/mn/"
+    // development: "http://10.0.0.22:8876/mn", // Test Api
+    production: "http://userapi.emartmall.mn/mn/",
+    development: "http://userapi.emartmall.mn/mn/"
 
     //development: "http://10.0.10.37:8876/mn" // Olzii's
     //development: "http://10.0.10.31:8876/mn" // Tulgaa brother's
