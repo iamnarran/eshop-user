@@ -566,7 +566,7 @@ class Component extends React.Component {
                     <input
                       className="inputButton"
                       type="password"
-                      value={this.state.fakepassword}
+                      placeholder="*****"
                       disabled
                       style={{ backgroundColor: "rgb(235, 235, 228)" }}
                     />

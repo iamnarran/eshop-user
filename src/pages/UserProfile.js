@@ -481,7 +481,7 @@ class UserProfilePage extends React.Component {
                         <Route
                           exact
                           path={`${match.path}`}
-                          component={DeliveryAddress}
+                          component={UserProfile}
                         />
                         <Route
                           exact
