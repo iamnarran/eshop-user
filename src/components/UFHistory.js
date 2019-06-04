@@ -11,7 +11,7 @@ class Component extends React.Component {
   };
 
   getData = async () => {
-    await api.customer.getViewList({ custId: this.props.user.id }).then(res => {
+    await api.customer.getViewList({ custid: this.props.user.id }).then(res => {
       if (res.success) {
         this.setState({
           deliveryList: res.data
@@ -25,7 +25,7 @@ class Component extends React.Component {
     console.log(item.cd);
     e.preventDefault();
     api.customer
-      .deleteSeenList({ custId: this.props.user.id, skucd: item.cd })
+      .deleteSeenList({ custid: this.props.user.id, skucd: item.cd })
       .then(res => {
         if (res.success) {
           this.getData();
@@ -34,6 +34,7 @@ class Component extends React.Component {
   };
 
   componentDidMount() {
+    console.log("fa");
     this.getData();
   }
 

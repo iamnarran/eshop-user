@@ -40,6 +40,7 @@ class RegisterModal extends React.Component {
 
     this.props.form.validateFields(async (error, form) => {
       if (!error) {
+        console.log(form);
         const data = {
           firstname: form.firstname.toString(),
           lastname: form.lastname.toString(),
@@ -97,6 +98,7 @@ class RegisterModal extends React.Component {
               })(
                 <input
                   type="text"
+                  autoComplete="off"
                   className="form-control"
                   id="lastname"
                   placeholder="Овог"
@@ -117,6 +119,7 @@ class RegisterModal extends React.Component {
               })(
                 <input
                   type="text"
+                  autoComplete="off"
                   className="form-control"
                   id="firstname"
                   placeholder="Нэр"
@@ -137,6 +140,7 @@ class RegisterModal extends React.Component {
               })(
                 <input
                   type="email"
+                  autoComplete="off"
                   className="form-control"
                   id="email"
                   aria-describedby="emailHelp"
@@ -158,6 +162,7 @@ class RegisterModal extends React.Component {
               })(
                 <input
                   type="text"
+                  autoComplete="off"
                   className="form-control"
                   id="phone"
                   placeholder="Утасны дугаар"
@@ -178,6 +183,7 @@ class RegisterModal extends React.Component {
               })(
                 <input
                   type="password"
+                  autoComplete="off"
                   className="form-control"
                   id="password"
                   aria-describedby="passwordHelp"
@@ -199,6 +205,7 @@ class RegisterModal extends React.Component {
               })(
                 <input
                   type="password"
+                  autoComplete="off"
                   className="form-control"
                   id="passwordRepeat"
                   aria-describedby="passwordHelp"

@@ -29,7 +29,7 @@ class ProductDetail extends Component {
     if (this.props.isLoggedIn) {
       api.customer
         .addViewList({
-          custId: this.props.user.id,
+          custid: this.props.user.id,
           skucd: this.props.match.params.id
         })
         .then(res => {

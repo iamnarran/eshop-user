@@ -9,7 +9,8 @@ class ResetPassword extends React.Component {
     super(props);
 
     this.state = {
-      loading: false
+      loading: false,
+      isShow: []
     };
   }
 
@@ -22,6 +23,22 @@ class ResetPassword extends React.Component {
       })
     });
 
+  componentWillMount() {
+    console.log("res");
+    api.customer
+      .putchangepass({
+        id: this.props.match.params.id,
+        password: "1234"
+      })
+      .then(res => {
+        this.setState({ isShow: res });
+        if (res.success) {
+        } else {
+          this.props.history.push("/");
+        }
+      });
+  }
+
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
@@ -33,10 +50,10 @@ class ResetPassword extends React.Component {
           })
           .then(res => {
             if (res.success) {
-              this.handleNotify("Амжилттай нууц үг солигдлоо.");
+              this.handleNotify("Нууц үг амжилттай солигдоо.");
               this.props.history.push("/");
             } else {
-              this.handleNotify("Оролдлого амжилтгүй.");
+              this.handleNotify("Нууц үг солих амжилтгүй");
             }
           });
       }
@@ -49,67 +66,71 @@ class ResetPassword extends React.Component {
     return (
       <div className="top-container">
         <div className="section">
-          <div className="col-md-12">
-            <center>
-              <div className="content">
-                <div className="text-center">
-                  <img
-                    alt="image"
-                    src={IMAGE + staticInfo.logopath}
-                    width="150px"
-                  />
-                  <h4 className="title">
-                    <span className="text-uppercase">НУУЦ ҮГ СЭРГЭЭХ</span>
-                  </h4>
-                  <p>Та нууц үгээ оруулна уу!</p>
+          {this.state.res.success ? (
+            <div className="col-md-12">
+              <center>
+                <div className="content">
+                  <div className="text-center">
+                    <img
+                      alt="image"
+                      src={IMAGE + staticInfo.logopath}
+                      width="150px"
+                    />
+                    <h4 className="title">
+                      <span className="text-uppercase">НУУЦ ҮГ СЭРГЭЭХ</span>
+                    </h4>
+                    <p>Та нууц үгээ оруулна уу!</p>
+                  </div>
                 </div>
-              </div>
-              <div className="col-xl-2">
-                <Form onSubmit={this.handleSubmit} className="login-form">
-                  <Form.Item hasFeedback>
-                    {getFieldDecorator("password", {
-                      rules: [
-                        {
-                          required: true,
-                          message: "Шинэ нууц үг!"
-                        },
-                        {
-                          validator: this.validateToNextPassword
-                        }
-                      ]
-                    })(<Input.Password placeholder="Шинэ нууц үг" />)}
-                  </Form.Item>
-                  <Form.Item hasFeedback>
-                    {getFieldDecorator("confirm", {
-                      rules: [
-                        {
-                          required: true,
-                          message: "Шинэ нууц үгээ дахин давтах!"
-                        },
-                        {
-                          validator: this.compareToFirstPassword
-                        }
-                      ]
-                    })(
-                      <Input.Password
-                        onBlur={this.handleConfirmBlur}
-                        placeholder="Шинэ нууц үгээ дахин давтах"
-                      />
-                    )}
-                  </Form.Item>
-                </Form>
-                <div>
-                  <button
-                    className="btn btn-dark"
-                    style={{ width: "100%" }}
-                    onClick={this.handleSubmit}
-                  >
-                    <span className="text-uppercase">Хадгалах</span>
-                  </button>
+                <div className="col-xl-2">
+                  <Form onSubmit={this.handleSubmit} className="login-form">
+                    <Form.Item hasFeedback>
+                      {getFieldDecorator("password", {
+                        rules: [
+                          {
+                            required: true,
+                            message: "Шинэ нууц үг!"
+                          },
+                          {
+                            validator: this.validateToNextPassword
+                          }
+                        ]
+                      })(<Input.Password placeholder="Шинэ нууц үг" />)}
+                    </Form.Item>
+                    <Form.Item hasFeedback>
+                      {getFieldDecorator("confirm", {
+                        rules: [
+                          {
+                            required: true,
+                            message: "Шинэ нууц үгээ дахин давтах!"
+                          },
+                          {
+                            validator: this.compareToFirstPassword
+                          }
+                        ]
+                      })(
+                        <Input.Password
+                          onBlur={this.handleConfirmBlur}
+                          placeholder="Шинэ нууц үгээ дахин давтах"
+                        />
+                      )}
+                    </Form.Item>
+                  </Form>
+                  <div>
+                    <button
+                      className="btn btn-dark"
+                      style={{ width: "100%" }}
+                      onClick={this.handleSubmit}
+                    >
+                      <span className="text-uppercase">Хадгалах</span>
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </center>
-          </div>
+              </center>
+            </div>
+          ) : (
+            <p />
+          )}
         </div>
       </div>
     );

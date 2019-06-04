@@ -63,7 +63,8 @@ class LoginModal extends React.Component {
     this.setState({ isVisibleReset: !this.state.isVisibleReset });
   };
 
-  handleSubmit = () => {
+  handleSubmit = e => {
+    e.preventDefault();
     api.customer.checkmail({ email: this.state.mail }).then(res => {
       if (res.success) {
         this.handleNotify("Та мэйл хаягаа шалгана уу");
@@ -216,6 +217,7 @@ class LoginModal extends React.Component {
               })(
                 <input
                   type="password"
+                  autoComplete="off"
                   className="form-control"
                   id="password"
                   aria-describedby="passwordHelp"
@@ -280,7 +282,7 @@ class LoginModal extends React.Component {
           onCancel={this.handleCancelReset}
           footer={[]}
         >
-          <form>
+          <form onSubmit={this.handleSubmit}>
             <div>
               <Input
                 placeholder="И-мэйл хаягаа оруулна уу"
