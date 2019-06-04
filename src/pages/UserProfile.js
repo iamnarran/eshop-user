@@ -331,14 +331,14 @@ class UserProfilePage extends React.Component {
                       <div className="col-md-4 d-none d-md-block pad10">
                         <div className="profile-menu">
                           <div className="menu-header">
-                            {/* <form onSubmit={e => this.submit(e)}>
+                            <form onSubmit={e => this.submit(e)}>
                               <input
                                 type="file"
                                 onChange={e => this.setFile(e)}
                               />
                               <button type="submit">Upload</button>
-                            </form> */}
-                            <div className="flex-this">
+                            </form>
+                            {/* <div className="flex-this" onChange={e => this.setFile(e)}>
                               <Avatar size="large" src={avatar} />
                               <p className="name">
                                 {user.firstname
@@ -349,7 +349,7 @@ class UserProfilePage extends React.Component {
                                   ? user.email
                                   : ""}
                               </p>
-                            </div>
+                            </div> */}
                             <p className="text text-right">
                               <strong>Таны мэдээлэл</strong>
                               <Progress

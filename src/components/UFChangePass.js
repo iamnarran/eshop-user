@@ -98,7 +98,6 @@ class Component extends React.Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    console.log("props", this.props);
     return (
       <div className="col-md-8 pad10">
         <div className="user-menu-content">

@@ -142,14 +142,14 @@ class UserButton extends React.Component {
                 </div>
                 <ul className="list-unstyled">
                   <li /* className="active" */>
-                    <a href="/userprofile" className="flex-this">
+                    <Link to="/userprofile" className="flex-this">
                       <i
                         className="fa fa-user"
                         aria-hidden="true"
                         style={{ color: "#feb415" }}
                       />
                       <span>Профайл хуудас</span>
-                    </a>
+                    </Link>
                   </li>
                   <li>
                     <a href="/userprofile/history" className="flex-this">
