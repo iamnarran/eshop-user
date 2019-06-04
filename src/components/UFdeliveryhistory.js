@@ -40,7 +40,7 @@ class Component extends React.Component {
         style={{
           padding: "5px 10px",
           backgroundColor: item.customerstatuscolor,
-          color: "rgba(0, 0, 0, 0.65)",
+          color: "white",
           borderRadius: "15px"
         }}
       >
