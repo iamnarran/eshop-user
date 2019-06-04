@@ -9,7 +9,8 @@ class Confirm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: true
+      loading: true,
+      message: []
     };
   }
 
@@ -24,18 +25,44 @@ class Confirm extends React.Component {
 
   componentDidMount() {
     api.customer.checkkey({ key: this.props.match.params.key }).then(res => {
+      console.log(res);
+      this.setState({ message: res });
       if (res.success) {
-        this.handleNotify(res.data);
+        /* this.handleNotify(res.data); */
         /* this.props.history.push("/"); */
       } else {
-        this.handleNotify(res.data);
+        /* this.handleNotify(res.data); */
         /* this.props.history.push("/"); */
       }
     });
   }
 
+  renderSuccessTrue() {
+    return (
+      <div>
+        <h3>Баталгаажуулалт амжилттай</h3>
+        <p>
+          Та өөрийн бүртгүүлсэн хаягаараа нэвтрэн орж худалдан авалт хийх
+          боломтой
+        </p>
+        <p>Манай системийн хэрэглэгч болсон танд баярлалаа</p>
+      </div>
+    );
+  }
+
+  renderSuccessFalse() {
+    return (
+      <div>
+        <h3>Баталгаажуулалт амжилтгүй</h3>
+        <p>{this.state.message.data}</p>
+      </div>
+    );
+  }
+
   render() {
     const { staticInfo } = this.props.container;
+    const { message } = this.state;
+    console.log(message);
     return (
       <div className="top-container">
         <div className="section">
@@ -46,7 +73,7 @@ class Confirm extends React.Component {
                 <center>
                   <div
                     className="logo"
-                    style={{ width: "15%", marginBottom: "5%" }}
+                    style={{ width: "15%", marginBottom: "50px" }}
                   >
                     <img
                       style={{ width: "100%" }}
@@ -54,8 +81,9 @@ class Confirm extends React.Component {
                       src={IMAGE + staticInfo.logopath}
                     />
                   </div>
-                  <h2>Нууц үг сэргээх</h2>
-                  <p>Та нууц үгээ оруулна уу!</p>
+                  {message.success
+                    ? this.renderSuccessTure()
+                    : this.renderSuccessFalse()}
                 </center>
               </div>
             </div>

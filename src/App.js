@@ -67,9 +67,7 @@ class Localization extends Component {
     const popupClass = `fixed-mobile-menu${
       this.state.isToggle ? " activated" : ""
     }`;
-    const popupClass1 = `${
-      this.state.isToggle ? " activated" : ""
-    }`;
+    const popupClass1 = `${this.state.isToggle ? " activated" : ""}`;
     const { auth } = this.props;
     console.log("ooo", this.props);
     const routes = [
@@ -133,6 +131,12 @@ class Localization extends Component {
         path: "/userprofile",
         isPrivate: true,
         component: rest => <UserProfile {...rest} {...this.props} />
+      },
+      {
+        exact: true,
+        path: "/userprofile/:subUrl",
+        isPrivate: true,
+        component: rest => <UserProfile {...rest} {...this.props} isSub />
       },
       {
         exact: true,

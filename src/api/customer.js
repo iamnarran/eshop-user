@@ -107,5 +107,11 @@ export default [
     METHOD: "PUT",
     URL: `${API}/api/customer/changeuserimf`,
     TOKEN: true
+  },
+  {
+    NAME: "uploadImage",
+    METHOD: "POST",
+    URL: `${API}/api/customer/userprofile/{custid}`,
+    REPLACE: "custid"
   }
 ];

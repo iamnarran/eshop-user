@@ -152,7 +152,7 @@ class UserButton extends React.Component {
                     </Link>
                   </li>
                   <li>
-                    <Link to="/userprofile" className="flex-this">
+                    <Link to="/userprofile/history" className="flex-this">
                       <i
                         className="fa fa-check-square"
                         aria-hidden="true"
@@ -162,17 +162,7 @@ class UserButton extends React.Component {
                     </Link>
                   </li>
                   <li>
-                    <Link to="/userprofile" className="flex-this">
-                      <i
-                        className="fa fa-history"
-                        aria-hidden="true"
-                        style={{ color: "#feb415" }}
-                      />
-                      <span>Захиалгын түүх</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/userprofile" className="flex-this">
+                    <Link to="/userprofile/wishlist" className="flex-this">
                       <i
                         className="fa fa-heart"
                         aria-hidden="true"
@@ -181,6 +171,20 @@ class UserButton extends React.Component {
                       <span>Хадгалсан бараа</span>
                     </Link>
                   </li>
+                  <li>
+                    <Link
+                      to="/userprofile/deliveryhistory"
+                      className="flex-this"
+                    >
+                      <i
+                        className="fa fa-history"
+                        aria-hidden="true"
+                        style={{ color: "#feb415" }}
+                      />
+                      <span>Захиалгын түүх</span>
+                    </Link>
+                  </li>
+
                   {/* <li>
                     <Link to="/userprofile" className="flex-this">
                       <i
@@ -192,7 +196,7 @@ class UserButton extends React.Component {
                     </Link>
                   </li> */}
                   <li>
-                    <Link to="/userprofile" className="flex-this">
+                    <Link to="/userprofile/delivery" className="flex-this">
                       <i
                         className="fa fa-compass"
                         aria-hidden="true"
@@ -202,7 +206,7 @@ class UserButton extends React.Component {
                     </Link>
                   </li>
                   <li>
-                    <Link to="/userprofile" className="flex-this">
+                    <Link to="/userprofile/password" className="flex-this">
                       <i
                         className="fa fa-lock"
                         aria-hidden="true"

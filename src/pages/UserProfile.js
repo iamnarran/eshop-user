@@ -164,6 +164,7 @@ export default Component;
  */
 
 import React from "react";
+import { post } from "axios";
 import { connect } from "react-redux";
 import { Route, Link, Switch, BrowserRouter as Router } from "react-router-dom";
 import { Upload, Button, Icon, message, Progress, Avatar } from "antd";
@@ -207,7 +208,9 @@ class UserProfilePage extends React.Component {
     cityOrProvince: [],
     districtOrSum: [],
     active: "userprofile",
-    progress: ""
+    progress: "",
+    id: "14",
+    file: null
   };
 
   componentDidMount() {
@@ -218,6 +221,71 @@ class UserProfilePage extends React.Component {
   toggleMenu = () => {
     this.setState({ isToggle: !this.state.isToggle });
   };
+
+  handleChangeImage = async info => {
+    console.log("hah");
+    console.log(info.fileList[0].originFileObj);
+    var data = new FormData();
+
+    data.append("data", info.fileList[0].originFileObj);
+
+    fetch("http://10.0.10.37:8876/mn/api/customer/userprofile/699", {
+      mode: "no-cors",
+      method: "POST",
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Accept: "application/json",
+        type: "formData"
+      },
+      body: data
+    }).then(
+      function(res) {
+        if (res.ok) {
+          alert("Perfect! ");
+        } else if (res.status == 401) {
+          alert("Oops! ");
+        }
+      },
+      function(e) {
+        alert("Error submitting form!");
+      }
+    );
+    /* await api.customer
+      .uploadImage({ custid: this.props.user.id, ContentType: "image/jpeg" })
+      .then(res => {
+        console.log(res);
+      }); */
+    /* if (info.file.status === "uploading") {
+      this.setState({ loading: true });
+      return;
+    }
+    if (info.file.status === "done") {
+      // Get this url from response in real world.
+      getBase64(info.file.originFileObj, imageUrl =>
+        this.setState({ imageUrl, loading: false
+        })
+      );
+    } */
+  };
+
+  async submit(e) {
+    e.preventDefault();
+    console.log(this.state.file);
+
+    const url = `http://10.0.10.37:8876/mn/api/customer/userprofile/699`;
+    const formData = new FormData();
+    formData.append("upload", this.state.file);
+    const config = {
+      headers: {
+        "content-type": "multipart/form-data"
+      }
+    };
+    return post(url, formData, config);
+  }
+
+  setFile(e) {
+    this.setState({ file: e.target.files[0] });
+  }
 
   getUserData = async () => {
     let progress = 25;
@@ -240,9 +308,20 @@ class UserProfilePage extends React.Component {
   };
 
   renderProfileInfo = () => {
+    const uploadButton = (
+      <div>
+        <Icon type={this.state.loading ? "loading" : "plus"} />
+        <div className="ant-upload-text">Upload</div>
+      </div>
+    );
+    const imageUrl = this.state.imageUrl;
+    console.log(this.props);
     if (this.props.isLoggedIn && this.props.user) {
       const { match, user } = this.props;
-      
+      console.log("first", match);
+      match.path = "/userprofile";
+      console.log("last", match);
+
       return (
         <div className="section section-gray">
           <Router>
@@ -254,6 +333,13 @@ class UserProfilePage extends React.Component {
                       <div className="col-md-4 d-none d-md-block pad10">
                         <div className="profile-menu">
                           <div className="menu-header">
+                            {/* <form onSubmit={e => this.submit(e)}>
+                              <input
+                                type="file"
+                                onChange={e => this.setFile(e)}
+                              />
+                              <button type="submit">Upload</button>
+                            </form> */}
                             <div className="flex-this">
                               <Avatar size="large" src={avatar} />
                               <p className="name">
@@ -397,37 +483,37 @@ class UserProfilePage extends React.Component {
                       <Switch>
                         <Route
                           exact
-                          path={`${match.url}`}
-                          component={UserProfile}
-                        />
-                        <Route
-                          exact
-                          path={`${match.url}/delivery`}
+                          path={`${match.path}`}
                           component={DeliveryAddress}
                         />
                         <Route
                           exact
-                          path={`${match.url}/password`}
+                          path={`${match.path}/delivery`}
+                          component={DeliveryAddress}
+                        />
+                        <Route
+                          exact
+                          path={`${match.path}/password`}
                           component={ChangePass}
                         />
                         <Route
                           exact
-                          path={`${match.url}/history`}
+                          path={`${match.path}/history`}
                           component={History}
                         />
                         <Route
                           exact
-                          path={`${match.url}/wishlist`}
+                          path={`${match.path}/wishlist`}
                           component={WishList}
                         />
                         <Route
                           exact
-                          path={`${match.url}/deliveryhistory`}
+                          path={`${match.path}/deliveryhistory`}
                           component={DeliveryHistory}
                         />
                         <Route
                           exact
-                          path={`${match.url}/epoint`}
+                          path={`${match.path}/epoint`}
                           component={Epoint}
                         />
                       </Switch>
