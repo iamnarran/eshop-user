@@ -72,7 +72,7 @@ class Component extends React.Component {
           <td style={{ textAlign: "center", paddingRight: "5px" }}>
             <a
               style={{
-                color: "#595959"
+                color: "#feb415"
               }}
               href={"/order/" + item.id}
               className="d-none d-lg-block d-xl-block"
@@ -81,7 +81,7 @@ class Component extends React.Component {
             </a>
             <a
               style={{
-                color: "#595959"
+                color: "#feb415"
               }}
               href={"/order/" + item.id}
               className="d-lg-none d-xl-none"

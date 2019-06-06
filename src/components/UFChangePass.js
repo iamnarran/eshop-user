@@ -36,7 +36,7 @@ class Component extends React.Component {
   successMsg = txt => {
     /* MySwal.hideLoading(); */
     MySwal.fire({
-      timer: 1500,
+      timer: 3000,
       type: "success",
       title: "Амжилттай",
       text: txt,
@@ -60,7 +60,7 @@ class Component extends React.Component {
         this.props.form.resetFields();
         /*  this.props.history.push("/userprofile"); */
       } else {
-        message.success(res.message);
+        message.error(res.message);
       }
     });
   };
@@ -107,62 +107,79 @@ class Component extends React.Component {
           </p>
           <div className="user-profile-contain">
             <Form>
-              <Form.Item hasFeedback>
-                {getFieldDecorator("oldPassword", {
-                  rules: [
-                    {
-                      required: true,
-                      message: "Хуучин нууц үг!"
-                    },
-                    {
-                      validator: this.validateToNextPassword
-                    }
-                  ]
-                })(<Input.Password placeholder="Хуучин нууц үг" />)}
-              </Form.Item>
-              <Form.Item hasFeedback>
-                {getFieldDecorator("password", {
-                  rules: [
-                    {
-                      required: true,
-                      message: "Шинэ нууц үг!"
-                    },
-                    {
-                      validator: this.validateToNextPassword
-                    },
-                    {
-                      min: 4,
-                      message: "Нууц үг хамгийн багадаа 4 оронтой байна."
-                    }
-                  ]
-                })(<Input.Password placeholder="Шинэ нууц үг" />)}
-              </Form.Item>
-              <Form.Item hasFeedback>
-                {getFieldDecorator("confirm", {
-                  rules: [
-                    {
-                      required: true,
-                      message: "Шинэ нууц үгээ дахин давтах!"
-                    },
-                    {
-                      validator: this.compareToFirstPassword
-                    },
-                    {
-                      min: 4,
-                      message: "Нууц үг хамгийн багадаа 4 оронтой байна."
-                    }
-                  ]
-                })(
-                  <Input.Password
-                    onBlur={this.handleConfirmBlur}
-                    placeholder="Шинэ нууц үгээ дахин давтах"
-                  />
-                )}
-              </Form.Item>
-              <div className="text-right">
-                <button className="btn btn-dark" onClick={this.handleSubmit}>
-                  <span className="text-uppercase">Хадгалах</span>
-                </button>
+              <div className="row row10">
+                <div className="col-xl-12" style={{ marginBottom: "-9px" }}>
+                  <div className="form-group">
+                    <Form.Item hasFeedback>
+                      {getFieldDecorator("oldPassword", {
+                        rules: [
+                          {
+                            required: true,
+                            message: "Хуучин нууц үг!"
+                          },
+                          {
+                            validator: this.validateToNextPassword
+                          }
+                        ]
+                      })(<Input.Password placeholder="Хуучин нууц үг" />)}
+                    </Form.Item>
+                  </div>
+                </div>
+                <div className="col-xl-12" style={{ marginBottom: "-9px" }}>
+                  <div className="form-group">
+                    <Form.Item hasFeedback>
+                      {getFieldDecorator("password", {
+                        rules: [
+                          {
+                            required: true,
+                            message: "Шинэ нууц үг!"
+                          },
+                          {
+                            validator: this.validateToNextPassword
+                          },
+                          {
+                            min: 4,
+                            message: "Нууц үг хамгийн багадаа 4 оронтой байна."
+                          }
+                        ]
+                      })(<Input.Password placeholder="Шинэ нууц үг" />)}
+                    </Form.Item>{" "}
+                  </div>
+                </div>
+                <div className="col-xl-12" style={{ marginBottom: "-9px" }}>
+                  <div className="form-group">
+                    <Form.Item hasFeedback>
+                      {getFieldDecorator("confirm", {
+                        rules: [
+                          {
+                            required: true,
+                            message: "Шинэ нууц үгээ дахин давтах!"
+                          },
+                          {
+                            validator: this.compareToFirstPassword
+                          }
+                        ]
+                      })(
+                        <Input.Password
+                          onBlur={this.handleConfirmBlur}
+                          placeholder="Шинэ нууц үгээ дахин давтах"
+                        />
+                      )}
+                    </Form.Item>{" "}
+                  </div>
+                </div>
+                <div className="col-xl-12" style={{ marginBottom: "-9px" }}>
+                  <div className="form-group">
+                    <div className="text-right">
+                      <button
+                        className="btn btn-dark"
+                        onClick={this.handleSubmit}
+                      >
+                        <span className="text-uppercase">Хадгалах</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </Form>
           </div>

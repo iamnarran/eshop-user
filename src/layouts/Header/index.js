@@ -312,11 +312,9 @@ class AppHeader extends Component {
                         </Link>
                       </li>
                       <li className="list-inline-item">
-                        <Link
-                          to={
-                            this.props.isLoggedIn
-                              ? "/userprofile/wishhlist"
-                              : ""
+                        <a
+                          href={
+                            this.props.isLoggedIn ? "/userprofile/wishlist" : ""
                           }
                           className="row10"
                         >
@@ -326,7 +324,7 @@ class AppHeader extends Component {
                             <small>Хадгалсан</small>
                             <span className="text-uppercase">бараа</span>
                           </p>
-                        </Link>
+                        </a>
                       </li>
                       <li className="list-inline-item">
                         <CartButton />

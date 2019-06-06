@@ -185,7 +185,11 @@ class Component extends React.Component {
               <ul className="list-unstyled flex-this end">
                 <li>
                   <Link to="" onClick={e => this.onDelete(e, item)}>
-                    <i className="fa fa-times" aria-hidden="true" />
+                    <i
+                      className="fa fa-times"
+                      aria-hidden="true"
+                      style={{ color: "black" }}
+                    />
                   </Link>
                 </li>
               </ul>
@@ -211,7 +215,7 @@ class Component extends React.Component {
                         rules: [
                           {
                             required: true,
-                            message: "Нэрээ заавал оруулна уу!"
+                            message: "Нэрээ оруулна уу"
                           }
                         ]
                       })(<Input placeholder="Нэр" />)}
@@ -226,7 +230,15 @@ class Component extends React.Component {
                         rules: [
                           {
                             required: true,
-                            message: "Утасаа заавал оруулна уу!"
+                            message: "Утас оруулна уу"
+                          },
+                          {
+                            pattern: new RegExp("^[0-9]*$"),
+                            message: "Утас зөв оруулна уу"
+                          },
+                          {
+                            len: 8,
+                            message: "8 оронтой байх ёстой."
                           }
                         ]
                       })(<Input placeholder="Утас 1" />)}
@@ -237,9 +249,18 @@ class Component extends React.Component {
                 <div className="col-xl-4" style={{ marginBottom: "-9px" }}>
                   <div className="form-group">
                     <Form.Item>
-                      {getFieldDecorator("phone2", {})(
-                        <Input placeholder="Утас 2" />
-                      )}
+                      {getFieldDecorator("phone2", {
+                        rules: [
+                          {
+                            pattern: new RegExp("^[0-9]*$"),
+                            message: "Утас зөв оруулна уу"
+                          },
+                          {
+                            len: 8,
+                            message: "8 оронтой байх ёстой."
+                          }
+                        ]
+                      })(<Input placeholder="Утас 2" />)}
                     </Form.Item>
                   </div>
                 </div>

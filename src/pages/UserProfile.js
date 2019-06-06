@@ -320,7 +320,6 @@ class UserProfilePage extends React.Component {
       </div>
     ); */
     /* const imageUrl = this.state.imageUrl; */
-    /* console.log(this.props); */
     if (this.props.isLoggedIn && this.props.user) {
       const { match, user } = this.props;
       match.path = "/userprofile";
