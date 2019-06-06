@@ -154,7 +154,7 @@ class UserButton extends React.Component {
                         src={profile}
                         shape="square"
                         style={{
-                          color: "#f56a00"
+                          width: "30px"
                         }}
                       />{" "}
                       <span>Профайл хуудас</span>
@@ -167,7 +167,7 @@ class UserButton extends React.Component {
                         src={history}
                         shape="square"
                         style={{
-                          color: "#f56a00"
+                          width: "30px"
                         }}
                       />{" "}
                       <span>Таны үзсэн барааны түүх</span>
@@ -180,7 +180,7 @@ class UserButton extends React.Component {
                         shape="square"
                         src={wishlist}
                         style={{
-                          color: "#f56a00"
+                          width: "30px"
                         }}
                       />{" "}
                       <span>Хадгалсан бараа</span>
@@ -196,7 +196,7 @@ class UserButton extends React.Component {
                         shape="square"
                         src={store}
                         style={{
-                          color: "#f56a00"
+                          width: "30px"
                         }}
                       />{" "}
                       <span>Захиалгын түүх</span>
@@ -219,7 +219,7 @@ class UserButton extends React.Component {
                         shape="square"
                         src={location}
                         style={{
-                          color: "#f56a00"
+                          width: "30px"
                         }}
                       />{" "}
                       <span>Хүргэлтийн хаяг</span>
@@ -232,7 +232,7 @@ class UserButton extends React.Component {
                         src={password}
                         shape="square"
                         style={{
-                          color: "#f56a00"
+                          width: "30px"
                         }}
                       />{" "}
                       <span>Нууц үгээ солих</span>

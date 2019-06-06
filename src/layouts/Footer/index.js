@@ -21,8 +21,8 @@ class Footer extends React.Component {
                 </Link>
                 <ul className="social">
                   <li>
-                    <Link
-                      to={staticInfo.facebook}
+                    <a
+                      href={staticInfo.facebook}
                       target="_blank "
                       rel="noopener"
                     >
@@ -39,8 +39,8 @@ class Footer extends React.Component {
                           transform="shrink-6 right-3.5"
                         />
                       </span>
-                    </Link>
-                    <Link to={staticInfo.gmail} target="_blank " rel="noopener">
+                    </a>
+                    <a href={staticInfo.gmail} target="_blank " rel="noopener">
                       <span className="fa-layers fa-fw">
                         <FontAwesomeIcon
                           icon={["fas", "circle"]}
@@ -54,9 +54,9 @@ class Footer extends React.Component {
                           transform="shrink-6 left-2"
                         />
                       </span>
-                    </Link>
-                    <Link
-                      to={staticInfo.twitter}
+                    </a>
+                    <a
+                      href={staticInfo.twitter}
                       target="_blank "
                       rel="noopener"
                     >
@@ -73,7 +73,7 @@ class Footer extends React.Component {
                           transform="shrink-6"
                         />
                       </span>
-                    </Link>
+                    </a>
                   </li>
                 </ul>
               </div>

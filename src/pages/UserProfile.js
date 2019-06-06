@@ -183,6 +183,7 @@ import {
   Epoint
 } from "../components";
 import api from "../api";
+import { signOut /* , updateCart */ } from "../actions/login";
 import avatar from "../scss/assets/images/demo/defaultAvatar.png";
 import profile from "../scss/assets/images/demo/profile.png";
 import history from "../scss/assets/images/demo/history.png";
@@ -312,6 +313,15 @@ class UserProfilePage extends React.Component {
     });
   };
 
+  handleLogoutClick = () => {
+    /* this.props.updateCart({
+      products: [],
+      totalQty: 0,
+      totalPrice: 0
+    }); */
+    this.props.signOut();
+  };
+
   renderProfileInfo = () => {
     /* const uploadButton = (
       <div>
@@ -358,7 +368,7 @@ class UserProfilePage extends React.Component {
                               </p>
                             </div>
                             <p className="text text-right">
-                              <strong>Таны мэдээлэл</strong>
+                              Таны мэдээлэл
                               <Progress
                                 percent={parseInt(this.state.progress)}
                                 strokeColor="#feb415"
@@ -467,13 +477,17 @@ class UserProfilePage extends React.Component {
                             </li>
                           </ul>
                         </div>
-                        <a href="/" className="btn btn-gray">
+                        <Link
+                          to="/"
+                          className="btn btn-gray"
+                          onClick={this.handleLogoutClick}
+                        >
                           <i
                             className="fa fa-chevron-left"
                             aria-hidden="true"
                           />
                           <span className="text-uppercase">Гарах</span>
-                        </a>
+                        </Link>
                       </div>
 
                       <Switch>
@@ -538,4 +552,7 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(UserProfilePage);
+export default connect(
+  mapStateToProps,
+  { signOut /* , updateCart */ }
+)(UserProfilePage);
