@@ -69,6 +69,7 @@ class Component extends React.Component {
       if (res.success) {
         this.getAddress();
         message.success("Хүргэлтийн хаяг амжилттай бүртгэгдлээ");
+        this.props.form.resetFields();
       } else {
         message.success(res.success);
       }

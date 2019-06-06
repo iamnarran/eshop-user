@@ -171,7 +171,7 @@ class Component extends React.Component {
                   },
                   {
                     min: 8,
-                    message: "Утасны дугаар 8ш тоо байна."
+                    message: "Утасны дугаар 8 оронтой байна."
                   },
                   {
                     pattern: new RegExp("^[0-9]*$"),

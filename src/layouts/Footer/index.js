@@ -9,7 +9,7 @@ import "./style.css";
 class Footer extends React.Component {
   render() {
     const { staticInfo, staticPage } = this.props.container;
-
+    console.log(this.props);
     return (
       <div className="top-container">
         <div className="section section-footer">
@@ -83,7 +83,7 @@ class Footer extends React.Component {
                     if (item.pagetype == "1") {
                       return (
                         <li key={index}>
-                          <a href={item.slug + "/" + item.id}>
+                          <a href={"/info" + "/" + item.id + item.slug}>
                             <span>{item.name}</span>
                           </a>
                         </li>
@@ -100,7 +100,7 @@ class Footer extends React.Component {
                     if (item.pagetype == "2") {
                       return (
                         <li key={index}>
-                          <a href={item.slug + "/" + item.id}>
+                          <a href={"/info" + "/" + item.id + item.slug}>
                             <span>{item.name}</span>
                           </a>
                         </li>
