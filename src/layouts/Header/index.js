@@ -215,12 +215,12 @@ class AppHeader extends Component {
                                       onClick={e => this.onItem(e, entry)}
                                     >
                                       {entry.icon ? (
-                                        " "
-                                      ) : (
                                         <img
                                           src={IMAGE + entry.icon}
                                           alt="category"
                                         />
+                                      ) : (
+                                        " "
                                       )}
                                       <span>{entry.name}</span>
                                     </a>
