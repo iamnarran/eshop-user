@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Form, message, Input, Select } from "antd";
+import { Link } from "react-router-dom";
 import api from "../api";
 const Option = Select.Option;
 
@@ -183,9 +184,9 @@ class Component extends React.Component {
             <div className="action">
               <ul className="list-unstyled flex-this end">
                 <li>
-                  <a onClick={e => this.onDelete(e, item)}>
+                  <Link to="" onClick={e => this.onDelete(e, item)}>
                     <i className="fa fa-times" aria-hidden="true" />
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>

@@ -244,9 +244,13 @@ class LoginModal extends React.Component {
                 </div>
                 <div className="col-xl-6 pad10">
                   <div className="text-right">
-                    <a className="btn btn-link" onClick={this.handleReset}>
+                    <Link
+                      to=""
+                      className="btn btn-link"
+                      onClick={this.handleReset}
+                    >
                       Нууц үгээ мартсан
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>

@@ -148,7 +148,7 @@ class UserButton extends React.Component {
                 </div>
                 <ul className="list-unstyled">
                   <li>
-                    <Link to="/userprofile" className="flex-this">
+                    <a href="/userprofile" className="flex-this">
                       <Avatar
                         size="small"
                         src={profile}
@@ -158,7 +158,7 @@ class UserButton extends React.Component {
                         }}
                       />{" "}
                       <span>Профайл хуудас</span>
-                    </Link>
+                    </a>
                   </li>
                   <li>
                     <a href="/userprofile/history" className="flex-this">

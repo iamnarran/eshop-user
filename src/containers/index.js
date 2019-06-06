@@ -46,6 +46,6 @@ export {
   OrderDetail,
   ResetPassword,
   Confirm,
-  GolomtMerchange
-  // DeliveryAddress
+  GolomtMerchange,
+  DeliveryAddress
 };

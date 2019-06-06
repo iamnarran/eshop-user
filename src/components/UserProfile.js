@@ -447,7 +447,15 @@ class Component extends React.Component {
                       rules: [
                         {
                           required: true,
-                          message: "Нэрээ оруулна уу"
+                          message: "Утас оруулна уу"
+                        },
+                        {
+                          pattern: new RegExp("^[0-9]*$"),
+                          message: "Утас зөв оруулна уу"
+                        },
+                        {
+                          len: 8,
+                          message: "8 оронтой байх ёстой."
                         }
                       ]
                     })(
@@ -462,7 +470,20 @@ class Component extends React.Component {
                 <div className="col-xl-4">
                   <Form.Item>
                     {getFieldDecorator("phone2", {
-                      rules: []
+                      rules: [
+                        {
+                          required: true,
+                          message: "Утас оруулна уу"
+                        },
+                        {
+                          pattern: new RegExp("^[0-9]*$"),
+                          message: "Утас зөв оруулна уу"
+                        },
+                        {
+                          len: 8,
+                          message: "8 оронтой байх ёстой."
+                        }
+                      ]
                     })(
                       <Input
                         placeholder="Утас 2"

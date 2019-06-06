@@ -255,9 +255,7 @@ class RecipeDetail extends React.Component {
                 </div>
                 <div className="ck-editor">
                   <h4 className="title" style={{ textTransform: "uppercase" }}>
-                    <span>
-                      <a>Зөвлөгөө</a>
-                    </span>
+                    <span>Зөвлөгөө</span>
                   </h4>
                   <div
                     dangerouslySetInnerHTML={{
@@ -271,9 +269,7 @@ class RecipeDetail extends React.Component {
                     className="title"
                     style={{ textTransform: "uppercase", marginBottom: "20px" }}
                   >
-                    <span>
-                      <a>Хоол хийх заавар</a>
-                    </span>
+                    <span>Хоол хийх заавар</span>
                   </h4>
                   {this.renderSteps()}
                 </div>

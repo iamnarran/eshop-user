@@ -69,7 +69,6 @@ class Localization extends Component {
     }`;
     const popupClass1 = `${this.state.isToggle ? " activated" : ""}`;
     const { auth } = this.props;
-    console.log("ooo", this.props);
     const routes = [
       {
         path: "/",

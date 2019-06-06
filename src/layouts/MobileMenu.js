@@ -98,7 +98,10 @@ class MobileMenu extends React.Component {
       );
     });
     return (
-      <div className={`mobile-menu-container ${popupClass1}`} onClick={this.togglePopup}>
+      <div
+        className={`mobile-menu-container ${popupClass1}`}
+        onClick={this.togglePopup}
+      >
         <div className={popupClass}>
           <div className="single">
             <ul className="list-unstyled flex-this flex-space top-1">
@@ -119,7 +122,12 @@ class MobileMenu extends React.Component {
               <li className="list-inline-item" onClick={this.togglePopup}>
                 <button className="button buttonBlack">
                   {/* <i className="fa fa-times" aria-hidden="true" /> */}
-                  <img src={crossImage} alt="cross" height="25px" aria-hidden="true" />
+                  <img
+                    src={crossImage}
+                    alt="cross"
+                    height="25px"
+                    aria-hidden="true"
+                  />
                 </button>
               </li>
             </ul>
@@ -244,9 +252,13 @@ class MobileMenu extends React.Component {
               Имарт картаар бүртгүүлэх
             </button> */}
             <div className="text-center">
-              <a className="btn btn-link" onClick={this.handleRegister}>
+              <Link
+                to=""
+                className="btn btn-link"
+                onClick={this.handleRegister}
+              >
                 Та шинээр бүртгүүлэх бол ЭНД ДАРЖ бүртгүүлнэ үү
-              </a>
+              </Link>
             </div>
           </div>
         </Modal>

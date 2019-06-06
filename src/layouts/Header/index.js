@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Icon } from "antd";
+import { connect } from "react-redux";
 
 import Category from "../../components/Category";
 import MainMenu from "../../components/Menu";
@@ -311,7 +312,14 @@ class AppHeader extends Component {
                         </Link>
                       </li>
                       <li className="list-inline-item">
-                        <Link to="" className="row10">
+                        <Link
+                          to={
+                            this.props.isLoggedIn
+                              ? "/userprofile/wishhlist"
+                              : ""
+                          }
+                          className="row10"
+                        >
                           {/* <Icon type="heart" theme="filled" /> */}
                           <img src={heartImage} alt="wishlist" height="25px" />
                           <p>
@@ -365,4 +373,10 @@ class AppHeader extends Component {
   }
 }
 
-export default AppHeader;
+const mapStateToProps = state => {
+  return {
+    isLoggedIn: state.auth.isLoggedIn
+  };
+};
+
+export default connect(mapStateToProps)(AppHeader);

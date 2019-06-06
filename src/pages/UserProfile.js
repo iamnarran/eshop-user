@@ -167,7 +167,12 @@ import React from "react";
 import { post } from "axios";
 import { connect } from "react-redux";
 import { Route, Link, Switch, BrowserRouter as Router } from "react-router-dom";
-import { Upload, Button, Icon, message, Progress, Avatar } from "antd";
+import {
+  /* Upload, */ /* Button, */ /* Icon, */
+  /* message, */
+  Progress,
+  Avatar
+} from "antd";
 import {
   UserProfile,
   DeliveryAddress,
@@ -185,7 +190,7 @@ import wishlist from "../scss/assets/images/demo/wishlist.png";
 import location from "../scss/assets/images/demo/location.png";
 import password from "../scss/assets/images/demo/password.png";
 import store from "../scss/assets/images/demo/store.png";
-function getBase64(img, callback) {
+/* function getBase64(img, callback) {
   const reader = new FileReader();
   reader.addEventListener("load", () => callback(reader.result));
   reader.readAsDataURL(img);
@@ -201,7 +206,7 @@ function beforeUpload(file) {
     message.error("Image must smaller than 2MB!");
   }
   return isJPG && isLt2M;
-}
+} */
 
 class UserProfilePage extends React.Component {
   state = {
@@ -242,7 +247,7 @@ class UserProfilePage extends React.Component {
       function(res) {
         if (res.ok) {
           alert("Perfect! ");
-        } else if (res.status == 401) {
+        } else if (res.status === 401) {
           alert("Oops! ");
         }
       },
@@ -308,13 +313,13 @@ class UserProfilePage extends React.Component {
   };
 
   renderProfileInfo = () => {
-    const uploadButton = (
+    /* const uploadButton = (
       <div>
         <Icon type={this.state.loading ? "loading" : "plus"} />
         <div className="ant-upload-text">Upload</div>
       </div>
-    );
-    const imageUrl = this.state.imageUrl;
+    ); */
+    /* const imageUrl = this.state.imageUrl; */
     /* console.log(this.props); */
     if (this.props.isLoggedIn && this.props.user) {
       const { match, user } = this.props;

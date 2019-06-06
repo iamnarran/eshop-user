@@ -57,7 +57,8 @@ class Component extends React.Component {
     await api.customer.passreset(params).then(res => {
       if (res.success) {
         this.successMsg("Нууц үг амжилттай солигдлоо.");
-        this.props.history.push("/userprofile");
+        this.props.form.resetFields();
+        /*  this.props.history.push("/userprofile"); */
       } else {
         message.success(res.message);
       }

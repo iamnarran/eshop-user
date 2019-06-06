@@ -11,7 +11,7 @@ class Component extends React.Component {
   };
 
   getData() {
-    api.customer.getWishList({ custId: this.props.user.id }).then(res => {
+    api.customer.getWishList({ custid: this.props.user.id }).then(res => {
       if (res.success) {
         this.setState({
           wishlist: res.data
