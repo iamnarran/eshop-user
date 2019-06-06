@@ -75,11 +75,11 @@ class Localization extends Component {
         exact: true,
         component: rest => <Homepage {...rest} {...this.props} />
       },
-      {
+      /* {
         path: "/:link/:id",
         exact: true,
         component: rest => <StaticPage {...rest} {...this.props} />
-      },
+      }, */
       {
         exact: true,
         path: "/discount",
