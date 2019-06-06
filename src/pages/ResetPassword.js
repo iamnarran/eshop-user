@@ -66,7 +66,7 @@ class ResetPassword extends React.Component {
     return (
       <div className="top-container">
         <div className="section">
-          {this.state.res.success ? (
+          {this.state.isShow.success ? (
             <div className="col-md-12">
               <center>
                 <div className="content">

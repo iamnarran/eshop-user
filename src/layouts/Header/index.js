@@ -207,16 +207,21 @@ class AppHeader extends Component {
                                   <span>Бүх бараа</span>
                                 </a>
                                 {menucategories.map((entry, index) => {
+                                  console.log(IMAGE, entry.icon);
                                   return (
                                     <a
                                       className="dropdown-item"
                                       key={index}
                                       onClick={e => this.onItem(e, entry)}
                                     >
-                                      <img
-                                        src={IMAGE + entry.icon}
-                                        alt="category"
-                                      />
+                                      {entry.icon ? (
+                                        " "
+                                      ) : (
+                                        <img
+                                          src={IMAGE + entry.icon}
+                                          alt="category"
+                                        />
+                                      )}
                                       <span>{entry.name}</span>
                                     </a>
                                   );

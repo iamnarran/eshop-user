@@ -16,7 +16,7 @@ export default [
   {
     NAME: "findProductBrand",
     METHOD: "GET",
-    URL: `${API}/api/search/:brandid`,
+    URL: `${API}/api/search/brand/:brandid/0/10/price_asc`,
     REPLACE: "brandid"
   }
 ];
