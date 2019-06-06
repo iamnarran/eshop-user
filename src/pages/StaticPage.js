@@ -7,7 +7,6 @@ class StaticPage extends React.Component {
 
   render() {
     const description = this.state.staticPages.description;
-    console.log("static", this.state.staticPages);
     return (
       <div className="section section-gray static">
         <div className="container pad10">
