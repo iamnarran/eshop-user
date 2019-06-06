@@ -610,6 +610,7 @@ class Component extends React.Component {
                 <div className="row row10">
                   <div className="col-xl-6" style={{ marginBottom: "-9px" }}>
                     <input
+                      autoComplete="off"
                       className="inputButton marginBottom"
                       type="text"
                       id="exampleInputEmail1"
@@ -624,6 +625,7 @@ class Component extends React.Component {
 
                   <div className="col-xl-6 marginBottom">
                     <input
+                      autoComplete="off"
                       className="inputButton"
                       type="password"
                       ref="cardpass"
