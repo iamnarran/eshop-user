@@ -22,7 +22,6 @@ class Component extends React.Component {
   };
 
   onDelete = (e, item) => {
-    console.log(item.cd);
     e.preventDefault();
     api.customer
       .deleteSeenList({ custid: this.props.user.id, skucd: item.cd })

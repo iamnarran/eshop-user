@@ -383,177 +383,193 @@ class Component extends React.Component {
           <div className="user-profile-contain">
             <Form>
               <div className="row row10">
-                <div className="col-xl-4">
-                  <Form.Item>
-                    {getFieldDecorator("lastname", {
-                      rules: [
-                        {
-                          required: true,
-                          message: "Овогоо оруулна уу"
-                        }
-                      ]
-                    })(
-                      <Input
-                        placeholder="Овог"
-                        onChange={this.onChangeLastname}
-                      />
-                    )}
-                  </Form.Item>
+                <div className="col-xl-4" style={{ marginBottom: "-9px" }}>
+                  <div className="form-group">
+                    <Form.Item>
+                      {getFieldDecorator("lastname", {
+                        rules: [
+                          {
+                            required: true,
+                            message: "Овгоо заавал оруулна уу! "
+                          }
+                        ]
+                      })(
+                        <Input
+                          placeholder="Овог"
+                          onChange={this.onChangeLastname}
+                        />
+                      )}
+                    </Form.Item>
+                  </div>{" "}
                 </div>
 
-                <div className="col-xl-4">
-                  <Form.Item>
-                    {getFieldDecorator("firstname", {
-                      rules: [
-                        {
-                          required: true,
-                          message: "Нэрээ оруулна уу"
-                        }
-                      ]
-                    })(
-                      <Input
-                        placeholder="Нэр"
-                        onChange={this.onChangeFirstname}
-                      />
-                    )}
-                  </Form.Item>
+                <div className="col-xl-4" style={{ marginBottom: "-9px" }}>
+                  <div className="form-group">
+                    <Form.Item>
+                      {getFieldDecorator("firstname", {
+                        rules: [
+                          {
+                            required: true,
+                            message: "Нэрээ заавал оруулна уу! "
+                          }
+                        ]
+                      })(
+                        <Input
+                          placeholder="Нэр"
+                          onChange={this.onChangeFirstname}
+                        />
+                      )}
+                    </Form.Item>
+                  </div>{" "}
                 </div>
 
-                <div className="col-xl-4">
-                  <Form.Item>
-                    {getFieldDecorator("email", {
-                      rules: [
-                        {
-                          required: true,
-                          message: "Имэйл оруулна оруулна уу"
-                        },
-                        {
-                          type: "email",
-                          message: "Зөв имэйл оруулна уу"
-                        }
-                      ]
-                    })(
-                      <Input
-                        placeholder="Имэйл"
-                        onChange={this.onChangeEmail}
-                      />
-                    )}
-                  </Form.Item>
+                <div className="col-xl-4" style={{ marginBottom: "-9px" }}>
+                  <div className="form-group">
+                    <Form.Item>
+                      {getFieldDecorator("email", {
+                        rules: [
+                          {
+                            required: true,
+                            message: "Имэйл хаяг заавал оруулна уу! "
+                          },
+                          {
+                            type: "email",
+                            message: "Зөв имэйл оруулна уу! "
+                          }
+                        ]
+                      })(
+                        <Input
+                          placeholder="Имэйл"
+                          onChange={this.onChangeEmail}
+                        />
+                      )}
+                    </Form.Item>
+                  </div>{" "}
                 </div>
 
-                <div className="col-xl-4">
-                  <Form.Item>
-                    {getFieldDecorator("phone1", {
-                      rules: [
-                        {
-                          required: true,
-                          message: "Утас оруулна уу"
-                        },
-                        {
-                          pattern: new RegExp("^[0-9]*$"),
-                          message: "Утас зөв оруулна уу"
-                        },
-                        {
-                          len: 8,
-                          message: "8 оронтой байх ёстой."
-                        }
-                      ]
-                    })(
-                      <Input
-                        placeholder="Утас 1"
-                        onChange={this.onChangePhone1}
-                      />
-                    )}
-                  </Form.Item>
+                <div className="col-xl-4" style={{ marginBottom: "-9px" }}>
+                  <div className="form-group">
+                    <Form.Item>
+                      {getFieldDecorator("phone1", {
+                        rules: [
+                          {
+                            required: true,
+                            message: "Утсаа заавал оруулна уу! "
+                          },
+                          {
+                            pattern: new RegExp("^[0-9]*$"),
+                            message: "Утасны дугаар нь зөвхөн тоо байна! "
+                          },
+                          {
+                            len: 8,
+                            message: "Утасны дугаар 8 оронтой байх ёстой! "
+                          }
+                        ]
+                      })(
+                        <Input
+                          placeholder="Утас 1"
+                          onChange={this.onChangePhone1}
+                        />
+                      )}
+                    </Form.Item>
+                  </div>{" "}
                 </div>
 
-                <div className="col-xl-4">
-                  <Form.Item>
-                    {getFieldDecorator("phone2", {
-                      rules: [
-                        {
-                          required: true,
-                          message: "Утас оруулна уу"
-                        },
-                        {
-                          pattern: new RegExp("^[0-9]*$"),
-                          message: "Утас зөв оруулна уу"
-                        },
-                        {
-                          len: 8,
-                          message: "8 оронтой байх ёстой."
-                        }
-                      ]
-                    })(
-                      <Input
-                        placeholder="Утас 2"
-                        onChange={this.onChangePhone2}
-                      />
-                    )}
-                  </Form.Item>
+                <div className="col-xl-4" style={{ marginBottom: "-9px" }}>
+                  <div className="form-group">
+                    <Form.Item>
+                      {getFieldDecorator("phone2", {
+                        rules: [
+                          {
+                            pattern: new RegExp("^[0-9]*$"),
+                            message: "Утасны дугаар нь зөвхөн тоо байна! "
+                          },
+                          {
+                            len: 8,
+                            message: "Утасны дугаар 8 оронтой байх ёстой! "
+                          }
+                        ]
+                      })(
+                        <Input
+                          placeholder="Утас 2"
+                          onChange={this.onChangePhone2}
+                        />
+                      )}
+                    </Form.Item>
+                  </div>{" "}
                 </div>
 
-                <div className="col-xl-4" />
+                <div className="col-xl-4" style={{ marginBottom: "-9px" }} />
 
-                <div className="col-xl-4">
-                  <Form.Item>
-                    <Select
-                      onChange={this.onChangeCity}
-                      placeholder={this.state.mainAddress.provincenm}
-                    >
-                      {this.renderProvince()}
-                    </Select>
-                  </Form.Item>
+                <div className="col-xl-4" style={{ marginBottom: "-9px" }}>
+                  <div className="form-group">
+                    <Form.Item>
+                      <Select
+                        onChange={this.onChangeCity}
+                        placeholder={this.state.mainAddress.provincenm}
+                      >
+                        {this.renderProvince()}
+                      </Select>
+                    </Form.Item>
+                  </div>{" "}
                 </div>
 
-                <div className="col-xl-4">
-                  <Form.Item>
-                    <Select
-                      placeholder={this.state.mainAddress.districtnm}
-                      onChange={this.onChangeDistrict}
-                    >
-                      {this.renderDistrict()}
-                    </Select>
-                  </Form.Item>
+                <div className="col-xl-4" style={{ marginBottom: "-9px" }}>
+                  <div className="form-group">
+                    <Form.Item>
+                      <Select
+                        placeholder={this.state.mainAddress.districtnm}
+                        onChange={this.onChangeDistrict}
+                      >
+                        {this.renderDistrict()}
+                      </Select>
+                    </Form.Item>
+                  </div>{" "}
                 </div>
 
-                <div className="col-xl-4">
-                  <Form.Item>
-                    <Select
-                      placeholder={this.state.mainAddress.committeenm}
-                      onChange={this.onStreet}
-                    >
-                      {this.renderStreet()}
-                    </Select>
-                  </Form.Item>
+                <div className="col-xl-4" style={{ marginBottom: "-9px" }}>
+                  <div className="form-group">
+                    <Form.Item>
+                      <Select
+                        placeholder={this.state.mainAddress.committeenm}
+                        onChange={this.onStreet}
+                      >
+                        {this.renderStreet()}
+                      </Select>
+                    </Form.Item>
+                  </div>{" "}
                 </div>
 
+                <div className="col-xl-12" style={{ marginBottom: "-9px" }}>
+                  <div className="form-group">
+                    <Form.Item>
+                      {getFieldDecorator("address", {
+                        rules: [
+                          {
+                            required: true,
+                            message: "Гэрийн хаягaa заавал оруулна уу! "
+                          }
+                        ]
+                      })(
+                        <Input
+                          placeholder="Гэрийн хаяг"
+                          onChange={this.onChangeAddress}
+                        />
+                      )}
+                    </Form.Item>
+                  </div>
+                </div>
                 <div className="col-xl-12">
-                  <Form.Item>
-                    {getFieldDecorator("address", {
-                      rules: [
-                        {
-                          required: true,
-                          message: "Гэрийн хаягaa оруулна уу"
-                        }
-                      ]
-                    })(
-                      <Input
-                        placeholder="Гэрийн хаяг"
-                        onChange={this.onChangeAddress}
-                      />
-                    )}
-                  </Form.Item>
-                </div>
-              </div>
-              <div className="col-xl-12">
-                <div
-                  className="text-right marginBottom"
-                  style={{ marginRight: "-9px" }}
-                >
-                  <button className="btn btn-dark" onClick={this.handleSubmit}>
-                    <span className="text-uppercase">Хадгалах</span>
-                  </button>
+                  <div className="form-group">
+                    <div className="text-right marginBottom">
+                      <button
+                        className="btn btn-dark"
+                        onClick={this.handleSubmit}
+                      >
+                        <span className="text-uppercase">Хадгалах</span>
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </Form>
@@ -569,7 +585,7 @@ class Component extends React.Component {
             {this.state.card ? (
               <Form>
                 <div className="row row10">
-                  <div className="col-xl-6">
+                  <div className="col-xl-6" style={{ marginBottom: "-9px" }}>
                     <input
                       value={this.state.card.cardno}
                       className="inputButton"
@@ -578,7 +594,7 @@ class Component extends React.Component {
                     />
                   </div>
 
-                  <div className="col-xl-6">
+                  <div className="col-xl-6" style={{ marginBottom: "-9px" }}>
                     <input
                       className="inputButton"
                       type="password"
@@ -592,22 +608,7 @@ class Component extends React.Component {
             ) : (
               <Form>
                 <div className="row row10">
-                  {/*<div className="col-xl-6">
-                     <Form.Item>
-                      {getFieldDecorator("cardNoInput", {})(
-                        <Input placeholder="Картын дугаар" value="123456789" />
-                      )}
-                    </Form.Item>
-                  </div>
-                  <div className="col-xl-6">
-                    <Form.Item>
-                      {getFieldDecorator("cardpass", {})(
-                        <Input.Password placeholder="Нууц үг" />
-                      )}
-                    </Form.Item>
-                  </div> */}
-
-                  <div className="col-xl-6">
+                  <div className="col-xl-6" style={{ marginBottom: "-9px" }}>
                     <input
                       className="inputButton marginBottom"
                       type="text"

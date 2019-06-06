@@ -184,13 +184,13 @@ class Component extends React.Component {
             <div className="action">
               <ul className="list-unstyled flex-this end">
                 <li>
-                  <Link to="" onClick={e => this.onDelete(e, item)}>
+                  <a onClick={e => this.onDelete(e, item)}>
                     <i
                       className="fa fa-times"
                       aria-hidden="true"
                       style={{ color: "black" }}
                     />
-                  </Link>
+                  </a>
                 </li>
               </ul>
             </div>
@@ -215,7 +215,7 @@ class Component extends React.Component {
                         rules: [
                           {
                             required: true,
-                            message: "Нэрээ оруулна уу"
+                            message: "Нэрээ заавал оруулна уу"
                           }
                         ]
                       })(<Input placeholder="Нэр" />)}
@@ -230,15 +230,15 @@ class Component extends React.Component {
                         rules: [
                           {
                             required: true,
-                            message: "Утас оруулна уу"
+                            message: "Утсаа заавал оруулна уу! "
                           },
                           {
                             pattern: new RegExp("^[0-9]*$"),
-                            message: "Утас зөв оруулна уу"
+                            message: "Утсаа зөв оруулна уу! "
                           },
                           {
                             len: 8,
-                            message: "8 оронтой байх ёстой."
+                            message: "Утасны дугаар 8 оронтой байх ёстой! "
                           }
                         ]
                       })(<Input placeholder="Утас 1" />)}
@@ -253,11 +253,11 @@ class Component extends React.Component {
                         rules: [
                           {
                             pattern: new RegExp("^[0-9]*$"),
-                            message: "Утас зөв оруулна уу"
+                            message: "Утас зөв оруулна уу! "
                           },
                           {
                             len: 8,
-                            message: "8 оронтой байх ёстой."
+                            message: "Утасны дугаар 8 оронтой байх ёстой! "
                           }
                         ]
                       })(<Input placeholder="Утас 2" />)}

@@ -32,7 +32,7 @@ class Component extends React.Component {
   onDelete = (e, item) => {
     e.preventDefault();
     api.customer
-      .deleteWishList({ custId: this.props.user.id, skucd: item.cd })
+      .deleteWishList({ custid: this.props.user.id, skucd: item.cd })
       .then(res => {
         if (res.success) {
           this.getData();
