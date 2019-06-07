@@ -1,11 +1,11 @@
 import React from "react";
-import { connect } from "react-redux";
+/* import { connect } from "react-redux"; */
 import Swal from "sweetalert2";
-import { Checkbox, Modal, Button } from "antd";
+import { Checkbox, Modal /* , Button */ } from "antd";
 import withReactContent from "sweetalert2-react-content";
 import api from "../../api";
-import SwalModals from "./SwalModals";
-const MySwal = withReactContent(Swal);
+/* import SwalModals from "./SwalModals"; */
+/* const MySwal = withReactContent(Swal); */
 const formatter = new Intl.NumberFormat("en-US");
 
 class DeliveryInfo extends React.Component {
@@ -35,7 +35,7 @@ class DeliveryInfo extends React.Component {
       document.getElementById("scroll-tst").scrollTop;
 
     let clientHeight = document.getElementById("scroll-tst").clientHeight;
-    if (calcBottom == clientHeight) {
+    if (calcBottom === clientHeight) {
       this.timer = setTimeout(() => this.setModal2Visible(false), 200);
       document
         .getElementById("scroll-tst")
@@ -80,11 +80,11 @@ class DeliveryInfo extends React.Component {
       chosenDeliveryAddrName
     } = this.props;
     let addrs;
-    const deliver1 = delivery == [] ? 0 : delivery.price;
+    const deliver1 = delivery === [] ? 0 : delivery.price;
     if (userAddress.length !== 0) {
       if (!chosenInfo.isNew) {
         userAddress.map((item, i) => {
-          if (item.id == chosenInfo.address) {
+          if (item.id === chosenInfo.address) {
             addrs = item.address;
           }
         });
@@ -100,7 +100,7 @@ class DeliveryInfo extends React.Component {
           {" "}
           <p className="title">
             <strong>
-              {userInfo.length == 0
+              {userInfo.length === 0
                 ? ""
                 : userInfo.lastname + " " + userInfo.firstname}
             </strong>
@@ -112,7 +112,7 @@ class DeliveryInfo extends React.Component {
             </p>
             <p className="text flex-space">
               <span>Хүргэлтийн төрөл</span>
-              <strong>{delivery == [] ? "" : delivery.typenm}</strong>
+              <strong>{delivery === [] ? "" : delivery.typenm}</strong>
             </p>
             <p className="text flex-this">
               <i
@@ -121,7 +121,7 @@ class DeliveryInfo extends React.Component {
                 style={{ color: "#feb415" }}
               />
               <span>
-                {userInfo.length == 0
+                {userInfo.length === 0
                   ? ""
                   : userInfo.lastname + " " + userInfo.firstname}
               </span>
@@ -133,7 +133,7 @@ class DeliveryInfo extends React.Component {
                 style={{ color: "#feb415" }}
               />
               <span>
-                {chosenInfo.length != 0
+                {chosenInfo.length !== 0
                   ? chosenInfo.phone1 + ", " + chosenInfo.phone2
                   : ""}
               </span>
@@ -145,7 +145,7 @@ class DeliveryInfo extends React.Component {
                 style={{ color: "#feb415" }}
               />
               <span>
-                {chosenDeliveryAddrName.length != 0
+                {chosenDeliveryAddrName.length !== 0
                   ? chosenDeliveryAddrName.mainLocation +
                     ", " +
                     chosenDeliveryAddrName.subLocation +
@@ -170,7 +170,7 @@ class DeliveryInfo extends React.Component {
               <span>Хүргэлтийн үнэ:</span>
               <strong>{formatter.format(deliver1)}₮</strong>
             </p>
-            {usedpoint.toFixed(0) != "0" ? (
+            {usedpoint.toFixed(0) !== "0" ? (
               <p className="text flex-space">
                 <span>Имарт карт оноо:</span>
                 <strong style={{ color: "red" }}>
@@ -206,9 +206,9 @@ class DeliveryInfo extends React.Component {
               className="btn btn-main btn-block"
               onClick={e => handleClick(e)}
               disabled={
-                paymentButton == false &&
-                isLoggedIn == true &&
-                checkedAgreement == true
+                paymentButton === false &&
+                isLoggedIn === true &&
+                checkedAgreement === true
                   ? false
                   : true
               }

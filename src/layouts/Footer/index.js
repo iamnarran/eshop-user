@@ -9,7 +9,6 @@ import "./style.css";
 class Footer extends React.Component {
   render() {
     const { staticInfo, staticPage } = this.props.container;
-    console.log(this.props);
     return (
       <div className="top-container">
         <div className="section section-footer">

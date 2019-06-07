@@ -1,16 +1,16 @@
 import React from "react";
-import { connect } from "react-redux";
+/* import { connect } from "react-redux"; */
 import { Collapse, Tabs, Divider } from "antd";
 // import withSizes from 'react-sizes'
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import withCart from "../../components/HOC/withCart";
+/* import withCart from "../../components/HOC/withCart"; */
 import { IMAGE } from "../../utils/consts";
 import { isMobile } from "react-device-detect";
 import api from "../../api";
 const MySwal = withReactContent(Swal);
 const formatter = new Intl.NumberFormat("en-US");
-const Panel = Collapse.Panel;
+/* const Panel = Collapse.Panel; */
 const TabPane = Tabs.TabPane;
 class SwalModals extends React.Component {
   constructor(props) {
@@ -46,7 +46,7 @@ class SwalModals extends React.Component {
 
   componentWillMount() {
     const { type } = this.props;
-    if (type == "msgBank") {
+    if (type === "msgBank") {
       const { data } = this.props;
       if (data.length !== 0) {
         this.setState({ chosenBank: data[0] });
@@ -66,7 +66,7 @@ class SwalModals extends React.Component {
     const { data } = this.props;
     if (data.length !== 0) {
       data.map((item, i) => {
-        if (item.bankid == e) {
+        if (item.bankid === e) {
           this.setState({ chosenBank: item });
         }
       });
@@ -92,7 +92,7 @@ class SwalModals extends React.Component {
   renderBankLogo = () => {
     const { ordData } = this.props;
     let tmp;
-    if (ordData.qpay.qPay_deeplink.lenght != 0) {
+    if (ordData.qpay.qPay_deeplink.lenght !== 0) {
       tmp = ordData.qpay.qPay_deeplink.map((item, i) => {
         return (
           <div className="checkout-qpay" key={i}>
@@ -117,11 +117,11 @@ class SwalModals extends React.Component {
     const { chosenBank } = this.state;
     const { type, changePage, data, readyBtn } = this.props;
     const { mode } = this.state;
-    if (type == "paymentSucess") {
+    if (type === "paymentSucess") {
       const {
-        delivery,
+        /* delivery, */
         userInfo,
-        products,
+        /* products, */
         chosenInfo,
         userAddress,
         chosenPayment,
@@ -134,7 +134,7 @@ class SwalModals extends React.Component {
       if (userAddress.length !== 0) {
         if (chosenInfo.length !== 0) {
           userAddress.map((item, i) => {
-            if (item.id == chosenInfo.address) {
+            if (item.id === chosenInfo.address) {
               addrs = item.address;
             }
           });
@@ -182,7 +182,7 @@ class SwalModals extends React.Component {
                           <span>Төлбөрийн төрөл:</span>
                           <strong className="big">{chosenPayment.name}</strong>
                         </li>
-                        {paymentType != "qpay" ? (
+                        {paymentType !== "qpay" ? (
                           <div>
                             <li className="flex-this flex-space">
                               <span>Банк:</span>
@@ -218,7 +218,7 @@ class SwalModals extends React.Component {
                         />
                         <span>
                           {" "}
-                          {userInfo.length == 0
+                          {userInfo.length === 0
                             ? ""
                             : userInfo.lastname + " " + userInfo.firstname}
                         </span>

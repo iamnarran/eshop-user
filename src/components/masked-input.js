@@ -262,9 +262,11 @@ class FormInputComponent extends Component {
       this.input = r.input;
     };
     let maxLength = this.mask.pattern.length;
-    let value = this._getDisplayValue();
+    /* let value = this._getDisplayValue(); */
     let eventHandlers = this._getEventHandlers();
-    let { size = maxLength, placeholder = this.mask.emptyValue } = this.props;
+    let {
+      /* size = maxLength, */ placeholder = this.mask.emptyValue
+    } = this.props;
 
     let { placeholderChar, formatCharacters, ...cleanedProps } = this.props;
     const props = {

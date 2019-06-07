@@ -17,14 +17,15 @@ class Component extends React.Component {
   };
 
   register = async values => {
-    console.log(values);
+    console.log("register", values);
     this.setState({ loading: true });
     let res = await this.props.register(values);
+    console.log("success", res);
     if (res.success) {
-      message.success("bolson shuu");
+      message.success(res.data);
       this.setState({ loading: false });
     } else {
-      message.error("boloogui shuu");
+      message.error(res.data);
       this.setState({ loading: false });
     }
   };
@@ -35,14 +36,16 @@ class Component extends React.Component {
 
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        console.log(values);
         const data = {
           firstname: values.firstname.toString(),
           lastname: values.lastname.toString(),
           email: values.email.toString(),
           password: values.password.toString(),
-          phonE1: values.phoneE1.toString(),
+          phonE1: values.phonE1,
           phonE2: "0"
         };
+        console.log(data);
         this.register(data);
         /* try {
           res = this.props.register(data);
@@ -61,20 +64,6 @@ class Component extends React.Component {
         } */
       }
     });
-  };
-
-  register = async values => {
-    this.setState({ loading: true });
-    values.phonE1 = values.phone;
-    values.phonE2 = 0;
-    let res = await this.props.register(values);
-    if (res.success) {
-      message.success(res.message);
-      this.setState({ loading: false });
-    } else {
-      message.error(res.message);
-      this.setState({ loading: false });
-    }
   };
 
   handleConfirmBlur = e => {
@@ -100,7 +89,6 @@ class Component extends React.Component {
   };
 
   render() {
-    console.log("ene yu we?", this.props);
     const { getFieldDecorator } = this.props.form;
     return (
       <div className="user-menu-content">
@@ -163,7 +151,7 @@ class Component extends React.Component {
               })(<Input placeholder="И мэйл хаяг" className="form-control" />)}
             </Form.Item>
             <Form.Item>
-              {getFieldDecorator("phoneE1", {
+              {getFieldDecorator("phonE1", {
                 rules: [
                   {
                     required: true,

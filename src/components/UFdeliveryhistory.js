@@ -29,9 +29,7 @@ class Component extends React.Component {
   renderDate = dateString => {
     const dateParts = dateString.split("T")[0].split("-");
 
-    return (
-      <span>{`${dateParts[0]} оны ${dateParts[1]} сарын ${dateParts[2]}`}</span>
-    );
+    return <span>{`${dateParts[0]}-${dateParts[1]}-${dateParts[2]}`}</span>;
   };
 
   renderType = item => {
@@ -110,18 +108,18 @@ class Component extends React.Component {
               <thead>
                 <tr style={{ height: "70px" }}>
                   <th width="5%" style={{ textAlign: "center" }}>
-                    №
+                    Захиалга №
                   </th>
-                  <th width="25%" style={{ textAlign: "center" }}>
+                  <th width="15%" style={{ textAlign: "center" }}>
                     Он сар өдөр
                   </th>
-                  <th width="25%" style={{ textAlign: "center" }}>
+                  <th width="30%" style={{ textAlign: "center" }}>
                     Төлөв
                   </th>
                   <th width="10%" style={{ textAlign: "center" }}>
                     Үнийн дүн
                   </th>
-                  <th width="15%" style={{ textAlign: "center" }}>
+                  <th width="10%" style={{ textAlign: "center" }}>
                     Дэлгэрэнгүй
                   </th>
                 </tr>
