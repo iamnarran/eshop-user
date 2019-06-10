@@ -71,7 +71,7 @@ class Card extends React.Component {
         this.oneSave(item);
       }
     } else {
-      /* console.log("loginModal"); */
+      console.log("loginModal");
       this.handleLoginClick(e);
     }
   };
@@ -274,7 +274,6 @@ class Card extends React.Component {
   };
 
   render() {
-    console.log(this.props);
     const { type, item, isLastInRow, className } = this.props;
     let prices;
     if (!item) {
