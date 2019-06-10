@@ -316,19 +316,33 @@ class AppHeader extends Component {
                         </Link>
                       </li>
                       <li className="list-inline-item">
-                        <a
-                          href={
-                            this.props.isLoggedIn ? "/userprofile/wishlist" : ""
-                          }
-                          className="row10"
-                        >
-                          {/* <Icon type="heart" theme="filled" /> */}
-                          <img src={heartImage} alt="wishlist" height="25px" />
-                          <p>
-                            <small>Хадгалсан</small>
-                            <span className="text-uppercase">бараа</span>
-                          </p>
-                        </a>
+                        {this.props.isLoggedIn ? (
+                          <a href="/userprofile/wishlist" className="row10">
+                            {/* <Icon type="heart" theme="filled" /> */}
+                            <img
+                              src={heartImage}
+                              alt="wishlist"
+                              height="25px"
+                            />
+                            <p>
+                              <small>Хадгалсан</small>
+                              <span className="text-uppercase">бараа</span>
+                            </p>
+                          </a>
+                        ) : (
+                          <a className="row10">
+                            {/* <Icon type="heart" theme="filled" /> */}
+                            <img
+                              src={heartImage}
+                              alt="wishlist"
+                              height="25px"
+                            />
+                            <p>
+                              <small>Хадгалсан</small>
+                              <span className="text-uppercase">бараа</span>
+                            </p>
+                          </a>
+                        )}
                       </li>
                       <li className="list-inline-item">
                         <CartButton />

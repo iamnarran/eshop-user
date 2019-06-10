@@ -17,12 +17,6 @@ const Option = Select.Option;
 class Component extends React.Component {
   state = {
     province: [],
-    city: false,
-    name: null,
-    phone: null,
-    homeaddress: [],
-    districtOrSum: [],
-    street: [],
     provid: null,
     distid: null,
     locid: null,
@@ -34,8 +28,9 @@ class Component extends React.Component {
     districtnm: "",
     committeenm: "",
     realAddress: "",
-    fakepassword: "123456",
-    fakepassword1: null
+
+    mainLocation: [],
+    commiteLocation: []
   };
 
   errorMsg = txt => {
@@ -64,6 +59,11 @@ class Component extends React.Component {
   };
 
   componentDidMount() {
+    api.location.findAll({}).then(res => {
+      if (res.success == true) {
+        this.setState({ mainLocation: res.data });
+      }
+    });
     this.getProvince();
     this.getUserInfo();
     this.getAddress();
@@ -94,15 +94,11 @@ class Component extends React.Component {
       if (res.success) {
         res.data.map((item, index) => {
           if (item.ismain) {
-            this.setState({
-              mainAddress: item,
-              realAddress: item.address,
-              provincenm: item.provincenm,
-              districtnm: item.districtnm,
-              committeenm: item.committeenm
-            });
             this.props.form.setFieldsValue({
-              address: item.address
+              address: item.address,
+              mainLocation: item.provincenm,
+              subLocation: item.districtnm,
+              commiteLocation: item.committeenm
             });
           }
         });
@@ -181,74 +177,6 @@ class Component extends React.Component {
         });
       }
     });
-  };
-
-  renderProvince() {
-    const options = this.state.province.map((item, index) => {
-      if (item.provinceid == "11") {
-        return (
-          <Option key={index} value={item.provinceid}>
-            {item.provincenm}
-          </Option>
-        );
-      } else {
-        return (
-          <Option key={index} value={item.provinceid}>
-            {item.provincenm}
-          </Option>
-        );
-      }
-    });
-    return options;
-  }
-
-  renderDistrict() {
-    const options = this.state.districtOrSum.map((item, index) => {
-      return (
-        <Option key={index} value={item.districtid}>
-          {item.districtnm}
-        </Option>
-      );
-    });
-    return options;
-  }
-
-  renderStreet() {
-    const options = this.state.street.map((item, index) => {
-      return (
-        <Option key={index} value={item.id}>
-          {item.committeenm}
-        </Option>
-      );
-    });
-    return options;
-  }
-
-  onChangeCity = async e => {
-    this.state.province.map((item, index) => {
-      if (item.provinceid == e) {
-        this.setState({ provincenm: item.provincenm });
-      }
-    });
-    await this.setState({ provid: e });
-    this.getDistrict(e);
-  };
-
-  onChangeDistrict = async e => {
-    await api.location
-      .findCommiteLocation({
-        provid: this.state.provid,
-        distid: e
-      })
-      .then(res => {
-        if (res.success) {
-          this.setState({ street: res.data });
-        }
-      });
-  };
-
-  onStreet = async e => {
-    this.setState({ locid: e });
   };
 
   onChangeLastname = e => {
@@ -369,6 +297,84 @@ class Component extends React.Component {
     } else {
       this.errorMsg("Картын дугаар нууц үг оруулна уу ?");
     }
+  };
+
+  /* render location */
+  onStreet = async e => {
+    console.log(e);
+    this.setState({ locid: e });
+  };
+
+  renderMainLocation = () => {
+    let tmp;
+    if (this.state.mainLocation.length != 0) {
+      tmp = this.state.mainLocation.map((item, i) => {
+        return (
+          <Option key={i} value={item.provinceid}>
+            {item.provincenm}
+          </Option>
+        );
+      });
+    }
+    return tmp;
+  };
+
+  renderSubLocation = e => {
+    let tmp;
+    if (this.state.subLocation !== undefined) {
+      tmp = this.state.subLocation.map((item, i) => {
+        return (
+          <Option key={i} value={item.districtid}>
+            {item.districtnm}
+          </Option>
+        );
+      });
+    }
+    return tmp;
+  };
+
+  onChangeMainLoc = (e, form) => {
+    api.location.findLocationWidthId({ id: e }).then(res => {
+      if (res.success == true) {
+        this.setState({ subLocation: res.data });
+      }
+    });
+  };
+
+  onChangeSubLoc = (e, validateFields, e1) => {
+    if (e1 == undefined) {
+      validateFields((err, values) => {
+        if (values.mainLocation !== "") {
+          api.location
+            .findCommiteLocation({ provid: values.mainLocation, distid: e })
+            .then(res => {
+              if (res.success == true) {
+                this.setState({ commiteLocation: res.data });
+              }
+            });
+        }
+      });
+    } else {
+      api.location.findCommiteLocation({ provid: e1, distid: e }).then(res => {
+        if (res.success == true) {
+          this.setState({ commiteLocation: res.data });
+        }
+      });
+    }
+  };
+
+  renderCommiteLocation = e => {
+    let tmp;
+    if (this.state.commiteLocation.length !== 0) {
+      tmp = this.state.commiteLocation.map((item, i) => {
+        return (
+          <Option key={i} value={item.id}>
+            {item.committeenm}
+          </Option>
+        );
+      });
+    }
+    return tmp;
   };
 
   render() {
@@ -504,12 +510,26 @@ class Component extends React.Component {
                 <div className="col-xl-4" style={{ marginBottom: "-9px" }}>
                   <div className="form-group">
                     <Form.Item>
-                      <Select
-                        onChange={this.onChangeCity}
-                        placeholder={this.state.mainAddress.provincenm}
-                      >
-                        {this.renderProvince()}
-                      </Select>
+                      {getFieldDecorator("mainLocation", {
+                        rules: [
+                          {
+                            required: true,
+                            message: "Хот/аймаг сонгоно уу!"
+                          }
+                        ]
+                      })(
+                        <Select
+                          placeholder="Хот/аймаг *"
+                          showSearch
+                          optionFilterProp="children"
+                          className="col-md-12"
+                          onChange={e =>
+                            this.onChangeMainLoc(e, this.props.form)
+                          }
+                        >
+                          {this.renderMainLocation()}
+                        </Select>
+                      )}
                     </Form.Item>
                   </div>{" "}
                 </div>
@@ -517,12 +537,29 @@ class Component extends React.Component {
                 <div className="col-xl-4" style={{ marginBottom: "-9px" }}>
                   <div className="form-group">
                     <Form.Item>
-                      <Select
-                        placeholder={this.state.mainAddress.districtnm}
-                        onChange={this.onChangeDistrict}
-                      >
-                        {this.renderDistrict()}
-                      </Select>
+                      {getFieldDecorator("subLocation", {
+                        rules: [
+                          {
+                            required: true,
+                            message: "Дүүрэг/Сум сонгоно уу!"
+                          }
+                        ]
+                      })(
+                        <Select
+                          showSearch
+                          optionFilterProp="children"
+                          placeholder="Дүүрэг/Сум *"
+                          onChange={e =>
+                            this.onChangeSubLoc(
+                              e,
+                              this.props.form.validateFields,
+                              undefined
+                            )
+                          }
+                        >
+                          {this.renderSubLocation()}
+                        </Select>
+                      )}
                     </Form.Item>
                   </div>{" "}
                 </div>
@@ -530,12 +567,20 @@ class Component extends React.Component {
                 <div className="col-xl-4" style={{ marginBottom: "-9px" }}>
                   <div className="form-group">
                     <Form.Item>
-                      <Select
-                        placeholder={this.state.mainAddress.committeenm}
-                        onChange={this.onStreet}
-                      >
-                        {this.renderStreet()}
-                      </Select>
+                      {getFieldDecorator("commiteLocation", {
+                        rules: [
+                          { required: true, message: "Хороо сонгоно уу!" }
+                        ]
+                      })(
+                        <Select
+                          placeholder="Хороо *"
+                          showSearch
+                          optionFilterProp="children"
+                          onChange={this.onStreet}
+                        >
+                          {this.renderCommiteLocation()}
+                        </Select>
+                      )}
                     </Form.Item>
                   </div>{" "}
                 </div>
