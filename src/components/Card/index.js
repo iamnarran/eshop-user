@@ -21,8 +21,9 @@ const formatter = new Intl.NumberFormat("en-US");
 
 class Card extends React.Component {
   oneSave = item => {
+    console.log("one save");
     api.product
-      .addWishList({ custId: this.props.user.id, skucd: item.cd })
+      .addWishList({ custid: this.props.user.id, skucd: item.cd })
       .then(res => {
         if (res.success) {
           this.props.onNotify("Амжилттай хадгаллаа.");
@@ -60,7 +61,7 @@ class Card extends React.Component {
 
   handleSave = item => e => {
     e.preventDefault();
-
+    console.log("e,", item);
     if (this.props.isLoggedIn && this.props.user) {
       if (item.recipeid) {
         this.getRecipeData(item.recipeid);
@@ -71,7 +72,6 @@ class Card extends React.Component {
         this.oneSave(item);
       }
     } else {
-      /* this.props.onNotify("ehleed newter"); */
     }
   };
 
@@ -270,7 +270,7 @@ class Card extends React.Component {
   render() {
     const { type, item, isLastInRow, className } = this.props;
     let prices;
-
+    console.log(item);
     if (!item) {
       return null;
     }
@@ -332,7 +332,7 @@ class Card extends React.Component {
 
     const hover = (
       <div className="search-hover">
-        <Link to="" onClick={() => this.handleSave(item)}>
+        <Link to="" onClick={this.handleSave(item)}>
           <i className="fa fa-heart-o" aria-hidden="true" />
           <span />
         </Link>

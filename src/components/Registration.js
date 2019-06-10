@@ -80,15 +80,11 @@ class Component extends React.Component {
                 rules: [
                   {
                     required: true,
-                    message: "Овогоо бичнэ үү!"
+                    message: "Овогоо заавал оруулна уу!"
                   },
                   {
-                    min: 4,
-                    message: "Хамгийн багадаа 4 үсэг байна."
-                  },
-                  {
-                    max: 99,
-                    message: "Хамгийн ихтэй 99 үсэг байна."
+                    max: 50,
+                    message: "Хамгийн ихтэй 50 үсэг байна."
                   }
                 ]
               })(
@@ -104,15 +100,12 @@ class Component extends React.Component {
                 rules: [
                   {
                     required: true,
-                    message: "Нэрээ бичнэ үү!"
+                    message: "Нэрээ заавал оруулна уу!"
                   },
+
                   {
-                    min: 4,
-                    message: "Хамгийн багадаа 4 үсэг байна."
-                  },
-                  {
-                    max: 99,
-                    message: "Хамгийн ихтэй 99 үсэг байна."
+                    max: 50,
+                    message: "Хамгийн ихтэй 50 үсэг байна."
                   }
                 ]
               })(<Input placeholder="Нэр" className="form-control" />)}
@@ -122,12 +115,12 @@ class Component extends React.Component {
                 rules: [
                   {
                     required: true,
-                    message: "Имэйлээ бичнэ үү!"
-                  },
+                    message: "Имэйлээ заавал оруулна уу!"
+                  } /* ,
                   {
                     type: "email",
                     message: "Бодитой мэйл хаяг бичнэ үү!"
-                  }
+                  } */
                 ]
               })(<Input placeholder="И мэйл хаяг" className="form-control" />)}
             </Form.Item>
@@ -136,8 +129,8 @@ class Component extends React.Component {
                 rules: [
                   {
                     required: true,
-                    message: "Утасны дугаараа бичнэ үү!"
-                  },
+                    message: "Утасны дугаараа заавал оруулна уу!"
+                  } /* ,
                   {
                     min: 8,
                     message: "Утасны дугаар 8 оронтой байна."
@@ -145,7 +138,7 @@ class Component extends React.Component {
                   {
                     pattern: new RegExp("^[0-9]*$"),
                     message: "Утас нь зөвхөн тоо байна"
-                  }
+                  } */
                 ]
               })(
                 <Input
@@ -160,19 +153,19 @@ class Component extends React.Component {
                 rules: [
                   {
                     required: true,
-                    message: "Нууц үгээ бичнэ үү!"
+                    message: "Нууц үгээ заавал оруулна уу!"
                   },
                   {
                     validator: this.validateToNextPassword
-                  },
+                  } /* ,
                   {
                     min: 4,
                     message: "Нууц үг хамгийн багадаа 4 оронтой байна."
-                  }
+                  } */
                 ]
               })(
                 <Input.Password
-                  placeholder="Шинэ нууц үг"
+                  placeholder="Нууц үг"
                   className="form-control"
                 />
               )}
@@ -182,7 +175,7 @@ class Component extends React.Component {
                 rules: [
                   {
                     required: true,
-                    message: "Шинэ нууц үгээ дахин давтах!"
+                    message: "Нууц үгээ дахин давтах!"
                   },
                   {
                     validator: this.compareToFirstPassword

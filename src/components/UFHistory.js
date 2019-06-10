@@ -1,9 +1,13 @@
 import React from "react";
-import { Form } from "antd";
+import { Form, message } from "antd";
 import { connect } from "react-redux";
 import api from "../api";
 import { IMAGE } from "../utils/consts";
 import Rate from "./Rate";
+import { updateCart } from "../actions/cart";
+import withCart from "./HOC/withCart";
+import store from "../store";
+
 class Component extends React.Component {
   state = {
     deliveryList: [],
@@ -36,7 +40,23 @@ class Component extends React.Component {
     this.getData();
   }
 
+  oneSave = item => {
+    console.log("one save");
+    api.product
+      .addWishList({ custid: this.props.user.id, skucd: item.cd })
+      .then(res => {
+        if (res.success) {
+          message.success("Амжилттай хадгаллаа.");
+        }
+      });
+  };
+
+  handleSingleAddToCartClick = product => {
+    this.props.onUpdateCart(product);
+  };
+
   render() {
+    console.log(this.props);
     let tableList = null;
     const formatter = new Intl.NumberFormat("en-US");
     tableList = this.state.deliveryList.map((item, index) => {
@@ -74,12 +94,20 @@ class Component extends React.Component {
             <ul className="list-unstyled flex-this end">
               <li>
                 <a>
-                  <i className="fa fa-heart" aria-hidden="true" />
+                  <i
+                    className="fa fa-heart"
+                    aria-hidden="true"
+                    onClick={() => this.oneSave(item)}
+                  />
                 </a>
               </li>
               <li>
                 <a>
-                  <i className="fa fa-cart-plus" aria-hidden="true" />
+                  <i
+                    className="fa fa-cart-plus"
+                    aria-hidden="true"
+                    onClick={() => this.handleSingleAddToCartClick(item)}
+                  />
                 </a>
               </li>
               <li>
@@ -120,4 +148,9 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(Component);
+export default withCart(
+  connect(
+    null,
+    { updateCart }
+  )(Component)
+);
