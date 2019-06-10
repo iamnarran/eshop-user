@@ -17,12 +17,10 @@ class Component extends React.Component {
   };
 
   register = async values => {
-    console.log("register", values);
     this.setState({ loading: true });
     let res = await this.props.register(values);
-    console.log("success", res);
     if (res.success) {
-      message.success(res.data);
+      message.success("Амжилттай бүртгүүллээ. Та мэйл ээ шалгана уу! ");
       this.setState({ loading: false });
     } else {
       message.error(res.data);
@@ -36,7 +34,6 @@ class Component extends React.Component {
 
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        console.log(values);
         const data = {
           firstname: values.firstname.toString(),
           lastname: values.lastname.toString(),
@@ -45,23 +42,7 @@ class Component extends React.Component {
           phonE1: values.phonE1,
           phonE2: "0"
         };
-        console.log(data);
         this.register(data);
-        /* try {
-          res = this.props.register(data);
-          if (res.status === "failed") {
-            message.error(res.message);
-            this.setState({ isLoading: false });
-          } else {
-            this.props.handleOk();
-            message.success("Амжилттай бүртгүүллээ. Имэйлээ шалгана уу");
-            return <Redirect to="/" />;
-          }
-        } catch (err) {
-          console.log(err);
-          message.error(err.message);
-          this.setState({ isLoading: false });
-        } */
       }
     });
   };

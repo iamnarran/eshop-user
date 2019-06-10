@@ -25,12 +25,13 @@ class Confirm extends React.Component {
 
   componentDidMount() {
     api.customer.checkkey({ key: this.props.match.params.key }).then(res => {
-      console.log(res);
       this.setState({ message: res });
       if (res.success) {
+        console.log(res);
         /* this.handleNotify(res.data); */
         /* this.props.history.push("/"); */
       } else {
+        console.log(res);
         /* this.handleNotify(res.data); */
         /* this.props.history.push("/"); */
       }

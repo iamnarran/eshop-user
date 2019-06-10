@@ -23,7 +23,6 @@ class RegisterModal extends React.Component {
     this.props.hideRegisterModal();
   };
 
-  _;
   render() {
     return (
       <Modal

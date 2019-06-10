@@ -15,6 +15,7 @@ import WishList from "./UFWishlist";
 import Breadcrumb from "./Breadcrumb";
 import DeliveryHistory from "./UFdeliveryhistory";
 import Epoint from "./UFEpoint";
+import Registration from "./Registration";
 
 export {
   ProductDetail,
@@ -33,5 +34,6 @@ export {
   WishList,
   Breadcrumb,
   DeliveryHistory,
-  Epoint
+  Epoint,
+  Registration
 };

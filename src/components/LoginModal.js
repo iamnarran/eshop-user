@@ -133,6 +133,11 @@ class LoginModal extends React.Component {
     this.handleOk();
   };
 
+  showRegisterModal = async => {
+    this.props.showRegisterModal();
+    this.handleCancel();
+  };
+
   _submit = e => {
     e.preventDefault();
 
@@ -274,7 +279,8 @@ class LoginModal extends React.Component {
             <Link
               to=""
               className="btn btn-link"
-              onClick={this.props.showRegisterModal}
+              onClick={this.showRegisterModal}
+              /* onClick={this.props.showRegisterModal} */
             >
               Та шинээр бүртгүүлэх бол ЭНД ДАРЖ бүртгүүлнэ үү
             </Link>
