@@ -102,10 +102,9 @@ class Component extends React.Component {
                     required: true,
                     message: "Нэрээ заавал оруулна уу!"
                   },
-
                   {
                     max: 50,
-                    message: "Хамгийн ихтэй 50 үсэг байна."
+                    message: "Нэрээ заавал оруулна уу!"
                   }
                 ]
               })(<Input placeholder="Нэр" className="form-control" />)}
@@ -115,12 +114,12 @@ class Component extends React.Component {
                 rules: [
                   {
                     required: true,
-                    message: "Имэйлээ заавал оруулна уу!"
-                  } /* ,
+                    message: "Имэйлээ хаягаа оруулна уу!"
+                  },
                   {
                     type: "email",
-                    message: "Бодитой мэйл хаяг бичнэ үү!"
-                  } */
+                    message: "Имэйлээ хаягаа оруулна уу!"
+                  }
                 ]
               })(<Input placeholder="И мэйл хаяг" className="form-control" />)}
             </Form.Item>
@@ -129,16 +128,20 @@ class Component extends React.Component {
                 rules: [
                   {
                     required: true,
-                    message: "Утасны дугаараа заавал оруулна уу!"
-                  } /* ,
+                    message: "Утасны дугаараа оруулна уу!"
+                  },
                   {
                     min: 8,
-                    message: "Утасны дугаар 8 оронтой байна."
+                    message: "Утасны дугаараа оруулна уу!"
+                  },
+                  {
+                    max: 8,
+                    message: "Утасны дугаараа оруулна уу!"
                   },
                   {
                     pattern: new RegExp("^[0-9]*$"),
-                    message: "Утас нь зөвхөн тоо байна"
-                  } */
+                    message: "Утасны дугаараа оруулна уу!"
+                  }
                 ]
               })(
                 <Input
@@ -157,11 +160,11 @@ class Component extends React.Component {
                   },
                   {
                     validator: this.validateToNextPassword
-                  } /* ,
+                  },
                   {
                     min: 4,
                     message: "Нууц үг хамгийн багадаа 4 оронтой байна."
-                  } */
+                  }
                 ]
               })(
                 <Input.Password
@@ -210,12 +213,12 @@ class Component extends React.Component {
             >
               Gmail-р бүртгүүлэх
             </button>
-            <button
+            {/*  <button
               type="submit"
               className="btn btn-block btn-social btn-emart"
             >
               Имарт картаар бүртгүүлэх
-            </button>
+            </button> */}
           </Form>
         </div>
       </div>

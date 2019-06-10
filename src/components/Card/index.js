@@ -9,6 +9,7 @@ import { css } from "glamor";
 
 import store from "../../store";
 import { updateCart } from "../../actions/cart";
+import { signOut, showLoginModal } from "../../actions/login";
 import api from "../../api";
 import Label from "../Label";
 import withCart from "../HOC/withCart";
@@ -70,7 +71,14 @@ class Card extends React.Component {
         this.oneSave(item);
       }
     } else {
+      /* console.log("loginModal"); */
+      this.handleLoginClick(e);
     }
+  };
+
+  handleLoginClick = e => {
+    e.preventDefault();
+    this.props.showLoginModal();
   };
 
   handleAddToCart = item => e => {
@@ -266,6 +274,7 @@ class Card extends React.Component {
   };
 
   render() {
+    console.log(this.props);
     const { type, item, isLastInRow, className } = this.props;
     let prices;
     if (!item) {
@@ -598,12 +607,11 @@ class Card extends React.Component {
                 <Link
                   to=""
                   className="wishlist"
-                  onClick={e => this.handleSave(item)}
+                  onClick={this.handleSave(item)}
                 >
                   <i className="fa fa-heart-o" aria-hidden="true" />
                 </Link>
-                <Link
-                  to=""
+                <a
                   onClick={this.handleAddToCart(item)}
                   style={{
                     fontSize: "1.1rem"
@@ -611,7 +619,7 @@ class Card extends React.Component {
                 >
                   <i className="fa fa-cart-plus" aria-hidden="true" />
                   <span />
-                </Link>
+                </a>
               </div>
             </div>
           </div>
@@ -632,6 +640,6 @@ Card.propTypes = {
 export default withCart(
   connect(
     null,
-    { updateCart }
+    { updateCart, showLoginModal }
   )(Card)
 );
