@@ -21,7 +21,6 @@ const formatter = new Intl.NumberFormat("en-US");
 
 class Card extends React.Component {
   oneSave = item => {
-    console.log("one save");
     api.product
       .addWishList({ custid: this.props.user.id, skucd: item.cd })
       .then(res => {
@@ -61,7 +60,6 @@ class Card extends React.Component {
 
   handleSave = item => e => {
     e.preventDefault();
-    console.log("e,", item);
     if (this.props.isLoggedIn && this.props.user) {
       if (item.recipeid) {
         this.getRecipeData(item.recipeid);
@@ -270,7 +268,6 @@ class Card extends React.Component {
   render() {
     const { type, item, isLastInRow, className } = this.props;
     let prices;
-    console.log(item);
     if (!item) {
       return null;
     }
