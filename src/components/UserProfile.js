@@ -76,7 +76,7 @@ class Component extends React.Component {
       }
     });
     api.location.findAll({}).then(res => {
-      if (res.success) {
+      if (res.success == true) {
         this.setState({ mainLocation: res.data });
       }
     });

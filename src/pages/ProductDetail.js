@@ -22,7 +22,9 @@ const formatter = new Intl.NumberFormat("en-US");
 class ProductDetail extends Component {
   state = {
     productQty: this.props.container.product.saleminqty || 1,
-    isShowMoreClicked: false
+    isShowMoreClicked: false,
+    rate: [],
+    rateNum: ""
   };
 
   addView() {
@@ -41,6 +43,10 @@ class ProductDetail extends Component {
   }
   componentDidMount() {
     this.addView();
+    api.product.productRate({ skucd: this.props.match.params.id }).then(res => {
+      this.setState({ rate: res.data[0] });
+      this.setState({ rateNum: res.data[0].rate });
+    });
   }
 
   componentDidUpdate() {
@@ -114,14 +120,14 @@ class ProductDetail extends Component {
           <div className="main-rating">
             <Rate
               allowHalf
-              defaultValue={this.getRateValue()}
+              value={this.state.rateNum / 2}
               onChange={this.handleRateChange}
             />
 
             <p className="text">
               (
-              {!!product.rate && !!product.rate.length
-                ? `${product.rate.length} хүн үнэлгээ өгсөн байна`
+              {this.state.rate
+                ? `${this.state.rate.custcnt} хүн үнэлгээ өгсөн байна`
                 : "Одоогоор үнэлгээ өгөөгүй байна"}
               )
             </p>
@@ -507,6 +513,7 @@ class ProductDetail extends Component {
   };
 
   handleRateChange = e => {
+    console.log(e * 2);
     api.product
       .addCustomerRate({
         custId: this.props.user.id,
