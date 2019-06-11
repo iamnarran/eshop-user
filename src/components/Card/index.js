@@ -26,7 +26,7 @@ class Card extends React.Component {
       .addWishList({ custid: this.props.user.id, skucd: item.cd })
       .then(res => {
         if (res.success) {
-          this.props.onNotify("Амжилттай хадгаллаа.");
+          /* this.props.onNotify("Амжилттай хадгаллаа."); */
         }
       });
   };
@@ -71,7 +71,6 @@ class Card extends React.Component {
         this.oneSave(item);
       }
     } else {
-      console.log("loginModal");
       this.handleLoginClick(e);
     }
   };
@@ -98,7 +97,7 @@ class Card extends React.Component {
             }, Promise.resolve());
           }
         } else {
-          this.props.onNotify(res.message);
+          /* this.props.onNotify(res.message); */
         }
       });
     } else if (item.id) {
@@ -114,7 +113,7 @@ class Card extends React.Component {
             }, Promise.resolve());
           }
         } else {
-          this.props.onNotify(res.message);
+          /* this.props.onNotify(res.message); */
         }
       });
     } else {

@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
-import { Rate } from "antd";
+import { Rate, message } from "antd";
 import { toast } from "react-toastify";
 
 import api from "../api";
@@ -14,17 +14,13 @@ class CommentList extends React.Component {
     comments: this.props.comments
   };
 
-  notify = message => toast(message, { autoClose: 5000 });
-
   handleCommitChange = e => {
     this.setState({ comment: e.target.value });
   };
 
   handleCommentSend = e => {
     e.preventDefault();
-
     const { user, product } = this.props;
-
     api.product
       .addCutomerComment({
         custid: user.id,
@@ -53,7 +49,7 @@ class CommentList extends React.Component {
             ]
           });
         } else {
-          this.notify(res.message);
+          message.error(res.message);
         }
       });
   };

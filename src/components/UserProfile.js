@@ -16,21 +16,12 @@ const Option = Select.Option;
 )
 class Component extends React.Component {
   state = {
-    province: [],
-    provid: null,
-    distid: null,
-    locid: null,
-    userInfo: [],
-    card: [],
+    info: [],
     cardNoInput: "",
-    mainAddress: [],
-    provincenm: "",
-    districtnm: "",
-    committeenm: "",
-    realAddress: "",
 
     mainLocation: [],
-    commiteLocation: []
+    commiteLocation: [],
+    subLocation: []
   };
 
   errorMsg = txt => {
@@ -59,213 +50,84 @@ class Component extends React.Component {
   };
 
   componentDidMount() {
-    api.location.findAll({}).then(res => {
-      if (res.success == true) {
-        this.setState({ mainLocation: res.data });
-      }
-    });
-    this.getProvince();
-    this.getUserInfo();
+    this.getData();
     this.getAddress();
-    this.getUserData();
   }
 
-  getValues = () => {
-    this.props.form.setFieldsValue({
-      lastname: this.state.userInfo.lastname,
-      firstname: this.state.userInfo.firstname,
-      email: this.state.userInfo.email,
-      phone1: this.state.userInfo.phone1,
-      phone2: this.state.userInfo.phone2,
-      address: this.state.realAddress
-    });
-  };
-
-  getUserData = async () => {
-    await api.customer.findUserData({ id: this.props.user.id }).then(res => {
+  getData() {
+    api.customer.getCustomer({ custid: this.props.user.id }).then(res => {
       if (res.success) {
-        this.setState({ card: res.data.card });
+        this.setStateInfo(res.data.info);
+        this.setData();
       }
     });
-  };
+  }
 
-  getAddress = async () => {
-    await api.customer.address({ custid: this.props.user.id }).then(res => {
+  getAddress() {
+    api.customer.address({ custid: this.props.user.id }).then(res => {
       if (res.success) {
         res.data.map((item, index) => {
           if (item.ismain) {
-            this.props.form.setFieldsValue({
-              address: item.address,
-              mainLocation: item.provincenm,
-              subLocation: item.districtnm,
-              commiteLocation: item.committeenm
-            });
+            this.setMainAddress(item);
           }
         });
-        this.setState({ homeaddress: res.data });
       } else {
         console.log("else");
       }
     });
-  };
-
-  getProvince = async () => {
-    await api.location.findAll().then(res => {
+    api.location.findAll({}).then(res => {
       if (res.success) {
-        this.setState({ province: res.data });
-      } else {
-        console.log("else");
+        this.setState({ mainLocation: res.data });
       }
     });
-  };
+  }
 
-  getDistrict = async id => {
-    await api.location.findLocationWidthId({ id: id }).then(res => {
-      if (res.success) {
-        this.setState({ districtOrSum: res.data });
-      }
-    });
-  };
+  async setMainAddress(data) {
+    await this.setState({ mainAddress: data });
+  }
 
-  getLocid = async () => {
-    await api.location
-      .findCommiteLocation({
-        provid: this.state.provid,
-        distid: this.state.distid
-      })
-      .then(res => {
-        if (res.success) {
-          this.setState({ street: res.data });
-        }
-      });
-  };
-  getUserInfo = async () => {
-    api.customer.getCustomer({ custid: this.props.user.id }).then(res => {
-      if (res.success) {
-        this.setState({ userInfo: res.data.info });
-        this.getValues();
-      }
+  async setStateInfo(data) {
+    await this.setState({ info: data });
+  }
+
+  setData = async () => {
+    this.props.form.setFieldsValue({
+      lastname: this.state.info.lastname,
+      firstname: this.state.info.firstname,
+      email: this.state.info.email,
+      phone1: this.state.info.phone1,
+      phone2: this.state.info.phone2,
+      address: this.state.mainAddress.address,
+      mainLocation: this.state.mainAddress.provincenm,
+      subLocation: this.state.mainAddress.districtnm,
+      commiteLocation: this.state.mainAddress.committeenm
     });
   };
 
   handleSubmit = e => {
     e.preventDefault();
-    let loc = this.state.locid
-      ? this.state.locid
-      : this.state.mainAddress.locid;
-    const data = {
-      id: this.props.user.id,
-      username: this.state.userInfo.username,
-      firstname: this.state.userInfo.firstname,
-      imgnm: this.state.userInfo.imgnm,
-      lastname: this.state.userInfo.lastname,
-      email: this.state.userInfo.email,
-      phonE1: this.state.userInfo.phone1,
-      phonE2: this.state.userInfo.phone2,
-      adrsid: this.state.mainAddress.id,
-      locid: loc,
-      address: this.state.realAddress
-    };
-    this.props.form.validateFieldsAndScroll(err => {
+    this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        api.customer.updateMainAddress(data).then(res => {
-          if (res.success) {
-            message.success("Амжилттай хадгаллаа.");
-          } else {
-            message.error("Амжилтгүй хадгаллаа.");
-          }
-        });
+        console.log(values);
       }
     });
   };
 
-  onChangeLastname = e => {
-    const data = {
-      conymd: this.state.userInfo.conymd,
-      email: this.state.userInfo.email,
-      firstname: this.state.userInfo.firstname,
-      id: this.state.userInfo.id,
-      imgnm: this.state.userInfo.imgnm,
-      insymd: this.state.userInfo.insymd,
-      lastname: e.target.value,
-      phone1: this.state.userInfo.phone1,
-      phone2: this.state.userInfo.phone2,
-      updymd: this.state.userInfo.updymd,
-      username: this.state.userInfo.username
-    };
-    this.setState({ userInfo: data });
-  };
-
-  onChangeFirstname = e => {
-    const data = {
-      conymd: this.state.userInfo.conymd,
-      email: this.state.userInfo.email,
-      firstname: e.target.value,
-      id: this.state.userInfo.id,
-      imgnm: this.state.userInfo.imgnm,
-      insymd: this.state.userInfo.insymd,
-      lastname: this.state.userInfo.lastname,
-      phone1: this.state.userInfo.phone1,
-      phone2: this.state.userInfo.phone2,
-      updymd: this.state.userInfo.updymd,
-      username: this.state.userInfo.username
-    };
-    this.setState({ userInfo: data });
-  };
-
-  onChangeEmail = e => {
-    const data = {
-      conymd: this.state.userInfo.conymd,
-      email: e.target.value,
-      firstname: this.state.userInfo.firstname,
-      id: this.state.userInfo.id,
-      imgnm: this.state.userInfo.imgnm,
-      insymd: this.state.userInfo.insymd,
-      lastname: this.state.userInfo.lastname,
-      phone1: this.state.userInfo.phone1,
-      phone2: this.state.userInfo.phone2,
-      updymd: this.state.userInfo.updymd,
-      username: this.state.userInfo.username
-    };
-    this.setState({ userInfo: data });
-  };
-
-  onChangePhone1 = e => {
-    const data = {
-      conymd: this.state.userInfo.conymd,
-      email: this.state.userInfo.email,
-      firstname: this.state.userInfo.firstname,
-      id: this.state.userInfo.id,
-      imgnm: this.state.userInfo.imgnm,
-      insymd: this.state.userInfo.insymd,
-      lastname: this.state.userInfo.lastname,
-      phone1: e.target.value,
-      phone2: this.state.userInfo.phone2,
-      updymd: this.state.userInfo.updymd,
-      username: this.state.userInfo.username
-    };
-    this.setState({ userInfo: data });
-  };
-
-  onChangePhone2 = e => {
-    const data = {
-      conymd: this.state.userInfo.conymd,
-      email: this.state.userInfo.email,
-      firstname: this.state.userInfo.firstname,
-      id: this.state.userInfo.id,
-      imgnm: this.state.userInfo.imgnm,
-      insymd: this.state.userInfo.insymd,
-      lastname: this.state.userInfo.lastname,
-      phone1: this.state.userInfo.phone1,
-      phone2: e.target.value,
-      updymd: this.state.userInfo.updymd,
-      username: this.state.userInfo.username
-    };
-    this.setState({ userInfo: data });
-  };
-
-  onChangeAddress = e => {
-    this.setState({ realAddress: e.target.value });
+  saveCustomerCard = async (e, refs) => {
+    e.preventDefault();
+    console.log("customerCard");
+    let cardpass = refs.cardpass.value;
+    let cardno = refs.cardno.value;
+    if (cardpass != "" && cardno != "") {
+      let tmp = {
+        custid: this.props.user.id,
+        cardno: cardno,
+        pincode: cardpass
+      };
+      this.saveCard(tmp);
+    } else {
+      this.errorMsg("Картын дугаар нууц үг оруулна уу ?");
+    }
   };
 
   cardNoChange = e => {
@@ -275,31 +137,18 @@ class Component extends React.Component {
     }
   };
 
-  saveCustomerCard = async (e, refs) => {
-    e.preventDefault();
-
-    let cardpass = refs.cardpass.value;
-    let cardno = refs.cardno.value;
-    if (cardpass != "" && cardno != "") {
-      let tmp = {
-        custid: this.state.userInfo.id,
-        cardno: cardno,
-        pincode: cardpass
-      };
-      await api.checkout.saveCustomerCard(tmp).then(res => {
-        if (res.success == true) {
-          this.setState({ card: res.data });
-          this.successMsg("Таны бүртгэлийг Ипойнт карттай амжилттай холболоо");
-        } else {
-          this.errorMsg(res.data);
-        }
-      });
-    } else {
-      this.errorMsg("Картын дугаар нууц үг оруулна уу ?");
-    }
+  saveCard = async tmp => {
+    await api.checkout.saveCustomerCard(tmp).then(res => {
+      if (res.success == true) {
+        this.setState({ card: res.data });
+        this.successMsg("Таны бүртгэлийг Ипойнт карттай амжилттай холболоо");
+      } else {
+        this.errorMsg(res.data);
+      }
+    });
   };
 
-  /* render location */
+  /* main Location */
   onStreet = async e => {
     console.log(e);
     this.setState({ locid: e });
@@ -378,6 +227,7 @@ class Component extends React.Component {
   };
 
   render() {
+    console.log(this.state, this.props);
     const { getFieldDecorator, setFieldsInitialValue } = this.props.form;
 
     return (
@@ -399,12 +249,7 @@ class Component extends React.Component {
                             message: "Овгоо заавал оруулна уу! "
                           }
                         ]
-                      })(
-                        <Input
-                          placeholder="Овог"
-                          onChange={this.onChangeLastname}
-                        />
-                      )}
+                      })(<Input placeholder="Овог" />)}
                     </Form.Item>
                   </div>{" "}
                 </div>
@@ -419,12 +264,7 @@ class Component extends React.Component {
                             message: "Нэрээ заавал оруулна уу! "
                           }
                         ]
-                      })(
-                        <Input
-                          placeholder="Нэр"
-                          onChange={this.onChangeFirstname}
-                        />
-                      )}
+                      })(<Input placeholder="Нэр" />)}
                     </Form.Item>
                   </div>{" "}
                 </div>
@@ -443,12 +283,7 @@ class Component extends React.Component {
                             message: "Зөв имэйл оруулна уу! "
                           }
                         ]
-                      })(
-                        <Input
-                          placeholder="Имэйл"
-                          onChange={this.onChangeEmail}
-                        />
-                      )}
+                      })(<Input placeholder="Имэйл" />)}
                     </Form.Item>
                   </div>{" "}
                 </div>
@@ -471,12 +306,7 @@ class Component extends React.Component {
                             message: "Утасны дугаар 8 оронтой байх ёстой! "
                           }
                         ]
-                      })(
-                        <Input
-                          placeholder="Утас 1"
-                          onChange={this.onChangePhone1}
-                        />
-                      )}
+                      })(<Input placeholder="Утас 1" />)}
                     </Form.Item>
                   </div>{" "}
                 </div>
@@ -495,12 +325,7 @@ class Component extends React.Component {
                             message: "Утасны дугаар 8 оронтой байх ёстой! "
                           }
                         ]
-                      })(
-                        <Input
-                          placeholder="Утас 2"
-                          onChange={this.onChangePhone2}
-                        />
-                      )}
+                      })(<Input placeholder="Утас 2" />)}
                     </Form.Item>
                   </div>{" "}
                 </div>
@@ -598,7 +423,7 @@ class Component extends React.Component {
                       })(
                         <Input
                           placeholder="Гэрийн хаяг"
-                          onChange={this.onChangeAddress}
+                          /* onChange={this.onChangeAddress} */
                         />
                       )}
                     </Form.Item>

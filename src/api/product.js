@@ -96,8 +96,8 @@ export default [
   {
     NAME: "addCustomerRate",
     METHOD: "POST",
-    URL: `${API}/api/product/rate/:custid/:skucd/:rate`,
-    REPLACE: "custid, skucd, rate"
+    URL: `${API}/api/product/rate/:custId/:skucd/:rate`,
+    REPLACE: "custId, skucd, rate"
   },
   {
     NAME: "addCutomerComment",

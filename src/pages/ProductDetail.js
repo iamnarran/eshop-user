@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { Button, Rate } from "antd";
+import { Button, Rate, message } from "antd";
 import {
   FacebookShareButton,
   TwitterShareButton,
@@ -279,10 +279,9 @@ class ProductDetail extends Component {
         <div className="btn-container text-right">
           <button
             type="button"
-            className="btn btn-gray text-uppercase"
+            className="btn text-uppercase"
             style={{ marginRight: "10px" }}
             onClick={this.handleSaveClick}
-            disabled={!(this.props.isLoggedIn && this.props.user)}
           >
             <span>Хадгалах</span>
           </button>
@@ -508,7 +507,20 @@ class ProductDetail extends Component {
   };
 
   handleRateChange = e => {
-    console.log(e);
+    api.product
+      .addCustomerRate({
+        custId: this.props.user.id,
+        skucd: this.props.match.params.id,
+        rate: e
+      })
+      .then(res => {
+        console.log(res);
+        if (res.success) {
+          message.success(res.data);
+        } else {
+          message.success(res.data);
+        }
+      });
   };
 
   handleQtyChange = product => e => {
@@ -577,16 +589,17 @@ class ProductDetail extends Component {
 
   handleSaveClick = e => {
     e.preventDefault();
-
     if (this.props.isLoggedIn && this.props.user) {
-      console.log("ready to save");
-      // await api.product
-      //   .addViewList({ id: this.state.userInfo.id, skucd: this.state.skucd })
-      //   .then(res => {
-      //     if (res.success) {
-      //       this.notify(res.message);
-      //     }
-      //   });
+      api.product
+        .addWishList({
+          custid: this.props.user.id,
+          skucd: this.props.match.params.id
+        })
+        .then(res => {
+          if (res.success) {
+            message.success(res.message);
+          }
+        });
     } else {
       this.showLoginModal();
     }
