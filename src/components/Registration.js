@@ -21,6 +21,7 @@ class Component extends React.Component {
     let res = await this.props.register(values);
     if (res.success) {
       message.success("Амжилттай бүртгүүллээ. Та мэйл ээ шалгана уу! ");
+      this.props.handleOk();
       this.setState({ loading: false });
     } else {
       message.error(res.data);

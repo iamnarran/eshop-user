@@ -178,7 +178,7 @@ class Homepage extends React.Component {
         clickable: true
       }
     };
-    console.log(brands.length);
+
     return (
       <div className="top-container">
         <div className="main-slide">

@@ -83,7 +83,7 @@ class Confirm extends React.Component {
                     />
                   </div>
                   {message.success
-                    ? this.renderSuccessTure()
+                    ? this.renderSuccessTrue()
                     : this.renderSuccessFalse()}
                 </center>
               </div>

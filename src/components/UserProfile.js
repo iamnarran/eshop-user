@@ -21,7 +21,9 @@ class Component extends React.Component {
 
     mainLocation: [],
     commiteLocation: [],
-    subLocation: []
+    subLocation: [],
+
+    locid: null
   };
 
   errorMsg = txt => {
@@ -102,6 +104,7 @@ class Component extends React.Component {
       subLocation: this.state.mainAddress.districtnm,
       commiteLocation: this.state.mainAddress.committeenm
     });
+    console.log(this.state.info);
   };
 
   handleSubmit = e => {
@@ -109,6 +112,7 @@ class Component extends React.Component {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         console.log(values);
+        console.log(this.state.locid);
       }
     });
   };
@@ -150,7 +154,6 @@ class Component extends React.Component {
 
   /* main Location */
   onStreet = async e => {
-    console.log(e);
     this.setState({ locid: e });
   };
 
@@ -227,7 +230,6 @@ class Component extends React.Component {
   };
 
   render() {
-    console.log(this.state, this.props);
     const { getFieldDecorator, setFieldsInitialValue } = this.props.form;
 
     return (
@@ -295,15 +297,9 @@ class Component extends React.Component {
                         rules: [
                           {
                             required: true,
-                            message: "Утсаа заавал оруулна уу! "
-                          },
-                          {
                             pattern: new RegExp("^[0-9]*$"),
-                            message: "Утасны дугаар нь зөвхөн тоо байна! "
-                          },
-                          {
                             len: 8,
-                            message: "Утасны дугаар 8 оронтой байх ёстой! "
+                            message: "Утсаа заавал оруулна уу! "
                           }
                         ]
                       })(<Input placeholder="Утас 1" />)}
@@ -318,9 +314,6 @@ class Component extends React.Component {
                         rules: [
                           {
                             pattern: new RegExp("^[0-9]*$"),
-                            message: "Утасны дугаар нь зөвхөн тоо байна! "
-                          },
-                          {
                             len: 8,
                             message: "Утасны дугаар 8 оронтой байх ёстой! "
                           }
