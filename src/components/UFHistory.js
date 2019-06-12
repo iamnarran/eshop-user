@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, message } from "antd";
+import { Form, message, Icon, Spin } from "antd";
 import { connect } from "react-redux";
 import api from "../api";
 import { IMAGE } from "../utils/consts";
@@ -11,10 +11,11 @@ import store from "../store";
 class Component extends React.Component {
   state = {
     deliveryList: [],
-    loading: true
+    loading: false
   };
 
   getData = async () => {
+    this.setState({ loading: true });
     await api.customer.getViewList({ custid: this.props.user.id }).then(res => {
       if (res.success) {
         this.setState({
@@ -27,6 +28,7 @@ class Component extends React.Component {
 
   onDelete = (e, item) => {
     e.preventDefault();
+    this.setState({ loading: true });
     api.customer
       .deleteSeenList({ custid: this.props.user.id, skucd: item.cd })
       .then(res => {
@@ -41,7 +43,6 @@ class Component extends React.Component {
   }
 
   oneSave = item => {
-    console.log("one save");
     api.product
       .addWishList({ custid: this.props.user.id, skucd: item.cd })
       .then(res => {
@@ -56,7 +57,7 @@ class Component extends React.Component {
   };
 
   render() {
-    console.log(this.props);
+    const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
     let tableList = null;
     const formatter = new Intl.NumberFormat("en-US");
     tableList = this.state.deliveryList.map((item, index) => {
@@ -123,17 +124,24 @@ class Component extends React.Component {
 
     return (
       <div className="col-md-8 pad10">
-        <div className="user-menu-content">
-          <p className="title">
-            <span>Үзсэн барааны түүх</span>
-          </p>
-          <div
-            className="product-list-history frame frameMargin"
-            style={{ maxHeight: "500px", overflow: "auto" }}
-          >
-            {tableList}
+        <Spin
+          spinning={this.state.loading}
+          delay={500}
+          indicator={antIcon}
+          tip="Түр хүлээнэ үү"
+        >
+          <div className="user-menu-content">
+            <p className="title">
+              <span>Үзсэн барааны түүх</span>
+            </p>
+            <div
+              className="product-list-history frame frameMargin"
+              style={{ maxHeight: "500px", overflow: "auto" }}
+            >
+              {tableList}
+            </div>
           </div>
-        </div>
+        </Spin>
       </div>
     );
   }

@@ -81,9 +81,6 @@ class Component extends React.Component {
                 rules: [
                   {
                     required: true,
-                    message: "Овогоо заавал оруулна уу!"
-                  },
-                  {
                     max: 50,
                     message: "Хамгийн ихтэй 50 үсэг байна."
                   }
@@ -102,10 +99,6 @@ class Component extends React.Component {
                   {
                     required: true,
                     message: "Нэрээ заавал оруулна уу!"
-                  },
-                  {
-                    max: 50,
-                    message: "Нэрээ заавал оруулна уу!"
                   }
                 ]
               })(<Input placeholder="Нэр" className="form-control" />)}
@@ -115,9 +108,6 @@ class Component extends React.Component {
                 rules: [
                   {
                     required: true,
-                    message: "Имэйлээ хаягаа оруулна уу!"
-                  },
-                  {
                     type: "email",
                     message: "Имэйлээ хаягаа оруулна уу!"
                   }
@@ -129,17 +119,8 @@ class Component extends React.Component {
                 rules: [
                   {
                     required: true,
-                    message: "Утасны дугаараа оруулна уу!"
-                  },
-                  {
                     min: 8,
-                    message: "Утасны дугаараа оруулна уу!"
-                  },
-                  {
                     max: 8,
-                    message: "Утасны дугаараа оруулна уу!"
-                  },
-                  {
                     pattern: new RegExp("^[0-9]*$"),
                     message: "Утасны дугаараа оруулна уу!"
                   }

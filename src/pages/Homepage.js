@@ -162,7 +162,7 @@ class Homepage extends React.Component {
     };
 
     const brandParams1 = {
-      slidesPerView: 1,
+      slidesPerView: brands.length,
       spaceBetween: 10,
       loop: true,
       autoplay: {
@@ -194,7 +194,7 @@ class Homepage extends React.Component {
           <div className="container pad10">
             <Slider
               data={brands}
-              params={brands.length === 1 ? brandParams1 : brandParams}
+              params={brands.length <= 5 ? brandParams1 : brandParams}
               elContainer={"brands"}
             />
           </div>
