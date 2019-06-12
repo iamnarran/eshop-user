@@ -16,6 +16,7 @@ import Gallery from "../components/Gallery";
 import { CommentList, CardSlider, Breadcrumb } from "../components";
 import withCart from "../components/HOC/withCart";
 import api from "../api";
+import { signOut, showLoginModal } from "../actions/login";
 
 const formatter = new Intl.NumberFormat("en-US");
 
@@ -608,7 +609,7 @@ class ProductDetail extends Component {
           }
         });
     } else {
-      this.showLoginModal();
+      this.props.showLoginModal();
     }
   };
 
@@ -663,6 +664,6 @@ const mapStateToProps = state => {
 export default withCart(
   connect(
     mapStateToProps,
-    { updateCart }
+    { updateCart, showLoginModal }
   )(ProductDetail)
 );
