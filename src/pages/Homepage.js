@@ -161,6 +161,24 @@ class Homepage extends React.Component {
       }
     };
 
+    const brandParams1 = {
+      slidesPerView: 1,
+      spaceBetween: 10,
+      loop: true,
+      autoplay: {
+        delay: 5000,
+        disableOnInteraction: false
+      },
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev"
+      },
+      pagination: {
+        type: "bullets",
+        clickable: true
+      }
+    };
+    console.log(brands.length);
     return (
       <div className="top-container">
         <div className="main-slide">
@@ -174,7 +192,11 @@ class Homepage extends React.Component {
 
         <div className="main-slide brands-list">
           <div className="container pad10">
-            <Slider data={brands} params={brandParams} elContainer={"brands"} />
+            <Slider
+              data={brands}
+              params={brands.length === 1 ? brandParams1 : brandParams}
+              elContainer={"brands"}
+            />
           </div>
         </div>
 
