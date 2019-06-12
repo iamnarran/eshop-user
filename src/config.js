@@ -11,10 +11,10 @@ export default {
     // development: "http://10.0.0.22:8876/mn", // Test Api
 
     production: "http://userapi.emartmall.mn/mn/",
-    development: "http://userapi.emartmall.mn/mn/"
+    // development: "http://userapi.emartmall.mn/mn/"
 
-    // development: "http://10.0.10.37:8876/mn" // Olzii's
-    //development: "http://10.0.10.31:8876/mn" // Tulgaa brother's
+    development: "http://10.0.10.37:8876/mn" // Olzii's
+    // development: "http://10.0.10.31:8876/mn" // Tulgaa brother's
   },
   image: {
     /* production: "http://10.0.0.55:81/", //Real
