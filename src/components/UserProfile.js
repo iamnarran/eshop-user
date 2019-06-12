@@ -76,7 +76,7 @@ class Component extends React.Component {
       if (res.success) {
         res.data.map((item, index) => {
           if (item.ismain) {
-            console.log(item);
+            this.setState({ mainAddress: item });
             this.props.form.setFieldsValue({
               address: item.address,
               mainLocation: item.provincenm,
