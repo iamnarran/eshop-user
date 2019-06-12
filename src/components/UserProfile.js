@@ -54,13 +54,19 @@ class Component extends React.Component {
   componentDidMount() {
     this.getData();
     this.getAddress();
+    this.setData();
   }
 
   getData() {
     api.customer.getCustomer({ custid: this.props.user.id }).then(res => {
       if (res.success) {
-        this.setStateInfo(res.data.info);
-        this.setData();
+        this.props.form.setFieldsValue({
+          lastname: res.data.info.lastname,
+          firstname: res.data.info.firstname,
+          email: res.data.info.email,
+          phone1: res.data.info.phone1,
+          phone2: res.data.info.phone2
+        });
       }
     });
   }
@@ -70,7 +76,13 @@ class Component extends React.Component {
       if (res.success) {
         res.data.map((item, index) => {
           if (item.ismain) {
-            this.setMainAddress(item);
+            console.log(item);
+            this.props.form.setFieldsValue({
+              address: item.address,
+              mainLocation: item.provincenm,
+              subLocation: item.districtnm,
+              commiteLocation: item.committeenm
+            });
           }
         });
       } else {
@@ -84,16 +96,8 @@ class Component extends React.Component {
     });
   }
 
-  async setMainAddress(data) {
-    await this.setState({ mainAddress: data });
-  }
-
-  async setStateInfo(data) {
-    await this.setState({ info: data });
-  }
-
   setData = async () => {
-    this.props.form.setFieldsValue({
+    /* this.props.form.setFieldsValue({
       lastname: this.state.info.lastname,
       firstname: this.state.info.firstname,
       email: this.state.info.email,
@@ -103,7 +107,7 @@ class Component extends React.Component {
       mainLocation: this.state.mainAddress.provincenm,
       subLocation: this.state.mainAddress.districtnm,
       commiteLocation: this.state.mainAddress.committeenm
-    });
+    }); */
   };
 
   handleSubmit = e => {
