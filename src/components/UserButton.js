@@ -17,7 +17,7 @@ import password from "../scss/assets/images/demo/password.png";
 import store from "../scss/assets/images/demo/store.png";
 class UserButton extends React.Component {
   state = {
-    progress: "",
+    progress: 0,
     pro: false
   };
 
@@ -49,7 +49,7 @@ class UserButton extends React.Component {
     if (this.props.user) {
       await api.customer.findUserData({ id: this.props.user.id }).then(res => {
         if (res.success) {
-          if (res.data.info.imgnm) {
+          /* if (res.data.info.imgnm) {
             progress = parseInt(progress) + 25;
           }
           if (res.data.addrs.length > 0) {
@@ -58,7 +58,7 @@ class UserButton extends React.Component {
           if (res.data.card) {
             progress = parseInt(progress) + 25;
           }
-          this.setState({ progress: progress });
+          this.setState({ progress: progress }); */
         }
       });
     } else {

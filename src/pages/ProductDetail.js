@@ -45,8 +45,17 @@ class ProductDetail extends Component {
   componentDidMount() {
     this.addView();
     api.product.productRate({ skucd: this.props.match.params.id }).then(res => {
-      this.setState({ rate: res.data[0] });
-      this.setState({ rateNum: res.data[0].rate });
+      if (res.success) {
+        if (res.data !== null) {
+          console.log(res.data);
+          this.setState({ rate: res.data[0] });
+          this.setState({ rateNum: res.data[0].rate });
+        } else {
+          this.setState({ rate: 0, rateNum: 0 });
+        }
+      }
+      /*  this.setState({ rate: res.data[0] });
+      this.setState({ rateNum: res.data[0].rate }); */
     });
   }
 
@@ -515,20 +524,22 @@ class ProductDetail extends Component {
 
   handleRateChange = e => {
     console.log(e * 2);
-    api.product
-      .addCustomerRate({
-        custId: this.props.user.id,
-        skucd: this.props.match.params.id,
-        rate: e
-      })
-      .then(res => {
-        console.log(res);
-        if (res.success) {
-          message.success(res.data);
-        } else {
-          message.success(res.data);
-        }
-      });
+    if (this.props.isLoggedIn) {
+      api.product
+        .addCustomerRate({
+          custId: this.props.user.id,
+          skucd: this.props.match.params.id,
+          rate: e
+        })
+        .then(res => {
+          console.log(res);
+          if (res.success) {
+            message.success(res.data);
+          } else {
+            message.success(res.data);
+          }
+        });
+    }
   };
 
   handleQtyChange = product => e => {

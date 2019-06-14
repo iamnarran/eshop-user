@@ -111,7 +111,6 @@ export default [
   {
     NAME: "uploadImage",
     METHOD: "POST",
-    URL: `${API}/api/customer/userprofile/{custid}`,
-    REPLACE: "custid"
+    URL: `${API}/api/customer/userprofile`
   }
 ];

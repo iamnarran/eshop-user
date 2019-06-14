@@ -114,13 +114,14 @@ class Component extends React.Component {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        console.log("value", values);
         let loc = this.state.locid
           ? this.state.locid
           : this.state.mainAddress.locid;
         const data = {
           id: this.props.user.id,
           username: this.state.info.username,
-          firstname: this.state.info.firstname,
+          firstname: values.firstname,
           imgnm: this.state.info.imgnm,
           lastname: values.lastname,
           email: values.email,
@@ -130,6 +131,7 @@ class Component extends React.Component {
           address: values.address,
           adrsid: this.state.mainAddress.id
         };
+        console.log("data", data);
         api.customer.updateMainAddress(data).then(res => {
           if (res.success) {
             message.success("Амжилттай хадгаллаа.");
@@ -137,7 +139,6 @@ class Component extends React.Component {
             message.error("Амжилтгүй хадгаллаа.");
           }
         });
-        console.log(data);
       }
     });
   };

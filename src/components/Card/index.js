@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import { Rate } from "antd";
+import { Rate, message } from "antd";
 import { connect } from "react-redux";
 
 import { toast } from "react-toastify";
@@ -26,7 +26,7 @@ class Card extends React.Component {
       .addWishList({ custid: this.props.user.id, skucd: item.cd })
       .then(res => {
         if (res.success) {
-          /* this.props.onNotify("Амжилттай хадгаллаа."); */
+          message.success("Амжилттай хадгаллаа.");
         }
       });
   };

@@ -18,6 +18,7 @@ import withCart from "./HOC/withCart";
 import storage from "../utils/storage";
 import api from "../api";
 import { toast } from "react-toastify";
+import Login from "./Login";
 
 class LoginModal extends React.Component {
   state = {
@@ -138,37 +139,6 @@ class LoginModal extends React.Component {
     this.handleCancel();
   };
 
-  _submit = e => {
-    e.preventDefault();
-
-    this.props.form.validateFields(async (error, form) => {
-      if (!error) {
-        this.setState({ isLoading: true });
-
-        try {
-          const res = await this.props.login(form);
-
-          if (res.success) {
-            storage.set("access_token", res.data[0].info.access_token);
-
-            let customer = res.data[0].info.customerInfo;
-            customer.token = res.data[0].info.access_token;
-
-            this.modifyDbAndRedux(customer);
-          } else {
-            this.handleNotify(res.message);
-          }
-        } catch (err) {
-          console.log(err);
-          this.handleNotify(err.message);
-          this.setState({ isLoading: false });
-        }
-
-        this.setState({ isLoading: false });
-      }
-    });
-  };
-
   render() {
     const { getFieldDecorator } = this.props.form;
 
@@ -183,92 +153,7 @@ class LoginModal extends React.Component {
           maskClosable={false}
           footer={[]}
         >
-          <form onSubmit={this._submit}>
-            <div className="form-group">
-              <label htmlFor="email" className="sr-only">
-                Имэйл
-              </label>
-              {getFieldDecorator("email", {
-                rule: [
-                  {
-                    required: true,
-                    message: "Имэйл хаяг оруулна уу"
-                  }
-                ]
-                /* initialValue: "tulgaa@datacare.mn" */
-              })(
-                <input
-                  autoComplete="off"
-                  type="email"
-                  className="form-control"
-                  id="email"
-                  aria-describedby="emailHelp"
-                  placeholder="Имэйл"
-                />
-              )}
-            </div>
-            <div className="form-group">
-              <label htmlFor="password" className="sr-only">
-                Нууц үг
-              </label>
-              {getFieldDecorator("password", {
-                rule: [
-                  {
-                    required: true,
-                    message: "Нууц үг оруулна уу"
-                  }
-                ]
-                /* initialValue: "123123" */
-              })(
-                <input
-                  type="password"
-                  autoComplete="off"
-                  className="form-control"
-                  id="password"
-                  aria-describedby="passwordHelp"
-                  placeholder="Нууц үг"
-                />
-              )}
-            </div>
-            <div className="form-group">
-              <div className="row row10">
-                <div className="col-xl-6 pad10">
-                  <div className="custom-control custom-checkbox">
-                    <input
-                      type="checkbox"
-                      className="custom-control-input"
-                      id="rememberMe"
-                    />
-                    <label
-                      className="custom-control-label"
-                      htmlFor="rememberMe"
-                    >
-                      Сануулах
-                    </label>
-                  </div>
-                </div>
-                <div className="col-xl-6 pad10">
-                  <div className="text-right">
-                    <Link
-                      to=""
-                      className="btn btn-link"
-                      onClick={this.handleReset}
-                    >
-                      Нууц үгээ мартсан
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <Button
-              type="primary"
-              className="btn btn-block btn-login text-uppercase"
-              htmlType="submit"
-            >
-              Нэвтрэх
-            </Button>
-          </form>
+          <Login handleOk={this.handleOk} handleReset={this.handleReset} />
 
           <span className="divide-maker">Эсвэл</span>
 

@@ -2,12 +2,7 @@ import React from "react";
 import { post } from "axios";
 import { connect } from "react-redux";
 import { Route, Link, Switch, BrowserRouter as Router } from "react-router-dom";
-import {
-  /* Upload, */ /* Button, */ /* Icon, */
-  /* message, */
-  Progress,
-  Avatar
-} from "antd";
+import { Upload, message, Progress, Avatar } from "antd";
 import {
   UserProfile,
   DeliveryAddress,
@@ -18,7 +13,7 @@ import {
   Epoint
 } from "../components";
 import api from "../api";
-import { signOut /* , updateCart */ } from "../actions/login";
+import { signOut } from "../actions/login";
 import avatar from "../scss/assets/images/demo/defaultAvatar.png";
 import profile from "../scss/assets/images/demo/profile.png";
 import history from "../scss/assets/images/demo/history.png";
@@ -26,12 +21,8 @@ import wishlist from "../scss/assets/images/demo/wishlist.png";
 import location from "../scss/assets/images/demo/location.png";
 import password from "../scss/assets/images/demo/password.png";
 import store from "../scss/assets/images/demo/store.png";
-/* function getBase64(img, callback) {
-  const reader = new FileReader();
-  reader.addEventListener("load", () => callback(reader.result));
-  reader.readAsDataURL(img);
-}
-
+import appViewsApi from "../api/appViewsApi";
+import { IMAGE } from "../utils/consts";
 function beforeUpload(file) {
   const isJPG = file.type === "image/jpeg";
   if (!isJPG) {
@@ -42,7 +33,7 @@ function beforeUpload(file) {
     message.error("Image must smaller than 2MB!");
   }
   return isJPG && isLt2M;
-} */
+}
 
 class UserProfilePage extends React.Component {
   state = {
@@ -51,7 +42,9 @@ class UserProfilePage extends React.Component {
     active: "userprofile",
     progress: "",
     id: "14",
-    file: null
+    file: null,
+    file: "",
+    userImage: null
   };
 
   componentDidMount() {
@@ -63,67 +56,6 @@ class UserProfilePage extends React.Component {
     this.setState({ isToggle: !this.state.isToggle });
   };
 
-  handleChangeImage = async info => {
-    /* console.log("hah");
-    console.log(info.fileList[0].originFileObj); */
-    var data = new FormData();
-
-    data.append("data", info.fileList[0].originFileObj);
-
-    fetch("http://10.0.10.37:8876/mn/api/customer/userprofile/699", {
-      mode: "no-cors",
-      method: "POST",
-      headers: {
-        "Content-Type": "multipart/form-data",
-        Accept: "application/json",
-        type: "formData"
-      },
-      body: data
-    }).then(
-      function(res) {
-        if (res.ok) {
-          alert("Perfect! ");
-        } else if (res.status === 401) {
-          alert("Oops! ");
-        }
-      },
-      function(e) {
-        alert("Error submitting form!");
-      }
-    );
-    /* await api.customer
-      .uploadImage({ custid: this.props.user.id, ContentType: "image/jpeg" })
-      .then(res => {
-        console.log(res);
-      }); */
-    /* if (info.file.status === "uploading") {
-      this.setState({ loading: true });
-      return;
-    }
-    if (info.file.status === "done") {
-      // Get this url from response in real world.
-      getBase64(info.file.originFileObj, imageUrl =>
-        this.setState({ imageUrl, loading: false
-        })
-      );
-    } */
-  };
-
-  async submit(e) {
-    e.preventDefault();
-    /* console.log(this.state.file); */
-
-    const url = `http://10.0.10.37:8876/mn/api/customer/userprofile/699`;
-    const formData = new FormData();
-    formData.append("upload", this.state.file);
-    const config = {
-      headers: {
-        "content-type": "multipart/form-data"
-      }
-    };
-    return post(url, formData, config);
-  }
-
   setFile(e) {
     this.setState({ file: e.target.files[0] });
   }
@@ -132,9 +64,8 @@ class UserProfilePage extends React.Component {
     let progress = 25;
     await api.customer.findUserData({ id: this.props.user.id }).then(res => {
       if (res.success) {
-        /* console.log("userprofile", res.data); */
-
         if (res.data.info.imgnm) {
+          this.setState({ userImage: res.data.info.imgnm });
           progress = parseInt(progress) + 25;
         }
         if (res.data.addrs.length > 0) {
@@ -149,26 +80,45 @@ class UserProfilePage extends React.Component {
   };
 
   handleLogoutClick = () => {
-    /* this.props.updateCart({
-      products: [],
-      totalQty: 0,
-      totalPrice: 0
-    }); */
     this.props.signOut();
   };
 
+  _handleImageChange(img) {
+    console.log("zurag", img);
+    var data = new FormData();
+    if (img && img[0]) {
+      let reader = new FileReader();
+      reader.onload = event => {
+        this.setState({
+          file: img
+        });
+      };
+      reader.readAsDataURL(img[0]);
+    }
+  }
+
+  handleChange = ({ fileList }) => {
+    var data = new FormData();
+    data.append("uploadimage", fileList[0].originFileObj);
+    data.append("custid", this.props.user.id);
+    api.customer
+      .uploadImage(data)
+      .then(res => {
+        console.log(res);
+        if (res.success == true) {
+          console.log(res);
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
   renderProfileInfo = () => {
-    /* const uploadButton = (
-      <div>
-        <Icon type={this.state.loading ? "loading" : "plus"} />
-        <div className="ant-upload-text">Upload</div>
-      </div>
-    ); */
-    /* const imageUrl = this.state.imageUrl; */
     if (this.props.isLoggedIn && this.props.user) {
       const { match, user } = this.props;
+      console.log("user", user);
       match.path = "/userprofile";
-
       return (
         <div className="section section-gray">
           <Router>
@@ -180,28 +130,32 @@ class UserProfilePage extends React.Component {
                       <div className="col-md-4 d-none d-md-block pad10">
                         <div className="profile-menu">
                           <div className="menu-header">
-                            {/* <form onSubmit={e => this.submit(e)}>
-                              <input
-                                type="file"
-                                onChange={e => this.setFile(e)}
-                              />
-                              <button type="submit">Upload</button>
-                            </form> */}
-                            <div
-                              className="flex-this"
-                              onChange={e => this.setFile(e)}
+                            <Upload
+                              className="avatar-uploader"
+                              showUploadList={false}
+                              beforeUpload={beforeUpload}
+                              onChange={this.handleChange}
                             >
-                              <Avatar size="large" src={avatar} />
-                              <p className="name">
-                                {user.firstname
-                                  ? user.lastname
-                                    ? `${user.firstname} ${user.lastname}`
-                                    : user.firstname
-                                  : user.email
-                                  ? user.email
-                                  : ""}
-                              </p>
-                            </div>
+                              <div className="flex-this">
+                                {this.state.userImage ? (
+                                  <Avatar
+                                    size="large"
+                                    src={IMAGE + this.state.userImage}
+                                  />
+                                ) : (
+                                  <Avatar size="large" src={avatar} />
+                                )}
+                                <p className="name">
+                                  {user.firstname
+                                    ? user.lastname
+                                      ? `${user.firstname} ${user.lastname}`
+                                      : user.firstname
+                                    : user.email
+                                    ? user.email
+                                    : ""}
+                                </p>
+                              </div>
+                            </Upload>
                             <p className="text text-right">
                               Таны мэдээлэл
                               <Progress
@@ -209,7 +163,6 @@ class UserProfilePage extends React.Component {
                                 strokeColor="#feb415"
                               />
                             </p>
-                            <div />
                           </div>
                           <ul className="list-unstyled">
                             <li className="">
@@ -269,19 +222,6 @@ class UserProfilePage extends React.Component {
                                 <span>Захиалгын түүх</span>
                               </Link>
                             </li>
-                            {/* <li>
-                              <Link
-                                to={`${match.path}/epoint`}
-                                className="flex-this"
-                              >
-                                <i
-                                  className="fa fa-credit-card"
-                                  aria-hidden="true"
-                                  style={{ color: "#feb415" }}
-                                />
-                                <span>ePoint карт</span>
-                              </Link>
-                            </li> */}
                             <li>
                               <Link
                                 to={`${match.path}/delivery`}
@@ -389,5 +329,5 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  { signOut /* , updateCart */ }
+  { signOut }
 )(UserProfilePage);
