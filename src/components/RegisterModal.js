@@ -2,12 +2,11 @@ import React from "react";
 import { connect } from "react-redux";
 import { Modal } from "antd";
 import { createForm } from "rc-form";
-import { Redirect } from "react-router-dom";
 import Registration from "./Registration";
 
 import actions, {
   showRegisterModal,
-  hideRegisterModal
+  hideRegisterModal,
 } from "../actions/register";
 
 class RegisterModal extends React.Component {

@@ -93,7 +93,7 @@ class UserButton extends React.Component {
                         ? user.picture.data.url
                         : user.picture
                       : avatar
-                  })`
+                    })`
                 }}
               />
             </div>
@@ -103,8 +103,8 @@ class UserButton extends React.Component {
                   ? `${user.firstname} ${user.lastname}`
                   : user.firstname
                 : user.email
-                ? user.email
-                : ""}
+                  ? user.email
+                  : ""}
             </span>
           </Link>
           <div className={`dropdown ${profilemenu}`}>
@@ -122,7 +122,7 @@ class UserButton extends React.Component {
                                 ? user.picture.data.url
                                 : user.picture
                               : avatar
-                          })`
+                            })`
                         }}
                       />
                     </div>
@@ -132,8 +132,8 @@ class UserButton extends React.Component {
                           ? `${user.firstname} ${user.lastname}`
                           : user.firstname
                         : user.email
-                        ? user.email
-                        : ""}
+                          ? user.email
+                          : ""}
                     </p>
                   </div>
                   <Progress

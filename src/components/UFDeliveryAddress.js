@@ -359,7 +359,7 @@ class Component extends React.Component {
                         </Select>
                       )}
                     </Form.Item>
-                  </div>{" "}
+                  </div>
                 </div>
 
                 <div className="col-xl-4" style={{ marginBottom: "-9px" }}>

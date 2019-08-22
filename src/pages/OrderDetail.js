@@ -3,7 +3,7 @@ import api from "../api";
 import { IMAGE } from "../utils/consts";
 import { Link } from "react-router-dom";
 class OrderDetail extends React.Component {
-  componentDidMount() {}
+  componentDidMount() { }
 
   render() {
     let orderList = this.props.container.data[0].items;
