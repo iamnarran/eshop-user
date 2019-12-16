@@ -124,24 +124,24 @@ class Component extends React.Component {
 
     return (
       <div className="col-md-8 pad10">
-        <Spin
+        {/* <Spin
           spinning={this.state.loading}
           delay={500}
           indicator={antIcon}
           tip="Түр хүлээнэ үү"
-        >
-          <div className="user-menu-content">
-            <p className="title">
-              <span>Үзсэн барааны түүх</span>
-            </p>
-            <div
-              className="product-list-history frame frameMargin"
-              style={{ maxHeight: "500px", overflow: "auto" }}
-            >
-              {tableList}
-            </div>
+        > */}
+        <div className="user-menu-content">
+          <p className="title">
+            <span>Үзсэн барааны түүх</span>
+          </p>
+          <div
+            className="product-list-history frame frameMargin"
+            style={{ maxHeight: "500px", overflow: "auto" }}
+          >
+            {tableList}
           </div>
-        </Spin>
+        </div>
+        {/* </Spin> */}
       </div>
     );
   }
