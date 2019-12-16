@@ -86,8 +86,10 @@ class Homepage extends React.Component {
         />
       );
     }
+    console.log('blocksToRender: ', blocksToRender);
 
     return blocksToRender;
+    
   }
 
   render() {

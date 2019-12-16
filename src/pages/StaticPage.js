@@ -1,10 +1,6 @@
 import React from "react";
 
 class StaticPage extends React.Component {
-  state = {
-    ...this.props.container
-  };
-
   render() {
     const description = this.state.staticPages.description;
     return (

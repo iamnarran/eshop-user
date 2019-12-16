@@ -175,6 +175,29 @@ class CategoryInfo extends React.Component {
     console.log(this.state.isLeftPanel);
   };
 
+  renderBreadCrumb = () => {
+    try {
+      return (
+        <div className="e-breadcrumb">
+              <ul className="list-unstyled">
+                {parentCats &&
+                  parentCats.map(category => {
+                    return (
+                      <li key={category.catnm}>
+                        <Link to={category.route ? category.route : ""}>
+                          <span>{category.catnm}</span>
+                        </Link>
+                      </li>
+                    );
+                  })}
+              </ul>
+            </div>
+      )
+    } catch (error) {
+      return console.log(error);
+    }
+  }
+
   render() {
     const { id, parentCats, subCats, attributes } = this.props.container;
     const { products } = this.state;
@@ -278,20 +301,7 @@ class CategoryInfo extends React.Component {
       <div className="top-container">
         <div className="section">
           <div className="container pad10">
-            <div className="e-breadcrumb">
-              <ul className="list-unstyled">
-                {parentCats &&
-                  parentCats.map(category => {
-                    return (
-                      <li key={category.catnm}>
-                        <Link to={category.route ? category.route : ""}>
-                          <span>{category.catnm}</span>
-                        </Link>
-                      </li>
-                    );
-                  })}
-              </ul>
-            </div>
+            
             <div className="row row10">
               <div className="col-xl-3 col-md-3 pad10">
               <div className={`left-panel-container ${leftPanel1}`} onClick={this.showLeftPanel}>
